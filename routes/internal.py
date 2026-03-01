@@ -12,7 +12,6 @@ from flask_wtf.csrf import validate_csrf
 
 from FlaskClass import app, csrf
 from logging_utility import logger
-from utility import sanitize_path, generate_captcha, convert_markdown_to_html, query_events, create_invoice_pdf, get_product_by_id, get_settings, get_coupon_by_id, get_products, get_coupons, get_events, add_contact_request, add_event, get_order_by_id, delete_product_json, delete_coupon_json, delete_order_json, delete_event_json
 
 internal_blueprint = Blueprint("internal", __name__, template_folder="./templates")
 

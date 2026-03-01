@@ -5,8 +5,6 @@ from datetime import timedelta
 from flask import Flask
 from flask_wtf.csrf import CSRFProtect
 
-from utility import format_number
-
 # =====================================
 # Configure the Flask app and session settings
 # =====================================

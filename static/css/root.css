@@ -2,18 +2,26 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css");
 
 
-
 :root{
-    --main-color: #326442;
-    --secondary-color: #289808;    
-    --third-color: #ff6b3b;
+    --main-color-50: #f1fcfb;
+    --main-color-100: #d1f6f4;
+    --main-color-200: #a3ece9;
+    --main-color-300: #6ddbdb;
+    --main-color-400: #3ebfc3;
+    --main-color-500: #25a1a7;
+    --main-color-600: #1e8c94;
+    --main-color-700: #1a646b;
+    --main-color-800: #195056;
+    --main-color-900: #194448;
+    --main-color-950: #09252a;
     --font-color: #333333;
-    --secondary-font-color: #eeeeee;   
-    --third-font-color: #666666;  
-    --main-bg: #fdfbfb;       
-    --secondary-bg: #eaeaea;
-    --third-bg: #191e1f;
+    --secondary-font-color: #eeeeee;
+    --third-font-color: #666666;
     --warning-color: #ff0000;
+    --background-1: #f8f9fa;
+    --background-2: #e9ecef;
+    --background-3: #212529;
+    --background-4: #d4edda;
 }
 
 *{
@@ -55,22 +63,8 @@ a {
 }
 
 
-h2 {
-    text-decoration: underline;
-    text-decoration-color: var(--main-color);
-    text-decoration-thickness: 10px;
-    margin-bottom: 40px;
-    text-align: center;
-    text-transform: uppercase;
-}
-
-section, header {
-    padding: 40px 30px;
-}
-
-
 ::selection{
-    background-color: color(from var(--main-color) srgb r g b / 0.8);
+
 }
 
 .hidden {
@@ -78,7 +72,6 @@ section, header {
 }
 
 
-/*Reduced motion*/
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
