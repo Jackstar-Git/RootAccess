@@ -1,0 +1,265 @@
+@import url(../root.css);
+
+.settings-form {
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.settings-form h2 {
+    font-size: 1.6rem;
+    color: var(--main-color);
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 1rem;
+    color: var(--font-color);
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"],
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: var(--font-color);
+    background-color: #f9f9f9;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border-color: var(--main-color);
+    background-color: var(--main-bg);
+    outline: none;
+}
+
+/* Disabled Input Fields */
+input[type="text"]:disabled,
+input[type="number"]:disabled,
+textarea:disabled,
+select:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+input[type="text"]:disabled:focus,
+input[type="number"]:disabled:focus,
+textarea:disabled:focus,
+select:disabled:focus {
+    background-color: #e0e0e0;
+    border-color: #ddd;
+    outline: none;
+}
+
+/* Button Styling */
+button {
+    padding: 10px 20px;
+    background-color: var(--main-color);
+    color: var(--secondary-font-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+}
+
+/* File Actions and Inputs */
+.file-actions {
+    display: flex;
+    gap: 20px;
+}
+
+.file-action {
+    flex: 1;
+}
+
+input[type="file"] {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    background-color: var(--main-color);
+    color: var(--secondary-font-color);
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+input[type="file"]:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+.export-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    background-color: var(--main-color);
+    color: var(--secondary-font-color);
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.export-btn:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+}
+
+/* Tooltip */
+.tooltip {
+    font-size: 0.9rem;
+    color: var(--third-font-color);
+}
+
+/* Tooltip Icon */
+.tooltip-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--main-color);
+    color: white;
+    text-align: center;
+    line-height: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.tooltip-icon:hover {
+    background-color: var(--secondary-color);
+}
+
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.password-wrapper i {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: var(--third-font-color);
+}
+
+.password-wrapper i:hover {
+    color: var(--font-color);
+}
+
+/* Toggle Slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: var(--main-color);
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* Password Requirements */
+.password-requirements {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.password-requirements li {
+    font-size: 0.9rem;
+    color: var(--third-font-color);
+    display: flex;
+    align-items: center;
+}
+
+.password-requirements li i {
+    margin-right: 8px;
+}
+
+.password-requirements li.valid {
+    color: green;
+}
+
+.password-requirements li.invalid {
+    color: red;
+}
+
+@media (max-width: 768px) {
+    .settings-form {
+        padding: 15px;
+    }
+
+    .file-action {
+        flex: 100%; /* Stacks file actions vertically on small screens */
+    }
+
+    button {
+        width: 100%; /* Make button full-width on smaller screens */
+    }
+}

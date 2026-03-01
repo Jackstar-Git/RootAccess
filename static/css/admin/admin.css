@@ -1,0 +1,361 @@
+@import url(../root.css);
+
+.status {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Button styling */
+#refreshBtn {
+    background-color: var(--main-color);
+    color: var(--secondary-font-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 200px;
+    margin: 20px auto;
+    display: block;
+}
+
+#refreshBtn:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Styling for progress bars */
+progress {
+    width: 100%;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
+    margin-top: 10px;
+}
+
+progress::-webkit-progress-bar {
+    background-color: var(--main-bg);
+    border-radius: 5px;
+}
+
+progress::-webkit-progress-value {
+    border-radius: 5px;
+}
+
+progress::-moz-progress-bar {
+    border-radius: 5px;
+}
+
+.low::-webkit-progress-value {
+    background-color: #4caf50;
+}
+
+.medium::-webkit-progress-value {
+    background-color: #ff9800;
+}
+
+.high::-webkit-progress-value {
+    background-color: #f44336;
+}
+
+.very-high::-webkit-progress-value {
+    background-color: #d32f2f;
+}
+
+/* Styling for the product information cards */
+.quicklinks-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.quicklink-card {
+    flex: 1;
+    padding: 20px;
+    background-color: var(--main-bg);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.quicklink-card:hover {
+    cursor: pointer;
+    background-color: var(--secondary-bg);
+}
+
+.quicklink-card i {
+    font-size: 1.5rem;
+    color: var(--main-color);
+}
+
+.quicklink-card h3 {
+    margin-bottom: 15px;
+}
+
+.calendar {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed
+}
+.calendar th, .calendar td {
+    border: 1px solid #ccc;
+    text-align: center;
+    padding: 10px;
+}
+.calendar th {
+    background-color: var(--main-bg);
+}
+.calendar td:not(:empty) {
+    cursor: pointer;
+}
+.calendar td:not(:empty):hover {
+    background-color: color(from var(--main-color) srgb r g b / 0.3);
+}
+
+.calendar th.month-year {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+
+.calendar button {
+    background-color: var(--main-color);
+    color: var(--secondary-font-color);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 20px auto;
+    display: block;
+}
+
+.calendar button:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Modal Styling */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    background: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    text-align: left;
+    max-height: 80%;
+    overflow-y: scroll;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+.modal-overlay.active {
+    display: block;
+}
+
+/* Modal Content */
+.modal h3 {
+    background: var(--main-color);
+    color: var(--secondary-font-color);
+    padding: 15px;
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.modal p {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: var(--font-color);
+}
+
+.modal .loading-message,
+.modal .no-events-message,
+.modal .error-message {
+    font-style: italic;
+    color: var(--third-font-color);
+    text-align: center;
+    padding: 20px;
+}
+
+/* Event List Styling */
+.event-list {
+    list-style: none;
+    margin: 0;
+    padding: 20px;
+    background: #f9f9f9;
+}
+
+.event-list li {
+    background: #ffffff;
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.event-list li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-list li h4 {
+    margin: 0 0 5px;
+    font-size: 1.2rem;
+    color: var(--main-color);
+}
+
+.event-list li p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--third-font-color);
+}
+
+/* Close Button */
+.modal button {
+    align-self: flex-end;
+    margin: 10px 20px;
+    padding: 10px 20px;
+    background: var(--main-color);
+    color: var(--secondary-font-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s ease;
+}
+
+.modal button:hover {
+    background: var(--secondary-color);
+}
+
+
+
+
+
+
+
+
+
+
+.past-day {
+    background-color: var(--secondary-bg);
+}
+
+#today {
+    font-weight: bold;
+    background-color: color(from var(--main-color) srgb r g b / 0.6);
+}
+
+.event-count-badge {
+    border-top: black 1px dotted;
+    height: 36px;
+    display: block;
+}
+
+
+/* Add Event Form Container */
+#addEventForm {
+    background-color: var(--main-bg);
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    display: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Input Fields */
+.modal #addEventForm input,
+.modal #addEventForm textarea,
+.modal #addEventForm select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: Arial, sans-serif;
+}
+
+/* Labels */
+.modal #addEventForm label {
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: var(--font-color);
+}
+
+/* Submit Button */
+.modal #addEventForm button {
+    background-color: var(--main-color);
+    color: var(--secondary-font-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    margin: 0;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+
+}
+
+.modal #addEventForm button:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Field Focus Effect */
+.modal #addEventForm input:focus,
+.modal #addEventForm textarea:focus,
+.modal #addEventForm select:focus {
+    outline: none;
+    border-color: var(--main-color);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.delete-btn {
+    background-color: var(--warning-color);
+}
+
+.btn {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    color: var(--secondary-font-color);
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+}

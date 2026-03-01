@@ -1,0 +1,51 @@
+@import url(../root.css);
+
+.filter-bar {
+    position: sticky;
+    top: 0;
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+}
+
+.filter-bar > *{
+    flex-grow: 1;
+}
+
+.filter-bar select, .filter-bar button {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.filter-bar button {
+    background-color: var(--main-color);
+    color: var(--secondary-font-color);
+    border: none;
+    cursor: pointer;
+}
+
+.filter-bar button:hover {
+    background-color: var(--secondary-color);
+}
+
+.logs-container {
+    margin-top: 20px;
+}
+
+#logsOutput {
+    font-family: monospace;
+    background-color: #eee;
+    border-radius: 10px;
+    border: 1px solid rgb(176, 176, 176);
+    min-height: 100px;
+    overflow-y: scroll;
+    padding: 20px;
+    height: 70vh;
+}

@@ -1,0 +1,159 @@
+@import url(../root.css);
+
+.edit-coupon-form {
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.edit-coupon-form h2 {
+    font-size: 1.6rem;
+    color: var(--main-color);
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 1rem;
+    color: var(--font-color);
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: var(--font-color);
+    background-color: #f9f9f9;
+}
+
+textarea {
+    height: 400px;
+    width: 100%;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: var(--main-color);
+    background-color: var(--main-bg);
+    outline: none;
+}
+
+.form-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: var(--secondary-font-color);
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.submit-btn {
+    background-color: var(--secondary-color);
+}
+
+.cancel-btn {
+    background-color: #f44336;
+    text-align: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: var(--secondary-font-color);
+}
+
+.submit-btn:hover,
+.cancel-btn:hover {
+    opacity: 0.9;
+}
+
+.submit-btn i,
+.cancel-btn i {
+    margin-right: 5px;
+}
+
+input[type="text"]:disabled,
+input[type="number"]:disabled,
+input[type="date"]:disabled,
+select:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+input[type="text"]:disabled:focus,
+input[type="number"]:disabled:focus,
+input[type="date"]:disabled:focus,
+select:disabled:focus {
+    background-color: #e0e0e0;
+    border-color: #ddd;
+    outline: none;
+}
+
+.error-message {
+    color: var(--warning-color);
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .edit-coupon-form {
+        padding: 15px;
+    }
+}
+
+/* New styles for radio buttons and checkboxes */
+.form-group.radio-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.radio-group label {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.checkbox-group input {
+    margin-right: 10px;
+}
+
+.checkbox-group label {
+    font-size: 1rem;
+    margin: 0;
+}
+
+#code-gen-btn {
+    color: var(--secondary-font-color);
+    border: var(--main-color) 2px solid;
+    background-color: var(--main-color);
+    transition: backgroud-color 0.5s linear;
+}
+
+#code-gen-btn:hover {
+    background-color: var(--main-bg);
+    color: var(--font-color)
+}

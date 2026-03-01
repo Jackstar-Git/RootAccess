@@ -1,0 +1,142 @@
+@import url(../root.css);
+
+.edit-contact-form {
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.edit-contact-form h2 {
+    font-size: 1.6rem;
+    color: var(--main-color);
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 1rem;
+    color: var(--font-color);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.info-label {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: var(--main-color);
+    text-decoration: underline;
+}
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: var(--font-color);
+    background-color: #f9f9f9;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: var(--font-color);
+    background-color: #f9f9f9;
+    resize: vertical;
+    min-height: 120px;
+}
+
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--main-color);
+    background-color: var(--main-bg);
+    outline: none;
+}
+
+.info {
+    font-size: 1rem;
+    color: var(--font-color);
+}
+
+.info-note {
+    font-size: 0.9rem;
+    color: var(--font-color);
+    display: block;
+    margin-top: 5px;
+}
+
+.form-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-actions {
+    display: flex;
+    align-items: center;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: var(--secondary-font-color);
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.submit-btn {
+    background-color: var(--secondary-color);
+}
+
+.cancel-btn {
+    background-color: #f44336;
+    text-align: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: var(--secondary-font-color);
+}
+
+.antworten-btn {
+    background-color: var(--main-color);
+    text-align: center;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: var(--secondary-font-color);
+    margin-left: 10px;
+}
+
+.submit-btn:hover,
+.cancel-btn:hover,
+.antworten-btn:hover {
+    opacity: 0.9;
+}
+
+.submit-btn i,
+.cancel-btn i,
+.antworten-btn i {
+    margin-right: 5px;
+}
+
+.error-message {
+    color: var(--warning-color);
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .edit-contact-form {
+        padding: 15px;
+    }
+}

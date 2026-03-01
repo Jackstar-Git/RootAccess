@@ -1,0 +1,6 @@
+venv
+*__pycache__*
+deploy.bat
+logs
+main.py
+changelog.txt

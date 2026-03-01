@@ -1,0 +1,121 @@
+@import url(root.css);
+
+.products {
+    background-color: var(--main-bg);
+    min-height: 50vh;
+    margin-bottom: 40px;
+}
+
+
+.products .product-filters {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.product-filters > div, form {
+    width: 100%;
+}
+
+
+.product-filters .search-bar input,
+.product-filters .sort-options select,
+.product-filters .filter-menu select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.products .products-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, min(400px, 100%));
+    justify-content: center;
+    gap: 50px;
+}
+
+
+
+.products .product {
+    background-color: var(--secondary-bg);
+    border-radius: 5px;
+    padding: 30px;
+    transition: transform 0.5s linear;
+}
+
+.products .product:hover,
+.products .product:focus {
+    transform: scale(1.05);
+}
+
+.products .product .detail-box a:hover {
+    background-color: var(--secondary-color);
+}
+
+.products .product img {
+    width: 100%;
+    margin-inline: auto;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 40px;
+}
+
+.products .product h3 {
+    overflow: hidden;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+    margin-bottom: 20px;
+    border-bottom: solid 2px var(--main-color);
+}
+
+.products .product h3:hover {
+    cursor: pointer;
+    color: var(--secondary-color);
+}
+.products .product .detail-box {
+    display: flex;
+}
+
+.products .product .detail-box button {
+    margin-left: auto;
+    text-align: center;
+    border: none    ;
+    color: var(--secondary-font-color);
+    color: var(--secondary-font-color);
+    height: 30px;
+    padding: 6px 4px;
+    background-color: var(--main-color);
+    border-radius: 5px;
+}
+
+.products .product .detail-box button:hover {
+    background-color: var(--secondary-color);
+}
+
+.products .product div.price_heading {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.product :has(.new-price) .old-price{
+    text-decoration: line-through;
+    font-weight: 300;
+}
+
+.product .new-price {
+    color: var(--warning-color);
+}
+
+.product .tax-note {
+    font-size: 13px;
+} 
+
+
+
+@media (max-width: 768px) {
+    .products .product-filters {
+        flex-direction: column;
+    }
+}

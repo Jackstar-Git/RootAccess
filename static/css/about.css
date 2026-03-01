@@ -1,0 +1,91 @@
+@import url(root.css);
+
+.about-section, .carousel-section, .video-section, .text-image-section {
+    padding: 40px 40px;
+}
+
+.carousel {
+    width: 80%;
+    margin: 20px auto;
+}
+
+.carousel img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.carousel .prev-btn,
+.carousel .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border: none;
+    color: var(--secondary-font-color);
+    background-color: var(--main-color);
+}
+
+.carousel .prev-btn:hover,
+.carousel .next-btn:hover{
+    background-color: var(--secondary-color);
+}
+
+.carousel .prev-btn {
+    left: 10px;
+}
+
+.carousel .next-btn {
+    right: 10px;
+}
+
+.carousel .carousel-indicators {
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.carousel .carousel-indicators button{
+    width: 15px;
+    height: 15px;
+    z-index: 99999;
+    background-color: transparent;
+    border: 2px solid var(--main-color);
+}
+
+.carousel .carousel-indicators .active {
+    background-color: var(--main-color);
+}
+
+.video-section video {
+    width: 80%;
+    max-width: 800px;
+    margin-inline: auto;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+}
+
+.text-image-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.text-image-container .text-content {
+    flex: 1;
+    min-width: 300px;
+}
+
+.text-image-container .image-content img {
+    max-width: 100%;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}

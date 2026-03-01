@@ -1,0 +1,33 @@
+User-agent: *
+Disallow: /api/                 # Disallow access to API endpoints
+Disallow: /uploads/             # Disallow access to uploaded files
+Disallow: /plugins/             # Disallow access to plugins directory
+Disallow: /static/              # Disallow access to static files (if not needed)
+Disallow: /404                  # Disallow access to the 404 error page
+Disallow: /403                  # Disallow access to the 403 error page
+
+# Allow access to all product pages
+Allow: /produkt/                # Allow access to individual product pages
+Allow: /produkte                # Allow access to the products list page
+
+# Allow access to all legal routes
+Allow: /rechtliches/            # Allow access to all legal pages (impressum, agb)
+
+# Allow access to the home page and sitemap
+Allow: /                       # Allow access to the home page
+Allow: /sitemap.xml           # Allow access to the sitemap
+
+Sitemap: uebungsfirma.onrender.com/sitemap.xml
+
+# Here is a friendly robot to say hello!
+#
+#         ,     ,
+#        (\____/)
+#         (_oo_)
+#           (O)
+#         __||__    \)
+#    []/______\[] /
+#    / \______/ \/
+#   /    /__\
+# (\   /____\
+

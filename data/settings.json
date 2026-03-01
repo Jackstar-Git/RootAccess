@@ -1,0 +1,17 @@
+{
+    "server_config": {
+        "MAX_CONTENT_LENGTH": 12582912,
+        "PERMANENT_SESSION_LIFETIME": 2592000,
+        "SESSION_COOKIE_NAME": "birdie_session",
+        "maintenance": false
+    },
+    "format": "#.##0,00",
+    "admin-password": "BirdieClub1!",
+    "url": "localhost",
+    "categories": [
+        "Golfschläger",
+        "Golfbälle",
+        "Golftaschen",
+        "Simulator"
+    ]
+}

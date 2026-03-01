@@ -1,0 +1,105 @@
+@import url(root.css);
+
+footer.footer_section {
+    background-color: var(--third-bg);
+    color: var(--secondary-font-color);
+    padding: 45px 0;
+    text-align: center;
+    font-size: 1.3rem;
+    padding-inline: 20px;
+}
+
+footer.footer_section .links_container {
+    margin: 25px 25px 40px 25px;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    font-size: 1.1rem;
+    flex-wrap: wrap;
+}
+
+footer.footer_section .links_container h3 {
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+footer.footer_section .info_links_menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+footer.footer_section .info_links_menu a {
+    color: var(--secondary-font-color);
+    flex-basis: 50%;
+    margin-bottom: 10px;
+}
+
+footer.footer_section .info_links_menu a:hover, 
+footer.footer_section .contact_nav a:hover {
+    color: var(--main-color);
+}
+
+footer.footer_section .contact_nav {
+    display: flex;
+    flex-direction: column;
+}
+
+footer.footer_section .contact_nav a i {
+    display: inline-block;
+    font-size: 28px;
+    height: 28px;
+    width: 28px;
+}
+
+.privacy-notice {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--third-bg);
+    color: var(--secondary-font-color);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    z-index: 1000;
+    transition: transform 0.3s ease; 
+}
+
+.privacy-notice p {
+    margin: 0;
+}
+
+.privacy-notice a {
+    color: var(--main-color);
+    text-decoration: underline;
+}
+
+.accept-btn {
+    background-color: var(--main-color);
+    color: var(--secondary-font-color); 
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px; 
+    cursor: pointer; 
+    transition: background-color 0.3s ease;
+}
+
+.accept-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+@media (max-width: 768px) {
+    footer.footer_section .links_container {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    footer.footer_section h3 {
+        margin-top: 20px;
+    }
+}
+

@@ -1,0 +1,65 @@
+@import url(../root.css);
+
+.categories-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: var(--main-bg);
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.category-item:hover {
+    background-color: var(--secondary-bg);
+}
+
+
+.category-item input{
+    width: 100%;
+    margin-right: 30px;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    padding: 3px;
+}
+
+.category-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    border: none;
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    color: var(--secondary-font-color);
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.save-btn {
+    background-color: var(--secondary-color);
+}
+
+#add-btn {
+    background-color: var(--main-color);
+}
+
+.delete-btn {
+    background-color: var(--warning-color);
+}
+
+.view-btn {
+    background-color: #2196F3;
+}

@@ -1,0 +1,86 @@
+@import url(../root.css);
+
+.coupons-list {
+    list-style: none;
+    width: 100%;
+}
+
+.coupon-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: var(--main-bg);
+    transition: background-color 0.3s ease;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.coupon-item:hover {
+    background-color: var(--main-bg);
+}
+
+
+.coupon-info {
+    flex: 1;
+    text-align: left;
+    max-width: 50%;
+}
+
+.coupon-details {
+    flex-basis: 40%;
+}
+
+.coupon-details .info-label {
+    font-weight: bold;
+}
+
+.coupon-info h3 {
+    color: var(--main-color);
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.coupon-info p {
+    font-size: 0.9rem;
+    color: var(--third-font-color);
+}
+
+.coupon-price {
+    margin-inline: 30px;
+    font-size: 1.2rem;
+    color: var(--font-color);
+    margin-bottom: 5px;
+}
+
+
+.coupon-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+    color: var(--secondary-font-color);
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.edit-btn {
+    background-color: var(--secondary-color);
+}
+
+.delete-btn {
+    background-color: var(--warning-color);
+}
+
+
+.id-column {
+    margin-right: 20px;
+    font-weight: bold;
+}

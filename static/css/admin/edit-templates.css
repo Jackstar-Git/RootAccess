@@ -1,0 +1,124 @@
+@import url(../root.css);
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    background-color: #f4f4f4;
+    color: var(--font-color);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+    overflow: hidden;
+}
+
+.toolbar-btn {
+    background-color: #e0e0e0; 
+    border: 1px solid #ccc; 
+    color: var(--font-color);
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease; 
+    border-radius: 6px; 
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.toolbar-btn:hover {
+    background-color: var(--main-color); /* Accent color on hover */
+    color: var(--secondary-font-color); /* White text for contrast */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Shadow on hover */
+}
+
+.toolbar-btn i {
+    font-size: 16px;
+    color: var(--secondary-color); /* Accent color for icons */
+}
+
+.toolbar-btn:hover i {
+    color: var(--secondary-font-color); /* Change icon color to white when hovering */
+}
+
+/* Address Bar Styling */
+.address-bar {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px; /* Slightly more rounded for a modern look */
+    color: var(--font-color);
+    background-color: var(--main-bg);
+    outline: none;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Inset shadow for depth */
+}
+
+.address-bar:focus {
+    border-color: var(--secondary-color); /* Accent color when focused */
+}
+
+/* File Explorer Header */
+.file-explorer-header {
+    display: grid;
+    grid-template-columns: 70px 1fr 200px repeat(2, 100px);
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc; /* Light border */
+    font-size: 14px;
+    color: var(--third-font-color); /* Darker text for better readability */
+}
+
+.file-explorer-item {
+    display: grid;
+    grid-template-columns: 70px 1fr 200px repeat(2, 100px);
+    padding: 10px 0;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.2s;
+}
+
+.file-explorer-item:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+}
+
+/* File Icon and Details */
+.file-details {
+    display: flex;
+    align-items: center;
+}
+
+.file-icon {
+    margin-right: 10px;
+    color: var(--secondary-color); /* Accent color for icons */
+}
+
+.file-icon i {
+    font-size: 18px;
+}
+
+/* Checkbox Styling */
+.file-checkbox {
+    margin-left: 10px;
+}
+
+a.location-path {
+    color: var(--font-color);
+}
+
+.file-date,
+.file-type,
+.file-size {
+    font-size: 14px;
+    color: var(--third-font-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .file-explorer-item {
+        grid-template-columns: 1fr;
+    }
+}

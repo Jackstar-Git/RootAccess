@@ -1,0 +1,144 @@
+@import url(root.css);
+
+.navbar {
+    position: sticky;
+    z-index: 999;
+    top: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--secondary-bg);
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.navbar-left {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+
+.logo {
+    height: 40px;
+    margin-right: 10px;
+}
+
+.text {
+    font-size: 1.2em;
+    font-weight: 800;
+}
+
+.nav-items {
+    display: flex;
+    justify-content: center;
+}
+
+.nav-item {
+    margin: 0 15px;
+    cursor: pointer;
+    transition: color 0.3s;
+    position: relative;
+}
+
+.nav-item:hover, .nav-item:focus > a{
+    color: var(--main-color);
+}
+
+.nav-item:focus::after,
+.nav-item:hover::after {
+    width: 100%;
+}
+
+.nav-item::after{
+    content: '';
+    display: block;
+    width: 0;
+    height: 3px;
+    background: var(--main-color);
+    transition: 0.25s;
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+}
+
+.nav-item .cart_icon {
+    position: relative;
+}
+
+.nav-item.cart_icon span {
+    color: var(--font-color);
+    position: absolute;
+    background-color: var(--warning-color);
+    display: inline-block;
+    border-radius: 50%;
+    width: 17px;
+    height: 17px;
+    font-size: 14px;
+    line-height: 17px;
+    bottom: 50%;
+    left: 75%;
+    text-align: center;
+}
+
+
+
+.navbar input {
+    display: none;
+}
+
+.navbar label {
+    font-size: 40px;
+    cursor: pointer;
+    display: none;
+    transition: transform 0.3s linear;
+}
+ 
+.navbar input:checked ~ label {
+    transform: rotate(90deg);
+}
+
+
+
+
+@keyframes sweep {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+
+    100% {
+        opacity: 0.9;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar label {
+        display: block;
+    }
+    .nav-items {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        background-color: var(--secondary-bg);
+        opacity: 0;
+        width: 100%;
+        z-index: 99;
+        left: 0;
+        top: 60px;
+        align-items: flex-end;
+        padding: 20px;
+        animation: sweep 0.5s linear;
+    }
+
+    .nav-items a {
+        margin-bottom: 10px;
+    }
+
+    .navbar:has(input:checked) .nav-items {
+        display: flex;
+        opacity: 0.9;
+    }
+    
+}
