@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 – Page Not Found</title>
+    <meta name="description" content="The page you were looking for does not exist on Jackstar's portfolio.">
+    <meta name="author" content="Jackstar">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/error.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pb1a8fR2IG23QMGYBk8zQ7C0r4kOG55G4+7RThd7GxVbxmYFZHzqLTXW2dEVxErbqD0kKcl00Kd6cTDyXv4qOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="shortcut icon" href="" type="image">
+</head>
+<body>
+    {% include "snippets/navbar.jinja-html" %}
+
+    <main class="error-page-wrapper">
+        <div class="error-glass-container">
+            <div class="error-visual">
+                <h1 class="error-code">404</h1>
+                <div class="error-circle"></div>
+            </div>
+            
+            <div class="error-content">
+                <h2 class="error-title">Signal Lost in Space.</h2>
+                <p class="error-message">
+                    The page you are looking for has drifted out of orbit. 
+                    It might have been moved, deleted, or never existed in this dimension.
+                </p>
+                
+                <div class="error-actions">
+                    <a href="/" class="error-primary-btn">Return to Base</a>
+                    <a href="/projects" class="error-secondary-btn">View Projects</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="error-blob blob-1"></div>
+        <div class="error-blob blob-2"></div>
+    </main>
+    {% include "snippets/footer.jinja-html" %}
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+</body>
+</html>

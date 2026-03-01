@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects – Jackstar’s Portfolio</title>
+    <meta name="description" content="A curated showcase of projects by Jackstar covering fintech, AI/ML, and creative work.">
+    <meta name="author" content="Jackstar">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/projects.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="shortcut icon" href="" type="image">
+</head>
+<body>
+    {% include "snippets/navbar.jinja-html" %}
+
+    <main class="project-page-wrapper container">
+        <header class="project-header">
+            <div class="project-label">Portfolio</div>
+            <h1>Selected Projects</h1>
+        </header>
+
+        <section class="project-toolbar">
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="project-search-input" placeholder="Search projects by name or technology...">
+            </div>
+            
+            <button class="filter-toggle-btn" id="filter-btn">
+                <i class="fa-solid fa-sliders"></i>
+                <span>Filters</span>
+            </button>
+        </section>
+
+        <section class="filter-drawer" id="filter-drawer">
+            <div class="drawer-inner">
+                <div class="filter-col">
+                    <label>Industry</label>
+                    <div class="filter-options">
+                        <button class="opt-btn active">All</button>
+                        <button class="opt-btn btn-color-teal">Fintech</button>
+                        <button class="opt-btn btn-color-blue">AI/ML</button>
+                        <button class="opt-btn btn-color-purple">Creative</button>
+                    </div>
+                </div>
+                <div class="filter-col">
+                    <label>Core Stack</label>
+                    <div class="tag-cloud">
+                        <button class="tag-link btn-color-teal">#Python</button>
+                        <button class="tag-link btn-color-blue">#React</button>
+                        <button class="tag-link btn-color-purple">#Docker</button>
+                        <button class="tag-link btn-color-teal">#AWS</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="project-main-grid">
+            <article class="project-item-card">
+                <div class="project-card-visual">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" alt="Project 1">
+                    <div class="project-topic-badge">Fintech</div>
+                </div>
+                <div class="project-card-details">
+                    <h3>Quant Dashboard</h3>
+                    <p>A high-performance financial analytics platform built for real-time visualization of market trends.</p>
+                    <div class="project-footer-tags">
+                        <span>#Python</span>
+                        <span>#Redis</span>
+                        <span>#D3.js</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="project-item-card">
+                <div class="project-card-visual">
+                    <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80" alt="Project 2">
+                    <div class="project-topic-badge">AI/ML</div>
+                </div>
+                <div class="project-card-details">
+                    <h3>Neural Vision API</h3>
+                    <p>An object detection API designed for automated drone monitoring in the Austrian Alps.</p>
+                    <div class="project-footer-tags">
+                        <span>#PyTorch</span>
+                        <span>#FastAPI</span>
+                        <span>#Docker</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="project-item-card">
+                <div class="project-card-visual">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" alt="Project 3">
+                    <div class="project-topic-badge">Creative</div>
+                </div>
+                <div class="project-card-details">
+                    <h3>Viennese Portfolio</h3>
+                    <p>A headless CMS implementation for local artists to showcase high-resolution digital galleries.</p>
+                    <div class="project-footer-tags">
+                        <span>#Next.js</span>
+                        <span>#Stripe</span>
+                        <span>#Tailwind</span>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+    {% include "snippets/footer.jinja-html" %}
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+</body>
+</html>

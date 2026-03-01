@@ -1,37 +1,116 @@
-/* Footer styles */
-footer {
-    background-color: var(--main-color-500);
-    color: var(--secondary-font-color);
-    padding: 2rem;
+/* footer.css - formatted with 4-space indentation */
+/* root.css is already linked in templates - no import needed */
+/* root.css linked in templates */
+.main-footer {
+    background: var(--background-1);
+    /* even tighter padding now */
+    padding: var(--spacing-3xl) 0 var(--spacing-2xl);
+    border-top: 1px solid var(--background-2);
 }
 
-.footer-content {
+.footer-container {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-xl);
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-bottom: 2rem;
+    grid-template-columns: 1fr 1fr; /* Brand and Links */
+    gap: var(--spacing-2xl);
 }
 
-.footer-section h3 {
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
+/* Brand styling */
+.footer-brand h3 { font-size: var(--font-size-lg); font-weight: var(--font-weight-black); margin-bottom: var(--spacing-xl); color: var(--main-color-950); }
+.footer-brand p { max-width: 400px; line-height: 1.6; color: var(--third-font-color); margin-bottom: var(--spacing-2xl); }
+
+.social-links { display: flex; gap: var(--spacing-2xl); }
+.social-links a { 
+    font-size: var(--font-size-lg); 
+    color: var(--main-color-800); 
+    transition: var(--transition-medium); 
+}
+.social-links a:hover { color: var(--main-color-500); transform: translateY(-3px); }
+
+/* Links Grid */
+.footer-links-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-md); }
+.footer-group h4 { 
+    text-transform: uppercase; 
+    font-size: var(--font-size-sm); 
+    font-weight: var(--font-weight-black); 
+    color: var(--main-color-500); 
+    letter-spacing: 1.5px; 
+    margin-bottom: var(--spacing-xl); 
+}
+.footer-group ul { list-style: none; }
+.footer-group li { margin-bottom: var(--spacing-xs); }
+.footer-group a { 
+    text-decoration: none; 
+    color: var(--font-color); 
+    font-weight: var(--font-weight-medium); 
+    transition: var(--transition-medium); 
+}
+.footer-group a:hover { color: var(--main-color-600); padding-left: 5px; }
+
+/* Bottom Bar */
+.footer-bottom { 
+    margin-top: var(--spacing-2xl); 
+    padding-top: var(--spacing-xl); 
+    border-top: 1px solid var(--background-2); 
+}
+.bottom-container {
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    padding: 0 var(--spacing-xl);
+    display: flex;
+    justify-content: space-between;
+    color: var(--third-font-color);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
 }
 
-.footer-section ul {
-    list-style: none;
+/* Privacy Banner (Glassy) */
+.privacy-banner {
+    position: fixed;
+    bottom: var(--spacing-3xl);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 600px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-md) var(--spacing-2xl);
+    display: none; /* Controlled by JS */
+    justify-content: space-between;
+    align-items: center;
+    z-index: 9999;
+    transition: transform var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.footer-section ul li {
-    margin-bottom: 0.5rem;
+/* dark-mode variant for privacy banner */
+[data-theme="dark"] .privacy-banner {
+    background: rgba(30, 30, 30, 0.7);
+    border: 1px solid rgba(80, 80, 80, 0.4);
 }
 
-.footer-section a {
-    color: var(--secondary-font-color);
-    text-decoration: none;
+.btn-accept {
+    background: var(--main-color-950);
+    color: white;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-2xl);
+    border-radius: var(--radius-lg);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-medium);
 }
+.btn-accept:hover { background: var(--main-color-700); }
 
-.footer-bottom {
-    text-align: center;
-    padding-top: 1rem;
-    border-top: 1px solid var(--secondary-font-color);
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-container { grid-template-columns: 1fr; text-align: center; }
+    .footer-brand p { margin: 0 auto var(--spacing-2xl); }
+    .social-links { justify-content: center; }
+    .bottom-container { flex-direction: column; gap: var(--spacing-xl); text-align: center; }
+    .privacy-banner { flex-direction: column; text-align: center; gap: var(--spacing-xl); bottom: var(--spacing-3xl); }
 }

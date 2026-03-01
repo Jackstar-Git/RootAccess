@@ -1,26 +1,42 @@
-function getYear() {
-    var currentDate = new Date();
-    var currentYear = currentDate.getFullYear();
-    const monthNames = ["Jänner", "Februar", "März", "April", "Mai", "Juni",
-      "Juli", "August", "September", "Oktober", "November", "Dezember"];
-    var currentMonth = currentDate.getMonth();
-    document.querySelector("#displayYear").innerHTML = "" + monthNames[currentMonth] + " " + currentYear;
+/* footer.js */
+function updateFooterYear() {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+    const currentMonth = currentDate.getMonth();
+
+    const displayElement = document.querySelector("#displayYear");
+    if (displayElement) {
+        displayElement.innerHTML = `${monthNames[currentMonth]} ${currentYear}`;
+    }
 }
-  
-getYear();
 
 function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
-if (!getCookie("cookiesAccepted")) {
-  document.getElementById("privacy-notice").style.display = "flex";
-}
+document.addEventListener("DOMContentLoaded", () => {
+    updateFooterYear();
 
-// Add event listener to accept button
-document.getElementById("acceptCookies").addEventListener("click", function() {
-  document.getElementById("privacy-notice").style.transform = "translateY(100%)";
-  document.cookie = "cookiesAccepted=true; path=/; max-age=" + 60 * 60 * 24 * 365;
+    const privacyNotice = document.getElementById("privacy-notice");
+    const acceptBtn = document.getElementById("acceptCookies");
+
+    // Check cookie status
+    if (!getCookie("cookiesAccepted") && privacyNotice) {
+        privacyNotice.style.display = "flex";
+    }
+
+    // Accept Logic
+    if (acceptBtn && privacyNotice) {
+        acceptBtn.addEventListener("click", () => {
+            privacyNotice.style.transform = "translate(-50%, 150%)"; // Slide down
+            setTimeout(() => { privacyNotice.style.display = "none"; }, 600);
+
+            // Set cookie for 1 year
+            document.cookie = "cookiesAccepted=true; path=/; max-age=" + 60 * 60 * 24 * 365;
+        });
+    }
 });

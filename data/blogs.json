@@ -1,0 +1,23 @@
+{
+    "1": {
+        "title": "Blog Post 1",
+        "content": "This is the content of blog post 1.",
+        "author": "Author 1",
+        "date": "2024-06-01",
+        "image": "blog1.jpg"
+    },
+    "2": {
+        "title": "Blog Post 2",
+        "content": "This is the content of blog post 2.",
+        "author": "Author 2",
+        "date": "2024-06-05",
+        "image": "blog2.jpg"
+    },
+    "3": {
+        "title": "Blog Post 3",
+        "content": "This is the content of blog post 3.",
+        "author": "Author 3",
+        "date": "2024-06-10",
+        "image": "blog3.jpg"
+    }
+}

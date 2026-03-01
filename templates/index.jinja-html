@@ -3,13 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Jackstar — Full-Stack Developer</title>
+    <meta name="description" content="Portfolio of Jackstar, a full-stack developer building modern web experiences.">
+    <meta name="author" content="Jackstar">
+    <!-- global root variables & reset -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pb1a8fR2IG23QMGYBk8zQ7C0r4kOG55G4+7RThd7GxVbxmYFZHzqLTXW2dEVxErbqD0kKcl00Kd6cTDyXv4qOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="shortcut icon" href="" type="image">
 </head>
 <body>
     {% include "snippets/navbar.jinja-html" %}
-    {% include "snippets/footer.jinja-html" %}
+    <main>
+        <section class="hero-section">
+            <div class="container hero-container">
+                <div class="hero-text">
+                    <span class="badge">Open for Collaborations</span>
+                    <h1>Engineering <span class="text-gradient">Seamless</span> Web Experiences</h1>
+                    <p>I'm a Full-Stack Developer specializing in building robust, scalable applications with a focus on modern UI/UX and performance.</p>
+                    <div class="hero-actions">
+                        <a href="/projects" class="btn-primary">Explore Projects</a>
+                        <a href="/contact" class="btn-outline">Say Hello</a>
+                    </div>
+                </div>
+                <div class="hero-3d-wrapper">
+                    <div class="hero-3d-card" id="tilt-card">
+                        <div class="card-content">
+                            <i class="fa-solid fa-terminal"></i>
+                            <div class="line"></div>
+                            <div class="line short"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
+        <section class="about-section">
+            <div class="container">
+                <div class="section-label">01. Identity</div>
+                <div class="about-grid">
+                    <div class="about-info">
+                        <h2>Merging Logic with <br>Creative Vision.</h2>
+                        <p>Based in Austria, I build digital products that balance technical complexity with intuitive simplicity. I believe that great code is not just functional, but maintainable and accessible to everyone.</p>
+                        <a href="/about" class="text-link">Learn more about my journey →</a>
+                    </div>
+                    <div class="about-stats">
+                        <div class="stat-box">
+                            <span class="number">12+</span>
+                            <span class="label">Live Projects</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="number">99%</span>
+                            <span class="label">Uptime Focus</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="projects-preview">
+            <div class="container">
+                <div class="section-header">
+                    <div>
+                        <div class="section-label">02. Portfolio</div>
+                        <h2>Selected Work</h2>
+                    </div>
+                    <a href="/projects" class="btn-secondary">View Gallery</a>
+                </div>
+                <div class="project-grid">
+                    <article class="project-card">
+                        <div class="card-img">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=80" alt="Project Alpha">
+                        </div>
+                        <div class="card-body">
+                            <div class="tags"><span class="tag">Next.js</span> <span class="tag">TypeScript</span></div>
+                            <h3>E-Commerce Dashboard</h3>
+                            <p>A high-performance dashboard with real-time analytics and inventory tracking.</p>
+                        </div>
+                    </article>
+                    <article class="project-card">
+                        <div class="card-img">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80" alt="Project Beta">
+                        </div>
+                        <div class="card-body">
+                            <div class="tags"><span class="tag">Python</span> <span class="tag">Flask</span></div>
+                            <h3>AI Image Processor</h3>
+                            <p>Leveraging neural networks to automate background removal for product photos.</p>
+                        </div>
+                    </article>
+                    <article class="project-card">
+                        <div class="card-img">
+                            <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=500&q=80" alt="Project Gamma">
+                        </div>
+                        <div class="card-body">
+                            <div class="tags"><span class="tag">React</span> <span class="tag">Tailwind</span></div>
+                            <h3>Collaboration Suite</h3>
+                            <p>Real-time workspace for remote teams featuring shared whiteboards and chat.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="blog-preview">
+            <div class="container">
+                <div class="section-label">03. Insights</div>
+                <div class="section-header">
+                    <h2>Latest from the Blog</h2>
+                    <a href="/blog" class="text-link">Browse all articles</a>
+                </div>
+                <div class="blog-rows">
+                    <a href="/blog/post-1" class="blog-item">
+                        <span class="date">May 20, 2026</span>
+                        <div class="blog-content">
+                            <h3>Optimizing Flask for High Traffic</h3>
+                            <p>Deep dive into caching strategies and load balancing for Python backends.</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                    <a href="/blog/post-2" class="blog-item">
+                        <span class="date">April 12, 2026</span>
+                        <div class="blog-content">
+                            <h3>The Future of CSS Container Queries</h3>
+                            <p>Why we can finally move away from traditional media queries for components.</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- load global behaviors -->
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+        {% include "snippets/footer.jinja-html" %}
 </body>
 </html>

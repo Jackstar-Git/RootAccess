@@ -1,0 +1,11 @@
+{% extends "base.jinja-html" %}
+
+{% block title %}Admin Login – Portfolio{% endblock %}
+
+{% block content %}
+<h1>Admin Login</h1>
+<p>This is a placeholder login page. Replace with actual form later.</p>
+{% if error %}
+    <p class="error">{{ error }}</p>
+{% endif %}
+{% endblock %}

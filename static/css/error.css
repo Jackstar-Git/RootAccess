@@ -1,0 +1,130 @@
+@import url(root.css);
+/* error.css */
+.error-page-wrapper {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--background-2); /* use global neutral background */
+    overflow: hidden;
+    position: relative;
+    padding: 2rem;
+}
+
+/* Glass Container */
+.error-glass-container {
+    position: relative;
+    z-index: 10;
+    max-width: 550px;
+    width: 100%;
+    padding: 4rem 3rem;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 40px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+/* 404 Text Effect */
+.error-code {
+    font-size: 8rem;
+    font-weight: 900;
+    margin: 0;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--main-color-950), var(--main-color-500));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -5px;
+    animation: float 6s ease-in-out infinite;
+}
+
+/* .error-title will inherit global h2 styles; adjust only margins if needed */
+.error-title {
+    margin: 1.5rem 0 1rem;
+}
+
+.error-message {
+    color: var(--third-font-color);
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+}
+
+/* Buttons */
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.error-primary-btn {
+    padding: 1rem 2rem;
+    background: var(--main-color-950);
+    color: white;
+    text-decoration: none;
+    border-radius: 14px;
+    font-weight: 700;
+    transition: 0.3s;
+}
+
+.error-secondary-btn {
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--main-color-950);
+    text-decoration: none;
+    border-radius: 14px;
+    font-weight: 700;
+    border: 1px solid var(--main-color-100);
+    transition: 0.3s;
+}
+
+.error-primary-btn:hover, .error-secondary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Background Animated Blobs */
+.error-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 1;
+    opacity: 0.4;
+}
+
+.blob-1 {
+    width: 400px;
+    height: 400px;
+    background: var(--main-color-400);
+    top: -10%;
+    left: -10%;
+    animation: move 20s infinite alternate;
+}
+
+.blob-2 {
+    width: 500px;
+    height: 500px;
+    background: var(--background-1);
+    bottom: -15%;
+    right: -10%;
+    animation: move 25s infinite alternate-reverse;
+}
+
+/* Animations */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes move {
+    from { transform: translate(0, 0); }
+    to { transform: translate(100px, 50px); }
+}
+
+@media (max-width: 480px) {
+    .error-code { font-size: 6rem; }
+    .error-actions { flex-direction: column; }
+    .error-glass-container { padding: 3rem 1.5rem; }
+}

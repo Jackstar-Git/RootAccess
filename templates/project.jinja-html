@@ -1,0 +1,8 @@
+{% extends "base.jinja-html" %}
+
+{% block title %}Project {{ project }} – Portfolio{% endblock %}
+
+{% block content %}
+<h1>Project {{ project }}</h1>
+<p>Details for this project will appear here.</p>
+{% endblock %}

@@ -1,1 +1,62 @@
+<nav class="navbar-full">
+    <div class="navbar-container">
+        <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
+        <div class="nav-logo">
+            <a href="/">PORTFOLIO<span class="dot">.</span></a>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
+            <li><a href="/about" class="{% if request.path == '/about' %}active{% endif %}">About</a></li>
+            <li><a href="/projects" class="{% if request.path == '/projects' %}active{% endif %}">Projects</a></li>
+            <li><a href="/blog" class="{% if request.path == '/blog' %}active{% endif %}">Blog</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <div class="theme-switch" title="Toggle Theme">
+                <div class="switch-track">
+                    <i class="fa-solid fa-sun"></i>
+                    <i class="fa-solid fa-moon"></i>
+                    <div class="switch-thumb"></div>
+                </div>
+            </div>
+
+            <div class="nav-auth">
+                <a href="/login" class="auth-icon"><i class="fas fa-user-circle"></i></a>
+            </div>
+
+            <label for="menu-toggle" class="mobile-menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+        </div>
+
+        <div class="mobile-overlay">
+            <div class="mobile-content">
+                <ul class="mobile-nav-links">
+                    <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
+                    <li><a href="/about" class="{% if request.path == '/about' %}active{% endif %}">About</a></li>
+                    <li><a href="/projects" class="{% if request.path == '/projects' %}active{% endif %}">Projects</a></li>
+                    <li><a href="/blog" class="{% if request.path == '/blog' %}active{% endif %}">Blog</a></li>
+                </ul>
+                <!-- theme toggle in mobile overlay -->
+                <div class="mobile-theme-switch theme-switch" title="Toggle Theme">
+                    <div class="switch-track">
+                        <i class="fa-solid fa-sun"></i>
+                        <i class="fa-solid fa-moon"></i>
+                        <div class="switch-thumb"></div>
+                    </div>
+                </div>
+                <div class="mobile-footer">
+                    <p>Based in Austria</p>
+                    <div class="mobile-socials">
+                        <i class="fa-brands fa-github"></i>
+                        <i class="fa-brands fa-linkedin"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

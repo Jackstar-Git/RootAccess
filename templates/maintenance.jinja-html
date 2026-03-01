@@ -1,0 +1,8 @@
+{% extends "base.jinja-html" %}
+
+{% block title %}Maintenance – Portfolio{% endblock %}
+
+{% block content %}
+<h1>Site Under Maintenance</h1>
+<p>Sorry for the inconvenience. We're performing some updates and will be back shortly.</p>
+{% endblock %}

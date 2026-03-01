@@ -1,52 +1,197 @@
-/* Navbar styles */
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: var(--main-color-500);
-    color: var(--secondary-font-color);
-}
-
-.logo a {
-    color: var(--secondary-font-color);
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-.nav-links {
-    display: flex;
-    list-style: none;
-}
-
-.nav-links li {
-    margin-left: 2rem;
-}
-
-.nav-links a {
-    color: var(--secondary-font-color);
+/* navbar.css - formatted with 4-space indentation */
+/* root.css already included by templates */
+/* root.css is linked in templates */
+/* 1. Logo Far Left */
+.nav-logo a { 
+    font-size: var(--font-size-xl); 
+    font-weight: var(--font-weight-black); 
+    letter-spacing: -1.5px;
+    color: var(--main-color-950);
     text-decoration: none;
 }
 
-.burger {
+/* 2. Links Center + Stronger Hover */
+.nav-links { display: flex; list-style: none; gap: 1rem; }
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--font-color);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-md); /* Bigger text */
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-medium) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-links a:hover, .nav-links a.active {
+    background: var(--main-color-50);
+    color: var(--main-color-600);
+    transform: translateY(-2px);
+}
+
+/* 3. Actions Far Right */
+.nav-right { display: flex; align-items: center; gap: var(--spacing-3xl); }
+
+.auth-icon { font-size: var(--font-size-xl); color: var(--main-color-800); transition: var(--transition-medium); }
+.auth-icon:hover { color: var(--main-color-500); }
+
+
+.mobile-overlay {
     display: none;
-    cursor: pointer;
+    position: fixed;
+    inset: 0;
+    background: var(--background-1);
+    z-index: 1999;
+    padding: var(--spacing-6xl) var(--spacing-xl) var(--spacing-4xl);
 }
 
-.burger div {
-    width: 25px;
-    height: 3px;
-    background-color: var(--secondary-font-color);
-    margin: 5px;
-    transition: all 0.3s ease;
+.mobile-overlay.active { display: flex; flex-direction: column; }
+
+.mobile-nav-links { list-style: none; width: 100%; }
+.mobile-nav-links li { margin-bottom: 1.5rem; border-bottom: 1px solid var(--background-2); }
+
+.mobile-nav-links a {
+    text-decoration: none;
+    font-size: 2.8rem; /* Massive, high-end feel */
+    font-weight: 800;
+    color: var(--main-color-950);
+    display: block;
+    padding-bottom: 1rem;
 }
 
-@media (max-width: 768px) {
-    .nav-links {
+.mobile-emphasis { color: var(--main-color-500) !important; }
+
+.mobile-footer { margin-top: auto; text-align: center; color: var(--third-font-color); }
+.mobile-socials { font-size: var(--font-size-xxl); display: flex; gap: var(--spacing-3xl); justify-content: center; margin-top: var(--spacing-xl); color: var(--main-color-700); }
+.mobile-theme-switch { margin: var(--spacing-4xl) auto var(--spacing-2xl); }
+
+/* Theme switch UI stays similar but polished */
+.theme-switch { width: 54px; height: 28px; background: var(--background-2); border-radius: 20px; position: relative; cursor: pointer; border: 1px solid var(--main-color-200); }
+.theme-switch .switch-track { position: relative; width: 100%; height: 100%; }
+.theme-switch .switch-track i {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    color: var(--main-color-700);
+    transition: opacity 0.3s;
+}
+.theme-switch .switch-track .fa-sun { left: 6px; opacity: 1; }
+.theme-switch .switch-track .fa-moon { right: 6px; opacity: 0; }
+.theme-switch.dark .switch-track .fa-sun { opacity: 0; }
+.theme-switch.dark .switch-track .fa-moon { opacity: 1; }
+.switch-thumb { position: absolute; left: 4px; top: 4px; width: 18px; height: 18px; background: var(--main-color-500); border-radius: 50%; transition: 0.3s; }
+
+.theme-switch.active .switch-thumb, .theme-switch.dark .switch-thumb { transform: translateX(26px); }
+
+/* when dark mode active move thumb, change track color if needed */
+.theme-switch.dark .switch-thumb { transform: translateX(26px); }
+.theme-switch.dark { background: var(--background-3); border-color: var(--main-color-700); }
+
+/* keep mobile styles unaffected */
+
+
+
+/* 1. Hide the checkbox */
+.menu-checkbox {
+    display: none;
+}
+
+/* 2. Desktop Styles (Same as before but reinforced) */
+.navbar-full {
+    position: fixed;
+    top: 0; left: 0; width: 100%;
+    z-index: 2000;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--main-color-100);
+}
+
+.navbar-container {
+    margin: 0 auto;
+    padding: 1rem 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-2xl);
+}
+
+.nav-logo {
+    position: absolute;
+    left: 2.5rem;
+}
+
+.nav-right {
+    position: absolute;
+    right: 2.5rem;
+}
+
+/* 3. Mobile Overlay Base (Hidden by default) */
+.mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: white;
+    z-index: 1999;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-6xl) var(--spacing-xl) var(--spacing-4xl);
+    
+    /* Animation: Slide from top or fade */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-20px);
+    transition: all var(--transition-medium) cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 4. THE CSS MAGIC: When Checkbox is Checked */
+.menu-checkbox:checked ~ .mobile-overlay {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Hamburger X-Animation via CSS */
+.menu-checkbox:checked ~ .nav-right .mobile-menu-toggle span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.menu-checkbox:checked ~ .nav-right .mobile-menu-toggle span:nth-child(2) {
+    opacity: 0;
+}
+.menu-checkbox:checked ~ .nav-right .mobile-menu-toggle span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+/* Responsive Overrides */
+@media (max-width: 1200px) {
+    .nav-links, .nav-auth, .nav-cta, .theme-switch {
         display: none;
     }
-
-    .burger {
+    
+    .mobile-menu-toggle {
         display: block;
+        cursor: pointer;
+        z-index: 2001; /* Above overlay */
+    }
+
+    .mobile-menu-toggle span {
+        display: block;
+        width: var(--hamburger-width);
+        height: var(--hamburger-height);
+        background: var(--main-color-950);
+        margin: var(--spacing-xs) 0;
+        transition: var(--transition-medium);
+    }
+
+    .mobile-nav-links a {
+        font-size: var(--font-size-xxl);
+        font-weight: var(--font-weight-black);
+        text-decoration: none;
+        color: var(--main-color-950);
+        display: block;
+        margin-bottom: var(--spacing-4xl);
     }
 }
