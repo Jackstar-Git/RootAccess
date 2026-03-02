@@ -18,12 +18,14 @@
 - **Hero & Content Sections**: Enhanced the index hero with a 3D-perspective card wrapper and refined project/blog preview cards with hover lift effects.
 - **Project Structure**: Updated `.gitignore` to track `changelog.txt` and exclude `main.py`.
 - **Configuration**: Simplified `settings.json` by removing legacy categories and local credentials (e.g., admin password).
+- **Refactor**: Consolidated root/navbar/footer CSS into `static/css/core.css`, updated templates, and archived old CSS. Also split blog search JS into `static/js/blog.js` and removed FontAwesome import from core.
 
 ### Fixed
 - **Responsiveness**: Improved mobile layouts for the hero section, about grid, and footer to ensure proper alignment on smaller devices.
 
 ### Removed
 - **Legacy Styling**: Deleted hardcoded pixel-based padding and colors in favor of the new design tokens.
+- **Redundant CSS**: Archived `root.css`, `navbar.css`, and `footer.css` after consolidation.
 - **Unused Data**: Removed legacy "Golf" related categories from the settings configuration.
 
 ---

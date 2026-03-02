@@ -3,200 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog – Jackstar’s Journal</title>
-    <meta name="description" content="Read articles, guides, and opinions from Jackstar on web development, design, and technology.">
-    <meta name="author" content="Jackstar">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/blog.css') }}">
+    <title>{{ blog.title }}</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pb1a8fR2IG23QMGYBk8zQ7C0r4kOG55G4+7RThd7GxVbxmYFZHzqLTXW2dEVxErbqD0kKcl00Kd6cTDyXv4qOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="shortcut icon" href="" type="image">
 </head>
 <body>
     {% include "snippets/navbar.jinja-html" %}
 
-    <main class="blog-container container">
-    <header class="blog-minimal-header">
-        <div class="section-label">Journal</div>
-        <h1>Articles & Perspectives</h1>
-    </header>
+    <div class="article-wrapper">
+        <div class="progress-indicator" id="progressBar"></div>
 
-    <section class="blog-toolbar">
-        <div class="search-wrapper">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search articles...">
-        </div>
-        
-        <button class="filter-toggle-btn" id="filter-btn">
-            <i class="fa-solid fa-sliders"></i>
-            <span>Filters</span>
-        </button>
-    </section>
-
-    <section class="filter-drawer" id="filter-drawer">
-        <div class="drawer-inner">
-            <div class="filter-col filter-group">
-                <label><i class="fa-solid fa-sort"></i> Sort</label>
-                <div class="filter-select-wrapper">
-                    <select>
-                        <option value="newest">🔽 Newest</option>
-                        <option value="oldest">🔼 Oldest</option>
-                    </select>
-                    <i class="fa-solid fa-chevron-down dropdown-icon"></i>
-                </div>
-            </div>
-            <div class="filter-col filter-group">
-                <label><i class="fa-solid fa-folder-open"></i> Topics</label>
-                <div class="filter-select-wrapper">
-                    <select>
-                        <option>All Topics</option>
-                        <option>Engineering</option>
-                        <option>Design</option>
-                        <option>Ecosystem</option>
-                        <option>Tools</option>
-                    </select>
-                    <i class="fa-solid fa-chevron-down dropdown-icon"></i>
-                </div>
-            </div>
-            <div class="filter-col filter-group">
-                <label><i class="fa-solid fa-tags"></i> Tags</label>
-                <div class="tag-input">
-                    <input type="text" placeholder="e.g. Python, UI Design">
-                    <div class="tag-suggestions">
-                        <span>#Python</span>
-                        <span>#AI</span>
-                        <span>#UI-Design</span>
+        <article class="article-container">
+            <header class="article-header-minimal">
+                <div class="header-top-row">
+                    <span class="article-type-badge"><a href="/blog?type={{ blog.type | lower if blog.type else 'article' }}">{{ blog.type if blog.type else "Article" }}</a></span>
+                    <div class="category-list">
+                        {% for cat in blog.categories %}
+                            <span class="category-tag">{{ cat }}</span>
+                        {% endfor %}
                     </div>
                 </div>
-            </div>
-            <div class="filter-col filter-group">
-                <label><i class="fa-solid fa-calendar-days"></i> Date</label>
-                <div class="filter-date-range">
-                    <input type="date"><span>to</span><input type="date">
+                
+                <h1 class="article-display-title">{{ blog.title }}</h1>
+                
+                <div class="article-author-bar">
+                    <div class="author-group">
+                        <div class="avatar-ring">
+                            {% for name in blog.author %}
+                                <img src="https://ui-avatars.com/api/?name={{ name }}&background=25a1a7&color=fff" 
+                                    alt="{{ name }}" class="avatar-img">
+                            {% endfor %}
+                        </div>
+                        <div class="author-meta">
+                            <span class="names">{{ blog.author | join(', ') }}</span>
+                            <span class="timestamp">{{ blog.time_created | datetimeformat }} • 4 min read</span>
+                        </div>
+                    </div>
+                    <div class="action-icons">
+                        <i class="fa-regular fa-bookmark"></i>
+                        <i class="fa-regular fa-share-from-square"></i>
+                    </div>
                 </div>
-            </div>
-            <div class="filter-col filter-group filter-collapsible">
-                <input type="checkbox" id="reading-time-toggle" class="filter-toggle-checkbox">
-                <label for="reading-time-toggle" class="filter-label-collapsible"><i class="fa-solid fa-clock"></i> Reading Time <i class="fa-solid fa-chevron-down"></i></label>
-                <div class="filter-list-group">
-                    <label class="filter-list-item">
-                        <input type="checkbox">
-                        <i class="fa-solid fa-rabbit"></i>
-                        <span>Short (&lt;5 min)</span>
-                    </label>
-                    <label class="filter-list-item">
-                        <input type="checkbox">
-                        <i class="fa-solid fa-person-hiking"></i>
-                        <span>Medium (5‑15 min)</span>
-                    </label>
-                    <label class="filter-list-item">
-                        <input type="checkbox">
-                        <i class="fa-solid fa-book"></i>
-                        <span>Deep Dive (&gt;15 min)</span>
-                    </label>
-                </div>
-            </div>
-            <div class="filter-col filter-group filter-collapsible">
-                <input type="checkbox" id="type-toggle" class="filter-toggle-checkbox">
-                <label for="type-toggle" class="filter-label-collapsible"><i class="fa-solid fa-list"></i> Type <i class="fa-solid fa-chevron-down"></i></label>
-                <div class="filter-list-group">
-                    <label class="filter-list-item">
-                        <input type="checkbox">
-                        <i class="fa-solid fa-lightbulb"></i>
-                        <span>Guide</span>
-                    </label>
-                    <label class="filter-list-item">
-                        <input type="checkbox">
-                        <i class="fa-solid fa-pen-fancy"></i>
-                        <span>Opinion</span>
-                    </label>
-                    <label class="filter-list-item">
-                        <input type="checkbox">
-                        <i class="fa-solid fa-microphone"></i>
-                        <span>Interview</span>
-                    </label>
-                    <label class="filter-list-item">
-                        <input type="checkbox">
-                        <i class="fa-solid fa-newspaper"></i>
-                        <span>News</span>
-                    </label>
-                    <label class="filter-list-item">
-                        <input type="checkbox">
-                        <i class="fa-solid fa-star"></i>
-                        <span>Review</span>
-                    </label>
-                    <label class="filter-list-item">
-                        <input type="checkbox">
-                        <i class="fa-solid fa-gear"></i>
-                        <span>Meta</span>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <button class="clear-filters-btn"><i class="fa-solid fa-rotate-left"></i> Clear All</button>
-    </section>
+            </header>
 
-    <section class="blog-list">
-        <article class="blog-card-v2">
-            <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80" alt="Post Cover">
-            </div>
-            <div class="card-content">
-                <div class="card-meta">
-                    <span class="tag">Engineering</span>
-                    <span class="dot">•</span>
-                    <span class="date">March 12, 2026</span>
-                </div>
-                <a href="#" class="card-title">
-                    <h2>Advanced State Management</h2>
-                </a>
-                <div class="title-divider"></div>
-                <p>Exploring how to handle complex data flows in modern web applications without sacrificing performance or scalability.</p>
-            </div>
-        </article>
+            <div class="glass-article-body">
+                <figure class="featured-figure">
+                    <img src="{{ blog.image_url }}" alt="{{ blog.title }}" class="featured-image">
+                </figure>
 
-        <article class="blog-card-v2">
-            <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=800&q=80" alt="UI Design">
-            </div>
-            <div class="card-content">
-                <div class="card-meta">
-                    <span class="tag">Design</span>
-                    <span class="dot">•</span>
-                    <span class="date">March 5, 2026</span>
-                </div>
-                <a href="#" class="card-title">
-                    <h2>The Future of Minimalist Interfaces</h2>
-                </a>
-                <div class="title-divider"></div>
-                <p>Why "less is more" is evolving into "less is better." A deep dive into the psychological impact of reduced UI clutter.</p>
-            </div>
-        </article>
+                <section class="main-text-flow">
+                    {{ blog.content_raw | safe }}
+                </section>
 
-        <article class="blog-card-v2">
-            <div class="card-image">
-                <img src="https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?auto=format&fit=crop&w=800&q=80" alt="Tech in Austria">
+                <footer class="article-end">
+                    <h4 class="footer-label">Related Tags</h4>
+                    <div class="tag-row-modern">
+                        {% for tag in blog.tags %}
+                            <a href="/blog?tags={{ tag }}" class="modern-tag">
+                                <span class="tag-hash">#</span>{{ tag }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </footer>
             </div>
-            <div class="card-content">
-                <div class="card-meta">
-                    <span class="tag">Ecosystem</span>
-                    <span class="dot">•</span>
-                    <span class="date">February 28, 2026</span>
+
+            <section class="see-also-section">
+                <h3 class="section-heading">See also</h3>
+                <div class="related-grid">
+                    {% for i in range(3) %}
+                    <div class="related-card-glass">
+                        <div class="placeholder-img"></div>
+                        <div class="related-content">
+                            <span class="related-cat">Category</span>
+                            <h4>Placeholder for a Related Article</h4>
+                            <span class="related-meta">Mar 12 • 5 min read</span>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
-                <a href="#" class="card-title">
-                    <h2>Vienna's Growing Tech Scene</h2>
-                </a>
-                <div class="title-divider"></div>
-                <p>Highlighting the innovative startups making waves in Austria and how the local landscape is shifting toward AI-driven solutions.</p>
-            </div>
+            </section>
         </article>
-        <div class="blog-load-more">
-            <button class="btn-load-more"><i class="fa-solid fa-arrow-down"></i> Load More Articles</button>
-        </div>
-    </section>
-</main>
+    </div>
     {% include "snippets/footer.jinja-html" %}
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/blog.js') }}"></script>
 </body>
 </html>

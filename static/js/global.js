@@ -110,10 +110,104 @@ function initThemeSwitch() {
     }
 }
 
+function updateReadingProgress() {
+    const progressBar = document.getElementById("progressBar");
+    if (!progressBar) return;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const percent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = percent + "%";
+}
+
+function initReadingProgress() {
+    if (document.getElementById("progressBar")) {
+        window.addEventListener("scroll", updateReadingProgress);
+        updateReadingProgress();
+    }
+}
+
 function initGlobal() {
     updateFooterYear();
     handlePrivacyBanner();
     initFilterToggle();
+    initHeroTilt();
+    initThemeSwitch();
+    initReadingProgress();
+}
+
+// execute when DOM content loaded
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initGlobal);
+} else {
+    initGlobal();
+}
+
+function initHeroTilt() {
+    const card = document.getElementById("tilt-card");
+    const wrapper = document.querySelector(".hero-3d-wrapper");
+
+    if (card && wrapper) {
+        document.addEventListener("mousemove", (e) => {
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+
+            wrapper.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        document.addEventListener("mouseleave", () => {
+            wrapper.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            wrapper.style.transition = "all 0.5s ease";
+        });
+
+        document.addEventListener("mouseenter", () => {
+            wrapper.style.transition = "none";
+        });
+    }
+}
+
+function initThemeSwitch() {
+    const switches = document.querySelectorAll(".theme-switch");
+    const root = document.documentElement;
+
+    function applyMode(mode) {
+        if (mode === "dark") {
+            root.setAttribute("data-theme", "dark");
+        } else {
+            root.removeAttribute("data-theme");
+        }
+        switches.forEach(s => {
+            const thumb = s.querySelector(".switch-thumb");
+            if (mode === "dark") {
+                s.classList.add("dark");
+                if (thumb) thumb.style.transform = "translateX(26px)";
+            } else {
+                s.classList.remove("dark");
+                if (thumb) thumb.style.transform = "translateX(0)";
+            }
+        });
+        try { localStorage.setItem("theme", mode); } catch(e) {}
+    }
+
+    function toggleTheme() {
+        const current = localStorage.getItem("theme") ||
+            (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        applyMode(current === "dark" ? "light" : "dark");
+    }
+
+    if (switches.length) {
+        switches.forEach(s => s.addEventListener("click", toggleTheme));
+        const saved = localStorage.getItem("theme");
+        const initial = saved ||
+            (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+        applyMode(initial);
+    }
+}
+
+function initGlobal() {
+    updateFooterYear();
+    handlePrivacyBanner();
+    initFilterToggle();
+    initBlogSearch();
     initHeroTilt();
     initThemeSwitch();
 }

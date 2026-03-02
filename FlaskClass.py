@@ -46,7 +46,7 @@ class CustomFlask(Flask):
             with open(settings_path, "r", encoding="utf-8") as f:
                 return json.load(f)
         return {}
-        
+
 
 app = CustomFlask(__name__, template_folder="templates", static_folder="static")
 csrf = CSRFProtect(app)

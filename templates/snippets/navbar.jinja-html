@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
 <nav class="navbar-full">
     <div class="navbar-container">
         <input type="checkbox" id="menu-toggle" class="menu-checkbox">

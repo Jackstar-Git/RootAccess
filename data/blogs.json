@@ -1,23 +1,93 @@
-{
-    "1": {
-        "title": "Blog Post 1",
-        "content": "This is the content of blog post 1.",
-        "author": "Author 1",
-        "date": "2024-06-01",
-        "image": "blog1.jpg"
-    },
-    "2": {
-        "title": "Blog Post 2",
-        "content": "This is the content of blog post 2.",
-        "author": "Author 2",
-        "date": "2024-06-05",
-        "image": "blog2.jpg"
-    },
-    "3": {
-        "title": "Blog Post 3",
-        "content": "This is the content of blog post 3.",
-        "author": "Author 3",
-        "date": "2024-06-10",
-        "image": "blog3.jpg"
-    }
-}
+[
+  {
+    "id": "1",
+    "author": [
+      "Alex Rivera"
+    ],
+    "title": "The Future of Flask in 2026",
+    "content_raw": "## Modern Web Development\nFlask continues to thrive as a lightweight powerhouse...",
+    "image_url": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1000&auto=format&fit=crop",
+    "time_created": 1735689600,
+    "last_modified": 1735689600,
+    "tags": [
+      "flask",
+      "python"
+    ],
+    "categories": [
+      "Technology"
+    ]
+  },
+  {
+    "id": "2",
+    "author": [
+      "Sarah Jenkins",
+      "Mark Wood"
+    ],
+    "title": "Hidden Gems of the Austrian Alps",
+    "content_raw": "Exploring the untouched valleys of Tyrol...",
+    "image_url": "https://images.unsplash.com/photo-1531310197839-ccf54634509e?q=80&w=1000&auto=format&fit=crop",
+    "time_created": 1738368000,
+    "last_modified": 1738454400,
+    "tags": [
+      "travel",
+      "austria"
+    ],
+    "categories": [
+      "Lifestyle"
+    ]
+  },
+  {
+    "id": "3",
+    "author": [
+      "Chef Mario"
+    ],
+    "title": "Mastering the 15-Minute Risotto",
+    "content_raw": "The secret is the grain...",
+    "image_url": "https://images.unsplash.com/photo-1476124369491-e7addf5db371?q=80&w=1000&auto=format&fit=crop",
+    "time_created": 1739577600,
+    "last_modified": 1739577600,
+    "tags": [
+      "cooking",
+      "italian"
+    ],
+    "categories": [
+      "Food"
+    ]
+  },
+  {
+    "id": "4",
+    "author": [
+      "Security Sam"
+    ],
+    "title": "Securing Your JSON Databases",
+    "content_raw": "Flat-file databases need security...",
+    "image_url": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop",
+    "time_created": 1740528000,
+    "last_modified": 1740614400,
+    "tags": [
+      "security",
+      "json"
+    ],
+    "categories": [
+      "Technology"
+    ]
+  },
+  {
+    "id": "5",
+    "author": [
+      "Evelyn Vance"
+    ],
+    "title": "Design Systems for Minimalist Portfolios",
+    "content_raw": "Minimalism is the perfect amount of design...",
+    "image_url": "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1000&auto=format&fit=crop",
+    "time_created": 1740873600,
+    "last_modified": 1740873600,
+    "tags": [
+      "design",
+      "ui"
+    ],
+    "categories": [
+      "Design"
+    ]
+  }
+]

@@ -1,25 +1,14 @@
-import base64
-import io
+﻿import io
 import os
-import shutil
-import time
 import zipfile
-from datetime import date, datetime
 
-import psutil
-from flask import request, jsonify, abort, session, Blueprint, send_file, url_for, redirect, make_response
-from flask_wtf.csrf import validate_csrf
-
-from FlaskClass import app, csrf
+from flask import request, abort, session, Blueprint, send_file
+from FlaskClass import app
 from logging_utility import logger
 
 internal_blueprint = Blueprint("internal", __name__, template_folder="./templates")
 
-# =====================================
-# File Handling Routes
-# =====================================
-
-# This function serves files from the uploads directory
+# serve files from uploads directory
 @internal_blueprint.route("/uploads/<path:filename>", methods=["GET"])
 def uploads(filename):
     logger.info(f"GET request received for serving file from uploads | Filename: {filename}")
@@ -27,9 +16,9 @@ def uploads(filename):
         return send_file(os.path.join(app.root_path, "uploads", filename))
     except Exception as e:
         logger.error(f"Error serving file from uploads | Filename: {filename} | Error: {str(e)}")
-        abort(404)  # Not found
+        abort(404)
 
-# This function serves files from the plugins directory
+# serve files from plugins directory
 @internal_blueprint.route("/plugins/<path:filename>", methods=["GET"])
 def plugins(filename):
     logger.info(f"GET request received for serving file from plugins | Filename: {filename}")
@@ -37,9 +26,9 @@ def plugins(filename):
         return send_file(os.path.join(app.root_path, "plugins", filename))
     except Exception as e:
         logger.error(f"Error serving file from plugins | Filename: {filename} | Error: {str(e)}")
-        abort(404)  # Not found
+        abort(404)
 
-# This function handles file and directory downloads
+# authenticated download route
 @internal_blueprint.route("/download/<path:filepath>", methods=["GET"])
 def download(filepath):
     logger.info(f"GET request received for download | Path: {filepath}")
@@ -55,7 +44,7 @@ def download(filepath):
         logger.info(f"Serving file | Path: {filepath}")
         return send_file(filepath, as_attachment=True)
 
-    elif os.path.isdir(filepath):
+    if os.path.isdir(filepath):
         logger.info(f"Creating zip for directory | Path: {filepath}")
         memory_file = io.BytesIO()
         with zipfile.ZipFile(memory_file, "w", zipfile.ZIP_DEFLATED) as zipf:
@@ -68,6 +57,5 @@ def download(filepath):
         zip_filename = os.path.basename(filepath) + ".zip"
         return send_file(memory_file, as_attachment=True, download_name=zip_filename, mimetype="application/zip")
 
-    else:
-        logger.error(f"Invalid path provided | Path: {filepath}")
-        abort(400, description="Invalid path provided.")
+    logger.error(f"Invalid path provided | Path: {filepath}")
+    abort(400, description="Invalid path provided.")

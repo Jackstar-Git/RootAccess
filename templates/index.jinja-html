@@ -6,10 +6,8 @@
     <title>Jackstar — Full-Stack Developer</title>
     <meta name="description" content="Portfolio of Jackstar, a full-stack developer building modern web experiences.">
     <meta name="author" content="Jackstar">
-    <!-- global root variables & reset -->
+    <!-- global core styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pb1a8fR2IG23QMGYBk8zQ7C0r4kOG55G4+7RThd7GxVbxmYFZHzqLTXW2dEVxErbqD0kKcl00Kd6cTDyXv4qOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="shortcut icon" href="" type="image">

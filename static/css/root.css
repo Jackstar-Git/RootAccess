@@ -193,6 +193,7 @@ body.dark, .dark, [data-theme="dark"] {
 /* typography helpers & default heading styles */
 .text-gradient {
     background: linear-gradient(135deg, var(--main-color-600), var(--main-color-400));
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
