@@ -1,0 +1,28 @@
+features:
+sitemap-structrure:
+  - index (/)
+  - about (/about)
+  - projects (/projects):
+    each project has its own page (/projects/<project-name>)
+      page includes:
+        - project description
+        - technologies used
+        - screenshots
+        - links to live demo and source code (if available)
+  - blog (/blog)
+    each blog post has its own page (/blog/<post-title>)
+      page includes:
+        - title
+        - cover image
+        - post content
+        - author information (myself)
+        - publication date
+        - tags/categories
+  - contact (/contact)
+  - imprint (/imprint)
+  - privacy (/privacy)
+  - admin (/admin) => unsure
+  - login (/login) => unsure
+
+
+
