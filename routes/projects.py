@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, abort
-from logging_utility import logger
+from utility.logging_utility import logger
 
 projects_blueprint = Blueprint("projects", __name__)
 

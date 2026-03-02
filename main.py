@@ -10,7 +10,7 @@ from flask_wtf.csrf import generate_csrf, CSRFError
 from waitress import serve
 
 from FlaskClass import app
-from logging_utility import logger
+from utility.logging_utility import logger
 from routes import blueprints
 
 load_dotenv()

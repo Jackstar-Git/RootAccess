@@ -4,7 +4,8 @@ import zipfile
 
 from flask import request, abort, session, Blueprint, send_file
 from FlaskClass import app
-from logging_utility import logger
+from utility.logging_utility import logger
+
 
 internal_blueprint = Blueprint("internal", __name__, template_folder="./templates")
 

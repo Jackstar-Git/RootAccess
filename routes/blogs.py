@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, abort, request
-from logging_utility import logger
+from utility.logging_utility import logger
 from utility import blogs as blog_utils, blog_helpers, get_settings
 
 blogs_blueprint = Blueprint("blogs", __name__)

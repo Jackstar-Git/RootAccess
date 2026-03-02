@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
-from logging_utility import logger
+from utility.logging_utility import logger
+
 
 others_blueprint = Blueprint("others", __name__)
 

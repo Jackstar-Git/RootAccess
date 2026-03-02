@@ -1,5 +1,5 @@
 ﻿from flask import render_template, request, redirect, url_for, session, Blueprint
-from logging_utility import logger
+from utility.logging_utility import logger
 from utility import get_settings
 
 admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
