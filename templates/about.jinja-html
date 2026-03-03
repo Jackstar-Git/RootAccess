@@ -1,8 +1,169 @@
-{% extends "base.jinja-html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+    <title></title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pb1a8fR2IG23QMGYBk8zQ7C0r4kOG55G4+7RThd7GxVbxmYFZHzqLTXW2dEVxErbqD0kKcl00Kd6cTDyXv4qOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="shortcut icon" href="" type="image">
+</head>
+<body>
+    {% include "snippets/navbar.jinja-html" %}
+    <main class="glass-page-container">
+        <div class="bento-grid">
+            
+            <section class="glass-element profile-hero">
+                <div class="hero-content">
+                    <div class="profile-sidebar">
+                        <div class="avatar-container">
+                            <img src="https://avatars.githubusercontent.com/u/114361791?v=4" alt="Jackstar" class="hero-avatar">
+                            <span class="flag-icon">🇦🇹</span>
+                        </div>
+                        <div class="personal-meta">
+                            <span class="meta-tag"><i class="fas fa-user"></i> he/him</span>
+                            <span class="meta-tag"><i class="fas fa-clock"></i> CE(S)T</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-info">
+                        <h1 class="greeting-inline">Hi there <img src="https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" alt="Waving hand"></h1>
+                        <p class="tagline">Developer from Austria</p>
+                        
+                        <div class="about-text">
+                            <p>I tell computers what to do since <strong>July 2021</strong>. Sometimes they listen, mostly they don't. 🤷‍♂️</p>
+                        </div>
 
-{% block title %}About – Portfolio{% endblock %}
+                        <div class="quote-box">
+                            <i class="fas fa-quote-left"> QOTD</i>
+                            <p id="daily-quote">"{{ quote.text }}"</p>
+                            <cite>– {{ quote.author or "A wise person" }}</cite>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-{% block content %}
-<h1>About</h1>
-<p>This is a placeholder page for the About section. Content will be added soon.</p>
-{% endblock %}
+            <section class="glass-element skills-sidebar">
+                <div class="skill-group">
+                    <h3><i class="fas fa-terminal"></i> Coding</h3>
+                    <div class="skill-item">
+                        <div class="skill-label">
+                            <div class="icon-label"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python"> Python</div>
+                            <span>90%</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="--target-width: 90%;"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-label">
+                            <div class="icon-label"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5"> HTML5</div>
+                            <span>95%</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="--target-width: 95%;"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-label">
+                            <div class="icon-label"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3"> CSS3</div>
+                            <span>85%</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="--target-width: 85%;"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-label">
+                            <div class="icon-label"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript"> JavaScript</div>
+                            <span>60%</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill" style="--target-width: 60%;"></div></div>
+                    </div>
+                </div>
+
+                <div class="skill-group spoken">
+                    <h3><i class="fas fa-comments"></i> Spoken</h3>
+                    <div class="skill-item spoken-lang-item">
+                        <div class="skill-label">
+                            <div class="icon-label"><img src="https://flagcdn.com/w20/at.png" alt="German Flag"> German</div>
+                            <span>Native</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill gold" style="--target-width: 100%;"></div></div>
+                    </div>
+                    <div class="skill-item spoken-lang-item">
+                        <div class="skill-label">
+                            <div class="icon-label"><img src="https://flagcdn.com/w20/gb.png" alt="UK Flag"> English</div>
+                            <span>Fluent</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill gold" style="--target-width: 85%;"></div></div>
+                    </div>
+                    <div class="skill-item spoken-lang-item">
+                        <div class="skill-label">
+                            <div class="icon-label"><img src="https://flagcdn.com/w20/es.png" alt="Spanish Flag"> Spanish</div>
+                            <span>Basic</span>
+                        </div>
+                        <div class="progress-bar"><div class="progress-fill gold" style="--target-width: 25%;"></div></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-element libraries-box">
+                <h3><i class="fas fa-layer-group"></i> Libraries & Frameworks</h3>
+                <div class="tool-grid">
+                    <div class="tool-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" alt="Flask">
+                        <span>Flask</span>
+                    </div>
+                    <div class="tool-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/streamlit/streamlit-plain.svg" alt="Streamlit">
+                        <span>Streamlit</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-element tools-box">
+                <h3><i class="fas fa-box-open"></i> Toolbox</h3>
+                <div class="tool-grid">
+                    <div class="tool-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="MongoDB">
+                        <span>MongoDB</span>
+                    </div>
+                    <div class="tool-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub">
+                        <span>GitHub</span>
+                    </div>
+                    <div class="tool-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/markdown/markdown-original.svg" alt="Markdown">
+                        <span>Markdown</span>
+                    </div>
+                    <div class="tool-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/visualstudio/visualstudio-original.svg" alt="Visual Studio Code">
+                        <span>VS Code</span>
+                    </div>
+                    <div class="tool-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/json/json-original.svg" alt="JSON">
+                        <span>JSON</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="glass-element learning-path">
+                <h3><i class="fas fa-rocket"></i> Currently Learning</h3>
+                <ul class="path-list">
+                    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" width="20" alt="C++"> C++</li>
+                    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg" width="20" alt="PyTorch"> PyTorch</li>
+                    <li><i class="fas fa-database" style="color: var(--main-color-500);"></i> MySQL</li>
+                    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" width="20" alt="Pandas">Pandas</li>
+                    <li><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" alt="NumPy" width="20">NumPy</li>
+                </ul>
+            </section>
+
+            <section class="glass-element contact-box">
+                <p>Want to build something together?</p>
+                <a href="https://discordapp.com/users/700285395589529702" class="discord-pill">
+                    <i class="fab fa-discord"></i> Connect on Discord
+                </a>
+            </section>
+        </div>
+    </main>
+    {% include "snippets/footer.jinja-html" %}
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+</body>
+</html>

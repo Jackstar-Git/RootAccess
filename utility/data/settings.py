@@ -1,10 +1,11 @@
+from functools import lru_cache
 import json
 import os
 from typing import Any, Optional
 
 SETTINGS_FILE = "data/settings.json"
 
-
+@lru_cache(maxsize=1)
 def _load_settings() -> Optional[dict]:
     try:
         with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
@@ -12,7 +13,7 @@ def _load_settings() -> Optional[dict]:
     except Exception:
         return None
 
-
+@lru_cache(maxsize=128)
 def get_settings(key: str) -> Any:
     data = _load_settings()
 

@@ -110,25 +110,18 @@
                 <div class="section-label">03. Insights</div>
                 <div class="section-header">
                     <h2>Latest from the Blog</h2>
-                    <a href="/blog" class="text-link">Browse all articles</a>
+                    <!-- more prominent button -->
+                    <a href="/blog" class="btn-secondary">Browse all articles</a>
                 </div>
-                <div class="blog-rows">
-                    <a href="/blog/post-1" class="blog-item">
-                        <span class="date">May 20, 2026</span>
-                        <div class="blog-content">
-                            <h3>Optimizing Flask for High Traffic</h3>
-                            <p>Deep dive into caching strategies and load balancing for Python backends.</p>
-                        </div>
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </a>
-                    <a href="/blog/post-2" class="blog-item">
-                        <span class="date">April 12, 2026</span>
-                        <div class="blog-content">
-                            <h3>The Future of CSS Container Queries</h3>
-                            <p>Why we can finally move away from traditional media queries for components.</p>
-                        </div>
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </a>
+                <!-- preview cards similar to full blog page -->
+                <div class="blog-list">
+                    {% if preview_blogs %}
+                        {% for blog in preview_blogs %}
+                            {% include "snippets/blog_card.jinja-html" %}
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-results">No recent articles available.</p>
+                    {% endif %}
                 </div>
             </div>
         </section>

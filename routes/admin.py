@@ -4,11 +4,11 @@ from utility import get_settings
 
 admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
 
-@admin_blueprint.before_request
-def check_login():
-    if "login" not in session and not request.base_url.endswith("login"):
-        logger.warning("User not logged in, redirecting to login page")
-        return redirect(url_for("admin.login"))
+#@admin_blueprint.before_request
+#def check_login():
+#    if "login" not in session and not request.base_url.endswith("login"):
+#        logger.warning("User not logged in, redirecting to login page")
+#        return redirect(url_for("admin.login"))
 
 @admin_blueprint.route("/login", methods=["GET", "POST"])
 def login():
@@ -37,3 +37,9 @@ def logout():
     session.pop("login", None)
     logger.info("User logged out successfully")
     return redirect(url_for("admin.login"))
+
+
+@admin_blueprint.route("/dashboard", methods=["GET"])
+def dashboard():
+    logger.info("Dashboard route accessed")
+    return render_template("admin/dashboard.jinja-html")

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 from utility.logging_utility import logger
+from utility.data.quotes import get_quote_of_the_day
 
 
 others_blueprint = Blueprint("others", __name__)
@@ -8,7 +9,8 @@ others_blueprint = Blueprint("others", __name__)
 @others_blueprint.route("/about", methods=["GET", "POST"])
 def about():
     logger.info("About route accessed")
-    return render_template("about.jinja-html")
+    daily_quote = get_quote_of_the_day()
+    return render_template("about.jinja-html", quote=daily_quote)
 
 
 @others_blueprint.route("/contact", methods=["GET", "POST"])

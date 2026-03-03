@@ -1,0 +1,53 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+<aside id="sidebar" class="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><i class="fa-solid fa-kaaba"></i></div>
+        <div class="brand-text">
+            <strong>Kangaroo Inc.</strong>
+            <span>admin@portfolio.com</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <ul class="nav-list">
+            <li class="nav-item active">
+                <a href="#"><i class="fa-solid fa-house"></i> Home</a>
+            </li>
+            <li class="nav-item has-submenu">
+                <a href="javascript:void(0)" class="submenu-toggle">
+                    <i class="fa-solid fa-pen-nib"></i> Content
+                    <i class="fa-solid fa-chevron-down arrow"></i>
+                </a>
+                <ul class="submenu">
+                    <li><a href="#">Blog Posts</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">Media Library</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a href="#"><i class="fa-solid fa-chart-line"></i> Analytics</a>
+            </li>
+            <li class="nav-item">
+                <a href="#"><i class="fa-solid fa-users"></i> Subscribers <span class="count-badge">12</span></a>
+            </li>
+        </ul>
+
+        <div class="nav-section-label">System</div>
+        <ul class="nav-list">
+            <li class="nav-item"><a href="#"><i class="fa-solid fa-briefcase"></i> Partners <span class="new-tag">New</span></a></li>
+            <li class="nav-item"><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
+        </ul>
+    </nav>
+
+    <div class="sidebar-promo">
+        <div class="promo-card">
+            <span class="close-promo">×</span>
+            <span class="promo-tag">New</span>
+            <p><strong>Affiliate Program</strong></p>
+            <p>Run your own affiliate program with zero overhead.</p>
+            <button class="btn-outline-sm">Try it out ↗</button>
+        </div>
+    </div>
+</aside>
+<script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>

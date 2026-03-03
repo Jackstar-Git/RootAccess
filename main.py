@@ -11,6 +11,8 @@ from waitress import serve
 
 from FlaskClass import app
 from utility.logging_utility import logger
+from utility import blogs as blog_utils, blog_helpers, get_settings
+
 from routes import blueprints
 
 load_dotenv()
@@ -48,10 +50,22 @@ def utility_processor():
         "generate_token": generate_csrf
     }
 
+
 @app.route("/")
 def home():
     logger.info("Home page accessed.")
-    return render_template("index.jinja-html")
+    # fetch latest few blog posts for preview on homepage
+    all_blogs = blog_utils.load_blogs()
+    # sort newest first
+    sorted_blogs = blog_helpers.sort_blogs(all_blogs, "newest")
+    preview_blogs = sorted_blogs[:3]
+
+    return render_template(
+        "index.jinja-html",
+        preview_blogs=preview_blogs,
+        # provide settings in case template uses any blog configuration
+        settings=get_settings("blog_config")
+    )
 
 @app.route("/sitemap.xml")
 def sitemap():

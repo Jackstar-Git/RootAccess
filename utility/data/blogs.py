@@ -1,6 +1,7 @@
 import json
 import os
 from typing import List, Union, Optional, TypedDict
+from functools import lru_cache
 
 class BlogPost(TypedDict):
     author: Union[str, List[str]]
@@ -15,6 +16,7 @@ class BlogPost(TypedDict):
 
 DATA_FILE: str = "data/blogs.json"
 
+@lru_cache(maxsize=1)
 def load_blogs() -> list[BlogPost]:
     if not os.path.exists(DATA_FILE):
         return []
@@ -23,6 +25,7 @@ def load_blogs() -> list[BlogPost]:
 
     return data
 
+@lru_cache(maxsize=128)
 def get_item_by_id(blog_id: Union[int, str]) -> Optional[BlogPost]:
     blogs = load_blogs()
     str_id = str(blog_id)
@@ -44,7 +47,6 @@ def search_blogs(search_query: str) -> List[BlogPost]:
     return results
 
 def query_blogs(**criteria) -> List[BlogPost]:
-    # operate on normalized list of posts
     blog_list: List[BlogPost] = load_blogs()
     
     if not criteria:

@@ -42,6 +42,10 @@
 
 /* Blog Rows */
 .blog-preview { padding: var(--spacing-5xl) 0; background: var(--background-2); }
+.blog-list { display: grid; grid-template-columns: 1fr; gap: var(--spacing-2xl); }
+
+.blog-card-v2 { margin: 0; }
+
 .blog-item { display: grid; grid-template-columns: 180px 1fr 40px; align-items: center; padding: var(--spacing-5xl) 0; border-bottom: 1px solid var(--background-2); text-decoration: none; color: inherit; transition: var(--transition-medium); }
 .blog-item:hover { color: var(--main-color-600); transform: translateX(10px); }
 .blog-item .date { color: var(--third-font-color); font-family: 'JetBrains Mono', monospace; font-size: var(--font-size-sm); }

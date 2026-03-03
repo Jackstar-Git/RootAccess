@@ -1,16 +1,27 @@
 from flask import Blueprint, render_template, abort, request
 from utility.logging_utility import logger
 from utility import blogs as blog_utils, blog_helpers, get_settings
+from math import ceil
+from urllib.parse import urlencode
 
 blogs_blueprint = Blueprint("blogs", __name__)
 
-BLOGS_PER_PAGE = 10
+BLOGS_PER_PAGE = 15
+
 
 @blogs_blueprint.route("/blog", methods=["GET"])
 def blogs_page():
     query = request.args.to_dict()
     search = query.get("search", "").strip()
     sort_by = query.get("sort", "newest").strip()
+
+    # determine page number for pagination (1-based)
+    try:
+        page = int(query.get("page", 1))
+    except (TypeError, ValueError):
+        page = 1
+    if page < 1:
+        page = 1
 
 
     raw_data = blog_utils.search_blogs(search) if search else blog_utils.load_blogs()
@@ -42,12 +53,28 @@ def blogs_page():
     blog_list = blog_helpers.sort_blogs(blog_list, sort_by)
 
 
+    # pagination
+    total_count = len(blog_list)
+    total_pages = ceil(total_count / BLOGS_PER_PAGE) if total_count else 1
+    start = (page - 1) * BLOGS_PER_PAGE
+    end = start + BLOGS_PER_PAGE
+    paginated = blog_list[start:end]
+
+    # base_query excludes page so we can build links in template
+    base_query = {k: v for k, v in query.items() if k != "page"}
+    base_query_string = urlencode(base_query)
+
     return render_template(
         "blogs.jinja-html",
-        blogs=blog_list,
-        settings = get_settings("blog_config"),
-        total_count=len(blog_list),
-        **query 
+        blogs=paginated,
+        settings=get_settings("blog_config"),
+        total_count=total_count,
+        page=page,
+        total_pages=total_pages,
+        base_query=base_query,
+        base_query_string=base_query_string,
+        search_query=search,
+        **base_query
     )
 
 @blogs_blueprint.route("/blog/<blog_id>", methods=["GET"])

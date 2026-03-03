@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <title></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dashboard-body">
+
+    <div class="dashboard-wrapper">
+        {% include "admin/sidebar.jinja-html" %}
+
+        <main class="dashboard-content">
+            <div class="dashboard-header-row">
+                <h2 class="section-title">Blog Posts</h2>
+                <div class="header-actions">
+                    <div class="search-container">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="Search posts...">
+                    </div>
+                    <button class="btn-create"><i class="fa-solid fa-plus"></i> New Post</button>
+                </div>
+            </div>
+
+            <div class="content-card list-container">
+                <div class="list-header">
+                    <button class="btn-tab active"><i class="fa-solid fa-sliders"></i> Display</button>
+                    <button class="btn-tab"><i class="fa-solid fa-gear"></i> Settings</button>
+                </div>
+
+                <div class="list-body">
+                    {% for post in range(4) %}
+                    <div class="list-item">
+                        <div class="item-icon"><i class="fa-solid fa-newspaper"></i></div>
+                        <div class="item-details">
+                            <div class="item-title">How to build a Flask Dashboard <i class="fa-solid fa-copy copy-icon"></i></div>
+                            <div class="item-meta">/blog/flask-dashboard-2026 • 2h ago</div>
+                        </div>
+                        <div class="item-tag">Tutorial Series #1</div>
+                        <div class="item-stats">
+                            <strong>{{ 10 + post * 15 }} views</strong>
+                            <i class="fa-solid fa-arrow-trend-up"></i>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="content-card chart-main">
+                    <div class="chart-header">
+                        <h4>Total Views: <strong>1,248</strong></h4>
+                        <div class="time-filters">
+                            <span>1d</span><span class="active">1w</span><span>1m</span><span>1y</span>
+                        </div>
+                    </div>
+                    <canvas id="viewsLineChart"></canvas>
+                </div>
+
+                <div class="content-card chart-side">
+                    <div class="chart-header">
+                        <div class="chart-tabs">
+                            <span class="active">Views</span><span>Shares</span><span>Comments</span>
+                        </div>
+                        <div class="time-filters"><span>1w</span></div>
+                    </div>
+                    <canvas id="topPostsBarChart"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

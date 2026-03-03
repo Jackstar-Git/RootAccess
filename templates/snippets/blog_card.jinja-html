@@ -1,0 +1,38 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/snippets/blog_card.css') }}">
+<article class="blog-card-v2">
+    <div class="card-image">
+        <img src="{{ blog.image_url }}" alt="{{ blog.title }} Cover">
+        <div class="glass-tags-container">
+            {% if blog.tags %}
+                {% for tag in blog.tags[:3] %}
+                    <span class="glass-tag">#{{ tag }}</span>
+                {% endfor %}
+            {% else %}
+                <span class="glass-tag">General</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-content">
+        <div class="card-meta">
+            <span class="reading-time"><i class="fa-regular fa-clock"></i> {{ blog.reading_time|default('5') }} min read</span>
+            <span class="dot">•</span>
+            <span class="date">{{ blog.time_created | datetimeformat }}</span>
+        </div>
+
+        <a href="/blog/{{ blog.id }}" class="card-title">
+            <h2>{{ blog.title }}</h2>
+        </a>
+
+        <div class="title-divider"></div>
+
+        <p>{{ blog.content_raw | truncate(150) }}</p>
+
+        <div class="author-modern">
+            <div class="author-avatar"><i class="fa-solid fa-user"></i></div>
+            <div class="author-details">
+                <span class="author-label">By</span>
+                <span class="author-name">{% if blog.author is string %}{{ blog.author }}{% else %}{{ blog.author | join(', ') }}{% endif %}</span>
+            </div>
+        </div>
+    </div>
+</article>

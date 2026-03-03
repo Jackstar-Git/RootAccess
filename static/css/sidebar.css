@@ -1,0 +1,93 @@
+/* Sidebar Container */
+.sidebar {
+    width: 280px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-lg);
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.03); /* Soft shadow like dark mode */
+    position: fixed;
+    height: 100vh;
+    z-index: 100;
+}
+
+/* Profile Section Update */
+.profile {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm);
+    background: var(--main-color-50);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-xl);
+}
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    margin-left: var(--spacing-sm);
+}
+.profile-role {
+    font-size: 0.75rem;
+    color: var(--third-font-color);
+}
+
+/* Navigation & Submenus */
+.nav-item {
+    margin-bottom: var(--spacing-xxs);
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--third-font-color);
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.nav-link i:first-child {
+    width: 20px;
+    margin-right: var(--spacing-sm);
+}
+
+.nav-link:hover, .nav-link.active {
+    background: var(--main-color-100);
+    color: var(--main-color-700);
+}
+
+/* Submenu Logic */
+.submenu {
+    list-style: none;
+    padding-left: 2.5rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.has-submenu.open .submenu {
+    max-height: 200px; /* Adjust based on content */
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.has-submenu .arrow {
+    margin-left: auto;
+    font-size: 0.8rem;
+    transition: transform 0.3s;
+}
+
+.has-submenu.open .arrow {
+    transform: rotate(90deg);
+}
+
+.submenu a {
+    display: block;
+    padding: var(--spacing-xxs) 0;
+    font-size: 0.95rem;
+    color: var(--third-font-color);
+    text-decoration: none;
+}
+
+.submenu a:hover {
+    color: var(--main-color-600);
+}

@@ -105,44 +105,7 @@
         <section class="blog-list">
             {% if blogs %}
                 {% for blog in blogs %}
-                    <article class="blog-card-v2">
-                        <div class="card-image">
-                            <img src="{{ blog.image_url }}" alt="{{ blog.title }} Cover">
-                            
-                            <div class="glass-tags-container">
-                                {% if blog.tags %}
-                                    {% for tag in blog.tags[:3] %}
-                                        <span class="glass-tag">#{{ tag }}</span>
-                                    {% endfor %}
-                                {% else %}
-                                    <span class="glass-tag">General</span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="card-content">
-                            <div class="card-meta">
-                                <span class="reading-time"><i class="fa-regular fa-clock"></i> {{ blog.reading_time|default('5') }} min read</span>
-                                <span class="dot">•</span>
-                                <span class="date">{{ blog.time_created | datetimeformat }}</span>
-                            </div>
-                            
-                            <a href="/blog/{{ blog.id }}" class="card-title">
-                                <h2>{{ blog.title }}</h2>
-                            </a>
-                            
-                            <div class="title-divider"></div>
-                            
-                            <p>{{ blog.content_raw | truncate(150) }}</p>
-                            
-                            <div class="author-modern">
-                                <div class="author-avatar"><i class="fa-solid fa-user"></i></div>
-                                <div class="author-details">
-                                    <span class="author-label">By</span>
-                                    <span class="author-name">{{ blog.author | join(', ') }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
+                    {% include "snippets/blog_card.jinja-html" %}
                 {% endfor %}
             {% else %}
                 <p class="no-results">
@@ -155,9 +118,40 @@
             {% endif %}
         </section>
 
-        <div class="blog-load-more">
-            <button class="btn-load-more"><i class="fa-solid fa-arrow-down"></i> Load More Articles</button>
+        {% if total_pages and total_pages > 1 %}
+        {% if base_query_string %}
+            {% set qprefix = '?' + base_query_string + '&' %}
+        {% else %}
+            {% set qprefix = '?' %}
+        {% endif %}
+        <div class="blog-pagination">
+            <nav class="pagination">
+                <a class="page-arrow" href="{{ qprefix + 'page=' + (page-1)|string }}" {% if page <= 1 %}aria-disabled="true"{% endif %}>&laquo;</a>
+
+                <a class="page-link" href="{{ qprefix + 'page=1' }}">1</a>
+
+                {% if page > 3 %}
+                    <span class="ellipsis">…</span>
+                {% endif %}
+
+                {% if page != 1 and page != total_pages %}
+                    <span class="page-link current">{{ page }}</span>
+                {% endif %}
+
+                {% if page < total_pages - 2 %}
+                    <span class="ellipsis">…</span>
+                {% endif %}
+
+                {% if total_pages > 1 %}
+                    {% if total_pages != 1 %}
+                        <a class="page-link" href="{{ qprefix + 'page=' + total_pages|string }}">{{ total_pages }}</a>
+                    {% endif %}
+                {% endif %}
+
+                <a class="page-arrow" href="{{ qprefix + 'page=' + (page+1)|string }}" {% if page >= total_pages %}aria-disabled="true"{% endif %}>&raquo;</a>
+            </nav>
         </div>
+        {% endif %}
     </main>
     {% include "snippets/footer.jinja-html" %}
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
