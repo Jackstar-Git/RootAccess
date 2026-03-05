@@ -136,7 +136,7 @@ def stay_alive():
                 pass
             time.sleep(300)  # 5 minutes
 
-    server_url = os.getenv("SERVER_URL", "")
+    server_url = ""
     if server_url:
         thread = threading.Thread(target=send_request, args=(server_url,))
         thread.daemon = True
@@ -146,6 +146,6 @@ if __name__ == '__main__':
     os.chdir(os.path.dirname(__file__))
     logger.info("*" * 50)
     logger.info("Application Server started!")    
-    #stay_alive()    
-    # serve(app, port=8080, threads=64, url_scheme=\"https\")
-    app.run(host="localhost", port=8080, debug=True)
+    stay_alive()    
+    serve(app, port=8080, threads=64, url_scheme="https")
+    #app.run(host="localhost", port=8080, debug=True)
