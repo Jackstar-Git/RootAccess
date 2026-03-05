@@ -9,5 +9,10 @@
     "blog_config": {
         "types": [{"name": "Guide", "icon": "fa-solid fa-lightbulb"}, {"name": "Review", "icon": "fa-solid fa-star"}, {"name": "Opinion", "icon": "fa-solid fa-pen-fancy"}, {"name": "Interview", "icon": "fa-solid fa-microphone"}, {"name": "News", "icon": "fa-solid fa-newspaper"}, {"name": "Meta", "icon": "fa-solid fa-gear"}],
         "topics": ["AI", "Programming", "Tech", "Gaming", "Science", "Private"]
+    },
+    "project_config": {
+        "maturity_levels": ["Concept", "Prototype", "MVP", "Stable", "Legacy"],
+        "activity_statuses": ["Active", "Maintained", "On hold", "Stalled", "Archived", "Unknown"],
+        "topics": ["Web Development", "Mobile App", "Game Development", "Data Science", "Utility", "Other"]
     }
 }

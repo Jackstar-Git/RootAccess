@@ -1,8 +1,52 @@
-{% extends "base.jinja-html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/legal.css') }}">
+    <title>Legal Notice & Disclosure</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pb1a8fR2IG23QMGYBk8zQ7C0r4kOG55G4+7RThd7GxVbxmYFZHzqLTXW2dEVxErbqD0kKcl00Kd6cTDyXv4qOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    {% include "snippets/navbar.jinja-html" %}
 
-{% block title %}Imprint – Portfolio{% endblock %}
+    <main class="legal-main">
+        <section class="legal-container">
+            <header class="legal-header">
+                <h1>Legal Notice</h1>
+                <p class="legal-subtitle">Information according to § 5 E-Commerce Act and disclosure according to § 25 Media Act.</p>
+            </header>
+            
+            <div class="legal-content-card">
+                <h3>Contact Information</h3>
+                <p>
+                    <strong>Name:</strong> Jackstar<br>
+                    <strong>Address:</strong> [Street/Number], [ZIP/City], Austria<br>
+                    <strong>Email:</strong> <a href="mailto:jackstarhimself@gmail.com" class="legal-link">jackstarhimself@gmail.com</a>
+                </p>
 
-{% block content %}
-<h1>Imprint</h1>
-<p>This is a placeholder page for the Imprint section. Content will be added soon.</p>
-{% endblock %}
+                <hr>
+
+                <h3>Business Purpose</h3>
+                <p>
+                    Presentation of professional services, display of personal and professional projects, and the operation of a weblog.
+                </p>
+
+                <h3>Editorial Policy (Blattlinie)</h3>
+                <p>
+                    This website serves as a platform for providing information about my professional services and projects. Furthermore, the blog provides commentary, news, and personal insights on a wide range of topics, including current technology trends and various other fields of interest.
+                </p>
+
+                <blockquote class="legal-disclaimer">
+                    <p><strong>Note:</strong> Despite careful content control, I assume no liability for the content of external links. All content is subject to copyright law.</p>
+                </blockquote>
+            </div>
+        </section>
+    </main>
+    
+    {% include "snippets/footer.jinja-html" %}
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+</body>
+</html>

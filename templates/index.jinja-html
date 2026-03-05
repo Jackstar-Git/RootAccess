@@ -18,9 +18,13 @@
         <section class="hero-section">
             <div class="container hero-container">
                 <div class="hero-text">
-                    <span class="badge">Open for Collaborations</span>
-                    <h1>Engineering <span class="text-gradient">Seamless</span> Web Experiences</h1>
-                    <p>I'm a Full-Stack Developer specializing in building robust, scalable applications with a focus on modern UI/UX and performance.</p>
+                    <span class="badge">404: Bugs not found.</span>
+                    <h1>
+                        Serious About <span class="text-gradient">Code</span> 
+                        <br>
+                        Less About <span class="text-gradient">Me</span>  
+                    </h1>
+                    <p>I’m a Python developer with a strong focus on back-end, but I also have a side interest in front-end development. While HTML, CSS, and JS weren't exactly part of my original plan, I've picked them up along the way - and surprisingly, they tend to (mostly) work when I need them to.</p>
                     <div class="hero-actions">
                         <a href="/projects" class="btn-primary">Explore Projects</a>
                         <a href="/contact" class="btn-outline">Say Hello</a>
@@ -43,18 +47,24 @@
                 <div class="section-label">01. Identity</div>
                 <div class="about-grid">
                     <div class="about-info">
-                        <h2>Merging Logic with <br>Creative Vision.</h2>
-                        <p>Based in Austria, I build digital products that balance technical complexity with intuitive simplicity. I believe that great code is not just functional, but maintainable and accessible to everyone.</p>
-                        <a href="/about" class="text-link">Learn more about my journey →</a>
+                        <h2>
+                            Hey, I'm Jackstar 
+                            <br>
+                            Austrian by birth, coder by choice
+                        </h2>
+                        <p>
+                            I'm based in Austria, where I spend my time building things - some of which actually work. In my free time, I enjoy diving into personal projects, experimenting with new ideas, and exploring the more creative side of tech. Whether it's coding just for the fun of it or working on professional projects
+                        </p>
+                        <a href="/about" class="text-link">Learn more about my me →</a>
                     </div>
                     <div class="about-stats">
                         <div class="stat-box">
-                            <span class="number">12+</span>
-                            <span class="label">Live Projects</span>
+                            <span class="number">10+</span>
+                            <span class="label">Projects</span>
                         </div>
                         <div class="stat-box">
-                            <span class="number">99%</span>
-                            <span class="label">Uptime Focus</span>
+                            <span class="number" id="years-of-experience">Many</span>
+                            <span class="label">Years of Experience</span>
                         </div>
                     </div>
                 </div>
@@ -66,41 +76,18 @@
                 <div class="section-header">
                     <div>
                         <div class="section-label">02. Portfolio</div>
-                        <h2>Selected Work</h2>
+                        <h2>My Latest Projects & Selected Work</h2>
                     </div>
                     <a href="/projects" class="btn-secondary">View Gallery</a>
                 </div>
                 <div class="project-grid">
-                    <article class="project-card">
-                        <div class="card-img">
-                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=500&q=80" alt="Project Alpha">
-                        </div>
-                        <div class="card-body">
-                            <div class="tags"><span class="tag">Next.js</span> <span class="tag">TypeScript</span></div>
-                            <h3>E-Commerce Dashboard</h3>
-                            <p>A high-performance dashboard with real-time analytics and inventory tracking.</p>
-                        </div>
-                    </article>
-                    <article class="project-card">
-                        <div class="card-img">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80" alt="Project Beta">
-                        </div>
-                        <div class="card-body">
-                            <div class="tags"><span class="tag">Python</span> <span class="tag">Flask</span></div>
-                            <h3>AI Image Processor</h3>
-                            <p>Leveraging neural networks to automate background removal for product photos.</p>
-                        </div>
-                    </article>
-                    <article class="project-card">
-                        <div class="card-img">
-                            <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=500&q=80" alt="Project Gamma">
-                        </div>
-                        <div class="card-body">
-                            <div class="tags"><span class="tag">React</span> <span class="tag">Tailwind</span></div>
-                            <h3>Collaboration Suite</h3>
-                            <p>Real-time workspace for remote teams featuring shared whiteboards and chat.</p>
-                        </div>
-                    </article>
+                    {% if preview_projects %}
+                        {% for project in preview_projects %}
+                            {% include "snippets/project_card.jinja-html" %}
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-results">No projects to display at the moment.</p>
+                    {% endif %}
                 </div>
             </div>
         </section>
@@ -110,10 +97,8 @@
                 <div class="section-label">03. Insights</div>
                 <div class="section-header">
                     <h2>Latest from the Blog</h2>
-                    <!-- more prominent button -->
                     <a href="/blog" class="btn-secondary">Browse all articles</a>
                 </div>
-                <!-- preview cards similar to full blog page -->
                 <div class="blog-list">
                     {% if preview_blogs %}
                         {% for blog in preview_blogs %}
@@ -126,9 +111,8 @@
             </div>
         </section>
     </main>
-
-    <!-- load global behaviors -->
+    {% include "snippets/footer.jinja-html" %}
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
-        {% include "snippets/footer.jinja-html" %}
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>
 </html>

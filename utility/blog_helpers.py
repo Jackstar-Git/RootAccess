@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Dict, Any, Tuple
 
-from .data.blogs import BlogPost
+from .blogs import BlogPost
 
 
 def filter_by_date_range(blog_list: List[BlogPost], start_date: str | None, end_date: str | None) -> List[BlogPost]:

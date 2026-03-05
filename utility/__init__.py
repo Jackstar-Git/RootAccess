@@ -1,9 +1,10 @@
-from .data import blogs
-from .data.settings import get_settings
+from . import blogs
+from .settings import get_settings
 from . import blog_helpers
 from . import logging_utility
+from . import projects
 
-from .data import quotes
+from . import quotes
 
 # convenience imports
 def __getattr__(name):
@@ -17,4 +18,6 @@ def __getattr__(name):
         return logging_utility
     if name == "quotes":
         return quotes
+    if name == "projects":
+        return projects
     raise AttributeError(f"module {__name__} has no attribute {name}")

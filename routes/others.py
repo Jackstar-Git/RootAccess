@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from utility.logging_utility import logger
-from utility.data.quotes import get_quote_of_the_day
+from utility.quotes import get_quote_of_the_day
 
 
 others_blueprint = Blueprint("others", __name__)

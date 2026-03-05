@@ -1,8 +1,69 @@
-{% extends "base.jinja-html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/legal.css') }}">
+    <title>Privacy Policy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+    {% include "snippets/navbar.jinja-html" %}
 
-{% block title %}Privacy Policy – Portfolio{% endblock %}
+    <main class="legal-main">
+        <section class="legal-container">
+            <header class="legal-header">
+                <h1>Privacy Policy</h1>
+                <p class="legal-subtitle">Last Updated: 05th of March, 2026</p>
+            </header>
 
-{% block content %}
-<h1>Privacy Policy</h1>
-<p>This is a placeholder privacy policy page. Content will be added soon.</p>
-{% endblock %}
+            <div class="legal-content-card">
+                <h3>1. General Information</h3>
+                <p>
+                    The protection of your personal data is of particular concern to me. I process your data exclusively on the basis of the legal provisions (GDPR/DSGVO, TKG 2021). In this privacy policy, I inform you about the most important aspects of data processing within the framework of my website.
+                </p>
+
+                <h3>2. Contacting Me</h3>
+                <p>
+                    If you contact me via the form on the website or by e-mail, the data you provide will be stored for the purpose of processing the inquiry and in the event of follow-up questions. I do not pass on this data without your consent.
+                </p>
+
+                <h3>3. Web Hosting & Infrastructure</h3>
+                <p>
+                    My website is hosted on <strong>Render.com</strong>. To provide this service, Render may collect metadata regarding your visit. However, as the operator, I do not store server access logs containing your full IP address on my own backend.
+                </p>
+
+                <h3>4. Cookies & Analytics</h3>
+                <p>
+                    <strong>Session Cookies:</strong> This website uses strictly necessary session cookies to handle login functionality. These are deleted when you close your browser.
+                </p>
+                <p>
+                    <strong>First-Party Analytics:</strong> I use a self-developed analytics tool to improve my services. This tool tracks page views and time spent on pages. This data is processed <strong>anonymously</strong> on my own server and is not shared with third parties.
+                </p>
+
+                <h3>5. External Services (Fonts & Icons)</h3>
+                <p>
+                    For the consistent display of fonts and icons, this website uses <strong>Google Fonts</strong> and <strong>FontAwesome</strong>. When you access a page, your browser loads the required web fonts into your browser cache.
+                </p>
+                <p>
+                    <em>Note for users in the EU:</em> By using these services, your IP address is technically transferred to the servers of Google and FontAwesome (USA). This is based on our legitimate interest in a professional and uniform presentation of our online offer (Art. 6 Para. 1 lit. f GDPR).
+                </p>
+
+                <h3>6. Your Rights</h3>
+                <p>
+                    You have the rights to information, correction, deletion, restriction, data portability, revocation, and objection regarding your data stored by me. If you believe that the processing of your data violates data protection law, you can complain to the supervisory authority (in Austria: <strong>Datenschutzbehörde</strong>).
+                </p>
+
+                <blockquote class="legal-disclaimer">
+                    <p><strong>Contact for Privacy Matters:</strong><br>
+                    Jackstar<br>
+                    <a href="mailto:jackstarhimself@gmail.com" class="legal-link">jackstarhimself@gmail.com</a></p>
+                </blockquote>
+            </div>
+        </section>
+    </main>
+
+    {% include "snippets/footer.jinja-html" %}
+</body>
+</html>

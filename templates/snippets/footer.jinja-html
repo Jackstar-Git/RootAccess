@@ -3,7 +3,7 @@
     <div class="footer-container">
         <div class="footer-brand">
             <h3 class="logo">PORTFOLIO<span class="dot">.</span></h3>
-            <p>Full-Stack Developer based in Austria, dedicated to building digital products with a focus on performance and clean design.</p>
+            <p>Digital products crafted in Austria, powered by caffeine, built with passion a touch of chaos and the occasional burst of brilliance.</p>
             <div class="social-links">
                 <a href="https://github.com/Jackstar-Git" aria-label="GitHub"><i class="fab fa-github"></i></a>
                 <a href="https://linkedin.com" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
@@ -28,6 +28,7 @@
                     <li><a href="/imprint">Imprint</a></li>
                     <li><a href="/privacy">Privacy Policy</a></li>
                     <li><a href="/contact">Contact</a></li>
+                    <li><a href="/sitemap.xml">Sitemap</a></li>
                 </ul>
             </div>
         </div>

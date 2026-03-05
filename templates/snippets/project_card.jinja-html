@@ -1,0 +1,55 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/snippets/project_card.css') }}">
+
+<article class="project-item-card modern-card-v2">
+    <div class="project-card-visual">
+        <img src="{{ project.image_url if project.image_url else '/static/assets/images/default/default-project.png' }}" alt="{{ project.title }}" loading="lazy">
+        <div class="glass-tags-container">
+            <span class="glass-tag">{{ project.category }}</span>
+        </div>
+    </div>
+
+    <div class="project-card-details">
+        <div class="project-meta-vertical">
+            <div class="project-status-row">
+                <div class="activity-pill-glass">
+                    <span class="activity-chip activity-{{ project.activity | lower | replace(' ', '-') }}">
+                        <span class="activity-dot"></span>
+                        <strong class="status-text">{{ project.activity | default('Unknown') }}</strong>
+                    </span>
+                </div>
+                <div class="project-maturity-tag {{ 'maturity-' + (project.maturity | lower) }}">
+                    <span>{{ project.maturity | default('MVP') }}</span>
+                </div>
+            </div>
+
+            <div class="project-date-group">
+                <div class="project-date-wrapper">
+                    <i class="fa-regular fa-calendar-plus"></i>
+                    <span class="date-label">Created:</span>
+                    <span class="project-date">{{ project.time_created | datetimeformat }}</span>
+                </div>
+                <div class="project-date-wrapper updated">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    <span class="date-label">Updated:</span>
+                    <span class="project-date">{{ project.last_modified | datetimeformat if project.last_modified else 'Unknown' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <a href="/projects/{{ project.id }}" class="project-title-link">
+            <div class="project-card-header">
+                <h3>{{project.title[:22]+"..." if project.title | length > 25 else project.title}}</h3>
+            </div>
+        </a>
+
+        <div class="title-divider"></div>
+
+        <p class="project-description">{{ project.description_short }}</p>
+
+        <div class="project-footer-tags">
+            {% for tech in project.tech_stack %}
+                <span class="tech-tag">#{{ tech }}</span>
+            {% endfor %}
+        </div>
+    </div>
+</article>

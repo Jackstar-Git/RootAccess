@@ -13,7 +13,6 @@
 
 .hero-3d-wrapper { transform-style: preserve-3d; transition: transform var(--transition-fast) ease-out; }
 .hero-3d-card { width: var(--hero-card-width); height: var(--hero-card-height); background: var(--background-2); border-radius: var(--radius-xl); box-shadow: 0 30px 60px rgba(0,0,0,0.08); border: 1px solid var(--main-color-100); display: flex; align-items: center; justify-content: center; transform: translateZ(60px); }
-.card-content i { font-size: 6rem; color: var(--main-color-400); margin-bottom: var(--spacing-xl); }
 .line { height: 8px; width: 120px; background: var(--main-color-50); border-radius: var(--radius-sm); margin: 10px auto; }
 
 /* Buttons & Links */

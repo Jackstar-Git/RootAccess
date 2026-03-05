@@ -73,28 +73,67 @@
                         <input type="date" id="start-date"><span>to</span><input type="date" id="end-date">
                     </div>
                 </div>
-                <div class="filter-col filter-group filter-collapsible">
-                    <input type="checkbox" id="reading-time-toggle" class="filter-toggle-checkbox">
-                    <label for="reading-time-toggle" class="filter-label-collapsible"><i class="fa-solid fa-clock"></i> Reading Time <i class="fa-solid fa-chevron-down"></i></label>
-                    <div class="filter-list-group">
-                        <label class="filter-list-item"><input type="checkbox" value="short"><i class="fa-solid fa-rabbit"></i><span>Short (&lt;5 min)</span></label>
-                        <label class="filter-list-item"><input type="checkbox" value="medium"><i class="fa-solid fa-person-hiking"></i><span>Medium (5‑15 min)</span></label>
-                        <label class="filter-list-item"><input type="checkbox" value="deep"><i class="fa-solid fa-book"></i><span>Deep Dive (&gt;15 min)</span></label>
+                
+                <div class="filter-col filter-group">
+                    <label><i class="fa-solid fa-clock"></i> Reading Time</label>
+                    
+                    <select name="reading_time" class="native-multiselect" multiple>
+                        <option value="short">Short (&lt;5 min)</option>
+                        <option value="medium">Medium (5‑15 min)</option>
+                        <option value="deep">Deep Dive (&gt;15 min)</option>
+                    </select>
+
+                    <div class="custom-multiselect" id="reading-time-multiselect" style="display: none;">
+                        <div class="multiselect-header">
+                            <div class="multiselect-pills"></div>
+                            <input type="text" class="multiselect-search" placeholder="Search...">
+                            <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+                        </div>
+                        <div class="multiselect-dropdown">
+                            <div class="multiselect-actions">
+                                <label><input type="checkbox" class="select-all"> Select All</label>
+                            </div>
+                            <div class="multiselect-options">
+                                <label class="filter-list-item"><input type="checkbox" value="short"><i class="fa-solid fa-rabbit"></i><span>Short (&lt;5 min)</span></label>
+                                <label class="filter-list-item"><input type="checkbox" value="medium"><i class="fa-solid fa-person-hiking"></i><span>Medium (5‑15 min)</span></label>
+                                <label class="filter-list-item"><input type="checkbox" value="deep"><i class="fa-solid fa-book"></i><span>Deep Dive (&gt;15 min)</span></label>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="filter-col filter-group filter-collapsible">
-                    <input type="checkbox" id="type-toggle" class="filter-toggle-checkbox">
-                    <label for="type-toggle" class="filter-label-collapsible"><i class="fa-solid fa-list"></i> Type <i class="fa-solid fa-chevron-down"></i></label>
-                    <div class="filter-list-group">
+
+                <div class="filter-col filter-group">
+                    <label><i class="fa-solid fa-list"></i> Type</label>
+                    
+                    <select name="type" class="native-multiselect" multiple>
                         {% for type in settings.types %}
-                            <label class="filter-list-item">
-                                <input type="checkbox" value="{{ type.name }}">
-                                <i class="{{ type.icon }}"></i>
-                                <span>{{ type.name }}</span>
-                            </label>
+                            <option value="{{ type.name }}">{{ type.name }}</option>
                         {% endfor %}
+                    </select>
+
+                    <div class="custom-multiselect" id="type-multiselect" style="display: none;">
+                        <div class="multiselect-header">
+                            <div class="multiselect-pills"></div>
+                            <input type="text" class="multiselect-search" placeholder="Search...">
+                            <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+                        </div>
+                        <div class="multiselect-dropdown">
+                            <div class="multiselect-actions">
+                                <label><input type="checkbox" class="select-all"> Select All</label>
+                            </div>
+                            <div class="multiselect-options">
+                                {% for type in settings.types %}
+                                    <label class="filter-list-item">
+                                        <input type="checkbox" value="{{ type.name }}">
+                                        <i class="{{ type.icon }}"></i>
+                                        <span>{{ type.name }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
             <div class="filter-actions">
                 <button class="clear-filters-btn"><i class="fa-solid fa-rotate-left"></i> Clear All</button>

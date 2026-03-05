@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from utility.logging_utility import logger
-from utility.data.quotes import get_quote_of_the_day, load_quotes
+from utility.quotes import get_quote_of_the_day, load_quotes
 
 public_api_blueprint = Blueprint("public_api", __name__, url_prefix="/api")
 

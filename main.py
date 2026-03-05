@@ -11,7 +11,7 @@ from waitress import serve
 
 from FlaskClass import app
 from utility.logging_utility import logger
-from utility import blogs as blog_utils, blog_helpers, get_settings
+from utility import projects, blogs, blog_helpers, get_settings
 
 from routes import blueprints
 
@@ -54,26 +54,40 @@ def utility_processor():
 @app.route("/")
 def home():
     logger.info("Home page accessed.")
-    # fetch latest few blog posts for preview on homepage
-    all_blogs = blog_utils.load_blogs()
-    # sort newest first
+    all_blogs = blogs.load_blogs()
     sorted_blogs = blog_helpers.sort_blogs(all_blogs, "newest")
     preview_blogs = sorted_blogs[:3]
+
+    all_projects = projects.load_projects()
+    sorted_projects = blog_helpers.sort_blogs(all_projects, "newest")
+    preview_projects = sorted_projects[:6]
 
     return render_template(
         "index.jinja-html",
         preview_blogs=preview_blogs,
-        # provide settings in case template uses any blog configuration
-        settings=get_settings("blog_config")
+        preview_projects=preview_projects
     )
 
 @app.route("/sitemap.xml")
 def sitemap():
     logger.info("Sitemap requested.")
     pages = []
+    # Current date for <lastmod>
     lastmod = datetime.now().date().isoformat()
+    
+    # List of endpoints to exclude (static files, sitemap itself, etc.)
+    excluded_endpoints = ['static', 'sitemap', 'admin'] 
+
     for rule in app.url_map.iter_rules():
-        pass
+        if "GET" in rule.methods and len(rule.arguments) == 0:
+            if rule.endpoint not in excluded_endpoints:
+                url = url_for(rule.endpoint, _external=True)
+                pages.append({
+                    "loc": url,
+                    "lastmod": lastmod,
+                    "changefreq": "monthly",
+                    "priority": "0.8" if "/" == rule.rule else "0.5"
+                })
 
     response = make_response(render_template("sitemap.xml", pages=pages))
     response.headers["Content-Type"] = "application/xml"

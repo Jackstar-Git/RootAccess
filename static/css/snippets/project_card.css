@@ -1,0 +1,216 @@
+/* project_card.css */
+
+.project-item-card {
+    background: var(--background-1);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--main-color-100);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.project-item-card:hover {
+    transform: translateY(-8px);
+    background: rgba(37, 161, 167, 0.02);
+    box-shadow: 0 20px 40px rgba(9, 37, 42, 0.1);
+}
+
+/* Visuals & Glass Tags */
+.project-card-visual {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--main-color-950);
+}
+
+.project-card-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.project-item-card:hover .project-card-visual img {
+    transform: scale(1.08);
+}
+
+.glass-tag {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+/* Meta Vertical Container */
+.project-card-details {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-meta-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 1.25rem;
+}
+
+/* Activity Chips (Bold Status) */
+.activity-chip {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+.activity-chip strong {
+    font-weight: 800; /* Bold Status */
+    letter-spacing: 0.03em;
+}
+
+.activity-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* Activity Colors */
+.activity-active { color: #10b981; } .activity-active .activity-dot { background: #10b981; box-shadow: 0 0 8px #10b981; }
+.activity-maintained { color: #3b82f6; } .activity-maintained .activity-dot { background: #3b82f6; }
+.activity-on-hold { color: #eab308; } .activity-on-hold .activity-dot { background: #eab308; }
+.activity-stalled { color: #f97316; } .activity-stalled .activity-dot { background: #f97316; }
+.activity-archived { color: #94a3b8; } .activity-archived .activity-dot { background: #94a3b8; }
+.activity-unknown { color: #a855f7; } .activity-unknown .activity-dot { background: #a855f7; }
+
+/* Larger Dates */
+.project-date-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.project-date-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem; /* Larger font size for dates */
+    color: var(--third-font-color);
+}
+
+.date-label {
+    font-weight: 800;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    width: 70px;
+    opacity: 0.8;
+}
+
+.project-date-wrapper i {
+    color: var(--main-color-600);
+    font-size: 0.9rem;
+}
+
+/* Title & Line Hover */
+.project-card-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+.project-item-card:hover .project-card-header h3 {
+    color: var(--main-color-600);
+}
+
+.title-divider {
+    width: 50%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--main-color-600), var(--main-color-400));
+    margin-bottom: 1.25rem;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-item-card:hover .title-divider {
+    width: 100%;
+}
+
+/* Tech Chips */
+.tech-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--main-color-700);
+    background: var(--main-color-50);
+    padding: 5px 12px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    border: 1px solid var(--main-color-100);
+}
+
+.project-item-card:hover .tech-tag {
+    background: var(--main-color-600);
+    color: white;
+}
+
+.project-description{
+    margin-bottom: var(--spacing-xl);
+}
+
+/* New Styles */
+.project-status-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.activity-pill-glass {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 2px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.project-maturity-tag {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.project-footer-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    margin-top: auto; /* This will push the tags to the bottom */
+    margin-bottom: 0; /* Ensure there's no extra space at the bottom */
+}
+
+/* Maturity Colors */
+.maturity-concept { background-color: #3b82f6; } /* Blue for Concept */
+.maturity-prototype { background-color: #eab308; } /* Yellow for Prototype */
+.maturity-mvp { background-color: #f97316; } /* Orange for MVP */
+.maturity-stable { background-color: #10b981; } /* Green for Stable */
+.maturity-legacy { background-color: #94a3b8; } /* Gray for Legacy */
+

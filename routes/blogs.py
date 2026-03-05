@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, abort, request
 from utility.logging_utility import logger
-from utility import blogs as blog_utils, blog_helpers, get_settings
+from utility import blogs, blog_helpers, get_settings
 from math import ceil
 from urllib.parse import urlencode
 
@@ -24,7 +24,7 @@ def blogs_page():
         page = 1
 
 
-    raw_data = blog_utils.search_blogs(search) if search else blog_utils.load_blogs()
+    raw_data = blogs.search_blogs(search) if search else blogs.load_blogs()
     
 
     blog_list = raw_data if isinstance(raw_data, list) else [
@@ -83,7 +83,7 @@ def blog(blog_id):
     if not blog_id:
         logger.warning("No blog ID provided, aborting with 400")
         abort(400, description="Blog ID is required")
-    blog_data = blog_utils.get_item_by_id(blog_id)
+    blog_data = blogs.get_item_by_id(blog_id)
     if not blog_data:
         logger.warning(f"Blog with ID {blog_id} not found, aborting with 404")
         abort(404, description="Blog not found")

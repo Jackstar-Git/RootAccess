@@ -1,13 +1,6 @@
-/* Formatted with 4-space indentation and consistent line breaks */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css");
 
-/*
-  Root-level CSS variables for colors, typography, spacing
-  and layout utilities.  All component and page-specific
-  styles should refer to these so that the look/feel is
-  consistent across the entire site.
-*/
 :root{
     /* color scale */
     --main-color-50: #f1fcfb;
