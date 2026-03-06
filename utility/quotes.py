@@ -14,6 +14,7 @@ def load_quotes(filepath="data/quotes.json"):
 def get_quote_of_the_day(date=None):
     if date is None:
         date = dt_date.today()
+        print(f"Using today's date: {date}")
     
     quotes = load_quotes()
     seed_str = date.strftime("%Y-%m-%d")
