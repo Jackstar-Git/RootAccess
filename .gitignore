@@ -3,3 +3,4 @@ venv
 deploy.bat
 logs
 changelog.txt
+tests

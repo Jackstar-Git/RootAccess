@@ -7,7 +7,8 @@
     <title></title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pb1a8fR2IG23QMGYBk8zQ7C0r4kOG55G4+7RThd7GxVbxmYFZHzqLTXW2dEVxErbqD0kKcl00Kd6cTDyXv4qOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="shortcut icon" href="" type="image">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+
 </head>
 <body>
     {% include "snippets/navbar.jinja-html" %}

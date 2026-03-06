@@ -31,7 +31,7 @@
 .footer-bottom { margin-top: var(--spacing-2xl); padding-top: var(--spacing-xl); border-top: 1px solid var(--background-2); }
 .bottom-container { max-width: var(--container-max-width); margin: 0 auto; padding: 0 var(--spacing-xl); display: flex; justify-content: space-between; color: var(--third-font-color); font-size: var(--font-size-xs); font-weight: var(--font-weight-medium); }
 
-.privacy-banner { position: fixed; bottom: var(--spacing-3xl); left: 50%; transform: translateX(-50%); width: 90%; max-width: 600px; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); border-radius: var(--radius-xl); padding: var(--spacing-md) var(--spacing-2xl); display: none; justify-content: space-between; align-items: center; z-index: 9999; transition: transform var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1); }
+.privacy-banner { position: fixed; bottom: var(--spacing-3xl); left: 50%; transform: translateX(-50%); width: 90%; max-width: 600px; background: var(--background-1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.4); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1); border-radius: var(--radius-xl); padding: var(--spacing-md) var(--spacing-2xl); display: none; justify-content: space-between; align-items: center; z-index: 9999; transition: transform var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1); }
 
 [data-theme="dark"] .privacy-banner { background: rgba(30, 30, 30, 0.7); border: 1px solid rgba(80, 80, 80, 0.4); }
 

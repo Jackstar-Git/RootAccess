@@ -19,10 +19,10 @@
 
 /* --- Glass Elements --- */
 .glass-element {
-    background: rgba(255, 255, 255, 0.6);
+    background: var(--background-1);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--background-1);
     border-radius: var(--radius-xl);
     padding: var(--spacing-xl);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);

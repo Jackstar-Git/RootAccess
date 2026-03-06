@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/legal.css') }}">
     <title>Legal Notice & Disclosure</title>
-    
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pb1a8fR2IG23QMGYBk8zQ7C0r4kOG55G4+7RThd7GxVbxmYFZHzqLTXW2dEVxErbqD0kKcl00Kd6cTDyXv4qOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
@@ -18,7 +18,6 @@
                 <h1>Legal Notice</h1>
                 <p class="legal-subtitle">Information according to § 5 E-Commerce Act and disclosure according to § 25 Media Act.</p>
             </header>
-            
             <div class="legal-content-card">
                 <h3>Contact Information</h3>
                 <p>
@@ -37,6 +36,23 @@
                 <h3>Editorial Policy (Blattlinie)</h3>
                 <p>
                     This website serves as a platform for providing information about my professional services and projects. Furthermore, the blog provides commentary, news, and personal insights on a wide range of topics, including current technology trends and various other fields of interest.
+                </p>
+
+                <hr>
+
+                <h3>Image & Brand Credits</h3>
+                <p>
+                    This website utilizes icons, logos, and imagery to illustrate technical skills and content. The rights belong to their respective owners:
+                </p>
+                <ul class="legal-list">
+                    <li><strong>Icons:</strong> Provided by <a href="https://fontawesome.com/" target="_blank" rel="noopener" class="legal-link">Font Awesome</a> (License: Font Awesome Free).</li>
+                    <li><strong>Brand Logos:</strong> Logos of programming languages and technologies (e.g., Python, JavaScript, etc.) are trademarks of their respective owners. Their use is for informational purposes and does not imply endorsement.</li>
+                    <li><strong>Stock Imagery:</strong> Licensed or royalty-free images provided by <a href="https://www.shutterstock.com/" target="_blank" rel="noopener" class="legal-link">Shutterstock</a>.</li>
+                </ul>
+
+                <h3>Copyright Notice</h3>
+                <p>
+                    All content created by the site operator on these pages is subject to Austrian copyright law. The reproduction, processing, distribution, and any kind of exploitation outside the limits of copyright law require the written consent of the respective author or creator.
                 </p>
 
                 <blockquote class="legal-disclaimer">

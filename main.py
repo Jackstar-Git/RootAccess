@@ -1,5 +1,6 @@
 ﻿import os
 from datetime import datetime
+import sys
 import threading
 import requests
 import time
@@ -146,6 +147,10 @@ if __name__ == '__main__':
     os.chdir(os.path.dirname(__file__))
     logger.info("*" * 50)
     logger.info("Application Server started!")    
-    stay_alive()    
-    serve(app, port=8080, threads=64, url_scheme="https")
-    #app.run(host="localhost", port=8080, debug=True)
+    print(sys.argv)
+    if sys.argv[1] == "--development":
+        logger.info("Running in development mode.")
+        app.run(host="localhost", port=8080, debug=True)
+    else:   
+        stay_alive()    
+        serve(app, port=8080, threads=64, url_scheme="https")

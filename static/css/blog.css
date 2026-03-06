@@ -1,8 +1,3 @@
-/* article.css 
-    Specialized styles for the single blog post view.
-    Refined for maximum readability and a clean "Glass" feel.
-*/
-
 .article-wrapper {
     background-color: var(--background-1);
     min-height: 100vh;
@@ -136,7 +131,7 @@
     background: rgba(255, 255, 255, 0.45);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--background-1);
     border-radius: var(--radius-xl);
     padding: var(--spacing-2xl);
     margin-bottom: var(--spacing-5xl);
@@ -197,7 +192,7 @@
 }
 
 .modern-tag {
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--background-1);
     border: 1px solid var(--main-color-100);
     padding: 8px 18px;
     border-radius: 50px;
@@ -222,7 +217,7 @@
 }
 
 .modern-tag:hover .tag-hash {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--background-1);
 }
 
 /* --- See Also Section --- */
@@ -245,7 +240,7 @@
 }
 
 .related-card-glass {
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--background-1);
     border: 1px solid rgba(255, 255, 255, 0.3);
     padding: var(--spacing-md);
     border-radius: var(--radius-lg);
@@ -256,7 +251,6 @@
 
 .related-card-glass:hover {
     transform: translateY(-8px);
-    background: white;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
 }
 

@@ -63,3 +63,36 @@
         font-size: var(--font-size-xl);
     }
 }
+
+.legal-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 2rem;
+}
+
+.legal-list li {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--main-color-800);
+}
+
+.legal-list li strong {
+    color: var(--main-color-950);
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--main-color-100);
+    margin: 2rem 0;
+}
+
+.legal-link {
+    color: var(--main-color-600);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+}
+
+.legal-link:hover {
+    border-bottom-color: var(--main-color-600);
+}

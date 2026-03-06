@@ -3,7 +3,6 @@ from .settings import get_settings
 from . import blog_helpers
 from . import logging_utility
 from . import projects
-
 from . import quotes
 
 # convenience imports

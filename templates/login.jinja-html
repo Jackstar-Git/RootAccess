@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <title>Jackstar's Journal - Login</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pb1a8fR2IG23QMGYBk8zQ7C0r4kOG55G4+7RThd7GxVbxmYFZHzqLTXW2dEVxErbqD0kKcl00Kd6cTDyXv4qOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+
+</head>
+<body>
+    {% include "snippets/navbar.jinja-html" %}
+
+    <main>
+        <section class="login-section">
+            <div class="login-card">
+                <div class="login-header">
+                    <h2>Admin Login</h2>
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <p class="flash-message {{ category }}">{{ message }}</p>
+                            {% endfor %}
+                        {% else %}
+                            <p>Please enter your credentials.</p>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+
+                <form action="{{ url_for('admin.login') }}" method="POST" class="login-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+                    <div class="input-group">
+                        <label for="password">Admin Password</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="password" name="password" required>
+                            </div>
+                    </div>
+                    <button type="submit" class="login-btn">Sign In</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    {% include "snippets/footer.jinja-html" %}
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+
+</body>
+</html>

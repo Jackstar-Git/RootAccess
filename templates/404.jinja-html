@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 – Page Not Found</title>
-    <meta name="description" content="The page you were looking for does not exist on Jackstar's portfolio.">
+    <meta name="description" content="The page you were looking for does not exist on here. It might have been moved, deleted, or never existed in the first place.">
     <meta name="author" content="Jackstar">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/error.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-pb1a8fR2IG23QMGYBk8zQ7C0r4kOG55G4+7RThd7GxVbxmYFZHzqLTXW2dEVxErbqD0kKcl00Kd6cTDyXv4qOQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="shortcut icon" href="" type="image">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
     {% include "snippets/navbar.jinja-html" %}

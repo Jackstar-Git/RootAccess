@@ -82,24 +82,30 @@
 
 }
 
-/* dark theme overrides (class or data attribute on root) */
-body.dark, .dark, [data-theme="dark"] {
-    --font-color: #e0e0e0;
-    --secondary-font-color: #999999;
-    --third-font-color: #cccccc;
-    --background-1: #121212;
-    --background-2: #1e1e1e;
-    --background-3: #000000;
-    --background-4: #2a2a2a;
-    --main-bg: var(--background-1);
+/* Dark Mode Overrides */
+[data-theme="dark"] {
+    color-scheme: dark light;
 
-    /* optionally dim main color scale a bit */
-    --main-color-50: #0d1314;
-    --main-color-100: #1a2224;
-    --main-color-200: #2a3335;
-    --main-color-300: #3b4447;
-    --main-color-400: #4c5558;
-    --main-color-500: #5d6669;
+    --main-color-50: #0e3539;
+    --main-color-100: #1f4f55;
+    --main-color-200: #2c7177;
+    --main-color-300: #3b8c8f;
+    --main-color-400: #4b9b9f;
+    --main-color-500: #5da9b0;
+    --main-color-600: #71b4c0;
+    --main-color-700: #86c3d0;
+    --main-color-800: #99ccd9;
+    --main-color-900: #b3d7e0;
+    --main-color-950: #c6e1e8;
+
+    --font-color: #ffffff;
+    --secondary-font-color: #cccccc;
+    --third-font-color: #999999;
+    --warning-color: #ff2e00;
+    --background-1: #1c1e21;
+    --background-2: #343a40;
+    --background-3: #1a1d20;
+    --background-4: #283038;
 }
 
 /* global utilities that are reused everywhere */
@@ -170,30 +176,6 @@ body.dark, .dark, [data-theme="dark"] {
     display: none !important;
 }
 
-/* dark theme overrides - toggled by setting data-theme="dark" on <html> */
-[data-theme="dark"] {
-    /* invert backgrounds and text colours */
-    --font-color: #e0e0e0;
-    --secondary-font-color: #aaaaaa;
-    --third-font-color: #bbbbbb;
-    --background-1: #121212;
-    --background-2: #1e1e1e;
-    --background-3: #2a2a2a;
-    --background-4: #333333;
-    /* adjust main color palette slightly for visibility */
-    --main-color-50: #072a2e;
-    --main-color-100: #09363b;
-    --main-color-200: #0b4a54;
-    --main-color-300: #0e5e6e;
-    --main-color-400: #106c84;
-    --main-color-500: #1882a4;
-    --main-color-600: #1a7b97;
-    --main-color-700: #1b5d70;
-    --main-color-800: #1b4a59;
-    --main-color-900: #183d4f;
-    --main-color-950: #0f2a34;
-}
-
 /* navbar background tweaks in dark mode */
 [data-theme="dark"] .navbar-full {
     background: rgba(0, 0, 0, 0.85);
@@ -253,7 +235,7 @@ h3 {
     padding: 0 var(--spacing-2xl);
     border-radius: var(--radius-lg);
     border: 1px solid var(--main-color-100);
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--background-1);
     backdrop-filter: blur(10px);
     color: var(--main-color-950);
     font-weight: var(--font-weight-semibold);
@@ -275,7 +257,7 @@ h3 {
     max-height: 0;
     overflow: hidden;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    background: rgba(255, 255, 255, 0.6);
+    background: var(--background-1);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.4);
@@ -315,7 +297,6 @@ h3 {
     border: 1px solid var(--background-2);
     font-size: var(--font-size-sm);
     appearance: none;
-    background: white;
     cursor: pointer;
     transition: var(--transition-medium);
 }
@@ -367,7 +348,7 @@ h3 {
     padding: var(--spacing-xs) var(--spacing-md);
     border-radius: var(--radius-md);
     border: 1px solid rgba(255, 255, 255, 0.4);
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--background-1);
     backdrop-filter: blur(6px);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
@@ -436,7 +417,6 @@ h3 {
     border: 1px solid var(--background-2);
     border-radius: var(--radius-md);
     font-size: var(--font-size-sm);
-    background: white;
     cursor: pointer;
     transition: var(--transition-medium);
 }
@@ -585,7 +565,7 @@ h3 {
 .clear-filters-btn {
     padding: var(--spacing-xs) var(--spacing-lg);
     border: 1px solid var(--background-2);
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--background-1);
     border-radius: var(--radius-md);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
@@ -596,7 +576,7 @@ h3 {
 }
 
 .clear-filters-btn:hover {
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--background-1);
     border-color: var(--main-color-600);
     color: var(--main-color-600);
 }
@@ -671,7 +651,6 @@ a {
     padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm) calc(var(--spacing-xl) + var(--spacing-sm));
     border-radius: var(--radius-lg);
     border: 1px solid var(--main-color-100);
-    background: white;
     outline: none;
     transition: var(--transition-medium);
     font-size: var(--font-size-md);

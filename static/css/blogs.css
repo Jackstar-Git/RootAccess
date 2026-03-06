@@ -153,7 +153,6 @@
     gap: var(--spacing-xs);
     padding: var(--spacing-xs) var(--spacing-md);
     min-height: 42px;
-    background: white;
     border: 1px solid var(--background-2);
     border-radius: var(--radius-md);
     cursor: text;
@@ -232,7 +231,6 @@
     top: calc(100% + 5px);
     left: 0;
     width: 100%;
-    background: white;
     border: 1px solid var(--background-2);
     border-radius: var(--radius-md);
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -300,7 +298,6 @@
     padding: var(--spacing-xs);
     border: 1px solid var(--background-2);
     border-radius: var(--radius-md);
-    background: white;
     font-family: inherit;
     font-size: var(--font-size-sm);
     color: var(--font-color);

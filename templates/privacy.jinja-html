@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/legal.css') }}">
     <title>Privacy Policy</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+
 </head>
 <body>
     {% include "snippets/navbar.jinja-html" %}
@@ -63,7 +65,7 @@
             </div>
         </section>
     </main>
-
+    <script src="{{url_for('static', filename='js/global.js') }}"></script>
     {% include "snippets/footer.jinja-html" %}
 </body>
 </html>

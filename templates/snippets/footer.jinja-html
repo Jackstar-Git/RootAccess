@@ -2,7 +2,7 @@
 <footer class="main-footer">
     <div class="footer-container">
         <div class="footer-brand">
-            <h3 class="logo">PORTFOLIO<span class="dot">.</span></h3>
+            <h3 class="logo">Root.Access<span class="dot">.</span> - Created by Jackstar</h3>
             <p>Digital products crafted in Austria, powered by caffeine, built with passion a touch of chaos and the occasional burst of brilliance.</p>
             <div class="social-links">
                 <a href="https://github.com/Jackstar-Git" aria-label="GitHub"><i class="fab fa-github"></i></a>
