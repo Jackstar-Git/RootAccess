@@ -33,7 +33,7 @@ def plugins(filename):
 @internal_blueprint.route("/download/<path:filepath>", methods=["GET"])
 def download(filepath):
     logger.info(f"GET request received for download | Path: {filepath}")
-    if not session.get("login", False):
+    if not session.get("is_admin", False):
         logger.warning("Unauthorized download attempt")
         return abort(403)
 
