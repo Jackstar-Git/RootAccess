@@ -5,7 +5,7 @@
 
         <div class="nav-logo">
             <a href="/">
-                <img src="static/assets/images/logos/LogoBrand.png" alt="Brand Logo">
+                <img src="/static/assets/images/logos/LogoBrand.png" alt="Brand Logo">
                 <span>Root.Access <span class="dot">|</span> Jackstar</span>
             </a>
         </div>
