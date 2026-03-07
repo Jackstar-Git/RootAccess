@@ -1,4 +1,22 @@
 [
+    {
+    "id": "0",
+    "title": "RootAccess - Portfolio",
+    "version": "1.0.0",
+    "description_short": "This is the code for my personal portfolio and blogging website, built with Flask and Jinja2.",
+    "content_raw": "",
+    "image_url": null,
+    "github_url": "https://github.com/Jackstar-Git/RootAccess",
+    "demo_url": "https://https://portfolio-h6m8.onrender.com/",
+    "tech_stack": ["JavaScript", "HTML", "CSS", "Jinja2", "Flask"],
+    "time_created": 1709302224,
+    "last_modified": 1709815526,
+    "tags": ["Personal", "Portfolio", "Blog"],
+    "maturity": "Stable",
+    "activity": "Active",
+    "topic": "Personal",
+    "download_file": null
+  },
   {
     "id": "1",
     "title": "WhatsappWeb-EnhancedPrivacy-Extension",
@@ -15,17 +33,17 @@
     "maturity": "MVP",
     "activity": "Active",
     "topic": "Productivity",
-    "download_file": "test"
+    "download_file": null
   },
   {
     "id": "2",
-    "title": "Chromium-Tab-Manager-",
+    "title": "Chromium-Tab-Manager",
     "version": "1.0.0",
     "description_short": "A tool to organize and manage high volumes of browser tabs.",
-    "content_raw": "main",
+    "content_raw": "",
     "image_url": "/static/assets//images/projects/Tab-Manager.png",
-    "github_url": "https://github.com/Jackstar-Git/Chromium-Tab-Manager-",
-    "demo_url": "",
+    "github_url": "https://github.com/Jackstar-Git/Chromium-Tab-Manager",
+    "demo_url": null,
     "tech_stack": ["JavaScript", "HTML", "CSS"],
     "time_created": 1763763877,
     "last_modified": 1763763904,
@@ -79,7 +97,7 @@
     "content_raw": "main",
     "image_url": "/static/assets/images/projects/Carousel.png",
     "github_url": "https://github.com/Jackstar-Git/Simple-JS-Carousel",
-    "demo_url": "",
+    "demo_url": null,
     "tech_stack": ["JavaScript", "HTML", "CSS"],
     "time_created": 1727462661,
     "last_modified": 1764652998,
@@ -87,7 +105,7 @@
     "maturity": "Stable",
     "activity": "Archived",
     "topic": "UI/UX",
-    "download_file": null
+    "download_file": "Simple-JS-Carousel-Full-Release_V1.0.0.zip"
   },
   {
     "id": "6",
@@ -146,7 +164,7 @@
   {
     "id": "9",
     "title": "Notepad-Clone",
-    "version": "0.7.0",
+    "version": "2.0.2",
     "description_short": "A Windows Notepad clone built with Python and Tkinter.",
     "content_raw": "main",
     "image_url": "/static/assets/images/projects/Notepad.png",
@@ -159,7 +177,7 @@
     "maturity": "Stable",
     "activity": "Stalled",
     "topic": "Desktop App",
-    "download_file": null
+    "download_file": "TextEditor-Full-Release_V2.0.2.zip"
   },
   {
     "id": "10",
@@ -196,5 +214,24 @@
     "activity": "Archived",
     "topic": "Game Development",
     "download_file": null
+  },
+  {
+  "id": "12",
+  "title": "QR-Code-Generator",
+  "version": "1.0.0",
+  "description_short": "A simple QR code generator built with Python!",
+  "content_raw": "main",
+  "image_url": null,
+  "github_url": "https://github.com/Jackstar-Git/QR-Code-Generator",
+  "demo_url": null,
+  "tech_stack": ["Python"],
+  "time_created": 1694634065,
+  "last_modified": 1694634102,
+  "tags": ["Utility", "Automation"],
+  "maturity": "Stable",
+  "activity": "Archived",
+  "topic": "Utility",
+  "download_file": "QR-Code-Generator-Full-Release_V1.0.0.exe"
   }
+
 ]
