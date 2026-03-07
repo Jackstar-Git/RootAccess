@@ -90,7 +90,7 @@ def sitemap():
                     "priority": "0.8" if "/" == rule.rule else "0.5"
                 })
 
-    response = make_response(render_template("sitemap.xml", pages=pages))
+    response = make_response(render_template("meta/sitemap.xml", pages=pages))
     response.headers["Content-Type"] = "application/xml"
     logger.info("Sitemap generated with %d pages.", len(pages))
     return response
@@ -107,12 +107,12 @@ def method_not_allowed(error):
 @app.errorhandler(404)
 def page_not_found(error):
     logger.warning(f"A page was not found: {request.path}; {error}")
-    return render_template("404.jinja-html")
+    return render_template("meta/404.jinja-html")
 
 @app.errorhandler(403)
 def access_denied(error):
     logger.warning(f"403 Access Denied: {request.path}; {error}")
-    return render_template("403.jinja-html")
+    return render_template("meta/403.jinja-html")
 
 @app.errorhandler(CSRFError)
 def handle_csrf_error(e):

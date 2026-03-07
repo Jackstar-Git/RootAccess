@@ -22,10 +22,10 @@ def contact():
 @others_blueprint.route("/imprint", methods=["GET", "POST"])
 def imprint():
     logger.info("Imprint route accessed")
-    return render_template("imprint.jinja-html")
+    return render_template("legal/imprint.jinja-html")
 
 
 @others_blueprint.route("/privacy", methods=["GET", "POST"])
 def privacy():
     logger.info("Privacy route accessed")
-    return render_template("privacy.jinja-html")
+    return render_template("legal/privacy.jinja-html")

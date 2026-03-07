@@ -35,7 +35,7 @@ def login():
         logger.warning(f"Unauthorized admin access attempt from {request.remote_addr}")
         flash("Access denied: Wrong password", "error")
 
-    return render_template("login.jinja-html")
+    return render_template("admin/login.jinja-html")
 
 @admin_blueprint.route("/logout")
 def logout():
@@ -104,7 +104,7 @@ def library():
     files_data.sort(key=lambda x: (x['type'] != 'folder', x['name'].lower()))
 
     return render_template(
-        "media-library.jinja-html", 
+        "admin/media-library.jinja-html", 
         files=files_data, 
         path=current_path,
         root=ROOT_DIR
