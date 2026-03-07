@@ -1,5 +1,3 @@
-/* blog.css */
-/* root.css is linked by each template; import not required */
 .blog-container {
     max-width: var(--container-max-width);
     margin: 0 auto;

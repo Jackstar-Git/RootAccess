@@ -22,8 +22,8 @@
 
         <section class="project-toolbar">
             <div class="search-wrapper">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" id="project-search-input" placeholder="Search projects by name or technology...">
+                <input type="text" placeholder="Search articles..." id="search-input">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
             </div>
             
             <button class="filter-toggle-btn" id="filter-btn">
@@ -34,24 +34,109 @@
 
         <section class="filter-drawer" id="filter-drawer">
             <div class="drawer-inner">
-                <div class="filter-col">
-                    <label>Industry</label>
-                    <div class="filter-options">
-                        <button class="opt-btn active">All</button>
-                        <button class="opt-btn btn-color-teal">Fintech</button>
-                        <button class="opt-btn btn-color-blue">AI/ML</button>
-                        <button class="opt-btn btn-color-purple">Creative</button>
+                <div class="filter-col filter-group">
+                    <label><i class="fa-solid fa-sort"></i> Sort</label>
+                    <div class="filter-select-wrapper">
+                        <select id="sort-select">
+                            <option value="newest">🔽 Newest</option>
+                            <option value="oldest">🔼 Oldest</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                     </div>
                 </div>
-                <div class="filter-col">
-                    <label>Core Stack</label>
-                    <div class="tag-cloud">
-                        <button class="tag-link btn-color-teal">#Python</button>
-                        <button class="tag-link btn-color-blue">#React</button>
-                        <button class="tag-link btn-color-purple">#Docker</button>
-                        <button class="tag-link btn-color-teal">#AWS</button>
+                <div class="filter-col filter-group">
+                    <label><i class="fa-solid fa-folder-open"></i> Topics</label>
+                    <div class="filter-select-wrapper">
+                        <select id="category-select">
+                            <option value="">All</option>
+                            {% for topic in settings.topics %}
+                                <option>{{ topic }}</option>
+                            {% endfor %}
+                        </select>
+                        <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                     </div>
                 </div>
+                <div class="filter-col filter-group">
+                    <label><i class="fa-solid fa-tags"></i> Tech Stack</label>
+                    <div class="tag-input">
+                        <input type="text" placeholder="e.g. Python, JavaScript, HTML" id="tags-input">
+                        <div class="tag-suggestions">
+                            <span>#Python</span>
+                            <span>#JavaScript</span>
+                            <span>#HTML</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-col filter-group">
+                    <label><i class="fa-solid fa-calendar-days"></i> Date</label>
+                    <div class="filter-date-range">
+                        <input type="date" id="start-date"><span>to</span><input type="date" id="end-date">
+                    </div>
+                </div>
+                
+                <div class="filter-col filter-group">
+                    <label><i class="fa-solid fa-clock"></i> Activity</label>
+                    
+                    <select name="reading_time" class="native-multiselect" multiple>
+                        {% for activity in settings.activity_statuses %}
+                            <option value="{{ activity }}">{{ activity }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <div class="custom-multiselect" id="reading-time-multiselect" style="display: none;">
+                        <div class="multiselect-header">
+                            <div class="multiselect-pills"></div>
+                            <input type="text" class="multiselect-search" placeholder="Search...">
+                            <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+                        </div>
+                        <div class="multiselect-dropdown">
+                            <div class="multiselect-actions">
+                                <label><input type="checkbox" class="select-all"> Select All</label>
+                            </div>
+                            <div class="multiselect-options">
+                                {% for activity in settings.activity_statuses %}
+                                    <label class="filter-list-item"><input type="checkbox" value="{{ activity }}"> <span>{{ activity }}</span></label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-col filter-group">
+                    <label><i class="fa-solid fa-bars-progress"></i> Maturity</label>
+                    
+                    <select name="maturity" class="native-multiselect" multiple>
+                        {% for maturity in settings.maturity_levels %}
+                            <option value="{{ maturity }}">{{ maturity }}</option>
+                        {% endfor %}
+                    </select>
+
+                    <div class="custom-multiselect" id="type-multiselect" style="display: none;">
+                        <div class="multiselect-header">
+                            <div class="multiselect-pills"></div>
+                            <input type="text" class="multiselect-search" placeholder="Search...">
+                            <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+                        </div>
+                        <div class="multiselect-dropdown">
+                            <div class="multiselect-actions">
+                                <label><input type="checkbox" class="select-all"> Select All</label>
+                            </div>
+                            <div class="multiselect-options">
+                                {% for maturity in settings.maturity_levels %}
+                                    <label class="filter-list-item">
+                                        <input type="checkbox" value="{{ maturity }}">
+                                        <span>{{ maturity }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="filter-actions">
+                <button class="clear-filters-btn"><i class="fa-solid fa-rotate-left"></i> Clear All</button>
+                <button class="apply-filters-btn"><i class="fa-solid fa-check"></i> Apply Filters</button>
             </div>
         </section>
 
@@ -63,9 +148,9 @@
             {% else %}
                 <p class="no-results">
                     {% if search_query %}
-                        No articles found matching "{{ search_query }}". Try different keywords.
+                        No projects found matching "{{ search_query }}". Try different keywords.
                     {% else %}
-                        No articles found with the current filters. Try adjusting your search criteria.
+                        No projects found with the current filters. Try adjusting your search criteria.
                     {% endif %}
                 </p>
             {% endif %}
@@ -73,5 +158,7 @@
     </main>
     {% include "snippets/footer.jinja-html" %}
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/projects.js') }}"></script>
+
 </body>
 </html>

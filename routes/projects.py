@@ -12,17 +12,15 @@ def projects_page():
     search = query.get("search", "").strip()
     sort_by = query.get("sort", "newest").strip()
 
-    # 1. Get Data
     if search:
         project_list = projects.search_projects(search)
     else:
         project_list = projects.load_projects()
 
-    # 2. Filter by Category
+
     if query.get("category"):
         project_list = [p for p in project_list if p.get("category") == query["category"]]
 
-    # 3. Filter by Tech Stack
     if query.get("tech_stack"):
         q_tech = {t.strip().lower() for t in query["tech_stack"].split(",")}
         project_list = [
@@ -30,18 +28,34 @@ def projects_page():
             if q_tech.intersection(map(str.lower, p.get("tech_stack", [])))
         ]
 
-    # 4. Sort
-    reverse = True if sort_by == "newest" else False
+    if query.get("activity"):
+        q_activity = {a.strip() for a in query["activity"].split(",")}
+        project_list = [p for p in project_list if p.get("activity") in q_activity]
+
+    if query.get("maturity"):
+        q_maturity = {m.strip() for m in query["maturity"].split(",")}
+        project_list = [p for p in project_list if p.get("maturity") in q_maturity]
+
+    import datetime
+    try:
+        if query.get("start_date"):
+            start_ts = datetime.datetime.strptime(query["start_date"], "%Y-%m-%d").timestamp()
+            project_list = [p for p in project_list if p.get("time_created", 0) >= start_ts]
+        if query.get("end_date"):
+            end_ts = datetime.datetime.strptime(query["end_date"], "%Y-%m-%d").timestamp()
+            project_list = [p for p in project_list if p.get("time_created", 0) <= end_ts]
+    except ValueError:
+        pass 
+
+    reverse = (sort_by == "newest")
     project_list.sort(key=lambda x: x.get("time_created", 0), reverse=reverse)
 
-    base_query = {k: v for k, v in query.items()}
-    
     return render_template(
         "projects.jinja-html",
         projects=project_list,
         search_query=search,
         settings=get_settings("project_config"),
-        **base_query
+        **query
     )
 
 @projects_blueprint.route("/projects/<project_id>", methods=["GET"])

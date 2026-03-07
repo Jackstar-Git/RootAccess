@@ -105,71 +105,34 @@ function initMultiselects() {
     });
 }
 
-function performBlogSearch() {
-	const searchInput = document.getElementById("search-input");
-	const params = new URLSearchParams();
+function performProjectSearch() {
+    const params = new URLSearchParams();
 
-	// Add search query
-	const searchQuery = searchInput?.value.trim();
-	if (searchQuery) {
-		params.append("search", searchQuery);
-	}
+    const getValue = (id) => document.getElementById(id)?.value.trim();
 
-	// Add sort
-	const sortSelect = document.getElementById("sort-select");
-	const sortValue = sortSelect?.value;
-	if (sortValue && sortValue !== "newest") {
-		params.append("sort", sortValue);
-	}
+    // Text & Selects
+    if (getValue("search-input")) params.append("search", getValue("search-input"));
+    if (getValue("sort-select") !== "newest") params.append("sort", getValue("sort-select"));
+    if (getValue("category-select")) params.append("category", getValue("category-select"));
+    if (getValue("tags-input")) params.append("tech_stack", getValue("tags-input")); // Maps to tech_stack
 
-	// Add category
-	const categorySelect = document.getElementById("category-select");
-	const categoryValue = categorySelect?.value;
-	if (categoryValue && categoryValue !== "All Topics") {
-		params.append("category", categoryValue);
-	}
+    // Dates
+    if (getValue("start-date")) params.append("start_date", getValue("start-date"));
+    if (getValue("end-date")) params.append("end_date", getValue("end-date"));
 
-	// Add tags
-	const tagInput = document.getElementById("tags-input");
-	const tagValue = tagInput?.value.trim();
-	if (tagValue) {
-		params.append("tags", tagValue);
-	}
+    // Multiselect: Activity (Previously reading-time-multiselect)
+    const activityCheckboxes = Array.from(document.querySelectorAll("#reading-time-multiselect .multiselect-options input[type='checkbox']:checked"));
+    if (activityCheckboxes.length) {
+        params.append("activity", activityCheckboxes.map(cb => cb.value).join(","));
+    }
 
-	// Add date range
-	const startDate = document.getElementById("start-date");
-	const endDate = document.getElementById("end-date");
-	if (startDate?.value) {
-		params.append("start_date", startDate.value);
-	}
-	if (endDate?.value) {
-		params.append("end_date", endDate.value);
-	}
+    // Multiselect: Maturity (Previously type-multiselect)
+    const maturityCheckboxes = Array.from(document.querySelectorAll("#type-multiselect .multiselect-options input[type='checkbox']:checked"));
+    if (maturityCheckboxes.length) {
+        params.append("maturity", maturityCheckboxes.map(cb => cb.value).join(","));
+    }
 
-	// Add reading time filter
-	const readingTimeCheckboxes = Array.from(document.querySelectorAll("#reading-time-multiselect .multiselect-options input[type='checkbox']"));
-	const checkedReadingTime = readingTimeCheckboxes
-		.filter(cb => cb.checked)
-		.map(cb => cb.value)
-		.join(",");
-	if (checkedReadingTime) {
-		params.append("reading_time", checkedReadingTime);
-	}
-
-	// Add type filter
-	const typeCheckboxes = Array.from(document.querySelectorAll("#type-multiselect .multiselect-options input[type='checkbox']"));
-	const checkedTypes = typeCheckboxes
-		.filter(cb => cb.checked)
-		.map(cb => cb.value)
-		.join(",");
-	if (checkedTypes) {
-		params.append("type", checkedTypes);
-	}
-
-	// Navigate with parameters
-	const queryString = params.toString();
-	const url = queryString ? `/blog?${queryString}` : "/blog";
-	location.href = url;
+    location.href = params.toString() ? `/projects?${params.toString()}` : "/projects";
 }
 
 function restoreFilterState() {
@@ -240,7 +203,7 @@ function restoreFilterState() {
 	}
 }
 
-function initBlogSearch() {
+function initProjectSearch() {
 	const searchInput = document.getElementById("search-input");
 	const searchIcon = document.querySelector(".search-icon");
 	const clearBtn = document.querySelector(".clear-filters-btn");
@@ -252,25 +215,25 @@ function initBlogSearch() {
 	// Make search icon clickable and enter key functional
 	if (searchIcon) {
 		searchIcon.addEventListener("click", () => {
-			performBlogSearch();
+			performProjectSearch();
 		});
 	}
     
 	searchInput.addEventListener("keydown", (e) => {
 		if (e.key === "Enter") {
-			performBlogSearch();
+			performProjectSearch();
 		}
 	});
     
 	// Handle apply filters button
 	if (applyBtn) {
-		applyBtn.addEventListener("click", performBlogSearch);
+		applyBtn.addEventListener("click", performProjectSearch);
 	}
     
 	// Handle clear filters
 	if (clearBtn) {
 		clearBtn.addEventListener("click", () => {
-			// Reset all inputs and navigate to /blog
+			// Reset all inputs and navigate to /Project
 			if (searchInput) searchInput.value = "";
 			const filterDrawer = document.getElementById("filter-drawer");
 			if (filterDrawer) {
@@ -279,7 +242,7 @@ function initBlogSearch() {
 				filterDrawer.querySelectorAll("input[type='checkbox']").forEach(checkbox => checkbox.checked = false);
 				filterDrawer.querySelectorAll("select").forEach(select => select.value = select.options[0].value);
 			}
-			location.href = "/blog";
+			location.href = "/projects";
 		});
 	}
     
@@ -307,7 +270,7 @@ function initBlogSearch() {
 			if (endDate) params.append("end_date", endDate);
 			params.append("offset", offset);
             
-			location.href = `/blog?${params.toString()}`;
+			location.href = `/projects?${params.toString()}`;
 		});
 	}
     
@@ -318,11 +281,11 @@ function initBlogSearch() {
     initMultiselects();
 }
 
-// ensure blog behaviours initialize only on blog pages
+// ensure Project behaviours initialize only on Project pages
 if (document.readyState === "loading") {
 	document.addEventListener("DOMContentLoaded", () => {
-		initBlogSearch();
+		initProjectSearch();
 	});
 } else {
-	initBlogSearch();
+	initProjectSearch();
 }
