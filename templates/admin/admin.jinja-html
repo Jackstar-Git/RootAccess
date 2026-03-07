@@ -1,67 +1,163 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('internal.uploads', filename='Logo.png') }}" type="image">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <title>Admin Panel - Übersicht</title>
+    <title>Admin Panel - Dashboard</title>
 </head>
 <body>
     <div class="main-container">
         {% include "admin/sidebar.jinja-html" %}
+        <main class="main-content container" role="main">
+            <h1 class="page-title text-gradient">System & Product Overview</h1>
 
-        <main class="main-content">
-            <h2>Übersicht der aktuellen System- und Produktinformationen</h2>
-            
             <div class="quicklinks-container">
                 <a href="/" target="_blank" rel="noopener noreferrer" class="quicklink-card">
-                    <i class="fa-solid fa-house"></i>
+                    <i class="fa-solid fa-house" aria-hidden="true"></i>
                     <h3>Homepage</h3>
-                    <p>Zurück zur Hauptseite des Dashboards.</p>
+                    <p>Return to the main page.</p>
                 </a>
 
-                <a href="/admin/einstellungen/allgemein" class="quicklink-card">
-                    <i class="fa-solid fa-gear"></i>
-                    <h3>Einstellungen</h3>
-                    <p>System- und Konfigurationseinstellungen verwalten.</p>
+                <a href="/admin/settings/general" class="quicklink-card">
+                    <i class="fa-solid fa-gear" aria-hidden="true"></i>
+                    <h3>Settings</h3>
+                    <p>Manage system and configuration settings.</p>
                 </a>
 
-                <a href="/admin/einstellungen/logs" class="quicklink-card">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
+                <a href="/admin/settings/logs" class="quicklink-card">
+                    <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
                     <h3>Logs</h3>
-                    <p>Lass dir die Logs, Fehlermeldungen und Serverevents anzeigen.</p>
+                    <p>View logs, error messages, and server events.</p>
                 </a>
             </div>
 
-            <div class="status">
-                <div class="status-item">
-                    <h4>CPU Nutzung</h4>
-                    <progress id="cpuProgress" class="low" value="0" max="100"></progress>
-                    <span id="cpuUsageText">Laden...</span>
-                </div>
-
-                <div class="status-item">
-                    <h4>RAM Nutzung</h4>
-                    <progress id="ramProgress" class="medium" value="0" max="100"></progress>
-                    <span id="ramUsageText">Laden...</span>
-                    <p id="ramAdditionalInfo"></p>
-                </div>
-
-                <div class="status-item">
-                    <h4>Speicherplatz</h4>
-                    <progress id="storageProgress" class="high" value="0" max="100"></progress>
-                    <span id="storageUsageText">Laden...</span>
-                    <p id="storageAdditionalInfo"></p>
+            <div class="status-container">
+                <div class="status-card">
+                    <h4>System Status</h4>
+                    <div class="status-bars">
+                        <div class="status-bar-container">
+                            <label><i class="fa-solid fa-microchip"></i> CPU Usage</label>
+                            <progress id="cpuProgress" class="low" value="50" max="100" aria-label="CPU Usage"></progress>
+                            <span id="cpuUsageText">Loading...</span>
+                        </div>
+                        <div class="status-bar-container">
+                            <label><i class="fa-solid fa-memory"></i> RAM Usage</label>
+                            <progress id="ramProgress" class="medium" value="50" max="100" aria-label="RAM Usage"></progress>
+                            <span id="ramUsageText">Loading...</span>
+                            <p id="ramAdditionalInfo" class="additional-info"></p>
+                        </div>
+                        <div class="status-bar-container">
+                            <label><i class="fa-solid fa-hard-drive"></i> Storage</label>
+                            <progress id="storageProgress" class="high" value="50" max="100" aria-label="Storage Usage"></progress>
+                            <span id="storageUsageText">Loading...</span>
+                            <p id="storageAdditionalInfo" class="additional-info"></p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <button id="refreshBtn" onclick="fetchSystemUsage()">
-                <i class="fa-solid fa-rotate-right"></i> Aktualisieren
+            <button id="refreshBtn" onclick="fetchSystemUsage()" class="btn-secondary" aria-label="Refresh system statistics">
+                <i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Refresh Stats
             </button>
+
+            <div class="calendar-container">
+                <h2>Calendar</h2>
+                <table class="calendar" role="grid" aria-label="Calendar">
+                    <thead>
+                        <tr>
+                            <th colspan="1" class="nav-cell">
+                                <button type="button" onclick="changeMonth(-1)" aria-label="Previous month" class="btn-outline">
+                                    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                                </button>
+                            </th>
+                            <th colspan="5" id="calendarMonthYear" class="month-year text-primary">
+                                {{year}} - {{month}}
+                            </th>
+                            <th colspan="1" class="nav-cell">
+                                <button type="button" onclick="changeMonth(1)" aria-label="Next month" class="btn-outline">
+                                    <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                                </button>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+                            <th>Sun</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set day_date = today.replace(month=month, year=year) %}
+                        {% for week in calendar %}
+                            <tr>
+                                {% for day in week %}
+                                    {% if day %}
+                                        {% set day_date = day_date.replace(day=day) %}
+                                        <td
+                                            {% if day_date < today %}class="past-day"{% endif %}
+                                            {% if day_date == today %}id="today"{% endif %}
+                                            role="button"
+                                            tabindex="0"
+                                            onclick="openModal({{ day }}, {{ month }}, {{ year }})">
+                                            <div class="day-number">{{ day }}</div>
+                                            <div class="event-count">
+                                                {% set event_count = events | selectattr('year', 'equalto', year) | selectattr('month', 'equalto', month) | selectattr('day', 'equalto', day) | list | length %}
+                                                {% if event_count > 0 %}
+                                                    <span class="event-count-badge">{{ event_count }} Event{% if event_count > 1 %}s{% endif %}</span>
+                                                {% else %}
+                                                    <span class="event-count-badge empty" aria-hidden="true"></span>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    {% else %}
+                                        <td class="empty-day past-day"></td>
+                                    {% endif %}
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-overlay" id="modalOverlay" onclick="closeModal()" role="presentation"></div>
+            <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalHeader">
+                <div class="modal-header">
+                    <h3 id="modalHeader" class="text-primary">Day Details</h3>
+                    <button class="close-icon btn-outline" onclick="closeModal()" aria-label="Close modal">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <div id="modalContent" class="modal-body">
+                    <!-- Event content will be loaded here -->
+                </div>
+
+                <div class="modal-footer">
+                    <button id="addEventBtn" class="btn-secondary" onclick="toggleAddEventForm()" aria-label="Add new event">
+                        + Add Event
+                    </button>
+
+                    <form id="addEventForm" class="hidden-form" onsubmit="submitEvent(event)" aria-label="Add new event form">
+                        <input type="hidden" id="csrf_token" name="csrf_token" value="{{ generate_token() }}">
+                        <div class="input-group">
+                            <input type="text" id="eventName" placeholder="Event Name" required aria-required="true" class="filter-input">
+                        </div>
+                        <div class="input-group">
+                            <textarea id="eventDescription" placeholder="Event Description" required rows="3" aria-required="true" class="filter-input"></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn-outline" onclick="toggleAddEventForm()">Cancel</button>
+                            <button type="submit" class="btn-secondary">Save Event</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </main>
     </div>
 

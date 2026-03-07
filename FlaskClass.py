@@ -8,6 +8,7 @@ from flask_wtf.csrf import CSRFProtect
 # =====================================
 # Configure the Flask app and session settings
 # =====================================
+
 class CustomFlask(Flask):
     def __init__(self, import_name, *args, **kwargs):
         super().__init__(import_name, *args, **kwargs)

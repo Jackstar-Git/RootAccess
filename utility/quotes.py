@@ -2,26 +2,34 @@ import json
 import random
 from datetime import date as dt_date
 from functools import lru_cache
+from typing import List, Dict, Optional, Final
 from utility.logging_utility import logger
 
+Quote = Dict[str, str]
+
+DEFAULT_QUOTE: Final[Quote] = {
+    "text": "Developer failed his job. Quotes are broken :(",
+    "author": "System"
+}
+
 @lru_cache(maxsize=1)
-def load_quotes(filepath="data/quotes.json"):
+def load_quotes(filepath: str = "data/quotes.json") -> List[Quote]:
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
+        with open(filepath, "r", encoding="utf-8") as f:
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
-        return [{"text": "Developer failed his job. Quotes are broken :(", "author": "System"}]
+        return [DEFAULT_QUOTE]
 
-def get_quote_of_the_day(date=None):
+def get_quote_of_the_day(date: Optional[dt_date] = None) -> Quote:
     if date is None:
         date = dt_date.today()
         logger.info(f"Using today's date for quote of the day: {date}")
     
-    quotes = load_quotes()
-    seed_str = date.strftime("%Y-%m-%d")
+    quotes: List[Quote] = load_quotes()
+    seed_str: str = date.strftime("%Y-%m-%d")
     
     random.seed(seed_str)
-    qotd = random.choice(quotes)
+    qotd: Quote = random.choice(quotes)
     random.seed()
     
     return qotd

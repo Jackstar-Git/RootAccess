@@ -1,11 +1,7 @@
-/* global.js - Cleaned and Optimized */
-
-// 1. UI Helpers
 function updateFooterYear() {
     const currentDate = new Date();
     const displayElement = document.querySelector("#displayYear");
     if (displayElement) {
-        // Displays "Month Year" as per your previous request
         const monthNames = ["January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"];
         displayElement.innerHTML = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
@@ -35,7 +31,6 @@ function handlePrivacyBanner() {
     }
 }
 
-// 2. Component Initializers
 function initFilterToggle() {
     const filterBtn = document.getElementById("filter-btn");
     const drawer = document.getElementById("filter-drawer");
@@ -67,7 +62,6 @@ function initHeroTilt() {
     });
 }
 
-// 3. Theme Logic (Fixed to apply even if no switch is found)
 function initThemeSwitch() {
     const switches = document.querySelectorAll(".theme-switch");
     const root = document.documentElement;
@@ -97,16 +91,13 @@ function initThemeSwitch() {
         applyMode(current);
     }
 
-    // Initialize Theme
     const saved = localStorage.getItem("theme");
     const initial = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     applyMode(initial);
 
-    // Attach Listeners
     switches.forEach(s => s.addEventListener("click", toggleTheme));
 }
 
-// 4. Main Global Loader
 function initGlobal() {
     updateFooterYear();
     handlePrivacyBanner();
@@ -114,13 +105,10 @@ function initGlobal() {
     initHeroTilt();
     initThemeSwitch();
 
-    // Safely check if blog search exists (usually in blogs.js)
     if (typeof initBlogSearch === "function") {
         initBlogSearch();
     }
 }
-
-// Bootstrapper
 if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initGlobal);
 } else {

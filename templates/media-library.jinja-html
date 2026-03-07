@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Media Library</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/root.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/media-library.css') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image">
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja-html" %}
+        <div class="main-content">
+            <input type="hidden" id="csrf_token" name="csrf_token" value="{{ generate_token() }}">
+
+            <!-- Toolbar -->
+            <div class="toolbar-container">
+                <!-- Navigation Toolbar -->
+                <div class="toolbar navigation-toolbar">
+                    <button class="toolbar-btn icon-btn" id="back-btn" onclick="folderUp()" aria-label="Go back">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </button>
+                    <div class="address-bar-container">
+                        <input type="text" class="address-bar" id="address-bar" placeholder="Enter path" value="{{ path }}">
+                        <button class="toolbar-btn" onclick="navigateToPath()">Go</button>
+                    </div>
+                    <button class="toolbar-btn" onclick="selectAllItems()">Select All</button>
+                    <div class="toolbar-divider"></div>
+                    <div class="sort-controls">
+                        <label for="sort-options" class="toolbar-label">Sort by:</label>
+                        <select id="sort-options" class="toolbar-select">
+                            <option value="name-asc">Name (A-Z)</option>
+                            <option value="name-desc">Name (Z-A)</option>
+                            <option value="size-asc">Size (Small-Large)</option>
+                            <option value="size-desc">Size (Large-Small)</option>
+                            <option value="date-asc">Date (Old-New)</option>
+                            <option value="date-desc">Date (New-Old)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Action Toolbar -->
+                <div class="toolbar action-toolbar">
+                    <button class="toolbar-btn" onclick="createLocation()">
+                        <i class="fa-solid fa-folder-plus"></i> New Folder
+                    </button>
+                    <button class="toolbar-btn" onclick="uploadFile()">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Files
+                    </button>
+                    <div class="toolbar-divider"></div>
+                    <button class="toolbar-btn" onclick="copyPath()" id="copy-btn">
+                        <i class="fa-solid fa-copy"></i> Copy
+                    </button>
+                    <button class="toolbar-btn" onclick="pastePath()" id="paste-btn">
+                        <i class="fa-solid fa-paste"></i> Paste
+                    </button>
+                    <button class="toolbar-btn" onclick="renamePath()" id="rename-btn">
+                        <i class="fa-solid fa-edit"></i> Rename
+                    </button>
+                    <button class="toolbar-btn danger-btn" onclick="deleteFiles()" id="delete-btn">
+                        <i class="fa-solid fa-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+
+
+            <!-- File List -->
+            <div class="file-list-container">
+                <div class="file-list-header">
+                    <div class="file-header-checkbox">
+                        <input type="checkbox" id="select-all-checkbox">
+                    </div>
+                    <div class="file-header-name">Name</div>
+                    <div class="file-header-date">Last Modified</div>
+                    <div class="file-header-type">Type</div>
+                    <div class="file-header-size">Size</div>
+                </div>
+
+                <div class="file-list" id="file-list">
+                    {% if path != "/" %}
+                    <div class="file-item parent-link" onclick="folderUp()">
+                        <div class="checkbox-column"></div>
+                        <div class="file-details">
+                            <i class="fa-solid fa-level-up-alt file-icon"></i>
+                            <span class="file-name">.. (Go Back)</span>
+                        </div>
+                        <span></span><span></span><span></span>
+                    </div>
+                    {% endif %}
+
+                    {% for file in files %}
+                    <div class="file-item" data-type="{{ file.type }}">
+                        <div class="checkbox-column">
+                            <input type="checkbox" class="file-checkbox" value="{{ file.name }}" onclick="handleItemSelection(this)">
+                        </div>
+                        <div class="file-details">
+                            <i class="file-icon {{ file.type }}">
+                                {% if file.type == 'folder' %}<i class="fa-solid fa-folder"></i>
+                                {% elif file.type == 'image' %}<i class="fa-solid fa-file-image"></i>
+                                {% elif file.type == 'video' %}<i class="fa-solid fa-file-video"></i>
+                                {% else %}<i class="fa-solid fa-file"></i>{% endif %}
+                            </i>
+                            
+                            {% if file.type == "folder" %}
+                            <a href="?path={{ (path + '/' + file.name) if path != '/' else '/' + file.name }}" class="file-name-link">
+                                {{ file.name }}
+                            </a>
+                            {% else %}
+                            <a href="/{{ root }}{{ path }}{{ '/' if path != '/' else '' }}{{ file.name }}" target="_blank" class="file-name-link">
+                                {{ file.name }}
+                            </a>
+                            {% endif %}
+                        </div>
+                        <span class="file-date">{{ file.last_modified }}</span>
+                        <span class="file-type-badge">{{ file.type }}</span>
+                        <span class="file-size">
+                            {% if file.type != "folder" %}
+                            {{ (file.size / 1024) | round(1) }} KB
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% endfor %}
+
+                    {% if not files %}
+                    <div class="empty-state">
+                        <i class="fa-solid fa-ghost"></i>
+                        <p>No files found in this directory.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/media-library.js') }}"></script>
+</body>
+</html>

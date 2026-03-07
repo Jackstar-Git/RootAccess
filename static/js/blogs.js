@@ -1,68 +1,62 @@
 function initMultiselects() {
-    const multiselects = document.querySelectorAll('.custom-multiselect');
+    const multiselects = document.querySelectorAll(".custom-multiselect");
 
     multiselects.forEach(ms => {
-        // Progressive Enhancement: Swap UI
         const nativeSelect = ms.previousElementSibling;
-        if (nativeSelect && nativeSelect.tagName === 'SELECT') {
-            nativeSelect.style.display = 'none';
+        if (nativeSelect && nativeSelect.tagName === "SELECT") {
+            nativeSelect.style.display = "none";
         }
-        ms.style.display = 'block';
+        ms.style.display = "block";
 
-        const header = ms.querySelector('.multiselect-header');
-        const searchInput = ms.querySelector('.multiselect-search');
-        const pillsContainer = ms.querySelector('.multiselect-pills');
+        const header = ms.querySelector(".multiselect-header");
+        const searchInput = ms.querySelector(".multiselect-search");
+        const pillsContainer = ms.querySelector(".multiselect-pills");
         const options = ms.querySelectorAll('.multiselect-options input[type="checkbox"]');
-        const selectAllBtn = ms.querySelector('.select-all');
-        const optionLabels = ms.querySelectorAll('.multiselect-options .filter-list-item');
+        const selectAllBtn = ms.querySelector(".select-all");
+        const optionLabels = ms.querySelectorAll(".multiselect-options .filter-list-item");
 
-        // Toggle dropdown open/close (FIXED)
-        header.addEventListener('click', (e) => {
-            if(e.target.closest('.multiselect-pill')) return;
+        header.addEventListener("click", (e) => {
+            if(e.target.closest(".multiselect-pill")) return;
             
-            // If clicking directly on the input, just open it
             if(e.target === searchInput) {
-                ms.classList.add('open');
+                ms.classList.add("open");
                 return;
             }
             
-            ms.classList.toggle('open');
-            if (ms.classList.contains('open')) searchInput.focus();
+            ms.classList.toggle("open");
+            if (ms.classList.contains("open")) searchInput.focus();
         });
 
-        // Close on outside click
-        document.addEventListener('click', (e) => {
+        document.addEventListener("click", (e) => {
             if (!ms.contains(e.target)) {
-                ms.classList.remove('open');
+                ms.classList.remove("open");
             }
         });
 
-        // Search filtering within the dropdown
-        searchInput.addEventListener('input', (e) => {
+        searchInput.addEventListener("input", (e) => {
             const term = e.target.value.toLowerCase();
-            ms.classList.add('open');
+            ms.classList.add("open");
             optionLabels.forEach(label => {
                 const text = label.textContent.toLowerCase();
-                label.style.display = text.includes(term) ? 'flex' : 'none';
+                label.style.display = text.includes(term) ? "flex" : "none";
             });
         });
 
-        // Generate pills and sync with native select
         const updatePills = () => {
-            pillsContainer.innerHTML = '';
+            pillsContainer.innerHTML = "";
             let allChecked = true;
             let anyChecked = false;
 
             options.forEach(opt => {
                 if (opt.checked) {
                     anyChecked = true;
-                    const pill = document.createElement('span');
-                    pill.className = 'multiselect-pill';
-                    const labelText = opt.closest('.filter-list-item').querySelector('span').textContent;
+                    const pill = document.createElement("span");
+                    pill.className = "multiselect-pill";
+                    const labelText = opt.closest(".filter-list-item").querySelector("span").textContent;
                     
                     pill.innerHTML = `${labelText} <i class="fa-solid fa-xmark"></i>`;
                     
-                    pill.querySelector('i').addEventListener('click', (e) => {
+                    pill.querySelector("i").addEventListener("click", (e) => {
                         e.stopPropagation(); 
                         opt.checked = false;
                         updatePills();
@@ -91,10 +85,10 @@ function initMultiselects() {
             }
         };
 
-        options.forEach(opt => opt.addEventListener('change', updatePills));
+        options.forEach(opt => opt.addEventListener("change", updatePills));
 
         if (selectAllBtn) {
-            selectAllBtn.addEventListener('change', (e) => {
+            selectAllBtn.addEventListener("change", (e) => {
                 const isChecked = e.target.checked;
                 options.forEach(opt => opt.checked = isChecked);
                 updatePills();
@@ -147,7 +141,7 @@ function performBlogSearch() {
 	}
 
 	// Add reading time filter
-	const readingTimeCheckboxes = Array.from(document.querySelectorAll("#reading-time-multiselect .multiselect-options input[type='checkbox']"));
+	const readingTimeCheckboxes = Array.from(document.querySelectorAll('#reading-time-multiselect .multiselect-options input[type="checkbox"]'));
 	const checkedReadingTime = readingTimeCheckboxes
 		.filter(cb => cb.checked)
 		.map(cb => cb.value)
@@ -157,7 +151,7 @@ function performBlogSearch() {
 	}
 
 	// Add type filter
-	const typeCheckboxes = Array.from(document.querySelectorAll("#type-multiselect .multiselect-options input[type='checkbox']"));
+	const typeCheckboxes = Array.from(document.querySelectorAll('#type-multiselect .multiselect-options input[type="checkbox"]'));
 	const checkedTypes = typeCheckboxes
 		.filter(cb => cb.checked)
 		.map(cb => cb.value)
@@ -219,7 +213,7 @@ function restoreFilterState() {
 	const readingTimeParam = params.get("reading_time");
 	if (readingTimeParam) {
 		const readingTimeValues = readingTimeParam.split(",");
-		const readingTimeCheckboxes = document.querySelectorAll("#reading-time-multiselect .multiselect-options input[type='checkbox']");
+		const readingTimeCheckboxes = document.querySelectorAll('#reading-time-multiselect .multiselect-options input[type="checkbox"]');
 		readingTimeCheckboxes.forEach(checkbox => {
 			if (readingTimeValues.includes(checkbox.value)) {
 				checkbox.checked = true;
@@ -231,7 +225,7 @@ function restoreFilterState() {
 	const typeParam = params.get("type");
 	if (typeParam) {
 		const typeValues = typeParam.split(",");
-		const typeCheckboxes = document.querySelectorAll("#type-multiselect .multiselect-options input[type='checkbox']");
+		const typeCheckboxes = document.querySelectorAll('#type-multiselect .multiselect-options input[type="checkbox"]');
 		typeCheckboxes.forEach(checkbox => {
 			if (typeValues.includes(checkbox.value)) {
 				checkbox.checked = true;
@@ -249,7 +243,6 @@ function initBlogSearch() {
     
 	if (!searchInput) return;
     
-	// Make search icon clickable and enter key functional
 	if (searchIcon) {
 		searchIcon.addEventListener("click", () => {
 			performBlogSearch();
@@ -262,28 +255,23 @@ function initBlogSearch() {
 		}
 	});
     
-	// Handle apply filters button
 	if (applyBtn) {
 		applyBtn.addEventListener("click", performBlogSearch);
 	}
-    
-	// Handle clear filters
 	if (clearBtn) {
 		clearBtn.addEventListener("click", () => {
-			// Reset all inputs and navigate to /blog
 			if (searchInput) searchInput.value = "";
 			const filterDrawer = document.getElementById("filter-drawer");
 			if (filterDrawer) {
-				filterDrawer.querySelectorAll("input[type='text']").forEach(input => input.value = "");
-				filterDrawer.querySelectorAll("input[type='date']").forEach(input => input.value = "");
-				filterDrawer.querySelectorAll("input[type='checkbox']").forEach(checkbox => checkbox.checked = false);
-				filterDrawer.querySelectorAll("select").forEach(select => select.value = select.options[0].value);
+				filterDrawer.querySelectorAll('input[type="text"]').forEach(input => input.value = "");
+				filterDrawer.querySelectorAll('input[type="date"]').forEach(input => input.value = "");
+				filterDrawer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+				filterDrawer.querySelectorAll('select').forEach(select => select.value = select.options[0].value);
 			}
 			location.href = "/blog";
 		});
 	}
     
-	// Handle load more button
 	if (loadMoreBtn) {
 		loadMoreBtn.addEventListener("click", () => {
 			const offset = loadMoreBtn.dataset.offset;
@@ -311,14 +299,10 @@ function initBlogSearch() {
 		});
 	}
     
-	// Restore filter state from URL parameters
 	restoreFilterState();
-
-    // Initialize custom multiselects after state restoration
     initMultiselects();
 }
 
-// ensure blog behaviours initialize only on blog pages
 if (document.readyState === "loading") {
 	document.addEventListener("DOMContentLoaded", () => {
 		initBlogSearch();

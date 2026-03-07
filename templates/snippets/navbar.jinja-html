@@ -16,6 +16,8 @@
             <li><a href="/about" class="{% if request.path == '/about' %}active{% endif %}">About</a></li>
             <li><a href="/projects" class="{% if request.path == '/projects' %}active{% endif %}">Projects</a></li>
             <li><a href="/blog" class="{% if request.path == '/blog' %}active{% endif %}">Blog</a></li>
+            <li><a href="/contact" class="{% if request.path == '/contact' %}active{% endif %}">Contact</a></li>
+
         </ul>
 
         <div class="nav-right">
@@ -45,6 +47,8 @@
                     <li><a href="/about" class="{% if request.path == '/about' %}active{% endif %}">About</a></li>
                     <li><a href="/projects" class="{% if request.path == '/projects' %}active{% endif %}">Projects</a></li>
                     <li><a href="/blog" class="{% if request.path == '/blog' %}active{% endif %}">Blog</a></li>
+                    <li><a href="/contact" class="{% if request.path == '/contact' %}active{% endif %}">Contact</a></li>
+
                 </ul>
                 <!-- theme toggle in mobile overlay -->
                 <div class="mobile-theme-switch theme-switch" title="Toggle Theme">

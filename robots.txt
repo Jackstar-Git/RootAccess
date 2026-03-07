@@ -7,11 +7,12 @@ Disallow: /404                  # Disallow access to the 404 error page
 Disallow: /403                  # Disallow access to the 403 error page
 
 # Allow access to all product pages
-Allow: /produkt/                # Allow access to individual product pages
-Allow: /produkte                # Allow access to the products list page
+Allow: /projects/                # Allow access to projects pages
+Allow: /blog/                   # Allow access to the blog list page
 
 # Allow access to all legal routes
-Allow: /rechtliches/            # Allow access to all legal pages (impressum, agb)
+Allow: /imprint/       
+Allow: /privacy/    
 
 # Allow access to the home page and sitemap
 Allow: /                       # Allow access to the home page

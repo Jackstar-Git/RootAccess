@@ -2,7 +2,6 @@ function initMultiselects() {
     const multiselects = document.querySelectorAll('.custom-multiselect');
 
     multiselects.forEach(ms => {
-        // Progressive Enhancement: Swap UI
         const nativeSelect = ms.previousElementSibling;
         if (nativeSelect && nativeSelect.tagName === 'SELECT') {
             nativeSelect.style.display = 'none';
@@ -16,11 +15,9 @@ function initMultiselects() {
         const selectAllBtn = ms.querySelector('.select-all');
         const optionLabels = ms.querySelectorAll('.multiselect-options .filter-list-item');
 
-        // Toggle dropdown open/close (FIXED)
         header.addEventListener('click', (e) => {
             if(e.target.closest('.multiselect-pill')) return;
             
-            // If clicking directly on the input, just open it
             if(e.target === searchInput) {
                 ms.classList.add('open');
                 return;
@@ -80,7 +77,6 @@ function initMultiselects() {
             
             searchInput.placeholder = anyChecked ? "" : "Search...";
 
-            // Sync with native select for accurate form fallback data
             if (nativeSelect) {
                 Array.from(nativeSelect.options).forEach(nativeOpt => {
                     const correspondingCheckbox = Array.from(options).find(cb => cb.value === nativeOpt.value);
@@ -110,23 +106,18 @@ function performProjectSearch() {
 
     const getValue = (id) => document.getElementById(id)?.value.trim();
 
-    // Text & Selects
     if (getValue("search-input")) params.append("search", getValue("search-input"));
     if (getValue("sort-select") !== "newest") params.append("sort", getValue("sort-select"));
     if (getValue("category-select")) params.append("category", getValue("category-select"));
-    if (getValue("tags-input")) params.append("tech_stack", getValue("tags-input")); // Maps to tech_stack
-
-    // Dates
+    if (getValue("tags-input")) params.append("tech_stack", getValue("tags-input"));
     if (getValue("start-date")) params.append("start_date", getValue("start-date"));
     if (getValue("end-date")) params.append("end_date", getValue("end-date"));
 
-    // Multiselect: Activity (Previously reading-time-multiselect)
     const activityCheckboxes = Array.from(document.querySelectorAll("#reading-time-multiselect .multiselect-options input[type='checkbox']:checked"));
     if (activityCheckboxes.length) {
         params.append("activity", activityCheckboxes.map(cb => cb.value).join(","));
     }
 
-    // Multiselect: Maturity (Previously type-multiselect)
     const maturityCheckboxes = Array.from(document.querySelectorAll("#type-multiselect .multiselect-options input[type='checkbox']:checked"));
     if (maturityCheckboxes.length) {
         params.append("maturity", maturityCheckboxes.map(cb => cb.value).join(","));
@@ -138,35 +129,30 @@ function performProjectSearch() {
 function restoreFilterState() {
 	const params = new URLSearchParams(location.search);
 
-	// Restore search input
 	const searchInput = document.getElementById("search-input");
 	const searchParam = params.get("search");
 	if (searchInput && searchParam) {
 		searchInput.value = searchParam;
 	}
 
-	// Restore sort
 	const sortSelect = document.getElementById("sort-select");
 	const sortParam = params.get("sort");
 	if (sortSelect && sortParam) {
 		sortSelect.value = sortParam;
 	}
 
-	// Restore category
 	const categorySelect = document.getElementById("category-select");
 	const categoryParam = params.get("category");
 	if (categorySelect && categoryParam) {
 		categorySelect.value = categoryParam;
 	}
 
-	// Restore tags
 	const tagInput = document.getElementById("tags-input");
 	const tagsParam = params.get("tags");
 	if (tagInput && tagsParam) {
 		tagInput.value = tagsParam;
 	}
 
-	// Restore date range
 	const startDateInput = document.getElementById("start-date");
 	const endDateInput = document.getElementById("end-date");
 	const startDateParam = params.get("start_date");
@@ -178,7 +164,6 @@ function restoreFilterState() {
 		endDateInput.value = endDateParam;
 	}
 
-	// Restore reading time checkboxes
 	const readingTimeParam = params.get("reading_time");
 	if (readingTimeParam) {
 		const readingTimeValues = readingTimeParam.split(",");
@@ -190,7 +175,6 @@ function restoreFilterState() {
 		});
 	}
 
-	// Restore type checkboxes
 	const typeParam = params.get("type");
 	if (typeParam) {
 		const typeValues = typeParam.split(",");
@@ -212,7 +196,6 @@ function initProjectSearch() {
     
 	if (!searchInput) return;
     
-	// Make search icon clickable and enter key functional
 	if (searchIcon) {
 		searchIcon.addEventListener("click", () => {
 			performProjectSearch();
@@ -225,15 +208,12 @@ function initProjectSearch() {
 		}
 	});
     
-	// Handle apply filters button
 	if (applyBtn) {
 		applyBtn.addEventListener("click", performProjectSearch);
 	}
     
-	// Handle clear filters
 	if (clearBtn) {
 		clearBtn.addEventListener("click", () => {
-			// Reset all inputs and navigate to /Project
 			if (searchInput) searchInput.value = "";
 			const filterDrawer = document.getElementById("filter-drawer");
 			if (filterDrawer) {
@@ -246,7 +226,6 @@ function initProjectSearch() {
 		});
 	}
     
-	// Handle load more button
 	if (loadMoreBtn) {
 		loadMoreBtn.addEventListener("click", () => {
 			const offset = loadMoreBtn.dataset.offset;
@@ -274,14 +253,10 @@ function initProjectSearch() {
 		});
 	}
     
-	// Restore filter state from URL parameters
 	restoreFilterState();
-
-    // Initialize custom multiselects after state restoration
     initMultiselects();
 }
 
-// ensure Project behaviours initialize only on Project pages
 if (document.readyState === "loading") {
 	document.addEventListener("DOMContentLoaded", () => {
 		initProjectSearch();

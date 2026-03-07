@@ -1,4 +1,3 @@
-/* footer.js */
 function updateFooterYear() {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
@@ -24,18 +23,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const privacyNotice = document.getElementById("privacy-notice");
     const acceptBtn = document.getElementById("acceptCookies");
 
-    // Check cookie status
     if (!getCookie("cookiesAccepted") && privacyNotice) {
         privacyNotice.style.display = "flex";
     }
 
-    // Accept Logic
     if (acceptBtn && privacyNotice) {
         acceptBtn.addEventListener("click", () => {
-            privacyNotice.style.transform = "translate(-50%, 150%)"; // Slide down
+            privacyNotice.style.transform = "translate(-50%, 150%)";
             setTimeout(() => { privacyNotice.style.display = "none"; }, 600);
 
-            // Set cookie for 1 year
             document.cookie = "cookiesAccepted=true; path=/; max-age=" + 60 * 60 * 24 * 365;
         });
     }

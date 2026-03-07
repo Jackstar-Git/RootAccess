@@ -1,30 +1,35 @@
 import logging
 import os
 from logging.handlers import RotatingFileHandler
+from typing import Final
 
-# =====================================
-# Setup Logger for the application
-# =====================================
+LOG_DIR: Final[str] = "logs"
+LOG_FILE: Final[str] = os.path.join(LOG_DIR, "app.log")
+MAX_BYTES: Final[int] = 10 * 1024 * 1024
+BACKUP_COUNT: Final[int] = 2
 
-log_file = os.path.join("logs", "app.log")
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
 
-# Create the log directory if it doesn't exist
-if not os.path.exists("logs"):
-    os.makedirs("logs")
+logger: logging.Logger = logging.getLogger("Main")
+logger.setLevel(logging.DEBUG)
 
-# Set up the formatter for log messages
-formatter = logging.Formatter("%(asctime)s: %(levelname)s - %(message)s", "%b %dth, %Y - %H:%M:%S")
+formatter: logging.Formatter = logging.Formatter(
+    fmt="%(asctime)s: %(levelname)s - %(message)s", 
+    datefmt="%b %dth, %Y - %H:%M:%S"
+)
 
-# Set up the rotating file handler for logging
-handler = RotatingFileHandler(log_file, mode='a', maxBytes=10 * 1024 * 1024,
-                              backupCount=2, encoding="utf-8", delay=False)
+handler: RotatingFileHandler = RotatingFileHandler(
+    filename=LOG_FILE,
+    mode="a",
+    maxBytes=MAX_BYTES,
+    backupCount=BACKUP_COUNT,
+    encoding="utf-8",
+    delay=False
+)
 
 handler.setLevel(logging.DEBUG)
 handler.setFormatter(formatter)
-
-# Set up the main logger
-logger = logging.getLogger("Main")
-logger.setLevel(logging.DEBUG)
 logger.addHandler(handler)
 
 logger.debug("Logging setup completed successfully.")

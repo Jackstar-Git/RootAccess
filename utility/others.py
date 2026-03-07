@@ -1,120 +1,113 @@
 import re
+from typing import List, Tuple, Pattern, Final
 
 def convert_markdown_to_html(markdown_text: str) -> str:
-    translation_table = str.maketrans({
+    translation_table: Final[dict[int, str]] = str.maketrans({
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
     })
-    
-    patterns = [
+
+    patterns: Final[List[Tuple[Pattern[str], str]]] = [
         (re.compile(r'(?<!\\)\*\*\*(.+?)\*\*\*'), r'<strong><em>\1</em></strong>'),
-        (re.compile(r'(?<!\\)\*\*(.+?)\*\*'), r'<strong>\1</strong>'),          
-        (re.compile(r'(?<!\\)\*(.+?)\*'), r'<em>\1</em>'),                        
-        (re.compile(r'(?<!\\)~~(.+?)~~'), r'<s>\1</s>'),                         
-        (re.compile(r'(?<!\\)_(.+?)_'), r'<u>\1</u>'),  
+        (re.compile(r'(?<!\\)\*\*(.+?)\*\*'), r'<strong>\1</strong>'),
+        (re.compile(r'(?<!\\)\*(.+?)\*'), r'<em>\1</em>'),
+        (re.compile(r'(?<!\\)~~(.+?)~~'), r'<s>\1</s>'),
+        (re.compile(r'(?<!\\)_(.+?)_'), r'<u>\1</u>'),
         (re.compile(r'(?<!\\)\[\^(.+?)\]'), r'<sup>\1</sup>'),
-        (re.compile(r'(?<!\\)\[_(.+?)\]'), r'<sub>\1</sub>'),                               
+        (re.compile(r'(?<!\\)\[_(.+?)\]'), r'<sub>\1</sub>'),
         (re.compile(r'(?<!\\)\{color:(#[0-9a-fA-F]{3,6})\}(.*?)\{\/color\}', re.DOTALL), r'<span style="color:\1">\2</span>'),
         (re.compile(r'(?<!\\)\{align:([a-z]*)\}(.*?)\{\/align\}', re.DOTALL), r'<span style="display: inline-block; width: 100%; text-align:\1">\2</span>'),
-        (re.compile(r'(?<!\\)\[(.+?)\]\((.+?)\)'), r'<a href="\2">\1</a>'),        
+        (re.compile(r'(?<!\\)\[(.+?)\]\((.+?)\)'), r'<a href="\2">\1</a>'),
         (re.compile(r'(?<!\\)`(.+?)`'), r'<code>\1</code>')
     ]
-    
-    html_output_list = []
-    line_iter = iter(markdown_text.splitlines())
 
-    in_codeblock = False
-    in_list = False
-    in_blockquote = False
-    in_html = False
+    html_output: List[str] = []
+    lines: List[str] = markdown_text.splitlines()
 
-    for line in line_iter:
-        if line.strip().startswith("{html}"):
-            in_html = True
-            continue
-        if line.strip().startswith("{/html}"):
-            in_html = False
-            continue
-        if in_html:
-            html_output_list.append(line)
-            continue
+    state: dict[str, bool] = {
+        "codeblock": False,
+        "list": False,
+        "blockquote": False,
+        "html": False
+    }
 
-        if line.strip().startswith("```"):
-            if in_codeblock:
-                html_output_list.append("</pre>")
-                in_codeblock = False
-            else:
-                html_output_list.append("<pre>")
-                in_codeblock = True
+    for line in lines:
+        stripped: str = line.strip()
+
+        if stripped.startswith("{html}"):
+            state["html"] = True
+            continue
+        if stripped.startswith("{/html}"):
+            state["html"] = False
+            continue
+        if state["html"]:
+            html_output.append(line)
             continue
 
-        if in_codeblock:
-            html_output_list.append(line.translate(translation_table))
+        if stripped.startswith("```"):
+            state["codeblock"] = not state["codeblock"]
+            html_output.append("</pre>" if not state["codeblock"] else "<pre>")
             continue
 
-        processed_content = line.strip()
-        
-        # Check for escaped triggers
-        is_list_item = processed_content.startswith('- ') and not processed_content.startswith('\\- ')
-        is_quote_item = processed_content.startswith('> ') and not processed_content.startswith('\\> ')
-        is_header = processed_content.startswith('#') and not processed_content.startswith('\\#')
-        is_hr = processed_content.startswith('---') and not processed_content.startswith('\\---')
+        if state["codeblock"]:
+            html_output.append(line.translate(translation_table))
+            continue
 
-        clean_text = processed_content
-        if is_list_item: clean_text = processed_content[2:]
-        elif is_quote_item: clean_text = processed_content[2:]
+        is_list: bool = stripped.startswith("- ") and not stripped.startswith("\\- ")
+        is_quote: bool = stripped.startswith("> ") and not stripped.startswith("\\> ")
+        is_header: bool = stripped.startswith("#") and not stripped.startswith("\\#")
+        is_hr: bool = stripped.startswith("---") and not stripped.startswith("\\---")
+
+        clean_text: str = stripped
+        header_level: int = 0
+
+        if is_list or is_quote:
+            clean_text = stripped[2:]
         elif is_header:
-            header_match = re.match(r'#+', processed_content)
-            header_level = len(header_match.group(0))
-            clean_text = processed_content[header_level:].strip()
+            match = re.match(r'#+', stripped)
+            header_level = len(match.group(0)) if match else 0
+            clean_text = stripped[header_level:].strip()
 
         for pattern, replacement in patterns:
             clean_text = pattern.sub(replacement, clean_text)
-        
-        # Remove escape characters
-        escape_chars = ['\\*', '\\_', '\\~', '\\{', '\\#', '\\-', '\\[', '\\^']
-        for char in escape_chars:
-            clean_text = clean_text.replace(char, char[-1])
 
-        if is_list_item:
-            if not in_list:
-                in_list = True
-                html_output_list.append("<ul>")
-            html_output_list.append(f'\t<li>{clean_text}</li>')
+        for char in ['*', '_', '~', '{', '#', '-', '[', '^']:
+            clean_text = clean_text.replace(f'\\{char}', char)
+
+        if is_list:
+            if not state["list"]:
+                state["list"] = True
+                html_output.append("<ul>")
+            html_output.append(f"\t<li>{clean_text}</li>")
             continue
-        elif in_list:
-            html_output_list.append("</ul>")
-            in_list = False
+        elif state["list"]:
+            html_output.append("</ul>")
+            state["list"] = False
 
-        if is_quote_item:
-            if not in_blockquote:
-                in_blockquote = True
-                html_output_list.append('<blockquote>')
-            html_output_list.append(clean_text)
+        if is_quote:
+            if not state["blockquote"]:
+                state["blockquote"] = True
+                html_output.append("<blockquote>")
+            html_output.append(clean_text)
             continue
-        elif in_blockquote:
-            html_output_list.append('</blockquote>')
-            in_blockquote = False
+        elif state["blockquote"]:
+            html_output.append("</blockquote>")
+            state["blockquote"] = False
 
-        if clean_text == "" and processed_content == "":
-            html_output_list.append("<br>")
+        if not clean_text and not stripped:
+            html_output.append("<br>")
             continue
 
         if is_header:
-            html_output_list.append(f'<h{header_level}>{clean_text}</h{header_level}>')
-            continue
+            html_output.append(f"<h{header_level}>{clean_text}</h{header_level}>")
+        elif is_hr:
+            html_output.append("<hr>")
+        else:
+            html_output.append(f"<p>{clean_text}</p>")
 
-        if is_hr:
-            html_output_list.append("<hr>")
-            continue
+    if state["list"]: html_output.append("</ul>")
+    if state["blockquote"]: html_output.append("</blockquote>")
+    if state["codeblock"]: html_output.append("</pre>")
 
-        html_output_list.append(f'<p>{clean_text}</p>')
-
-    if in_list: html_output_list.append('</ul>')
-    if in_blockquote: html_output_list.append('</blockquote>')
-    if in_codeblock: html_output_list.append('</pre>')
-
-    return "\n".join(html_output_list)
-
-
+    return "\n".join(html_output)

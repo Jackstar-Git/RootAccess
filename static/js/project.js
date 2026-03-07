@@ -1,11 +1,8 @@
-// project.js - handles share, bookmark, and progress bar for projects
-
 function createSharePopup() {
-    // Prevent duplicate popups
-    if (document.querySelector('.share-popup')) return;
+    if (document.querySelector(".share-popup")) return;
 
-    const popup = document.createElement('div');
-    popup.className = 'share-popup'; 
+    const popup = document.createElement("div");
+    popup.className = "share-popup"; 
     popup.innerHTML = `
         <div class="share-content">
             <h4>Share this project</h4>
@@ -23,45 +20,45 @@ function createSharePopup() {
     `;
     document.body.appendChild(popup);
 
-    popup.querySelectorAll('.share-links a').forEach(link => {
-        link.addEventListener('click', function(e) {
+    popup.querySelectorAll(".share-links a").forEach(link => {
+        link.addEventListener("click", function(e) {
             e.preventDefault();
             const platform = this.dataset.platform;
             const url = encodeURIComponent(window.location.href);
             const text = encodeURIComponent(document.title);
-            let shareUrl = '';
+            let shareUrl = "";
             switch (platform) {
-                case 'facebook': shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
-                case 'twitter': shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`; break;
-                case 'linkedin': shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`; break;
-                case 'reddit': shareUrl = `https://www.reddit.com/submit?url=${url}&title=${text}`; break;
+                case "facebook": shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`; break;
+                case "twitter": shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`; break;
+                case "linkedin": shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`; break;
+                case "reddit": shareUrl = `https://www.reddit.com/submit?url=${url}&title=${text}`; break;
             }
-            window.open(shareUrl, '_blank', 'noopener');
+            window.open(shareUrl, "_blank", "noopener");
         });
     });
 
-    popup.querySelector('#copyLinkBtn').addEventListener('click', () => {
+    popup.querySelector("#copyLinkBtn").addEventListener("click", () => {
         navigator.clipboard.writeText(window.location.href).then(() => {
-            alert('Link copied to clipboard');
+            alert("Link copied to clipboard");
         }).catch(() => {
-            prompt('Copy the link below:', window.location.href);
+            prompt("Copy the link below:", window.location.href);
         });
     });
 
-    popup.querySelector('#closeSharePopup').addEventListener('click', () => {
+    popup.querySelector("#closeSharePopup").addEventListener("click", () => {
         popup.remove();
     });
 }
 
 function requestBookmark() {
-    if (confirm('Do you want to bookmark this project?')) {
+    if (confirm("Do you want to bookmark this project?")) {
         try {
             if (window.external && window.external.AddFavorite) {
                 window.external.AddFavorite(window.location.href, document.title);
             } else if (window.sidebar && window.sidebar.addPanel) {
-                window.sidebar.addPanel(document.title, window.location.href, '');
+                window.sidebar.addPanel(document.title, window.location.href, "");
             } else {
-                alert('Press ' + (navigator.userAgent.toLowerCase().indexOf('mac') != -1 ? 'Cmd' : 'Ctrl') + '+D to bookmark this page.');
+                alert("Press " + (navigator.userAgent.toLowerCase().indexOf("mac") != -1 ? "Cmd" : "Ctrl") + "+D to bookmark this page.");
             }
         } catch (e) {
             alert("Unable to automatically bookmark; please use your browser's bookmarking feature.");
@@ -69,10 +66,10 @@ function requestBookmark() {
     }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-    const shareIcon = document.querySelector('.fa-share-from-square');
-    if (shareIcon) shareIcon.addEventListener('click', createSharePopup);
+window.addEventListener("DOMContentLoaded", () => {
+    const shareIcon = document.querySelector(".fa-share-from-square");
+    if (shareIcon) shareIcon.addEventListener("click", createSharePopup);
 
-    const bookmarkIcon = document.querySelector('.fa-bookmark');
-    if (bookmarkIcon) bookmarkIcon.addEventListener('click', requestBookmark);
+    const bookmarkIcon = document.querySelector(".fa-bookmark");
+    if (bookmarkIcon) bookmarkIcon.addEventListener("click", requestBookmark);
 });

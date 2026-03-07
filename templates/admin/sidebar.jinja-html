@@ -15,7 +15,7 @@
 
     <div class="nav-links">
         <div class="nav-item">
-            <a href="/admin" title="Dashboard">
+            <a href="/admin/dashboard" title="Dashboard">
                 <i class="fas fa-home-alt"></i> 
                 <span>Dashboard</span>
             </a>
@@ -49,6 +49,16 @@
                 <a href="/admin/projects/all"><i class="fa-solid fa-folder-open"></i> All Projects</a>
                 <a href="/admin/projects/create"><i class="fa-solid fa-plus"></i> Create New</a>
                 <a href="/admin/projects/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <a href="#" class="menu-toggle" title="Projects">
+                <i class="fa-solid fa-images"></i> 
+                <span>Media</span>
+            </a>
+            <div class="submenu">
+                <a href="/admin/media/all"><i class="fa-solid fa-folder-open"></i> All Media</a>
             </div>
         </div>
 
