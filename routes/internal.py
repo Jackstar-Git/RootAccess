@@ -33,8 +33,11 @@ def plugins(filename):
 @internal_blueprint.route("/download/<path:filepath>", methods=["GET"])
 def download(filepath):
     logger.info(f"GET request received for download | Path: {filepath}")
-    if not session.get("is_admin", False):
-        logger.warning("Unauthorized download attempt")
+    is_public_path = filepath.startswith("uploads/")
+    is_admin = session.get("is_admin", False)
+
+    if not is_public_path and not is_admin:
+        logger.warning(f"Unauthorized download attempt to restricted path: {filepath}")
         return abort(403)
 
     if not os.path.exists(filepath):
@@ -55,8 +58,13 @@ def download(filepath):
                     zipf.write(file_path, os.path.relpath(file_path, filepath))
         
         memory_file.seek(0)
-        zip_filename = os.path.basename(filepath) + ".zip"
-        return send_file(memory_file, as_attachment=True, download_name=zip_filename, mimetype="application/zip")
+        zip_filename = f"{os.path.basename(filepath)}.zip"
+        return send_file(
+            memory_file, 
+            as_attachment=True, 
+            download_name=zip_filename, 
+            mimetype="application/zip"
+        )
 
     logger.error(f"Invalid path provided | Path: {filepath}")
     abort(400, description="Invalid path provided.")

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('internal.uploads', filename='Logo.png') }}" type="image">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Admin Panel - Übersicht</title>
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja-html" %}
+
+        <main class="main-content">
+            <h2>Übersicht der aktuellen System- und Produktinformationen</h2>
+            
+            <div class="quicklinks-container">
+                <a href="/" target="_blank" rel="noopener noreferrer" class="quicklink-card">
+                    <i class="fa-solid fa-house"></i>
+                    <h3>Homepage</h3>
+                    <p>Zurück zur Hauptseite des Dashboards.</p>
+                </a>
+
+                <a href="/admin/einstellungen/allgemein" class="quicklink-card">
+                    <i class="fa-solid fa-gear"></i>
+                    <h3>Einstellungen</h3>
+                    <p>System- und Konfigurationseinstellungen verwalten.</p>
+                </a>
+
+                <a href="/admin/einstellungen/logs" class="quicklink-card">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <h3>Logs</h3>
+                    <p>Lass dir die Logs, Fehlermeldungen und Serverevents anzeigen.</p>
+                </a>
+            </div>
+
+            <div class="status">
+                <div class="status-item">
+                    <h4>CPU Nutzung</h4>
+                    <progress id="cpuProgress" class="low" value="0" max="100"></progress>
+                    <span id="cpuUsageText">Laden...</span>
+                </div>
+
+                <div class="status-item">
+                    <h4>RAM Nutzung</h4>
+                    <progress id="ramProgress" class="medium" value="0" max="100"></progress>
+                    <span id="ramUsageText">Laden...</span>
+                    <p id="ramAdditionalInfo"></p>
+                </div>
+
+                <div class="status-item">
+                    <h4>Speicherplatz</h4>
+                    <progress id="storageProgress" class="high" value="0" max="100"></progress>
+                    <span id="storageUsageText">Laden...</span>
+                    <p id="storageAdditionalInfo"></p>
+                </div>
+            </div>
+
+            <button id="refreshBtn" onclick="fetchSystemUsage()">
+                <i class="fa-solid fa-rotate-right"></i> Aktualisieren
+            </button>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

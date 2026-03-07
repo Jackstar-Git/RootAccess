@@ -1,6 +1,6 @@
 import json
 import os
-from typing import List, Union, Optional, TypedDict
+from typing import Any, List, Union, Optional, TypedDict
 from functools import lru_cache
 
 class BlogPost(TypedDict):
@@ -46,15 +46,15 @@ def search_blogs(search_query: str) -> List[BlogPost]:
             results.append(blog)
     return results
 
-def query_blogs(**criteria) -> List[BlogPost]:
+def query_blogs(limit: int = 10, exclude_id: Optional[Any] = None, **criteria) -> List[BlogPost]:
     blog_list: List[BlogPost] = load_blogs()
     
-    if not criteria:
-        return blog_list
-
     filtered_results: List[BlogPost] = []
     
     for blog in blog_list:
+        if exclude_id is not None and blog.get("id") == exclude_id:
+            continue
+
         is_match: bool = True
         for key, target_value in criteria.items():
             if key not in blog:
@@ -78,7 +78,6 @@ def query_blogs(**criteria) -> List[BlogPost]:
         
         if is_match:
             filtered_results.append(blog)
-            
-    return filtered_results
 
+    return filtered_results[:limit]
 

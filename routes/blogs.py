@@ -87,4 +87,4 @@ def blog(blog_id):
     if not blog_data:
         logger.warning(f"Blog with ID {blog_id} not found, aborting with 404")
         abort(404, description="Blog not found")
-    return render_template("blog.jinja-html", blog=blog_data, id=blog_id)
+    return render_template("blog.jinja-html", blog=blog_data, id=blog_id, suggestions=blogs.query_blogs(categories=blog_data.get("categories", []), limit=3, exclude_id=blog_id))

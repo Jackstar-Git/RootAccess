@@ -52,4 +52,4 @@ def logout():
 @admin_blueprint.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("admin/dashboard.jinja-html")
+    return render_template("admin/admin.jinja-html")

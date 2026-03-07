@@ -1,53 +1,104 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
-<aside id="sidebar" class="sidebar">
-    <div class="sidebar-brand">
-        <div class="brand-icon"><i class="fa-solid fa-kaaba"></i></div>
-        <div class="brand-text">
-            <strong>Kangaroo Inc.</strong>
-            <span>admin@portfolio.com</span>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<nav class="sidebar" id="adminSidebar">
+    <div class="sidebar-header">
+        <div class="logo">
+            <i class="fa-solid fa-shield-halved"></i> 
+            <span>Admin Panel</span>
         </div>
+        <button class="collapse-btn" id="toggleBtn" type="button" title="Toggle Sidebar">
+            <i class="fa-solid fa-bars-staggered"></i>
+        </button>
     </div>
 
-    <nav class="sidebar-nav">
-        <div class="nav-section-label">Main</div>
-        <ul class="nav-list">
-            <li class="nav-item active">
-                <a href="#"><i class="fa-solid fa-house"></i> Home</a>
-            </li>
-            <li class="nav-item has-submenu">
-                <a href="javascript:void(0)" class="submenu-toggle">
-                    <i class="fa-solid fa-pen-nib"></i> Content
-                    <i class="fa-solid fa-chevron-down arrow"></i>
-                </a>
-                <ul class="submenu">
-                    <li><a href="#">Blog Posts</a></li>
-                    <li><a href="#">Categories</a></li>
-                    <li><a href="#">Media Library</a></li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <a href="#"><i class="fa-solid fa-chart-line"></i> Analytics</a>
-            </li>
-            <li class="nav-item">
-                <a href="#"><i class="fa-solid fa-users"></i> Subscribers <span class="count-badge">12</span></a>
-            </li>
-        </ul>
+    <div class="nav-links">
+        <div class="nav-item">
+            <a href="/admin" title="Dashboard">
+                <i class="fas fa-home-alt"></i> 
+                <span>Dashboard</span>
+            </a>
+        </div>
 
-        <div class="nav-section-label">System</div>
-        <ul class="nav-list">
-            <li class="nav-item"><a href="#"><i class="fa-solid fa-briefcase"></i> Partners <span class="new-tag">New</span></a></li>
-            <li class="nav-item"><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
-        </ul>
-    </nav>
+        <div class="nav-item">
+            <a href="/admin/analytics" title="Analytics">
+                <i class="fa-solid fa-chart-line"></i> 
+                <span>Analytics</span>
+            </a>
+        </div>
+        
+        <div class="nav-item">
+            <a href="#" class="menu-toggle" title="Blogs">
+                <i class="fa-solid fa-blog"></i> 
+                <span>Blogs</span>
+            </a>
+            <div class="submenu">
+                <a href="/admin/blogs/all"><i class="fa-solid fa-list-ul"></i> All Blogs</a>
+                <a href="/admin/blogs/create"><i class="fa-solid fa-plus"></i> Create New</a>
+                <a href="/admin/blogs/categories"><i class="fa-solid fa-tags"></i> Categories</a>
+            </div>
+        </div>
 
-    <div class="sidebar-promo">
-        <div class="promo-card">
-            <span class="close-promo">×</span>
-            <span class="promo-tag">New</span>
-            <p><strong>Affiliate Program</strong></p>
-            <p>Run your own affiliate program with zero overhead.</p>
-            <button class="btn-outline-sm">Try it out ↗</button>
+        <div class="nav-item">
+            <a href="#" class="menu-toggle" title="Projects">
+                <i class="fa-solid fa-briefcase"></i> 
+                <span>Projects</span>
+            </a>
+            <div class="submenu">
+                <a href="/admin/projects/all"><i class="fa-solid fa-folder-open"></i> All Projects</a>
+                <a href="/admin/projects/create"><i class="fa-solid fa-plus"></i> Create New</a>
+                <a href="/admin/projects/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <a href="#" class="menu-toggle" title="Requests">
+                <i class="fa-solid fa-envelope-open-text"></i> 
+                <span>Requests</span>
+            </a>
+            <div class="submenu">
+                <a href="/admin/requests/contact"><i class="fa-solid fa-address-book"></i> Contact Requests</a>
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <a href="#" class="menu-toggle" title="Appearance">
+                <i class="fa-solid fa-paint-brush"></i> 
+                <span>Appearance</span>
+            </a>
+            <div class="submenu">
+                <a href="/admin/appearance/colors"><i class="fa-solid fa-palette"></i> Colors</a>
+                <a href="/admin/appearance/templates"><i class="fa-solid fa-file-code"></i> Templates</a>
+                <a href="/admin/appearance/statics"><i class="fa-solid fa-code"></i> CSS & JS</a>
+            </div>
+        </div>
+
+        <div class="nav-item">
+            <a href="#" class="menu-toggle" title="Settings">
+                <i class="fa-solid fa-gear"></i> 
+                <span>Settings</span>
+            </a>
+            <div class="submenu">
+                <a href="/admin/settings/general"><i class="fa-solid fa-sliders"></i> General</a>
+                <a href="/admin/settings/server"><i class="fa-solid fa-server"></i> Server</a>
+                <a href="/admin/settings/logs"><i class="fa-solid fa-terminal"></i> Logs</a>
+            </div>
         </div>
     </div>
-</aside>
+    
+    <div class="profile-section">
+        <img src="{{ url_for('static', filename='assets/images/logos/Logo.png') }}" alt="Admin Profile">
+        <div class="profile-name">
+            <span>Jackstar</span>
+        </div>
+        <div class="profile-info">
+            <a href="/admin/logout" class="logout-link" title="Logout">
+                <i class="fa-solid fa-power-off"></i> 
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+</nav>
+
 <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>

@@ -1,6 +1,6 @@
 import json
 import os
-from typing import List, Union, Optional, TypedDict
+from typing import Any, List, Union, Optional, TypedDict
 from functools import lru_cache
 
 class Project(TypedDict):
@@ -55,15 +55,16 @@ def search_projects(search_query: str) -> List[Project]:
             
     return results
 
-def query_projects(**criteria) -> List[Project]:
+
+def query_projects(limit: int = 10, exclude_id: Optional[Any] = None, **criteria) -> List[Project]:
     project_list: List[Project] = load_projects()
-    
-    if not criteria:
-        return project_list
 
     filtered_results: List[Project] = []
     
     for project in project_list:
+        if exclude_id is not None and project.get("id") == exclude_id:
+            continue
+
         is_match: bool = True
         for key, target_value in criteria.items():
             if key not in project:
@@ -87,5 +88,5 @@ def query_projects(**criteria) -> List[Project]:
         
         if is_match:
             filtered_results.append(project)
-            
-    return filtered_results
+
+    return filtered_results[:limit]

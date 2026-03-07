@@ -7,14 +7,15 @@
     "content_raw": "main",
     "image_url": "/static/assets//images/projects/WhatsApp.png",
     "github_url": "https://github.com/Jackstar-Git/WhatsappWeb-EnhancedPrivacy-Extension",
-    "demo_url": null,
+    "demo_url": "test",
     "tech_stack": ["JavaScript", "HTML", "CSS"],
     "time_created": 1764621692,
     "last_modified": 1764622793,
     "tags": ["Privacy", "Browser Extension"],
     "maturity": "MVP",
     "activity": "Active",
-    "topic": "Privacy"
+    "topic": "Productivity",
+    "download_file": "test"
   },
   {
     "id": "2",
@@ -31,7 +32,8 @@
     "tags": ["Productivity", "Browser Tool"],
     "maturity": "Stable",
     "activity": "Maintained",
-    "topic": "Productivity"
+    "topic": "Productivity",
+    "download_file": null
   },
   {
     "id": "3",
@@ -48,7 +50,8 @@
     "tags": ["E-commerce", "CMS"],
     "maturity": "MVP",
     "activity": "On hold",
-    "topic": ""
+    "topic": "E-commerce",
+    "download_file": null
   },
   {
     "id": "4",
@@ -64,7 +67,9 @@
     "last_modified": 1752130549,
     "tags": ["UI/UX", "Widget"],
     "maturity": "Stable",
-    "activity": "Archived"
+    "activity": "Archived",
+    "topic": "UI/UX",
+    "download_file": null
   },
   {
     "id": "5",
@@ -81,7 +86,8 @@
     "tags": ["UI/UX", "Frontend"],
     "maturity": "Stable",
     "activity": "Archived",
-    "topic": ""
+    "topic": "UI/UX",
+    "download_file": null
   },
   {
     "id": "6",
@@ -98,16 +104,17 @@
     "tags": ["Desktop App", "Productivity"],
     "maturity": "Legacy",
     "activity": "Stalled",
-    "topic": ""
+    "topic": "Productivity",
+    "download_file": null
   },
   {
     "id": "7",
-    "title": "Youtube-Downloader",
+    "title": "Youtube-download_fileer",
     "version": "1.2.0",
-    "description_short": "A script written in Python that lets you download Youtube Videos in any resolution.",
+    "description_short": "A script written in Python that lets you download_file Youtube Videos in any resolution.",
     "content_raw": "main",
     "image_url": null,
-    "github_url": "https://github.com/Jackstar-Git/Youtube-Downloader",
+    "github_url": "https://github.com/Jackstar-Git/Youtube-download_fileer",
     "demo_url": "",
     "tech_stack": ["Python"],
     "time_created": 1686919254,
@@ -115,7 +122,8 @@
     "tags": ["Utility", "Automation"],
     "maturity": "Stable",
     "activity": "Archived",
-    "topic": ""
+    "topic": "Utility",
+    "download_file": null
   },
   {
     "id": "8",
@@ -132,7 +140,8 @@
     "tags": ["Game Development", "Pygame"],
     "maturity": "MVP",
     "activity": "Archived",
-    "topic": ""
+    "topic": "Game Development",
+    "download_file": null
   },
   {
     "id": "9",
@@ -149,7 +158,8 @@
     "tags": ["Desktop App", "GUI"],
     "maturity": "Stable",
     "activity": "Stalled",
-    "topic": ""
+    "topic": "Desktop App",
+    "download_file": null
   },
   {
     "id": "10",
@@ -166,7 +176,8 @@
     "tags": ["Utility", "GUI"],
     "maturity": "MVP",
     "activity": "Archived",
-    "topic": ""
+    "topic": "Utility",
+    "download_file": null
   },
   {
     "id": "11",
@@ -183,6 +194,7 @@
     "tags": ["Game Development", "Logic"],
     "maturity": "Stable",
     "activity": "Archived",
-    "topic": ""
+    "topic": "Game Development",
+    "download_file": null
   }
 ]

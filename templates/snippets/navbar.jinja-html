@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/snippets/navbar.css') }}">
+<noscript>This site requires JavaScript to function properly. You can use it without JavaScript, but some features may not be available.</noscript>
 <nav class="navbar-full">
     <div class="navbar-container">
         <input type="checkbox" id="menu-toggle" class="menu-checkbox">

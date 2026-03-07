@@ -66,5 +66,5 @@ def project(project_id):
     if not project_data:
         logger.warning(f"Project {project_id} not found")
         abort(404)
-        
-    return render_template("project.jinja-html", project=project_data)
+
+    return render_template("project.jinja-html", project=project_data, suggestions=projects.query_projects(topic=project_data.get("topic", ""), limit=2, exclude_id=project_id))

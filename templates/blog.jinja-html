@@ -73,16 +73,16 @@
             <section class="see-also-section">
                 <h3 class="section-heading">See also</h3>
                 <div class="related-grid">
-                    {% for i in range(3) %}
-                    <div class="related-card-glass">
-                        <div class="placeholder-img"></div>
-                        <div class="related-content">
-                            <span class="related-cat">Category</span>
-                            <h4>Placeholder for a Related Article</h4>
-                            <span class="related-meta">Mar 12 • 5 min read</span>
-                        </div>
-                    </div>
-                    {% endfor %}
+                    {% if suggestions %}
+                        {% for suggestion in suggestions %}
+                            {% with blog=suggestion %}
+                                {% include "snippets/blog_card.jinja-html" %}
+                            {% endwith %}
+                        {% endfor %}
+                    {% else %}
+                        <p>No related blogs found.</p>
+                    {% endif %}
+                    
                 </div>
             </section>
         </article>

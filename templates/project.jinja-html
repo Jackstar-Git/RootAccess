@@ -1,8 +1,135 @@
-{% extends "base.jinja-html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/project.css') }}">
 
-{% block title %}Project {{ project }} – Portfolio{% endblock %}
+    <title>{{ project.title }}</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+</head>
+<body>
+    {% include "snippets/navbar.jinja-html" %}
 
-{% block content %}
-<h1>Project {{ project }}</h1>
-<p>Details for this project will appear here.</p>
-{% endblock %}
+    <main>
+        <div class="article-wrapper">
+            <div class="progress-indicator" id="readingProgress"></div>
+
+            <article class="article-container">
+                <header class="project-header">
+                    <div class="header-top-row">
+                        <span class="project-version-badge">v{{ project.version }}</span>
+                        <div class="project-maturity-badge maturity-{{ project.maturity | lower }}">
+                            {{ project.maturity | default('MVP') }}
+                        </div>
+                    </div>
+                    
+                    <h1 class="article-display-title">{{ project.title }}</h1>
+                    <p class="project-lead-text">{{ project.description_short }}</p>
+                    
+                    <div class="project-action-bar">
+                        <div class="external-links">
+                            {% if project.github_url %}
+                                <a href="{{ project.github_url }}" target="_blank" class="btn-project btn-github">
+                                    <i class="fa-brands fa-github"></i> Repository
+                                </a>
+                            {% endif %}
+
+                            {% if project.demo_url %}
+                                <a href="{{ project.demo_url }}" target="_blank" class="btn-project btn-demo">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
+                                </a>
+                            {% endif %}
+                            {% if project.download_file %}
+                                <a href="/download/uploads/projects/{{ project.download_file }}" class="btn-project btn-download">
+                                    <i class="fa-solid fa-download"></i> Download
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        <div class="action-icons">
+                            <i class="fa-regular fa-bookmark" title="Bookmark"></i>
+                            <i class="fa-regular fa-share-from-square" title="Share"></i>
+                        </div>
+                    </div>
+
+                    <div class="project-meta-bar">
+                        <div class="meta-item">
+                            <span class="activity-chip activity-{{ project.activity | lower | replace(' ', '-') }}">
+                                <span class="activity-dot"></span>
+                                <strong>{{ project.activity | default('Unknown') }}</strong>
+                            </span>
+                        </div>
+                        <div class="meta-divider"></div>
+                        <div class="meta-item dates">
+                            <span><i class="fa-regular fa-calendar-plus"></i> Created: {{ project.time_created | datetimeformat }}</span>
+                            {% if project.last_modified %}
+                                <span><i class="fa-regular fa-pen-to-square"></i> Updated: {{ project.last_modified | datetimeformat }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </header>
+
+                <div class="glass-article-body">
+                    <figure class="featured-figure">
+                        <img src="{{ project.image_url if project.image_url else '/static/assets/images/default/default-project.png' }}" 
+                            alt="{{ project.title }}" class="featured-image">
+                    </figure>
+
+                    <section class="main-text-flow">
+                        {{ project.content_raw | safe }}
+                    </section>
+
+                    <footer class="article-end">
+                        <div class="footer-tag-groups">
+                            <div class="tag-group">
+                                <h4 class="footer-label">Tech Stack</h4>
+                                <div class="tag-row-modern">
+                                    {% for tech in project.tech_stack %}
+                                        <a href="/projects?tech_stack={{ tech }}"><span class="tech-tag">#{{ tech }}</span></a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            {% if project.tags %}
+                            <div class="tag-group mt-3">
+                                <h4 class="footer-label">Project Tags</h4>
+                                <div class="tag-row-modern">
+                                    {% for tag in project.tags %}
+                                        <a href="/projects?tags={{ tag }}" class="modern-tag">
+                                            <span class="tag-hash">#</span>{{ tag }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </footer>
+                </div>
+                <section class="see-also-section">
+                    <h3 class="section-heading">See also</h3>
+                    <div class="related-grid">
+                        {% if suggestions %}
+                            {% for suggestion in suggestions %}
+                                {% with project=suggestion %}
+                                    {% include "snippets/project_card.jinja-html" %}
+                                {% endwith %}
+                            {% endfor %}
+                        {% else %}
+                            No related projects found.
+                        {% endif %}
+                        
+                    </div>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    {% include "snippets/footer.jinja-html" %}
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/project.js') }}"></script>
+</body>
+</html>

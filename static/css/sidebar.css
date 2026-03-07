@@ -1,93 +1,180 @@
-/* Sidebar Container */
+/* --- Sidebar Main Container --- */
 .sidebar {
     width: 280px;
-    background: #ffffff;
+    background-color: var(--background-3);
     display: flex;
     flex-direction: column;
-    padding: var(--spacing-lg);
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.03); /* Soft shadow like dark mode */
-    position: fixed;
     height: 100vh;
+    position: sticky;
+    top: 0;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+    border-right: 1px solid rgba(255,255,255,0.05);
     z-index: 100;
+    overflow-x: hidden;
 }
 
-/* Profile Section Update */
-.profile {
+/* --- Collapsed State Logic --- */
+.sidebar.collapsed {
+    width: 80px;
+}
+
+.sidebar.collapsed .logo span,
+.sidebar.collapsed .nav-item span,
+.sidebar.collapsed .profile-info span {
+    display: none;
+}
+
+.sidebar.collapsed .menu-toggle::after {
+    display: none;
+}
+
+.sidebar.collapsed .submenu {
+    display: none !important; /* Force hide submenus when collapsed */
+}
+
+/* --- Sidebar Header --- */
+.sidebar-header {
     display: flex;
     align-items: center;
-    padding: var(--spacing-sm);
-    background: var(--main-color-50);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--spacing-xl);
-}
-.profile-info {
-    display: flex;
-    flex-direction: column;
-    margin-left: var(--spacing-sm);
-}
-.profile-role {
-    font-size: 0.75rem;
-    color: var(--third-font-color);
+    justify-content: space-between;
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--background-2);
+    height: 70px;
 }
 
-/* Navigation & Submenus */
+.logo {
+    display: flex;
+    align-items: center;
+    color: var(--main-color-500);
+    font-weight: var(--font-weight-bold);
+    white-space: nowrap;
+    gap: 15px;
+}
+
+.collapse-btn {
+    background: transparent;
+    border: none;
+    color: var(--secondary-font-color);
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+
+.collapse-btn:hover {
+    color: var(--main-color-500);
+}
+
+/* --- Navigation Links --- */
+.nav-links {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-top: var(--spacing-md);
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+}
+
 .nav-item {
-    margin-bottom: var(--spacing-xxs);
+    width: 100%;
 }
 
-.nav-link {
+.nav-item a {
     display: flex;
     align-items: center;
-    padding: var(--spacing-sm) var(--spacing-md);
-    color: var(--third-font-color);
+    padding: var(--spacing-md) var(--spacing-lg);
+    color: var(--secondary-font-color);
     text-decoration: none;
-    border-radius: var(--radius-md);
-    transition: all var(--transition-fast);
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
 }
 
-.nav-link i:first-child {
-    width: 20px;
-    margin-right: var(--spacing-sm);
+.nav-item a i {
+    min-width: 25px;
+    margin-right: 15px;
+    text-align: center;
+    color: var(--main-color-400);
+    font-size: 1.1rem;
 }
 
-.nav-link:hover, .nav-link.active {
-    background: var(--main-color-100);
-    color: var(--main-color-700);
+.nav-item a:hover {
+    background: var(--background-2);
+    border-left-color: var(--main-color-500);
+    color: var(--main-color-100);
 }
 
-/* Submenu Logic */
+/* --- Submenu Styling --- */
 .submenu {
-    list-style: none;
-    padding-left: 2.5rem;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
+    display: none; /* JS toggles this */
+    background: rgba(0, 0, 0, 0.2);
+    flex-direction: column;
 }
 
-.has-submenu.open .submenu {
-    max-height: 200px; /* Adjust based on content */
-    margin-top: 5px;
-    margin-bottom: 10px;
+.submenu a {
+    padding: 10px 10px 10px 55px;
+    font-size: 0.85rem;
+    color: var(--secondary-font-color);
+    text-decoration: none;
+    transition: color 0.2s;
 }
 
-.has-submenu .arrow {
-    margin-left: auto;
+.submenu a:hover {
+    color: var(--main-color-300);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.menu-toggle {
+    position: relative;
+}
+
+.menu-toggle::after {
+    content: "\f107";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 20px;
     font-size: 0.8rem;
     transition: transform 0.3s;
 }
 
-.has-submenu.open .arrow {
-    transform: rotate(90deg);
+.menu-toggle.active::after {
+    transform: rotate(180deg);
 }
 
-.submenu a {
-    display: block;
-    padding: var(--spacing-xxs) 0;
-    font-size: 0.95rem;
-    color: var(--third-font-color);
+/* --- Profile Section --- */
+.profile-section {
+    margin-top: auto;
+    padding: var(--spacing-md);
+    background: var(--background-3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px solid var(--background-2);
+}
+
+.profile-section img {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+}
+
+.profile-section .profile-name {
+    color: var(--main-color-500);
+    font-weight: var(--font-weight-medium);
+    white-space: nowrap;
+}
+
+.profile-section .profile-info{
+    margin-left: auto;
+}
+
+.logout-link {
+    color: var(--warning-color) !important;
     text-decoration: none;
-}
-
-.submenu a:hover {
-    color: var(--main-color-600);
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
