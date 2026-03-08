@@ -137,7 +137,7 @@ def stay_alive():
                 pass
             time.sleep(300)  # 5 minutes
 
-    server_url = "https://portfolio-h6m8.onrender.com"
+    server_url = "https://rootaccess.onrender.com"
     if server_url:
         thread = threading.Thread(target=send_request, args=(server_url,))
         thread.daemon = True
