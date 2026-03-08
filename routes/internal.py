@@ -18,6 +18,12 @@ from utility.logging_utility import logger
 from utility.path_files import MAX_FILE_SIZE, ROOT_DIR, get_file_type, is_safe_path, sanitize_filename
 from utility.settings import get_settings
 
+# Attempt to import the markdown converter depending on your exact directory structure
+try:
+    from others import convert_markdown_to_html
+except ImportError:
+    from utility.others import convert_markdown_to_html
+
 internal_blueprint = Blueprint("internal", __name__, template_folder="./templates")
 
 # ============== FILE SERVING ROUTES ==============
@@ -383,7 +389,7 @@ def get_logs() -> Response:
     log_path = "logs/app.log"
 
     if not os.path.exists(log_path):
-        return jsonify({"logs": ["Logdatei nicht gefunden oder leer."]})
+        return jsonify({"logs": ["Log file not found or empty."]})
 
     with open(log_path, "r", encoding="utf-8") as file:
         lines = file.readlines()
@@ -515,10 +521,10 @@ def api_update_blog() -> Response:
         logger.error(f"Failed to update blog {blog_id}: {e}")
         return jsonify({"error": "Error occurred during update."}), 500
 
-@internal_blueprint.route("/api/delete-blog", methods=["POST"])
+@internal_blueprint.route("/api/delete-blog", methods=["DELETE"])
 @login_required
 def api_delete_blog() -> Response:
-    data = request.get_json()
+    data = request.get_json(silent=True)
     blog_id = data.get("id") if data else request.args.get("id")
 
     if not blog_id:
@@ -549,3 +555,18 @@ def api_clear_cache():
             "success": False,
             "message": str(e)
         }), 500
+
+# ============== FRONTEND PREVIEW HANDLER ==============
+@internal_blueprint.route("/api/markdown-to-html/", methods=["POST"])
+@login_required
+def api_markdown_to_html() -> Response:
+    data = request.get_json()
+    if not data or "data" not in data:
+        return jsonify({"error": "No markdown data provided."}), 400
+
+    try:
+        html_content = convert_markdown_to_html(data["data"])
+        return Response(html_content, mimetype="text/html")
+    except Exception as e:
+        logger.error(f"Failed to convert markdown to HTML: {e}")
+        return Response("<p><em>Error rendering preview</em></p>", status=500, mimetype="text/html")

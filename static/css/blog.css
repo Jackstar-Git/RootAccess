@@ -18,7 +18,7 @@
 
 /* --- Layout Container --- */
 .article-container {
-    max-width: 720px; /* Optimized for ~75 characters per line */
+    max-width: 920px; 
     margin: 0 auto;
     padding: 0 var(--spacing-md);
 }
@@ -162,7 +162,14 @@
 }
 
 .main-text-flow p {
-    margin-bottom: 1.8rem;
+    margin-bottom: 1rem; /* Reduced gap */
+}
+
+.main-text-flow h1 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    line-height: 1.2;
 }
 
 .main-text-flow h2 {
@@ -295,13 +302,13 @@
     .article-display-title {
         font-size: 2rem;
     }
-    
+
     .article-author-bar {
         flex-direction: column;
         align-items: flex-start;
         gap: var(--spacing-md);
     }
-    
+
     .action-icons {
         align-self: flex-end;
     }

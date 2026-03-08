@@ -4,6 +4,7 @@ import time
 from typing import List, Union, Optional, TypedDict, Any, Dict
 from functools import lru_cache
 import uuid
+from .others import convert_markdown_to_html
 
 class BlogPost(TypedDict):
     id: str
@@ -42,7 +43,6 @@ def _save_and_refresh_cache(blogs: List[BlogPost]) -> None:
     load_blogs.cache_clear()
     get_item_by_id.cache_clear()
 
-
 def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
     blogs: List[BlogPost] = load_blogs()
     now = int(time.time())
@@ -58,6 +58,10 @@ def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
     if isinstance(new_blog.get("author"), str):
         new_blog["author"] = [new_blog["author"]]
     
+    # Generate HTML content on creation
+    raw_content = new_blog.get("content_raw", "")
+    new_blog["content_html"] = convert_markdown_to_html(raw_content)
+
     new_blog.setdefault("tags", [])
     new_blog.setdefault("categories", [])
     new_blog.setdefault("time_created", now)
@@ -78,6 +82,10 @@ def update_blog(blog_id: Union[int, str], updated_data: Dict[str, Any]) -> bool:
             
             if "author" in updated_data and isinstance(updated_data["author"], str):
                 updated_data["author"] = [updated_data["author"]]
+
+            # Automatically update HTML if the raw content is being changed
+            if "content_raw" in updated_data:
+                updated_data["content_html"] = convert_markdown_to_html(updated_data["content_raw"])
 
             blogs[i].update(updated_data)
             blogs[i]["last_modified"] = int(time.time())

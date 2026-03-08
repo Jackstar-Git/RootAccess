@@ -89,7 +89,7 @@ def convert_markdown_to_html(markdown_text: str) -> str:
         if is_quote:
             if not state["blockquote"]:
                 state["blockquote"] = True
-                html_output.append("<blockquote>")
+                html_output.append("blockquote>")
             html_output.append(clean_text)
             continue
         elif state["blockquote"]:

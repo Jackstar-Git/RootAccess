@@ -1,13 +1,14 @@
 ﻿import logging
 import os
 from datetime import datetime
+import time
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash
 
 from utility.auth import login_required
-from utility.blogs import load_blogs
+from utility.blogs import load_blogs, add_blog, get_item_by_id, update_blog
 from utility.calendar import generate_calendar
 from utility.logging_utility import logger
 from utility.settings import get_settings, update_settings
@@ -192,3 +193,92 @@ def server_settings():
     return render_template("admin/server-settings.jinja-html",
                          settings=settings,
                          robots=settings.get('robots_txt', ''))
+
+
+@admin_blueprint.route("/blogs/create/", methods=["GET", "POST"])
+@login_required
+def create_blog():
+    logger.info("Accessing blog creation portal.")
+
+    if request.method == "POST":
+        # 1. Handle Thumbnail Upload
+        # The form uses name="thumbnail" for the file input
+        thumbnail_file = request.files.get("thumbnail")
+        image_url = "/static/assets/images/defaults/blog-placeholder.png" # Default fallback
+        
+        if thumbnail_file and thumbnail_file.filename:
+            # Ensure the uploads directory exists
+            upload_folder = "uploads"
+            os.makedirs(upload_folder, exist_ok=True)
+            
+            # Create a unique filename using timestamp
+            filename = f"{int(time.time())}_{thumbnail_file.filename}"
+            thumbnail_file.save(os.path.join(upload_folder, filename))
+            image_url = f"/uploads/{filename}"
+
+        # 2. Construct Blog Data
+        blog_data = {
+            "author": request.form.getlist("authors[]"),
+            "title": request.form.get("title"),
+            "content_raw": request.form.get("content"),
+            "image_url": image_url,
+            "tags": [tag.strip() for tag in request.form.get("tags", "").split(",") if tag.strip()],
+            "categories": request.form.getlist("categories")
+        }
+        
+        # 3. Save to File
+        try:
+            add_blog(blog_data)
+            logger.info(f"Blog '{blog_data['title']}' created successfully.")
+            flash("Blog post published!", "success")
+            return redirect(url_for('admin.all_blogs'))
+        except Exception as e:
+            logger.error(f"Failed to save blog: {str(e)}")
+            flash("Error saving blog post.", "error")
+
+    return render_template(
+        "admin/add-blog.jinja-html", 
+        settings=get_settings("blog_config")
+    )
+
+@admin_blueprint.route("/blogs/edit/<blog_id>", methods=["GET", "POST"])
+@login_required
+def edit_blog(blog_id: str):
+    blog = get_item_by_id(blog_id)
+
+    if not blog:
+        flash("Post not found.", "error")
+        return redirect(url_for('admin.all_blogs'))
+
+    if request.method == "POST":
+        thumbnail_file = request.files.get("thumbnail")
+        image_url = blog.get("image_url")
+
+        if thumbnail_file and thumbnail_file.filename:
+            upload_folder = "uploads"
+            os.makedirs(upload_folder, exist_ok=True)
+            filename = f"{int(time.time())}_{thumbnail_file.filename}"
+            thumbnail_file.save(os.path.join(upload_folder, filename))
+            image_url = f"/uploads/{filename}"
+
+        updated_data = {
+            "author": request.form.getlist("authors[]"),
+            "title": request.form.get("title"),
+            "content_raw": request.form.get("content"),
+            "image_url": image_url,
+            "tags": [tag.strip() for tag in request.form.get("tags", "").split(",") if tag.strip()],
+            "categories": request.form.getlist("categories"),
+            "description": request.form.get("description"),
+            "type": request.form.get("type"),
+            "reading_time": request.form.get("reading_time")
+        }
+
+        if update_blog(blog_id, updated_data):
+            flash("Successfully updated!", "success")
+            return redirect(url_for('admin.all_blogs'))
+
+    return render_template(
+        "admin/edit-blog.jinja-html",
+        blog=blog,
+        settings=get_settings("blog_config")
+    )

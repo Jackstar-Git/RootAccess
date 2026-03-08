@@ -15,11 +15,12 @@
         <div class="main-content">
             <div class="header-actions">
                 <h2>Blogs Overview</h2>
-                <a href="/admin/blog/new" class="btn btn-primary"><i class="fas fa-plus"></i> New Post</a>
+                <a href="/admin/blogs/create" class="btn btn-primary"><i class="fas fa-plus"></i> New Post</a>
             </div>
             
             <div class="blog-filters">
                 <form class="search-bar" method="GET" action="/admin/blogs/all">
+                    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ generate_token() }}">
                     <input type="hidden" name="category" value="{{ query_params.get('category', 'all') }}">
                     <input type="text" name="search" id="search-input" placeholder="Search by title or author..." value="{{ query_params.get('search', '') }}">
                     <button type="submit" style="display: none;">Search</button>
@@ -60,7 +61,7 @@
                         <img src="{{ blog.image_url }}" alt="Thumbnail for {{ blog.title }}" class="blog-thumbnail">
 
                         <div class="blog-info">
-                            <h3><a href="/admin/blog/{{ blog.id }}">{{ blog.title }}</a></h3>
+                            <h3><a href="/admin/blogs/edit/{{ blog.id }}">{{ blog.title }}</a></h3>
                             <p class="categories-tags">
                                 <i class="fas fa-folder"></i> {{ blog.categories | join(', ') }} 
                                 {% if blog.tags %}
@@ -78,14 +79,15 @@
                         <div class="blog-actions">
                             <a href="/blog/{{ blog.id }}" target="_blank" rel="noopener noreferrer" class="btn view-btn" title="View Live"><i class="fas fa-external-link-alt"></i></a>
 
-                            <a href="/admin/blog/{{ blog.id }}" class="btn edit-btn" title="Edit Post"><i class="fas fa-edit"></i></a>
+                            <a href="/admin/blogs/edit/{{ blog.id }}" class="btn edit-btn" title="Edit Post"><i class="fas fa-edit"></i></a>
 
-                            <a href="/api/delete-blog?id={{ blog.id }}" class="btn delete-btn" onclick="return confirm('Are you sure you want to completely delete this blog post? This cannot be undone.')" title="Delete Post"><i class="fas fa-trash-alt"></i></a>
+                            <button class="btn delete-btn" onclick="deletePost('{{blog.id}}')" title="Delete Post"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </div>
                 {% endfor %}
             </div>
         </div>
     </div>
+    <script src="{{ url_for('static', filename='js/admin-global.js')}}"></script>
 </body>
 </html>

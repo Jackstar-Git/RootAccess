@@ -25,7 +25,7 @@
 
         <div class="title-divider"></div>
 
-        <p>{{ blog.content_raw | truncate(150) }}</p>
+        <p>{{ blog.description | truncate(150) }}</p>
 
         <div class="author-modern">
             <div class="author-avatar"><i class="fa-solid fa-user"></i></div>
