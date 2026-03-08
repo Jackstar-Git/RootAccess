@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <nav class="sidebar" id="adminSidebar">
     <div class="sidebar-header">
