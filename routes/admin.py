@@ -147,9 +147,6 @@ def all_blogs() -> render_template:
             if not (title_match or author_match):
                 continue
 
-        dt: datetime = datetime.fromtimestamp(blog.get("time_created", 0))
-        blog['formatted_date'] = dt.strftime("%b %d, %Y")
-
         display_blogs.append(blog)
 
     display_blogs.sort(key=lambda x: x.get("time_created", 0), reverse=True)

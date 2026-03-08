@@ -73,7 +73,7 @@
                         <div class="blog-meta">
                             <span class="author"><i class="fas fa-user-edit"></i> {{ blog.author | join(', ') }}</span>
                             <br>    
-                            <span class="date"><i class="fas fa-calendar-alt"></i> {{ blog.formatted_date }}</span>
+                            <span class="date"><i class="fas fa-calendar-alt"></i> {{ blog.time_created | datetimeformat }}</span>
                         </div>
 
                         <div class="blog-actions">

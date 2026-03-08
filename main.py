@@ -135,7 +135,7 @@ def stay_alive():
                     requests.get(server_url)
             except Exception:
                 pass
-            time.sleep(300)  # 5 minutes
+            time.sleep(300)
 
     server_url = "https://rootaccess.onrender.com"
     if server_url:
