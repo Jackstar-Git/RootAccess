@@ -1,25 +1,28 @@
-﻿from datetime import datetime
-import io
+﻿import io
 import os
+import platform
 import shutil
+import subprocess
 import zipfile
-from typing import Dict, List, Optional, Union
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from flask import Blueprint, request, abort, session, send_file, jsonify
+from flask import Blueprint, jsonify, request, session, abort, send_file, Response
 from werkzeug.utils import secure_filename
 import psutil
 
 from FlaskClass import app, csrf
-from utility.logging_utility import logger
-from utility.path_files import MAX_FILE_SIZE, ROOT_DIR, sanitize_filename, is_safe_path, get_file_type
 from utility.auth import login_required
+from utility.blogs import add_blog, delete_blog, get_item_by_id, update_blog
+from utility.logging_utility import logger
+from utility.path_files import MAX_FILE_SIZE, ROOT_DIR, get_file_type, is_safe_path, sanitize_filename
+from utility.settings import get_settings
 
 internal_blueprint = Blueprint("internal", __name__, template_folder="./templates")
 
-# File Serving Routes
+# ============== FILE SERVING ROUTES ==============
 @internal_blueprint.route("/uploads/<path:filename>", methods=["GET"])
-def uploads(filename: str) -> str:
-    """Serve files from uploads directory."""
+def uploads(filename: str) -> Response:
     logger.info(f"GET request received for serving file from uploads | Filename: {filename}")
     try:
         return send_file(os.path.join(app.root_path, "uploads", filename))
@@ -28,8 +31,7 @@ def uploads(filename: str) -> str:
         abort(404)
 
 @internal_blueprint.route("/plugins/<path:filename>", methods=["GET"])
-def plugins(filename: str) -> str:
-    """Serve files from plugins directory."""
+def plugins(filename: str) -> Response:
     logger.info(f"GET request received for serving file from plugins | Filename: {filename}")
     try:
         return send_file(os.path.join(app.root_path, "plugins", filename))
@@ -38,8 +40,7 @@ def plugins(filename: str) -> str:
         abort(404)
 
 @internal_blueprint.route("/download/<path:filepath>", methods=["GET"])
-def download(filepath: str) -> str:
-    """Authenticated download route."""
+def download(filepath: str) -> Response:
     logger.info(f"GET request received for download | Path: {filepath}")
     is_public_path = filepath.startswith("uploads/")
     is_admin = session.get("is_admin", False)
@@ -79,11 +80,10 @@ def download(filepath: str) -> str:
     logger.error(f"Invalid path provided | Path: {filepath}")
     abort(400, description="Invalid path provided.")
 
-# API Endpoints
+# ============== API ENDPOINTS ==============
 @internal_blueprint.route("/api/add-events/", methods=["POST"])
 @login_required
-def add_events() -> Union[str, tuple]:
-    """Endpoint for adding new events to the calendar."""
+def add_events() -> Union[Response, Tuple[Response, int]]:
     logger.info("Received POST request for adding events")
 
     data = request.get_json()
@@ -100,13 +100,11 @@ def add_events() -> Union[str, tuple]:
         month = int(data["month"])
         day = int(data["day"])
 
-        # Validate date ranges
         if not 1 <= month <= 12:
             return jsonify({"error": "Month must be between 1 and 12"}), 400
         if not 1 <= day <= 31:
             return jsonify({"error": "Day must be between 1 and 31"}), 400
 
-        # Validate day for specific months
         if month in [4, 6, 9, 11] and day > 30:
             return jsonify({"error": "This month only has 30 days"}), 400
         elif month == 2:
@@ -150,8 +148,7 @@ def add_events() -> Union[str, tuple]:
 
 @internal_blueprint.route("/api/get-system-info/", methods=["GET"])
 @login_required
-def get_system_info() -> str:
-    """Endpoint for retrieving system information."""
+def get_system_info() -> Union[Response, Tuple[Response, int]]:
     logger.info("Received GET request for system information")
 
     try:
@@ -183,11 +180,10 @@ def get_system_info() -> str:
         logger.error(f"Failed to retrieve system information: {str(e)}", exc_info=True)
         return jsonify({"error": "Internal server error"}), 500
 
-# File Management Endpoints
+# ============== FILE MANAGEMENT ENDPOINTS ==============
 @internal_blueprint.route("/api/files/upload", methods=["POST"])
 @login_required
-def upload_file() -> str:
-    """Endpoint for file uploads."""
+def upload_file() -> Response:
     directory = request.args.get("dir", "").lstrip("/")
     root_dir = request.args.get("root", ROOT_DIR).lstrip("/")
 
@@ -238,8 +234,7 @@ def upload_file() -> str:
 
 @internal_blueprint.route("/api/files/delete", methods=["DELETE"])
 @login_required
-def delete_files() -> str:
-    """Endpoint for file deletion."""
+def delete_files() -> Response:
     data = request.get_json()
     if not data or "files" not in data or "path" not in data:
         return jsonify({"error": "Invalid request"}), 400
@@ -281,8 +276,7 @@ def delete_files() -> str:
 
 @internal_blueprint.route("/api/files/rename", methods=["POST"])
 @login_required
-def rename_file() -> str:
-    """Endpoint for renaming files."""
+def rename_file() -> Response:
     data = request.get_json()
     required = ["path", "name", "new_name"]
     if not all(field in data for field in required):
@@ -314,7 +308,7 @@ def rename_file() -> str:
 
 @internal_blueprint.route("/api/files/copy", methods=["POST"])
 @login_required
-def copy_file() -> str:
+def copy_file() -> Response:
     data = request.get_json()
     required = ["path", "file_name", "new_path"]
     if not all(field in data for field in required):
@@ -348,7 +342,7 @@ def copy_file() -> str:
 
 @internal_blueprint.route("/api/files/create_folder", methods=["POST"])
 @login_required
-def create_folder() -> str:
+def create_folder() -> Response:
     data = request.get_json()
     required = ["path", "folder_name"]
     if not all(field in data for field in required):
@@ -370,3 +364,188 @@ def create_folder() -> str:
     except Exception as e:
         logger.error(f"Failed to create folder | Path: {full_path} | Error: {str(e)}")
         return jsonify({"error": "Failed to create folder"}), 500
+
+# ============== SYSTEM INFORMATION AND LOGGING ==============
+@internal_blueprint.route("/api/get-logs", methods=["POST"])
+@login_required
+def get_logs() -> Response:
+    logger.info("POST request received for getting logs")
+
+    data = request.get_json()
+    if not data:
+        logger.warning("No data provided for getting logs")
+        return jsonify({"error": "No data provided"}), 400
+
+    severity: str = data.get("severityFilter", "ALL").upper()
+    items_raw: int = int(data.get("itemsFilter", 500))
+    sorting: str = data.get("sortingFilter", "DESC")
+
+    log_path = "logs/app.log"
+
+    if not os.path.exists(log_path):
+        return jsonify({"logs": ["Logdatei nicht gefunden oder leer."]})
+
+    with open(log_path, "r", encoding="utf-8") as file:
+        lines = file.readlines()
+
+    if severity != "ALL":
+        filtered_lines = [line for line in lines if severity in line]
+    else:
+        filtered_lines = [line for line in lines if "DEBUG" not in line]
+
+    if items_raw > 0:
+        clean_lines = filtered_lines[-items_raw:]
+    else:
+        clean_lines = filtered_lines
+
+    if sorting == "DESC":
+        clean_lines = list(reversed(clean_lines))
+
+    logger.info("Logs retrieved successfully")
+    return jsonify({
+        "logs": [line.strip() for line in clean_lines if line.strip()]
+    })
+
+@internal_blueprint.route("/api/clear-logs", methods=["POST"])
+@login_required
+def clear_logs() -> Response:
+    logger.info("POST request received to clear logs")
+    log_path = "logs/app.log"
+
+    try:
+        open(log_path, "w", encoding="utf-8").close()
+        logger.info("Log file truncated successfully")
+        return jsonify({"success": True})
+    except Exception as e:
+        logger.error(f"Failed to clear logs: {e}")
+        return jsonify({"error": "Error occurred while clearing logs."}), 500
+
+@internal_blueprint.route("/api/execute-command", methods=["POST"])
+@login_required
+def execute_command() -> Response:
+    IS_WINDOWS = platform.system() == "Windows"
+
+    COMMANDS_CONFIG = {
+        "Windows": {
+            "ping": ["ping", "google.com"],
+            "uptime": ["net", "stats", "workstation"],
+            "disk": ["wmic", "logicaldisk", "get", "caption,size,freespace"],
+            "memory": ["systeminfo"],
+            "cpu": ["wmic", "cpu", "get", "loadpercentage"],
+            "ip": ["ipconfig", "/all"],
+            "ls": ["dir"]
+        },
+        "Linux": {
+            "ping": ["ping", "-c", "4", "google.com"],
+            "uptime": ["uptime", "-p"],
+            "disk": ["df", "-h"],
+            "memory": ["free", "-m"],
+            "cpu": ["top", "-bn1"],
+            "ip": ["ip", "addr"],
+            "ls": ["ls", "-la"]
+        }
+    }
+
+    data = request.get_json()
+    command_key = data.get("command", "").strip().lower()
+    password_input = data.get("consolePassword", "")
+
+    if password_input != "1234":
+        return jsonify({"output": "Unauthorized: Incorrect Console Password.", "status": "error"}), 403
+
+    os_type = "Windows" if IS_WINDOWS else "Linux"
+    available_cmds = COMMANDS_CONFIG[os_type]
+
+    if command_key == "help":
+        cmd_list = ", ".join(available_cmds.keys())
+        return jsonify({"output": f"Available commands ({os_type}): {cmd_list}, help", "status": "success"})
+
+    if command_key not in available_cmds:
+        return jsonify({"output": f"Command '{command_key}' not permitted or unknown for {os_type}.", "status": "error"}), 400
+
+    try:
+        result = subprocess.run(
+            available_cmds[command_key],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            encoding="utf-8",
+            errors="replace",
+            shell=IS_WINDOWS
+        )
+
+        output = result.stdout if result.stdout else result.stderr
+        return jsonify({"output": output, "status": "success"})
+
+    except Exception as e:
+        return jsonify({"output": f"Execution Error: {str(e)}", "status": "error"}), 500
+
+# ============== BLOG MANAGEMENT ==============
+@internal_blueprint.route("/api/add-blog", methods=["POST"])
+@login_required
+def api_add_blog() -> Response:
+    data = request.get_json()
+    if not data or not data.get("title") or not data.get("content_raw"):
+        return jsonify({"error": "Title and content are required."}), 400
+
+    try:
+        new_post = add_blog(data)
+        logger.info(f"New blog created: {new_post['id']}")
+        return jsonify({"success": True, "id": new_post["id"]})
+    except Exception as e:
+        logger.error(f"Failed to add blog: {e}")
+        return jsonify({"error": "Internal server error while adding blog."}), 500
+
+@internal_blueprint.route("/api/update-blog", methods=["POST"])
+@login_required
+def api_update_blog() -> Response:
+    data = request.get_json()
+    blog_id = data.get("id")
+
+    if not blog_id:
+        return jsonify({"error": "Blog ID is required for updates."}), 400
+
+    try:
+        success = update_blog(blog_id, data)
+        if success:
+            logger.info(f"Blog {blog_id} updated successfully")
+            return jsonify({"success": True})
+        return jsonify({"error": "Blog post not found."}), 404
+    except Exception as e:
+        logger.error(f"Failed to update blog {blog_id}: {e}")
+        return jsonify({"error": "Error occurred during update."}), 500
+
+@internal_blueprint.route("/api/delete-blog", methods=["POST"])
+@login_required
+def api_delete_blog() -> Response:
+    data = request.get_json()
+    blog_id = data.get("id") if data else request.args.get("id")
+
+    if not blog_id:
+        return jsonify({"error": "No blog ID provided."}), 400
+
+    try:
+        if delete_blog(blog_id):
+            logger.info(f"Blog {blog_id} deleted successfully")
+            return jsonify({"success": True})
+        return jsonify({"error": "Blog post not found."}), 404
+    except Exception as e:
+        logger.error(f"Failed to delete blog {blog_id}: {e}")
+        return jsonify({"error": "Error occurred while deleting blog."}), 500
+
+@internal_blueprint.route("/api/clear-cache", methods=["POST"])
+@login_required
+def api_clear_cache():
+    try:
+        get_settings.cache_clear()
+        logger.info("Cache cleared by admin")
+        return jsonify({
+            "success": True,
+            "message": "Cache cleared successfully"
+        })
+    except Exception as e:
+        logger.error(f"Error clearing cache: {str(e)}")
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        }), 500

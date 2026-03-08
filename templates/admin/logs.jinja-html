@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/logs.css') }}">
+    <title>Admin Panel - Server Logs & Console</title>
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja-html" %}
+        <div class="main-content">
+            <h2>Server Logs & Remote Console</h2>
+
+            <div class="filter-bar">
+                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ generate_token() }}">
+                
+                <div class="filter-controls">
+                    <select id="severityFilter" name="severityFilter">
+                        <option value="ALL" selected>Alle Level</option>
+                        <option value="DEBUG">Debug</option>
+                        <option value="INFO">Info</option>
+                        <option value="WARNING">Warnungen</option>
+                        <option value="ERROR">Fehler</option>
+                        <option value="CRITICAL">Kritisch</option>
+                    </select>
+
+                    <select id="itemsFilter" name="itemsFilter">
+                        <option value="50">Letzte 50</option>
+                        <option value="100">Letzte 100</option>
+                        <option value="500" selected>Letzte 500</option>
+                        <option value="1000">Letzte 1000</option>
+                        <option value="10000">Letzte 10000</option>
+                        <option value="0">Alle</option>
+                    </select>
+
+                    <select id="sortingFilter" name="sortingFilter">
+                        <option value="ASC">Älteste zuerst</option>
+                        <option value="DESC" selected>Neueste zuerst</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary" id="applyFilters" onclick="fetchLogs()">Filter anwenden</button>
+                <button class="btn-danger" id="clearLogsBtn" onclick="clearLogs()">Logs leeren</button>
+            </div>
+
+            <div class="logs-container">
+                <div id="logsOutput">
+                    <span class="log-empty">Lade Logs...</span>
+                </div>
+                
+                <div class="console-bar">
+                    <input type="password" id="consolePassword" placeholder="Console PWD" autocomplete="off">
+                    <input type="text" id="consoleInput" placeholder="Befehl eingeben (z.B. 'help')..." autocomplete="off">
+                    <button class="btn-console" onclick="sendCommand()">Senden</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/logs.js')}}"></script>
+</body>
+</html>

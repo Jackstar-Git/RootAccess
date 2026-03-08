@@ -1,11 +1,13 @@
 import json
 import os
-from typing import List, Union, Optional, TypedDict, Any
+import time
+from typing import List, Union, Optional, TypedDict, Any, Dict
 from functools import lru_cache
+import uuid
 
 class BlogPost(TypedDict):
-    id: Union[int, str]
-    author: Union[str, List[str]]
+    id: str
+    author: List[str] 
     title: str
     content_raw: str
     image_url: str
@@ -16,18 +18,84 @@ class BlogPost(TypedDict):
 
 DATA_FILE: str = "data/blogs.json"
 
+
 @lru_cache(maxsize=1)
 def load_blogs() -> List[BlogPost]:
     if not os.path.exists(DATA_FILE):
         return []
-    with open(DATA_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+    try:
+        with open(DATA_FILE, "r", encoding="utf-8", errors="replace") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        return []
 
 @lru_cache(maxsize=128)
 def get_item_by_id(blog_id: Union[int, str]) -> Optional[BlogPost]:
     blogs: List[BlogPost] = load_blogs()
     str_id: str = str(blog_id)
     return next((post for post in blogs if str(post.get("id")) == str_id), None)
+
+def _save_and_refresh_cache(blogs: List[BlogPost]) -> None:
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(blogs, f, indent=4, ensure_ascii=False)
+    
+    load_blogs.cache_clear()
+    get_item_by_id.cache_clear()
+
+
+def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
+    blogs: List[BlogPost] = load_blogs()
+    now = int(time.time())
+
+    if not new_blog.get("id"):
+        existing_ids = {str(b.get("id")) for b in blogs}
+        while (candidate := uuid.uuid4().hex[:8]) in existing_ids:
+            pass
+        new_blog["id"] = candidate
+    else:
+        new_blog["id"] = str(new_blog["id"])
+
+    if isinstance(new_blog.get("author"), str):
+        new_blog["author"] = [new_blog["author"]]
+    
+    new_blog.setdefault("tags", [])
+    new_blog.setdefault("categories", [])
+    new_blog.setdefault("time_created", now)
+    new_blog["last_modified"] = now
+
+    blogs.append(new_blog) 
+    _save_and_refresh_cache(blogs)
+    return new_blog
+
+def update_blog(blog_id: Union[int, str], updated_data: Dict[str, Any]) -> bool:
+    blogs: List[BlogPost] = load_blogs()
+    str_id: str = str(blog_id)
+    
+    for i, post in enumerate(blogs):
+        if str(post.get("id")) == str_id:
+            updated_data.pop("id", None)
+            updated_data.pop("time_created", None)
+            
+            if "author" in updated_data and isinstance(updated_data["author"], str):
+                updated_data["author"] = [updated_data["author"]]
+
+            blogs[i].update(updated_data)
+            blogs[i]["last_modified"] = int(time.time())
+            
+            _save_and_refresh_cache(blogs)
+            return True
+    return False
+
+def delete_blog(blog_id: Union[int, str]) -> bool:
+    blogs: List[BlogPost] = load_blogs()
+    str_id: str = str(blog_id)
+    
+    new_list = [p for p in blogs if str(p.get("id")) != str_id]
+    if len(new_list) < len(blogs):
+        _save_and_refresh_cache(new_list)
+        return True
+    return False
+
 
 def search_blogs(search_query: str) -> List[BlogPost]:
     blogs: List[BlogPost] = load_blogs()

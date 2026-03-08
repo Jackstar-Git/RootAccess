@@ -15,7 +15,6 @@ def blogs_page():
     search = query.get("search", "").strip()
     sort_by = query.get("sort", "newest").strip()
 
-    # determine page number for pagination (1-based)
     try:
         page = int(query.get("page", 1))
     except (TypeError, ValueError):
@@ -42,25 +41,21 @@ def blogs_page():
     if query.get("type"):
         blog_list = [b for b in blog_list if b.get("type") == query["type"]]
 
-    # 4. Apply Helpers
     if query.get("start_date") or query.get("end_date"):
         blog_list = blog_helpers.filter_by_date_range(blog_list, query.get("start_date"), query.get("end_date"))
     
     if query.get("reading_time"):
         blog_list = blog_helpers.filter_by_reading_time(blog_list, query["reading_time"])
 
-    # 5. Final Sort
     blog_list = blog_helpers.sort_blogs(blog_list, sort_by)
 
 
-    # pagination
     total_count = len(blog_list)
     total_pages = ceil(total_count / BLOGS_PER_PAGE) if total_count else 1
     start = (page - 1) * BLOGS_PER_PAGE
     end = start + BLOGS_PER_PAGE
     paginated = blog_list[start:end]
 
-    # base_query excludes page so we can build links in template
     base_query = {k: v for k, v in query.items() if k != "page"}
     base_query_string = urlencode(base_query)
 

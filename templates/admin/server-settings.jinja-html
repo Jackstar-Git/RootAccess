@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/BrandLogo.png') }}" type="image">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+
+    <title>Admin Panel - Servereinstellungen</title>
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja-html" %}
+        
+        <div class="main-content">
+            <h2>Servereinstellungen</h2>
+            
+            <!-- Einstellungsformular -->
+            <form class="settings-form" method="POST" enctype="multipart/form-data">
+                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ generate_token() }}">
+                <div class="form-group">
+                    <label for="maintenance">Wartungsmodus:<span class="tooltip-icon" title="Aktiviert den Wartungsmodus, um die Website vorübergehend offline zu schalten. Nur für Admins sichtbar.">i</span></label>
+                    <label class="switch">
+                        <input type="checkbox" id="maintenance" name="maintenance" {% if settings['server_config']['maintenance'] %}checked{% endif %}>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <!-- robots.txt verwalten -->
+                <div class="form-group">
+                    <label for="robots_txt">robots.txt verwalten:<span class="tooltip-icon" title="Verwalten der robots.txt-Datei, um Suchmaschinen-Crawler zu steuern. Warnung: Nur für erfahrene Nutzer.">i</span></label>
+                    <textarea id="robots_txt" name="robots_txt" rows="10" required>{{ robots }}</textarea>
+                </div>
+
+                <!-- Cache löschen -->
+                <div class="form-group">
+                    <label for="clear_cache">Cache löschen:<span class="tooltip-icon" title="Löscht den Cache, um mögliche Fehler zu beheben und die Website zu aktualisieren.">i</span><br><span class="tooltip">Bei Fehlern kann das Löschen vom Cache hilfreich sein.</span></label>
+                    <button type="button" id="clear_cache" name="clear_cache" class="btn-clear-cache" onclick="clearCache()"><i class="fa-solid fa-rotate"></i> Cache löschen</button>
+                </div>
+
+                <!-- MAX_CONTENT_LENGTH -->
+                <div class="form-group">
+                    <label for="max_content_length">Maximale Inhaltsgröße (in Bytes):<span class="tooltip-icon" title="Legt die maximale Größe für hochgeladene Inhalte in Bytes fest. Bezieht sich auf alle Uploads, auch für Uploads über das Admin Dashboard.">i</span></label>
+                    <input type="number" id="max_content_length" name="max_content_length" value="{{ settings['server_config']['MAX_CONTENT_LENGTH'] }}" required>
+                </div>
+
+                <!-- PERMANENT_SESSION_LIFETIME -->
+                <div class="form-group">
+                    <label for="permanent_session_lifetime">Dauer der Sitzung (in Sekunden):<span class="tooltip-icon" title="Bestimmt die Dauer einer Sitzung in Sekunden. Wirkungsdauer für Cookies. Warnung: Nur für erfahrene Nutzer.">i</span></label>
+                    <input type="number" id="permanent_session_lifetime" name="permanent_session_lifetime" value="{{ settings['server_config']['PERMANENT_SESSION_LIFETIME'] }}" required>
+                </div>
+
+                <!-- SESSION_COOKIE_NAME -->
+                <div class="form-group">
+                    <label for="session_cookie_name">Name des Sitzungscookies:<span class="tooltip-icon" title="Definiert den Namen des Sitzungscookies. Warnung: Nur für erfahrene Nutzer. Warnung: Ändern meldet ALLE Nutzer ab und LÖSCHT ALLE WARENKÖRBE.">i</span></label>
+                    <input type="text" id="session_cookie_name" name="session_cookie_name" value="{{ settings['server_config']['SESSION_COOKIE_NAME'] }}" required>
+                </div>
+
+                <!-- Einstellungen speichern Button -->
+                <div class="form-group">
+                    <button type="submit" class="btn"><i class="fa-solid fa-floppy-disk"></i> Einstellungen speichern</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin/settings.js') }}"></script>
+</body>
+</html>

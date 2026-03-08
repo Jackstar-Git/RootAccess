@@ -1,60 +1,65 @@
-﻿from datetime import datetime
+﻿import logging
 import os
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple, Union
 
-from flask import render_template, request, redirect, url_for, session, Blueprint
-from utility.logging_utility import logger
-from utility import get_settings, calendar
-from utility.auth import login_required
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash
-import logging
+
+from utility.auth import login_required
+from utility.blogs import load_blogs
+from utility.calendar import generate_calendar
+from utility.logging_utility import logger
+from utility.settings import get_settings, update_settings
 
 logger = logging.getLogger(__name__)
 admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
 
+# ============== AUTHENTICATION ==============
 @admin_blueprint.before_request
-def protect_admin():
+def protect_admin() -> Optional[redirect]:
     if request.endpoint != "admin.login" and not session.get("is_admin"):
         return redirect(url_for("admin.login"))
 
 @admin_blueprint.route("/login", methods=["GET", "POST"])
-def login():
+def login() -> Union[render_template, redirect]:
     if session.get("is_admin"):
         return redirect(url_for("admin.dashboard"))
 
     if request.method == "POST":
-        input_pass = request.form.get("password")
-        stored_hash = get_settings("admin-password-hash")
+        input_pass: Optional[str] = request.form.get("password")
+        stored_hash: Optional[str] = get_settings("admin-password-hash")
 
         if stored_hash and check_password_hash(stored_hash, input_pass):
             session.clear()
             session.permanent = True
             session["is_admin"] = True
             return redirect(url_for("admin.dashboard"))
-        
+
         logger.warning(f"Unauthorized admin access attempt from {request.remote_addr}")
         flash("Access denied: Wrong password", "error")
 
     return render_template("admin/login.jinja-html")
 
 @admin_blueprint.route("/logout")
-def logout():
+def logout() -> redirect:
     session.clear()
     return redirect(url_for("admin.login"))
 
+# ============== DASHBOARD ==============
 @admin_blueprint.route("/dashboard")
 @login_required
-def dashboard():
-    today = datetime.today()
-    
-    year = request.args.get("year", default=today.year, type=int)
-    month = request.args.get("month", default=today.month, type=int)
+def dashboard() -> render_template:
+    today: datetime = datetime.today()
 
-    cal = calendar.generate_calendar(year, month)
+    year: int = request.args.get("year", default=today.year, type=int)
+    month: int = request.args.get("month", default=today.month, type=int)
 
-    events = [] 
-    
-    month_name = datetime(year, month, 1).strftime("%B")
+    cal = generate_calendar(year, month)
+
+    events: List[Dict[str, Any]] = []
+
+    month_name: str = datetime(year, month, 1).strftime("%B")
 
     return render_template(
         "admin/admin.jinja-html",
@@ -66,25 +71,25 @@ def dashboard():
         events=events
     )
 
+# ============== MEDIA LIBRARY ==============
 @admin_blueprint.route("/media/all", methods=["GET"])
-def library():
-    ROOT_DIR = "uploads"
-    current_path = request.args.get("path", "/")
-    
-    safe_path = current_path.strip("/")
-    abs_path = os.path.join(ROOT_DIR, safe_path)
+def library() -> render_template:
+    ROOT_DIR: str = "uploads"
+    current_path: str = request.args.get("path", "/")
 
-    files_data = []
-    
+    safe_path: str = current_path.strip("/")
+    abs_path: str = os.path.join(ROOT_DIR, safe_path)
+
+    files_data: List[Dict[str, Any]] = []
+
     if os.path.exists(abs_path) and os.path.isdir(abs_path):
         for item in os.listdir(abs_path):
-            item_path = os.path.join(abs_path, item)
+            item_path: str = os.path.join(abs_path, item)
             stats = os.stat(item_path)
-            
-            # Determine type
-            ext = os.path.splitext(item)[1].lower()
+
+            ext: str = os.path.splitext(item)[1].lower()
             if os.path.isdir(item_path):
-                file_type = "folder"
+                file_type: str = "folder"
             elif ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
                 file_type = "image"
             elif ext in ['.mp4', '.mov', '.avi']:
@@ -104,8 +109,86 @@ def library():
     files_data.sort(key=lambda x: (x['type'] != 'folder', x['name'].lower()))
 
     return render_template(
-        "admin/media-library.jinja-html", 
-        files=files_data, 
+        "admin/media-library.jinja-html",
+        files=files_data,
         path=current_path,
         root=ROOT_DIR
     )
+
+# ============== LOGS ==============
+@admin_blueprint.route("/settings/logs", methods=["GET"])
+def server_logs() -> render_template:
+    logger.info("Server logs route accessed")
+    with open("logs/app.log", "r", encoding="utf-8") as file:
+        lines: List[str] = file.readlines()
+
+    clean_lines: List[str] = lines[-50::]
+    logger.info("Rendering server logs page")
+    return render_template("admin/logs.jinja-html", logs=clean_lines)
+
+# ============== BLOGS ==============
+@admin_blueprint.route("/blogs/all", methods=["GET"])
+@login_required
+def all_blogs() -> render_template:
+    search_query: str = request.args.get("search", "").lower()
+    topic_query: str = request.args.get("topic", "all")
+
+    raw_blogs = load_blogs()
+    display_blogs: List[Dict[str, Any]] = []
+
+    for blog in raw_blogs:
+        if topic_query != "all" and topic_query not in blog.get("topics", []):
+            continue
+
+        if search_query:
+            title_match: bool = search_query in blog.get("title", "").lower()
+            author_match: bool = any(search_query in a.lower() for a in blog.get("author", []))
+            if not (title_match or author_match):
+                continue
+
+        dt: datetime = datetime.fromtimestamp(blog.get("time_created", 0))
+        blog['formatted_date'] = dt.strftime("%b %d, %Y")
+
+        display_blogs.append(blog)
+
+    display_blogs.sort(key=lambda x: x.get("time_created", 0), reverse=True)
+
+    return render_template(
+        "admin/all-blogs.jinja-html",
+        blogs=display_blogs,
+        settings=get_settings("blog_config"),
+        query_params=request.args
+    )
+
+@admin_blueprint.route("/settings/server", methods=["GET", "POST"])
+@login_required
+def server_settings():
+    if request.method == "POST":
+        try:
+            settings = get_settings()
+            form_data = request.form.to_dict()
+
+            settings['server_config']['maintenance'] = 'maintenance' in form_data
+            settings['server_config']['MAX_CONTENT_LENGTH'] = int(form_data.get('max_content_length', 0))
+            settings['server_config']['PERMANENT_SESSION_LIFETIME'] = int(form_data.get('permanent_session_lifetime', 0))
+            settings['server_config']['SESSION_COOKIE_NAME'] = form_data.get('session_cookie_name', '')
+            settings['robots_txt'] = form_data.get('robots_txt', '')
+
+            update_settings(settings)
+            logger.info("Server settings updated successfully")
+
+            return jsonify({
+                "success": True,
+                "message": "Settings updated successfully"
+            })
+        except Exception as e:
+            logger.error(f"Error updating server settings: {str(e)}")
+            return jsonify({
+                "success": False,
+                "message": str(e)
+            }), 400
+
+    settings = get_settings()
+    return render_template("admin/server-settings.jinja-html",
+                         settings=settings,
+                         robots=settings.get('robots_txt', ''))

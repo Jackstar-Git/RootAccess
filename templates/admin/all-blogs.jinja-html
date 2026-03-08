@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/all-blogs.css') }}">
+    <title>Admin Panel - All Blogs</title>
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja-html" %}
+
+        <div class="main-content">
+            <div class="header-actions">
+                <h2>Blogs Overview</h2>
+                <a href="/admin/blog/new" class="btn btn-primary"><i class="fas fa-plus"></i> New Post</a>
+            </div>
+            
+            <div class="blog-filters">
+                <form class="search-bar" method="GET" action="/admin/blogs/all">
+                    <input type="hidden" name="category" value="{{ query_params.get('category', 'all') }}">
+                    <input type="text" name="search" id="search-input" placeholder="Search by title or author..." value="{{ query_params.get('search', '') }}">
+                    <button type="submit" style="display: none;">Search</button>
+                </form>
+
+                <div class="sort-options">
+                    <select id="sort-options" onchange="window.location.href=this.value">
+                        <option value="">Sort by</option>
+                        <option value="?sort=newest">Newest First</option>
+                        <option value="?sort=oldest">Oldest First</option>
+                        <option value="?sort=title-asc">Title: A-Z</option>
+                        <option value="?sort=title-desc">Title: Z-A</option>
+                    </select>
+                </div>
+
+                <div class="filter-menu">
+                    <select id="category-filter" onchange="window.location.href='?topic=' + this.value">
+                        <option value="all">All Topics</option>
+                        {% for topic in settings.topics %}
+                            <option {% if query_params.get('topic') == topic %}selected{% endif %} value="{{ topic }}">{{ topic }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="blogs-list">
+                {% if blogs|length == 0 %}
+                    <div class="empty-state">
+                        <h3>No matching blog posts found!</h3>
+                        <a href="/admin/blogs/all" class="btn view-btn">Clear Filters</a>
+                    </div>
+                {% endif %}
+
+                {% for blog in blogs %}
+                    <div class="blog-item">
+                        <div class="id-column">{{ blog.id }}</div>
+                        
+                        <img src="{{ blog.image_url }}" alt="Thumbnail for {{ blog.title }}" class="blog-thumbnail">
+
+                        <div class="blog-info">
+                            <h3><a href="/admin/blog/{{ blog.id }}">{{ blog.title }}</a></h3>
+                            <p class="categories-tags">
+                                <i class="fas fa-folder"></i> {{ blog.categories | join(', ') }} 
+                                {% if blog.tags %}
+                                    &nbsp;|&nbsp; <i class="fas fa-hashtag"></i> {{ blog.tags | join(', ') }}
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <div class="blog-meta">
+                            <span class="author"><i class="fas fa-user-edit"></i> {{ blog.author | join(', ') }}</span>
+                            <br>    
+                            <span class="date"><i class="fas fa-calendar-alt"></i> {{ blog.formatted_date }}</span>
+                        </div>
+
+                        <div class="blog-actions">
+                            <a href="/blog/{{ blog.id }}" target="_blank" rel="noopener noreferrer" class="btn view-btn" title="View Live"><i class="fas fa-external-link-alt"></i></a>
+
+                            <a href="/admin/blog/{{ blog.id }}" class="btn edit-btn" title="Edit Post"><i class="fas fa-edit"></i></a>
+
+                            <a href="/api/delete-blog?id={{ blog.id }}" class="btn delete-btn" onclick="return confirm('Are you sure you want to completely delete this blog post? This cannot be undone.')" title="Delete Post"><i class="fas fa-trash-alt"></i></a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
