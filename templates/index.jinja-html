@@ -6,6 +6,7 @@
     <title>Root.Access — Portfolio & Blog</title>
     <meta name="description" content="Root.Access - Portfolio and Blog  of Jackstar, a full-stack developer building modern web experiences.">
     <meta name="author" content="Jackstar">
+    <meta name="google-site-verification" content="GiteS5edM4D2FY75Qyih8OE1Chnlg3zYuX6ZcEDNdmw" />
     <!-- global core styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
