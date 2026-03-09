@@ -19,7 +19,7 @@ Allow: /privacy/
 Allow: /                       # Allow access to the home page
 Allow: /sitemap.xml           # Allow access to the sitemap
 
-Sitemap: rootaccess.onrender.com/sitemap.xml
+Sitemap: https://rootaccess.onrender.com/sitemap.xml
 
 # Here is a friendly robot to say hello!
 #
