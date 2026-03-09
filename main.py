@@ -99,6 +99,11 @@ def sitemap():
 def robots():
     return send_from_directory("./", "robots.txt")
 
+
+@app.route("/google7825769118bcd42a.html")
+def google_verification():
+    return send_from_directory("/google7825769118bcd42a.html")
+
 @app.errorhandler(405)
 def method_not_allowed(error):
     logger.warning(f"405 Method Not Allowed: {request.path}; {error}")
