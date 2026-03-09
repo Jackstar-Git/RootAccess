@@ -9,6 +9,7 @@ Disallow: /403                  # Disallow access to the 403 error page
 # Allow access to all product pages
 Allow: /projects/                # Allow access to projects pages
 Allow: /blog/                   # Allow access to the blog list page
+Allow: /about/  
 
 # Allow access to all legal routes
 Allow: /imprint/       
@@ -18,7 +19,7 @@ Allow: /privacy/
 Allow: /                       # Allow access to the home page
 Allow: /sitemap.xml           # Allow access to the sitemap
 
-Sitemap: uebungsfirma.onrender.com/sitemap.xml
+Sitemap: rootaccess.onrender.com/sitemap.xml
 
 # Here is a friendly robot to say hello!
 #
