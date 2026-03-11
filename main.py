@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from flask import render_template, url_for, make_response, request, jsonify, session, send_from_directory, Response
 from flask_wtf.csrf import generate_csrf, CSRFError
 from waitress import serve
+import urllib.parse
 
 from FlaskClass import app
 from utility.logging_utility import logger
@@ -28,8 +29,8 @@ logger.debug("Registered routes:")
 for rule in app.url_map.iter_rules():
     logger.debug(f"Route: {rule.rule}, Endpoint: {rule.endpoint}")
 
-@app.template_filter('datetimeformat')
-def datetime_filter(value: int, format: str = '%B %d, %Y') -> str:
+@app.template_filter("datetimeformat")
+def datetime_filter(value: int, format: str = "%B %d, %Y") -> str:
     if not value:
         return ""
     return datetime.fromtimestamp(value).strftime(format)
@@ -73,27 +74,58 @@ def home():
 def sitemap():
     logger.info("Sitemap requested.")
     pages = []
-    # Current date for <lastmod>
-    lastmod = datetime.now().date().isoformat()
-    
-    # List of endpoints to exclude (static files, sitemap itself, etc.)
-    excluded_endpoints = ['static', 'sitemap', 'admin'] 
+
+    default_lastmod = datetime.now()
+
+    excluded_paths = ["/admin", "/static", "/upload", "/download"]
+
+    for blog in blogs.query_blogs():
+        blog_id = blog.get("id", 0)
+        url = urllib.parse.urljoin(request.url_root, f"blogs/{blog_id}")
+        
+        pages.append({
+            "loc": url,
+            "lastmod": datetime.fromtimestamp(blog.get("last_modified", default_lastmod)).isoformat(), 
+            "changefreq": "yearly",
+            "priority": "0.5"
+        })
+
+    for project in projects.query_projects():
+        project_id = project.get("id", 0)
+        url = urllib.parse.urljoin(request.url_root, f"projects/{project_id}")
+        
+        pages.append({
+            "loc": url,
+            "lastmod": datetime.fromtimestamp(project.get("last_modified", default_lastmod)).isoformat(),
+            "changefreq": "monthly",
+            "priority": "0.5"
+        })
 
     for rule in app.url_map.iter_rules():
-        if "GET" in rule.methods and len(rule.arguments) == 0:
-            if rule.endpoint not in excluded_endpoints:
+        if "GET" in rule.methods:
+            if rule.arguments:
+                continue
+
+            if any(rule.rule.startswith(path) for path in excluded_paths):
+                continue
+
+            try:
                 url = url_for(rule.endpoint, _external=True)
                 pages.append({
                     "loc": url,
-                    "lastmod": lastmod,
+                    "lastmod": default_lastmod,
                     "changefreq": "monthly",
-                    "priority": "0.8" if "/" == rule.rule else "0.5"
+                    "priority": "0.8" if rule.rule == "/" else "0.5"
                 })
+            except Exception as e:
+                logger.warning(f"Could not generate URL for endpoint {rule.endpoint}: {e}")
 
     response = make_response(render_template("meta/sitemap.xml", pages=pages))
     response.headers["Content-Type"] = "application/xml"
     logger.info("Sitemap generated with %d pages.", len(pages))
     return response
+
+
 
 @app.route("/robots.txt")
 def robots():
@@ -148,7 +180,7 @@ def stay_alive():
         thread.daemon = True
         thread.start()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     os.chdir(os.path.dirname(__file__))
     logger.info("*" * 50)
     logger.info("Application Server started!")    
