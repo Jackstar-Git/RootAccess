@@ -20,8 +20,18 @@
     "original": null
   },
   {
+    "text": "The world is full of the ruins of empires who thought they were eternal.",
+    "author": "Camille Flammarion",
+    "original": null
+  },
+  {
     "text": "This world doesn’t like those who are different… Don’t let anyone tell you who you should be.",
     "author": "Carl Manfred (Detroit: Become Human)",
+    "original": null
+  },
+  {
+    "text": "Humanity's greatest achievement is once again going to be its greatest demise.",
+    "author": "Elijah Kamski (Detroit: Become Human)",
     "original": null
   },
   {
@@ -41,7 +51,7 @@
   },
   {
     "text": "The only thing necessary for the triumph of evil is for good men to do nothing.",
-    "author": "Edmund Burke",
+    "author": "Edmund Burke (Attributed)",
     "original": null
   },
   {
@@ -61,7 +71,7 @@
   },
   {
     "text": "The further a society drifts from the truth, the more it will hate those who speak it.",
-    "author": "George Orwell",
+    "author": "George Orwell (Attributed)",
     "original": null
   },
   {
@@ -71,7 +81,7 @@
   },
   {
     "text": "When writing the story of your life, don't let anyone else hold the pen.",
-    "author": "Harley Davidson",
+    "author": "Harley Davidson (Brand Slogan)",
     "original": null
   },
   {
@@ -101,7 +111,7 @@
   },
   {
     "text": "Nothing is more dangerous than a man who has nothing to lose.",
-    "author": "Johann Wolfgang von Goethe",
+    "author": "James Baldwin (Attributed)",
     "original": null
   },
   {
@@ -112,6 +122,11 @@
   {
     "text": "First, solve the problem. Then, write the code.",
     "author": "John Johnson",
+    "original": null
+  },
+  {
+    "text": "You don't realize what you have until it's gone.",
+    "author": "Joni Mitchell",
     "original": null
   },
   {
@@ -126,7 +141,7 @@
   },
   {
     "text": "An eye for an eye only ends up making the whole world blind.",
-    "author": "Mahatma Gandhi",
+    "author": "Mahatma Gandhi (Attributed)",
     "original": null
   },
   {
@@ -190,9 +205,19 @@
     "original": null
   },
   {
+    "text": "If the majority simply does nothing, a few extremists are enough.",
+    "author": "Rezo (German YouTuber)",
+    "original": "Wenn die meisten einfach gar nichts machen, reichen ein paar Spinner aus"
+  },
+  {
     "text": "Just because something was a certain way once doesn't mean it can't be that way again.",
     "author": "Rezo (German YouTuber)",
     "original": "Nur weil etwas schonmal so war, kann es doch nochmal so sein"
+  },
+  {
+    "text": "8 billion people, but humanity is missing.",
+    "author": "Sido (German Rapper)",
+    "original": "8 Milliarden Menschen, doch die Menschlichkeit fehlt"
   },
   {
     "text": "The real danger is not that computers will begin to think like men, but that men will begin to think like computers.",
@@ -215,6 +240,11 @@
     "original": null
   },
   {
+    "text": "History is written by the victors.",
+    "author": "Winston Churchill (Attributed)",
+    "original": "Only the winners write the history"
+  },
+  {
     "text": "If you are going through hell, keep going! It ain't a place to stop!",
     "author": "Winston Churchill",
     "original": null
@@ -223,21 +253,6 @@
     "text": "If someone is trying to bring you down, it means they are already below you.",
     "author": "Ziad K. Abdelnour",
     "original": null
-  },
-  {
-    "text": "History is written by the victors.",
-    "author": null,
-    "original": "Only the winners write the history"
-  },
-  {
-    "text": "Humanity's greatest achievement is once again going to be its greatest demise.",
-    "author": null,
-    "original": null
-  },
-  {
-    "text": "If the majority simply does nothing, a few extremists are enough.",
-    "author": null,
-    "original": "Wenn die meisten einfach gar nichts machen, reichen ein paar Spinner aus"
   },
   {
     "text": "Put your money where your mouth is.",
@@ -250,22 +265,12 @@
     "original": null
   },
   {
-    "text": "The world is full of the ruins of empires who thought they were eternal.",
-    "author": null,
-    "original": null
-  },
-  {
     "text": "There is a huge difference between believing you know, and knowing you believe.",
     "author": null,
     "original": null
   },
   {
     "text": "We are living in a world where technology allows us to communicate instantly, yet isolates us profoundly.",
-    "author": null,
-    "original": null
-  },
-  {
-    "text": "You don't realize what you have until it's gone.",
     "author": null,
     "original": null
   }
