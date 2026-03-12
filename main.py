@@ -77,7 +77,7 @@ def sitemap():
 
     default_lastmod = datetime.now()
 
-    excluded_paths = ["/admin", "/static", "/upload", "/download"]
+    excluded_paths = ["/admin", "/static", "/upload", "/download", "/google7825769118bcd42a.html"]
 
     for blog in blogs.query_blogs():
         blog_id = blog.get("id", 0)

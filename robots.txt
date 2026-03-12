@@ -1,10 +1,11 @@
 User-agent: *
-Disallow: /api/                 # Disallow access to API endpoints
-Disallow: /uploads/             # Disallow access to uploaded files
-Disallow: /plugins/             # Disallow access to plugins directory
-Disallow: /static/              # Disallow access to static files (if not needed)
-Disallow: /404                  # Disallow access to the 404 error page
-Disallow: /403                  # Disallow access to the 403 error page
+Disallow: /api/                         # Disallow access to API endpoints
+Disallow: /uploads/                     # Disallow access to uploaded files
+Disallow: /plugins/                     # Disallow access to plugins directory
+Disallow: /static/                      # Disallow access to static files (if not needed)
+Disallow: /404                          # Disallow access to the 404 error page
+Disallow: /403                          # Disallow access to the 403 error page
+Disallow: /google7825769118bdc2a.html   # Disallow access to the google search engine verification page
 
 # Allow access to all product pages
 Allow: /projects/                # Allow access to projects pages
