@@ -85,7 +85,7 @@ def sitemap():
         
         pages.append({
             "loc": url,
-            "lastmod": datetime.fromtimestamp(blog.get("last_modified", default_lastmod)).isoformat(), 
+            "lastmod": datetime.fromtimestamp(blog.get("last_modified", default_lastmod)).date().isoformat(), 
             "changefreq": "yearly",
             "priority": "0.5"
         })
@@ -96,7 +96,7 @@ def sitemap():
         
         pages.append({
             "loc": url,
-            "lastmod": datetime.fromtimestamp(project.get("last_modified", default_lastmod)).isoformat(),
+            "lastmod": datetime.fromtimestamp(project.get("last_modified", default_lastmod)).date().isoformat(),
             "changefreq": "monthly",
             "priority": "0.5"
         })
@@ -113,7 +113,7 @@ def sitemap():
                 url = url_for(rule.endpoint, _external=True)
                 pages.append({
                     "loc": url,
-                    "lastmod": default_lastmod,
+                    "lastmod": default_lastmod.date().isoformat(),
                     "changefreq": "monthly",
                     "priority": "0.8" if rule.rule == "/" else "0.5"
                 })
