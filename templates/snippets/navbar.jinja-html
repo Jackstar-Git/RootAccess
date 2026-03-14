@@ -30,7 +30,7 @@
             </div>
 
             <div class="nav-auth">
-                <a href="/admin/login" class="auth-icon"><i class="fas fa-user-circle"></i></a>
+                <a href="/admin/login" class="auth-icon" aria-label="Admin Panel Login"><i class="fas fa-user-circle"></i></a>
             </div>
 
             <label for="menu-toggle" class="mobile-menu-toggle">

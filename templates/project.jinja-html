@@ -75,12 +75,12 @@
                 <div class="glass-article-body">
                     <figure class="featured-figure">
                         <img src="{{ project.image_url if project.image_url else '/static/assets/images/default/default-project.png' }}" 
-                            alt="{{ project.title }}" class="featured-image">
+                            alt="{{ project.title }}" class="featured-image" fetchpriority="high">
                     </figure>
 
-                    <section class="main-text-flow">
+                    <main class="main-text-flow">
                         {{ project.content_raw | safe }}
-                    </section>
+                    </main>
 
                     <footer class="article-end">
                         <div class="footer-tag-groups">

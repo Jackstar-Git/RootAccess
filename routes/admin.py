@@ -138,7 +138,7 @@ def all_blogs() -> render_template:
     display_blogs: List[Dict[str, Any]] = []
 
     for blog in raw_blogs:
-        if topic_query != "all" and topic_query not in blog.get("topics", []):
+        if topic_query != "all" and topic_query not in blog.get("categories", []):
             continue
 
         if search_query:
@@ -157,6 +157,11 @@ def all_blogs() -> render_template:
         settings=get_settings("blog_config"),
         query_params=request.args
     )
+
+@admin_blueprint.route("/blogs/categories", methods=["GET"])
+@login_required
+def blogs_categories() -> render_template:
+    return render_template("admin/blog-settings.jinja-html", settings=get_settings("blog_config"))  
 
 @admin_blueprint.route("/settings/server", methods=["GET", "POST"])
 @login_required
@@ -198,32 +203,29 @@ def create_blog():
     logger.info("Accessing blog creation portal.")
 
     if request.method == "POST":
-        # 1. Handle Thumbnail Upload
-        # The form uses name="thumbnail" for the file input
         thumbnail_file = request.files.get("thumbnail")
-        image_url = "/static/assets/images/defaults/blog-placeholder.png" # Default fallback
+        image_url = "/static/assets/images/defaults/blog-placeholder.png" 
         
         if thumbnail_file and thumbnail_file.filename:
-            # Ensure the uploads directory exists
             upload_folder = "uploads"
             os.makedirs(upload_folder, exist_ok=True)
-            
-            # Create a unique filename using timestamp
             filename = f"{int(time.time())}_{thumbnail_file.filename}"
             thumbnail_file.save(os.path.join(upload_folder, filename))
             image_url = f"/uploads/{filename}"
 
-        # 2. Construct Blog Data
         blog_data = {
             "author": request.form.getlist("authors[]"),
             "title": request.form.get("title"),
             "content_raw": request.form.get("content"),
+            "status": request.form.get("status", "draft"),
             "image_url": image_url,
             "tags": [tag.strip() for tag in request.form.get("tags", "").split(",") if tag.strip()],
-            "categories": request.form.getlist("categories")
+            "categories": request.form.getlist("categories"),
+            "type": request.form.get("type"),
+            "reading_time": request.form.get("reading_time"),
+            "description": request.form.get("description")
         }
         
-        # 3. Save to File
         try:
             add_blog(blog_data)
             logger.info(f"Blog '{blog_data['title']}' created successfully.")
@@ -263,6 +265,7 @@ def edit_blog(blog_id: str):
             "title": request.form.get("title"),
             "content_raw": request.form.get("content"),
             "image_url": image_url,
+            "status": request.form.get("status", "draft"),
             "tags": [tag.strip() for tag in request.form.get("tags", "").split(",") if tag.strip()],
             "categories": request.form.getlist("categories"),
             "description": request.form.get("description"),

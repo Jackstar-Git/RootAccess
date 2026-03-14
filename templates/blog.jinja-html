@@ -50,12 +50,12 @@
 
             <div class="glass-article-body">
                 <figure class="featured-figure">
-                    <img src="{{ blog.image_url }}" alt="{{ blog.title }}" class="featured-image">
+                    <img src="{{ blog.image_url }}" alt="{{ blog.title }}" class="featured-image" fetchpriority="high">
                 </figure>
 
-                <section class="main-text-flow">
+                <main class="main-text-flow">
                     {{ blog.content_html | safe }}
-                </section>
+                </main>
 
                 <footer class="article-end">
                     <h4 class="footer-label">Related Tags</h4>

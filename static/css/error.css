@@ -28,18 +28,18 @@
 
 /* 404 Text Effect */
 .error-code {
-    font-size: 8rem;
+    font-size: calc(var(--font-size-3xl));
     font-weight: 900;
     margin: 0;
     line-height: 1;
     background: linear-gradient(135deg, var(--main-color-950), var(--main-color-500));
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -5px;
     animation: float 6s ease-in-out infinite;
 }
 
-/* .error-title will inherit global h2 styles; adjust only margins if needed */
 .error-title {
     margin: 1.5rem 0 1rem;
 }
@@ -123,7 +123,7 @@
 }
 
 @media (max-width: 480px) {
-    .error-code { font-size: 6rem; }
+    .error-code { font-size: var(--font-size-3xl); }
     .error-actions { flex-direction: column; }
     .error-glass-container { padding: 3rem 1.5rem; }
 }

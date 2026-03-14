@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/BrandLogo.png') }}" type="image">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/settings.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
 
     <title>Admin Panel - Servereinstellungen</title>

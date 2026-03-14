@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/BrandLogo.png') }}" type="image">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit-blog.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/edit-blog.css') }}">
     <title>Admin - Edit Post</title>
 </head>
 <body>
@@ -33,38 +33,29 @@
                                 <button type="button" onclick="applyStyle('italic')" title="Italic"><i class="fas fa-italic"></i></button>
                                 <button type="button" onclick="applyStyle('underline')" title="Underline"><i class="fas fa-underline"></i></button>
                                 <button type="button" onclick="applyStyle('strikethrough')" title="Strikethrough"><i class="fas fa-strikethrough"></i></button>
-
                                 <span class="divider"></span>
-
                                 <button type="button" onclick="applyStyle('superscript')" title="Superscript"><i class="fas fa-superscript"></i></button>
                                 <button type="button" onclick="applyStyle('subscript')" title="Subscript"><i class="fas fa-subscript"></i></button>
                                 <button type="button" onclick="applyColor()" title="Text Color"><i class="fas fa-palette"></i></button>
-
                                 <span class="divider"></span>
-
                                 <select onchange="applyAlignment(this.value); this.value='';" class="toolbar-select">
                                     <option value="" disabled selected>Align</option>
                                     <option value="left">Left</option>
                                     <option value="center">Center</option>
                                     <option value="right">Right</option>
                                 </select>
-
                                 <button type="button" onclick="applyLineStyle('blockquote')" title="Quote"><i class="fas fa-quote-right"></i></button>
                                 <button type="button" onclick="applyLineStyle('codeblock')" title="Code Block"><i class="fas fa-code"></i></button>
                                 <button type="button" onclick="applyStyle('inlinecode')" title="Inline Code"><i class="fas fa-terminal"></i></button>
-
                                 <select onchange="applyLineStyle(this.value); this.value='';" class="toolbar-select">
                                     <option value="" disabled selected>H</option>
                                     <option value="h1">H1</option>
                                     <option value="h2">H2</option>
                                     <option value="h3">H3</option>
                                 </select>
-
                                 <button type="button" onclick="addLink()" title="Link"><i class="fas fa-link"></i></button>
                                 <button type="button" onclick="applyLineStyle('html')" title="HTML Injection"><i class="fab fa-html5"></i></button>
-
                                 <span class="divider"></span>
-
                                 <button type="button" id="toggle-view-button" onclick="toggleView()" class="btn-preview">
                                     <i class="fas fa-eye"></i> Preview
                                 </button>
@@ -76,6 +67,15 @@
                     </section>
 
                     <aside class="settings-sidebar">
+                        <div class="settings-group">
+                            <label>Visibility Status</label>
+                            <select name="status" class="modern-input" style="height: auto;">
+                                <option value="visible" {% if blog.status == 'visible' %}selected{% endif %}>Visible</option>
+                                <option value="draft" {% if blog.status == 'draft' or not blog.status %}selected{% endif %}>Draft</option>
+                                <option value="hidden" {% if blog.status == 'hidden' %}selected{% endif %}>Hidden</option>
+                            </select>
+                        </div>
+
                         <div class="settings-group">
                             <label>Featured Image</label>
                             <div class="upload-container" id="drop-zone">
@@ -117,22 +117,21 @@
                             <label>Description</label>
                             <textarea name="description" class="modern-input">{{ blog.description }}</textarea>
                         </div>
-
                         <div class="settings-group">
                             <label>Type</label>
-                            <select name="type" class="modern-select">
+                            <select name="type" class="modern-select" style="min-height: auto;">
                                 {% for type in settings.types %}
-                                    <option value="{{type.name}}"><i class="{{type.icon}}"></i>{{type.name}}</option>
+                                    <option value="{{type.name}}" {% if blog.type == type.name %}selected{% endif %}>{{type.name}}</option>
                                 {% endfor %}
                             </select>
                         </div>
 
                         <div class="settings-group">
                             <label>Reading Time</label>
-                            <select name="reading_time" class="modern-select">
-                                <option value="short">Short (&lt;5 min)</option>
-                                <option value="medium">Medium (5‑15 min)</option>
-                                <option value="deep">Deep Dive (&gt;15 min)</option>
+                            <select name="reading_time" class="modern-select" style="min-height: auto;">
+                                <option value="short" {% if blog.reading_time == "short" %}selected{% endif %}>Short (&lt;5 min)</option>
+                                <option value="medium" {% if blog.reading_time == "medium" %}selected{% endif %}>Medium (5‑15 min)</option>
+                                <option value="deep" {% if blog.reading_time == "deep" %}selected{% endif %}>Deep Dive (&gt;15 min)</option>
                             </select>
                         </div>
 
@@ -151,6 +150,5 @@
 
     <script src="{{ url_for('static', filename='js/edit-blogs.js')}}"></script>
     <script src="{{ url_for('static', filename='js/admin-global.js')}}"></script>
-
 </body>
 </html>

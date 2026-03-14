@@ -102,7 +102,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 1rem; /* Larger font size for dates */
+    font-size: var(--font-size-md);
     color: var(--third-font-color);
 }
 

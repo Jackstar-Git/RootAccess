@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/BrandLogo.png') }}" type="image">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit-blog.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/edit-blog.css') }}">
     <title>Admin - Draft New Post</title>
 </head>
 <body>

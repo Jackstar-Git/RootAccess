@@ -26,7 +26,7 @@
                 <h4>Legal & Support</h4>
                 <ul>
                     <li><a href="/imprint">Imprint</a></li>
-                    <li><a href="/privacy">Privacy Policy</a></li>
+                    <li><a href="/privacy" >Privacy Policy</a></li>
                     <li><a href="/contact">Contact</a></li>
                     <li><a href="/sitemap.xml">Sitemap</a></li>
                 </ul>
@@ -46,7 +46,7 @@
 
 <div id="privacy-notice" class="privacy-banner">
     <div class="privacy-content">
-        <p>This site uses cookies to ensure you get the best experience. <a href="/privacy">Learn more</a></p>
+        <p>This site uses cookies to ensure you get the best experience. <a href="/privacy">View Privacy Policy</a></p>
         <button id="acceptCookies" class="btn-accept">Accept</button>
     </div>
 </div>

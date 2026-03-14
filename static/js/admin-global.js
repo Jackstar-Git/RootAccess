@@ -21,3 +21,4 @@ async function deletePost(blogId) {
         alert("Failed to communicate with the server.");
     }
 }
+

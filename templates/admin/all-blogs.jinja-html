@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/all-blogs.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/all-blogs.css') }}">
     <title>Admin Panel - All Blogs</title>
 </head>
 <body>
@@ -71,6 +71,14 @@
                         </div>
 
                         <div class="blog-meta">
+                            {% if blog.status == 'visible' %}
+                                <span class="status-badge status-visible"><i class="fas fa-eye"></i> Visible</span>
+                            {% elif blog.status == 'hidden' %}
+                                <span class="status-badge status-hidden"><i class="fas fa-eye-slash"></i> Hidden</span>
+                            {% else %}
+                                <span class="status-badge status-draft"><i class="fas fa-pencil-alt"></i> Draft</span>
+                            {% endif %}
+                            <br>
                             <span class="author"><i class="fas fa-user-edit"></i> {{ blog.author | join(', ') }}</span>
                             <br>    
                             <span class="date"><i class="fas fa-calendar-alt"></i> {{ blog.time_created | datetimeformat }}</span>
@@ -78,9 +86,7 @@
 
                         <div class="blog-actions">
                             <a href="/blog/{{ blog.id }}" target="_blank" rel="noopener noreferrer" class="btn view-btn" title="View Live"><i class="fas fa-external-link-alt"></i></a>
-
                             <a href="/admin/blogs/edit/{{ blog.id }}" class="btn edit-btn" title="Edit Post"><i class="fas fa-edit"></i></a>
-
                             <button class="btn delete-btn" onclick="deletePost('{{blog.id}}')" title="Delete Post"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </div>

@@ -56,7 +56,7 @@ def utility_processor():
 @app.route("/")
 def home():
     logger.info("Home page accessed.")
-    all_blogs = blogs.load_blogs()
+    all_blogs = blogs.query_blogs(status="visible")
     sorted_blogs = blog_helpers.sort_blogs(all_blogs, "newest")
     preview_blogs = sorted_blogs[:3]
 

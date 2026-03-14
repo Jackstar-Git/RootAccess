@@ -4,25 +4,19 @@ import platform
 import shutil
 import subprocess
 import zipfile
-from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Tuple, Union
 
-from flask import Blueprint, jsonify, request, session, abort, send_file, Response
+from flask import Blueprint, jsonify, request, session, abort, send_file, Response, redirect
 from werkzeug.utils import secure_filename
 import psutil
 
 from FlaskClass import app, csrf
 from utility.auth import login_required
-from utility.blogs import add_blog, delete_blog, get_item_by_id, update_blog
+from utility.blogs import add_blog, delete_blog, update_blog
 from utility.logging_utility import logger
-from utility.path_files import MAX_FILE_SIZE, ROOT_DIR, get_file_type, is_safe_path, sanitize_filename
-from utility.settings import get_settings
-
-# Attempt to import the markdown converter depending on your exact directory structure
-try:
-    from others import convert_markdown_to_html
-except ImportError:
-    from utility.others import convert_markdown_to_html
+from utility.path_files import MAX_FILE_SIZE, ROOT_DIR, is_safe_path, sanitize_filename
+from utility.settings import get_settings, update_settings
+from utility.others import convert_markdown_to_html
 
 internal_blueprint = Blueprint("internal", __name__, template_folder="./templates")
 
@@ -570,3 +564,130 @@ def api_markdown_to_html() -> Response:
     except Exception as e:
         logger.error(f"Failed to convert markdown to HTML: {e}")
         return Response("<p><em>Error rendering preview</em></p>", status=500, mimetype="text/html")
+    
+@internal_blueprint.route("/api/settings/topics/add", methods=["POST"])
+@login_required
+def add_topic():
+    new_topic = request.form.get("new_topic", "").strip()
+    
+    try:
+        current_config = get_settings("blog_config") or {"topics": [], "types": []}
+        topics = current_config.get("topics", [])
+        
+        if new_topic and new_topic not in topics:
+            topics.append(new_topic)
+            update_settings({"blog_config": {"topics": topics}})
+            
+    except Exception as e:
+        logger.error(f"Failed to add new blog topic: {e}")
+        
+    return redirect(request.referrer or "/")
+
+@internal_blueprint.route("/api/settings/types/add", methods=["POST"])
+@login_required
+def add_type():
+    type_name = request.form.get("type_name", "").strip()
+    type_icon = request.form.get("type_icon", "").strip()
+    
+    try:
+        current_config = get_settings("blog_config") or {"topics": [], "types": []}
+        types = current_config.get("types", [])
+        
+        # Prevent duplicate type names
+        if type_name and not any(t.get("name") == type_name for t in types):
+            types.append({"name": type_name, "icon": type_icon})
+            update_settings({"blog_config": {"types": types}})
+            
+    except Exception as e:
+        logger.error(f"Failed to add new blog type: {e}")
+        
+    return redirect(request.referrer or "/")
+
+
+# ============== BLOG CONFIG: JS API HANDLERS (EDIT/DELETE) ==============
+
+@internal_blueprint.route("/api/settings/topics", methods=["PUT", "DELETE"])
+@login_required
+def api_manage_topics():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided."}), 400
+
+    try:
+        current_config = get_settings("blog_config") or {"topics": [], "types": []}
+        topics = current_config.get("topics", [])
+
+        if request.method == "PUT":
+            old_name = data.get("old_name")
+            new_name = data.get("new_name")
+
+            if not old_name or not new_name:
+                return jsonify({"error": "Missing parameters."}), 400
+
+            if old_name in topics:
+                # Update in place to maintain list order
+                topics = [new_name if t == old_name else t for t in topics]
+                update_settings({"blog_config": {"topics": topics}})
+                return jsonify({"success": True})
+            
+            return jsonify({"error": "Topic not found."}), 404
+
+        elif request.method == "DELETE":
+            topic_name = data.get("topic_name")
+
+            if topic_name in topics:
+                topics.remove(topic_name)
+                update_settings({"blog_config": {"topics": topics}})
+                return jsonify({"success": True})
+            
+            return jsonify({"error": "Topic not found."}), 404
+
+    except Exception as e:
+        logger.error(f"API Error managing topics: {e}")
+        return jsonify({"error": "Internal server error."}), 500
+
+
+@internal_blueprint.route("/api/settings/types", methods=["PUT", "DELETE"])
+@login_required
+def api_manage_types():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided."}), 400
+
+    try:
+        current_config = get_settings("blog_config") or {"topics": [], "types": []}
+        types = current_config.get("types", [])
+
+        if request.method == "PUT":
+            old_name = data.get("old_name")
+            new_name = data.get("new_name")
+            new_icon = data.get("new_icon")
+
+            if not old_name or not new_name or not new_icon:
+                return jsonify({"error": "Missing parameters."}), 400
+
+            for t in types:
+                if t.get("name") == old_name:
+                    t["name"] = new_name
+                    t["icon"] = new_icon
+                    update_settings({"blog_config": {"types": types}})
+                    return jsonify({"success": True})
+                    
+            return jsonify({"error": "Type not found."}), 404
+
+        elif request.method == "DELETE":
+            type_name = data.get("type_name")
+
+            # Filter out the deleted type
+            initial_length = len(types)
+            types = [t for t in types if t.get("name") != type_name]
+            
+            if len(types) < initial_length:
+                update_settings({"blog_config": {"types": types}})
+                return jsonify({"success": True})
+                
+            return jsonify({"error": "Type not found."}), 404
+
+    except Exception as e:
+        logger.error(f"API Error managing types: {e}")
+        return jsonify({"error": "Internal server error."}), 500
