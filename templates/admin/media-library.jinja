@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="main-container">
-        {% include "admin/sidebar.jinja-html" %}
+        {% include "admin/sidebar.jinja" %}
         <div class="main-content">
             <input type="hidden" id="csrf_token" name="csrf_token" value="{{ generate_token() }}">
 

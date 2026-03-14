@@ -11,7 +11,7 @@
 
 </head>
 <body>
-    {% include "snippets/navbar.jinja-html" %}
+    {% include "snippets/navbar.jinja" %}
 
     <main>
         <section class="login-section">
@@ -44,7 +44,7 @@
             </div>
         </section>
     </main>
-    {% include "snippets/footer.jinja-html" %}
+    {% include "snippets/footer.jinja" %}
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
     <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 

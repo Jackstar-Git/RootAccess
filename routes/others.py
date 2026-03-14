@@ -10,22 +10,22 @@ others_blueprint = Blueprint("others", __name__)
 def about():
     logger.info("About route accessed")
     daily_quote = get_quote_of_the_day()
-    return render_template("about.jinja-html", quote=daily_quote)
+    return render_template("about.jinja", quote=daily_quote)
 
 
 @others_blueprint.route("/contact", methods=["GET", "POST"])
 def contact():
     logger.info("Contact route accessed")
-    return render_template("contact.jinja-html")
+    return render_template("contact.jinja")
 
 
 @others_blueprint.route("/imprint", methods=["GET", "POST"])
 def imprint():
     logger.info("Imprint route accessed")
-    return render_template("legal/imprint.jinja-html")
+    return render_template("legal/imprint.jinja")
 
 
 @others_blueprint.route("/privacy", methods=["GET", "POST"])
 def privacy():
     logger.info("Privacy route accessed")
-    return render_template("legal/privacy.jinja-html")
+    return render_template("legal/privacy.jinja")

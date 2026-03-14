@@ -6,26 +6,26 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/edit-blog.css') }}">
-    <title>Admin - Edit Post</title>
+    <title>Admin - Draft New Post</title>
 </head>
 <body>
     <div class="main-container">
-        {% include "admin/sidebar.jinja-html" %}
+        {% include "admin/sidebar.jinja" %}
 
         <main class="main-content">
             <header class="editor-header">
-                <h2>Edit: {{ blog.title }}</h2>
+                <h2>Draft New Post</h2>
                 <div class="header-actions">
                     <a href="/admin/blogs/all" class="btn-discard" onclick="return confirm('Discard changes?')">Discard</a>
                 </div>
             </header>
 
-            <form method="POST" action="{{ url_for('admin.edit_blog', blog_id=blog.id) }}" enctype="multipart/form-data" class="modern-form" id="blog-form">
+            <form method="POST" action="{{ url_for('admin.create_blog') }}" enctype="multipart/form-data" class="modern-form" id="blog-form">
                 <input type="hidden" name="csrf_token" id="csrf_token" value="{{ generate_token() }}">
 
                 <div class="editor-layout">
                     <section class="content-area">
-                        <input type="text" id="title" name="title" class="title-input" value="{{ blog.title }}" required>
+                        <input type="text" id="title" name="title" class="title-input" placeholder="Post Title" required>
 
                         <div class="toolbar-sticky">
                             <div class="toolbar">
@@ -33,56 +33,56 @@
                                 <button type="button" onclick="applyStyle('italic')" title="Italic"><i class="fas fa-italic"></i></button>
                                 <button type="button" onclick="applyStyle('underline')" title="Underline"><i class="fas fa-underline"></i></button>
                                 <button type="button" onclick="applyStyle('strikethrough')" title="Strikethrough"><i class="fas fa-strikethrough"></i></button>
+
                                 <span class="divider"></span>
+
                                 <button type="button" onclick="applyStyle('superscript')" title="Superscript"><i class="fas fa-superscript"></i></button>
                                 <button type="button" onclick="applyStyle('subscript')" title="Subscript"><i class="fas fa-subscript"></i></button>
                                 <button type="button" onclick="applyColor()" title="Text Color"><i class="fas fa-palette"></i></button>
+
                                 <span class="divider"></span>
+
                                 <select onchange="applyAlignment(this.value); this.value='';" class="toolbar-select">
                                     <option value="" disabled selected>Align</option>
                                     <option value="left">Left</option>
                                     <option value="center">Center</option>
                                     <option value="right">Right</option>
                                 </select>
+
                                 <button type="button" onclick="applyLineStyle('blockquote')" title="Quote"><i class="fas fa-quote-right"></i></button>
                                 <button type="button" onclick="applyLineStyle('codeblock')" title="Code Block"><i class="fas fa-code"></i></button>
                                 <button type="button" onclick="applyStyle('inlinecode')" title="Inline Code"><i class="fas fa-terminal"></i></button>
+
                                 <select onchange="applyLineStyle(this.value); this.value='';" class="toolbar-select">
                                     <option value="" disabled selected>H</option>
                                     <option value="h1">H1</option>
                                     <option value="h2">H2</option>
                                     <option value="h3">H3</option>
                                 </select>
+
                                 <button type="button" onclick="addLink()" title="Link"><i class="fas fa-link"></i></button>
                                 <button type="button" onclick="applyLineStyle('html')" title="HTML Injection"><i class="fab fa-html5"></i></button>
+
                                 <span class="divider"></span>
+
                                 <button type="button" id="toggle-view-button" onclick="toggleView()" class="btn-preview">
                                     <i class="fas fa-eye"></i> Preview
                                 </button>
                             </div>
                         </div>
 
-                        <textarea id="content" name="content" required>{{ blog.content_raw }}</textarea>
+                        <textarea id="content" name="content" placeholder="Tell your story..." required></textarea>
                         <div id="preview-output" class="markdown-body" style="display: none;"></div>
                     </section>
 
                     <aside class="settings-sidebar">
                         <div class="settings-group">
-                            <label>Visibility Status</label>
-                            <select name="status" class="modern-input" style="height: auto;">
-                                <option value="visible" {% if blog.status == 'visible' %}selected{% endif %}>Visible</option>
-                                <option value="draft" {% if blog.status == 'draft' or not blog.status %}selected{% endif %}>Draft</option>
-                                <option value="hidden" {% if blog.status == 'hidden' %}selected{% endif %}>Hidden</option>
-                            </select>
-                        </div>
-
-                        <div class="settings-group">
                             <label>Featured Image</label>
                             <div class="upload-container" id="drop-zone">
                                 <input type="file" id="thumbnail-upload" name="thumbnail" accept="image/*" hidden>
                                 <div id="thumbnail-preview" class="preview-box">
-                                    <img src="{{ blog.image_url }}" style="max-width: 200px; max-height: 200px; border-radius: 4px; margin-bottom: 10px;">
-                                    <p>Click to change image</p>
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload</p>
                                 </div>
                             </div>
                         </div>
@@ -90,11 +90,9 @@
                         <div class="settings-group">
                             <label>Authors</label>
                             <div id="author-list">
-                                {% for name in blog.author %}
                                 <div class="dynamic-input">
-                                    <input name="authors[]" type="text" value="{{ name }}" required>
+                                    <input name="authors[]" type="text" placeholder="Author Name" required>
                                 </div>
-                                {% endfor %}
                             </div>
                             <button type="button" class="btn-add" onclick="addAuthor()">+ Add Author</button>
                         </div>
@@ -103,52 +101,45 @@
                             <label>Categories</label>
                             <select name="categories" multiple class="modern-select">
                                 {% for topic in settings.topics %}
-                                    <option value="{{ topic }}" {% if topic in blog.categories %}selected{% endif %}>{{ topic }}</option>
+                                    <option value="{{ topic }}">{{ topic }}</option>
                                 {% endfor %}
                             </select>
                         </div>
 
                         <div class="settings-group">
                             <label>Tags</label>
-                            <input type="text" name="tags" class="modern-input" value="{{ blog.tags | join(', ') }}" placeholder="travel, tech, lifestyle">
+                            <input type="text" name="tags" class="modern-input" placeholder="travel, tech, lifestyle">
                         </div>
 
                         <div class="settings-group">
                             <label>Description</label>
-                            <textarea name="description" class="modern-input">{{ blog.description }}</textarea>
+                            <textarea name="description" class="modern-input"></textarea>
                         </div>
+
                         <div class="settings-group">
                             <label>Type</label>
-                            <select name="type" class="modern-select" style="min-height: auto;">
+                            <select name="type" class="modern-select">
                                 {% for type in settings.types %}
-                                    <option value="{{type.name}}" {% if blog.type == type.name %}selected{% endif %}>{{type.name}}</option>
+                                    <option value="{{type.name}}"><i class="{{type.icon}}"></i>{{type.name}}</option>
                                 {% endfor %}
                             </select>
                         </div>
 
                         <div class="settings-group">
                             <label>Reading Time</label>
-                            <select name="reading_time" class="modern-select" style="min-height: auto;">
-                                <option value="short" {% if blog.reading_time == "short" %}selected{% endif %}>Short (&lt;5 min)</option>
-                                <option value="medium" {% if blog.reading_time == "medium" %}selected{% endif %}>Medium (5‑15 min)</option>
-                                <option value="deep" {% if blog.reading_time == "deep" %}selected{% endif %}>Deep Dive (&gt;15 min)</option>
+                            <select name="reading_time" class="modern-select">
+                                <option value="short">Short (&lt;5 min)</option>
+                                <option value="medium">Medium (5‑15 min)</option>
+                                <option value="deep">Deep Dive (&gt;15 min)</option>
                             </select>
                         </div>
 
-                        <button type="submit" class="btn-primary btn-publish">Update Post</button>
-
-                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--main-color-100);">
-                            <button type="button" class="btn-discard" onclick="deletePost('{{ blog.id }}')">
-                                <i class="fas fa-trash-alt"></i> Delete Post
-                            </button>
-                        </div>
+                        <button type="submit" class="btn-primary btn-publish">Publish Post</button>
                     </aside>
                 </div>
             </form>
         </main>
     </div>
-
     <script src="{{ url_for('static', filename='js/edit-blogs.js')}}"></script>
-    <script src="{{ url_for('static', filename='js/admin-global.js')}}"></script>
 </body>
 </html>

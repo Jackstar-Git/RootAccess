@@ -40,7 +40,7 @@ def login() -> Union[render_template, redirect]:
         logger.warning(f"Unauthorized admin access attempt from {request.remote_addr}")
         flash("Access denied: Wrong password", "error")
 
-    return render_template("admin/login.jinja-html")
+    return render_template("admin/login.jinja")
 
 @admin_blueprint.route("/logout")
 def logout() -> redirect:
@@ -63,7 +63,7 @@ def dashboard() -> render_template:
     month_name: str = datetime(year, month, 1).strftime("%B")
 
     return render_template(
-        "admin/admin.jinja-html",
+        "admin/admin.jinja",
         today=today,
         year=year,
         month=month,
@@ -110,7 +110,7 @@ def library() -> render_template:
     files_data.sort(key=lambda x: (x['type'] != 'folder', x['name'].lower()))
 
     return render_template(
-        "admin/media-library.jinja-html",
+        "admin/media-library.jinja",
         files=files_data,
         path=current_path,
         root=ROOT_DIR
@@ -125,7 +125,7 @@ def server_logs() -> render_template:
 
     clean_lines: List[str] = lines[-50::]
     logger.info("Rendering server logs page")
-    return render_template("admin/logs.jinja-html", logs=clean_lines)
+    return render_template("admin/logs.jinja", logs=clean_lines)
 
 # ============== BLOGS ==============
 @admin_blueprint.route("/blogs/all", methods=["GET"])
@@ -152,7 +152,7 @@ def all_blogs() -> render_template:
     display_blogs.sort(key=lambda x: x.get("time_created", 0), reverse=True)
 
     return render_template(
-        "admin/all-blogs.jinja-html",
+        "admin/all-blogs.jinja",
         blogs=display_blogs,
         settings=get_settings("blog_config"),
         query_params=request.args
@@ -161,7 +161,7 @@ def all_blogs() -> render_template:
 @admin_blueprint.route("/blogs/categories", methods=["GET"])
 @login_required
 def blogs_categories() -> render_template:
-    return render_template("admin/blog-settings.jinja-html", settings=get_settings("blog_config"))  
+    return render_template("admin/blog-settings.jinja", settings=get_settings("blog_config"))  
 
 @admin_blueprint.route("/settings/server", methods=["GET", "POST"])
 @login_required
@@ -192,7 +192,7 @@ def server_settings():
             }), 400
 
     settings = get_settings()
-    return render_template("admin/server-settings.jinja-html",
+    return render_template("admin/server-settings.jinja",
                          settings=settings,
                          robots=settings.get('robots_txt', ''))
 
@@ -236,7 +236,7 @@ def create_blog():
             flash("Error saving blog post.", "error")
 
     return render_template(
-        "admin/add-blog.jinja-html", 
+        "admin/add-blog.jinja", 
         settings=get_settings("blog_config")
     )
 
@@ -278,7 +278,7 @@ def edit_blog(blog_id: str):
             return redirect(url_for('admin.all_blogs'))
 
     return render_template(
-        "admin/edit-blog.jinja-html",
+        "admin/edit-blog.jinja",
         blog=blog,
         settings=get_settings("blog_config")
     )

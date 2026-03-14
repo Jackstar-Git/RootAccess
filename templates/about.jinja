@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
-    {% include "snippets/navbar.jinja-html" %}
+    {% include "snippets/navbar.jinja" %}
     <main class="glass-page-container">
         <div class="bento-grid">
             
@@ -158,7 +158,7 @@
             </section>
         </div>
     </main>
-    {% include "snippets/footer.jinja-html" %}
+    {% include "snippets/footer.jinja" %}
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
 </body>
 </html>

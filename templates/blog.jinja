@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
-    {% include "snippets/navbar.jinja-html" %}
+    {% include "snippets/navbar.jinja" %}
 
     <div class="article-wrapper">
         <div class="progress-indicator" id="progressBar"></div>
@@ -75,7 +75,7 @@
                     {% if suggestions %}
                         {% for suggestion in suggestions %}
                             {% with blog=suggestion %}
-                                {% include "snippets/blog_card.jinja-html" %}
+                                {% include "snippets/blog_card.jinja" %}
                             {% endwith %}
                         {% endfor %}
                     {% else %}
@@ -86,7 +86,7 @@
             </section>
         </article>
     </div>
-    {% include "snippets/footer.jinja-html" %}
+    {% include "snippets/footer.jinja" %}
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
     <script src="{{ url_for('static', filename='js/blog.js') }}"></script>
 </body>

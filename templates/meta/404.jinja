@@ -11,7 +11,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
-    {% include "snippets/navbar.jinja-html" %}
+    {% include "snippets/navbar.jinja" %}
 
     <main class="error-page-wrapper">
         <div class="error-glass-container">
@@ -37,7 +37,7 @@
         <div class="error-blob blob-1"></div>
         <div class="error-blob blob-2"></div>
     </main>
-    {% include "snippets/footer.jinja-html" %}
+    {% include "snippets/footer.jinja" %}
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
 </body>
 </html>

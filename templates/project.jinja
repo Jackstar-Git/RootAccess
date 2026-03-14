@@ -11,7 +11,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
-    {% include "snippets/navbar.jinja-html" %}
+    {% include "snippets/navbar.jinja" %}
 
     <main>
         <div class="article-wrapper">
@@ -114,7 +114,7 @@
                         {% if suggestions %}
                             {% for suggestion in suggestions %}
                                 {% with project=suggestion %}
-                                    {% include "snippets/project_card.jinja-html" %}
+                                    {% include "snippets/project_card.jinja" %}
                                 {% endwith %}
                             {% endfor %}
                         {% else %}
@@ -127,7 +127,7 @@
         </div>
     </main>
 
-    {% include "snippets/footer.jinja-html" %}
+    {% include "snippets/footer.jinja" %}
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
     <script src="{{ url_for('static', filename='js/project.js') }}"></script>
 </body>

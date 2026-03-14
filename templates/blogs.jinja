@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects – Jackstar’s Portfolio</title>
-    <meta name="description" content="A curated showcase of projects by Jackstar covering fintech, AI/ML, and creative work.">
+    <title>Blog – Root.Access</title>
+    <meta name="description" content="Read articles, guides, and opinions from Jackstar on web development, design, and technology.">
     <meta name="author" content="Jackstar">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/projects.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blogs.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
-    {% include "snippets/navbar.jinja-html" %}
+    {% include "snippets/navbar.jinja" %}
 
-    <main class="project-page-wrapper container">
-        <header class="project-header">
-            <div class="project-label">Portfolio</div>
-            <h1>Selected Projects</h1>
+    <main class="blog-container container">
+        <header class="blog-minimal-header">
+            <div class="section-label">Journal</div>
+            <h1>Articles & Perspectives</h1>
         </header>
 
-        <section class="project-toolbar">
+        <section class="blog-toolbar">
             <div class="search-wrapper">
                 <input type="text" placeholder="Search articles..." id="search-input">
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
@@ -56,13 +56,13 @@
                     </div>
                 </div>
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-tags"></i> Tech Stack</label>
+                    <label><i class="fa-solid fa-tags"></i> Tags</label>
                     <div class="tag-input">
-                        <input type="text" placeholder="e.g. Python, JavaScript, HTML" id="tags-input">
+                        <input type="text" placeholder="e.g. Python, UI Design" id="tags-input">
                         <div class="tag-suggestions">
                             <span>#Python</span>
-                            <span>#JavaScript</span>
-                            <span>#HTML</span>
+                            <span>#AI</span>
+                            <span>#UI-Design</span>
                         </div>
                     </div>
                 </div>
@@ -74,12 +74,12 @@
                 </div>
                 
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-clock"></i> Activity</label>
+                    <label><i class="fa-solid fa-clock"></i> Reading Time</label>
                     
                     <select name="reading_time" class="native-multiselect" multiple>
-                        {% for activity in settings.activity_statuses %}
-                            <option value="{{ activity }}">{{ activity }}</option>
-                        {% endfor %}
+                        <option value="short">Short (&lt;5 min)</option>
+                        <option value="medium">Medium (5‑15 min)</option>
+                        <option value="deep">Deep Dive (&gt;15 min)</option>
                     </select>
 
                     <div class="custom-multiselect" id="reading-time-multiselect" style="display: none;">
@@ -93,20 +93,20 @@
                                 <label><input type="checkbox" class="select-all"> Select All</label>
                             </div>
                             <div class="multiselect-options">
-                                {% for activity in settings.activity_statuses %}
-                                    <label class="filter-list-item"><input type="checkbox" value="{{ activity }}"> <span>{{ activity }}</span></label>
-                                {% endfor %}
+                                <label class="filter-list-item"><input type="checkbox" value="short"><i class="fa-solid fa-rabbit"></i><span>Short (&lt;5 min)</span></label>
+                                <label class="filter-list-item"><input type="checkbox" value="medium"><i class="fa-solid fa-person-hiking"></i><span>Medium (5‑15 min)</span></label>
+                                <label class="filter-list-item"><input type="checkbox" value="deep"><i class="fa-solid fa-book"></i><span>Deep Dive (&gt;15 min)</span></label>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-bars-progress"></i> Maturity</label>
+                    <label><i class="fa-solid fa-list"></i> Type</label>
                     
-                    <select name="maturity" class="native-multiselect" multiple>
-                        {% for maturity in settings.maturity_levels %}
-                            <option value="{{ maturity }}">{{ maturity }}</option>
+                    <select name="type" class="native-multiselect" multiple>
+                        {% for type in settings.types %}
+                            <option value="{{ type.name }}">{{ type.name }}</option>
                         {% endfor %}
                     </select>
 
@@ -121,10 +121,11 @@
                                 <label><input type="checkbox" class="select-all"> Select All</label>
                             </div>
                             <div class="multiselect-options">
-                                {% for maturity in settings.maturity_levels %}
+                                {% for type in settings.types %}
                                     <label class="filter-list-item">
-                                        <input type="checkbox" value="{{ maturity }}">
-                                        <span>{{ maturity }}</span>
+                                        <input type="checkbox" value="{{ type.name }}">
+                                        <i class="{{ type.icon }}"></i>
+                                        <span>{{ type.name }}</span>
                                     </label>
                                 {% endfor %}
                             </div>
@@ -139,25 +140,59 @@
             </div>
         </section>
 
-        <section class="project-main-grid">
-           {% if projects %}
-                {% for project in projects %}
-                    {% include "snippets/project_card.jinja-html" %}
+        <section class="blog-list">
+            {% if blogs %}
+                {% for blog in blogs %}
+                    {% include "snippets/blog_card.jinja" %}
                 {% endfor %}
             {% else %}
                 <p class="no-results">
                     {% if search_query %}
-                        No projects found matching "{{ search_query }}". Try different keywords.
+                        No articles found matching "{{ search_query }}". Try different keywords.
                     {% else %}
-                        No projects found with the current filters. Try adjusting your search criteria.
+                        No articles found with the current filters. Try adjusting your search criteria.
                     {% endif %}
                 </p>
             {% endif %}
         </section>
-    </main>
-    {% include "snippets/footer.jinja-html" %}
-    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/projects.js') }}"></script>
 
+        {% if total_pages and total_pages > 1 %}
+        {% if base_query_string %}
+            {% set qprefix = '?' + base_query_string + '&' %}
+        {% else %}
+            {% set qprefix = '?' %}
+        {% endif %}
+        <div class="blog-pagination">
+            <nav class="pagination">
+                <a class="page-arrow" href="{{ qprefix + 'page=' + (page-1)|string }}" {% if page <= 1 %}aria-disabled="true"{% endif %}>&laquo;</a>
+
+                <a class="page-link" href="{{ qprefix + 'page=1' }}">1</a>
+
+                {% if page > 3 %}
+                    <span class="ellipsis">…</span>
+                {% endif %}
+
+                {% if page != 1 and page != total_pages %}
+                    <span class="page-link current">{{ page }}</span>
+                {% endif %}
+
+                {% if page < total_pages - 2 %}
+                    <span class="ellipsis">…</span>
+                {% endif %}
+
+                {% if total_pages > 1 %}
+                    {% if total_pages != 1 %}
+                        <a class="page-link" href="{{ qprefix + 'page=' + total_pages|string }}">{{ total_pages }}</a>
+                    {% endif %}
+                {% endif %}
+
+                <a class="page-arrow" href="{{ qprefix + 'page=' + (page+1)|string }}" {% if page >= total_pages %}aria-disabled="true"{% endif %}>&raquo;</a>
+            </nav>
+        </div>
+        {% endif %}
+    </main>
+    {% include "snippets/footer.jinja" %}
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/blogs.js') }}"></script>
 </body>
 </html>

@@ -12,7 +12,7 @@
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
-    {% include "snippets/navbar.jinja-html" %}
+    {% include "snippets/navbar.jinja" %}
     <main>
         <section class="hero-section">
             <div class="container hero-container">
@@ -82,7 +82,7 @@
                 <div class="project-grid">
                     {% if preview_projects %}
                         {% for project in preview_projects %}
-                            {% include "snippets/project_card.jinja-html" %}
+                            {% include "snippets/project_card.jinja" %}
                         {% endfor %}
                     {% else %}
                         <p class="no-results">No projects to display at the moment.</p>
@@ -101,7 +101,7 @@
                 <div class="blog-list">
                     {% if preview_blogs %}
                         {% for blog in preview_blogs %}
-                            {% include "snippets/blog_card.jinja-html" %}
+                            {% include "snippets/blog_card.jinja" %}
                         {% endfor %}
                     {% else %}
                         <p class="no-results">No recent articles available.</p>
@@ -110,7 +110,7 @@
             </div>
         </section>
     </main>
-    {% include "snippets/footer.jinja-html" %}
+    {% include "snippets/footer.jinja" %}
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>

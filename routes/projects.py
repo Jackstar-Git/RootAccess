@@ -51,7 +51,7 @@ def projects_page():
     project_list.sort(key=lambda x: x.get("time_created", 0), reverse=reverse)
 
     return render_template(
-        "projects.jinja-html",
+        "projects.jinja",
         projects=project_list,
         search_query=search,
         settings=get_settings("project_config"),
@@ -67,4 +67,4 @@ def project(project_id):
         logger.warning(f"Project {project_id} not found")
         abort(404)
 
-    return render_template("project.jinja-html", project=project_data, suggestions=projects.query_projects(topic=project_data.get("topic", ""), limit=2, exclude_id=project_id))
+    return render_template("project.jinja", project=project_data, suggestions=projects.query_projects(topic=project_data.get("topic", ""), limit=2, exclude_id=project_id))

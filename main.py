@@ -40,7 +40,7 @@ def request_handler():
     request.query_params = dict(request.args)
     if app.maintenance and not request.path.startswith("/admin") and not request.path.startswith("/static") and not request.path.startswith("/uploads") and not session.get("login"):
         logger.warning("Maintenance mode is enabled.")
-        response = Response(render_template("maintenance.jinja-html"), status=503)
+        response = Response(render_template("maintenance.jinja"), status=503)
         response.headers["Retry-After"] = "3600"
         return response
 
@@ -65,7 +65,7 @@ def home():
     preview_projects = sorted_projects[:6]
 
     return render_template(
-        "index.jinja-html",
+        "index.jinja",
         preview_blogs=preview_blogs,
         preview_projects=preview_projects
     )
@@ -144,12 +144,12 @@ def method_not_allowed(error):
 @app.errorhandler(404)
 def page_not_found(error):
     logger.warning(f"A page was not found: {request.path}; {error}")
-    return render_template("meta/404.jinja-html")
+    return render_template("meta/404.jinja")
 
 @app.errorhandler(403)
 def access_denied(error):
     logger.warning(f"403 Access Denied: {request.path}; {error}")
-    return render_template("meta/403.jinja-html")
+    return render_template("meta/403.jinja")
 
 @app.errorhandler(CSRFError)
 def handle_csrf_error(e):
