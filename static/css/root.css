@@ -310,7 +310,7 @@ h3 {
 
 .filter-drawer {
     max-height: 0;
-    overflow: hidden;
+    overflow: scroll;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     background: var(--background-1);
     backdrop-filter: blur(12px);
@@ -570,7 +570,6 @@ h3 {
     border: 1px solid var(--background-2);
     border-radius: var(--radius-md);
     padding: var(--spacing-md) 0;
-    overflow: hidden;
 }
 
 .filter-label-collapsible {

@@ -50,6 +50,10 @@ def download(filepath: str) -> Response:
         return abort(403)
 
     full_path = os.path.join(app.root_path, filepath)
+
+    if filepath == "all":
+        full_path = os.path.join(app.root_path)
+
     if not os.path.exists(full_path):
         logger.error(f"File or directory not found | Path: {full_path}")
         abort(404, description="File or directory not found.")

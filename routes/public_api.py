@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from utility.logging_utility import logger
@@ -14,8 +14,9 @@ limiter = Limiter(
 @public_api_blueprint.route("/qotd", methods=["GET"])
 @limiter.limit("10 per minute")
 def qotd():
+    date = request.args.get("date", None)
     try:
-        quote = get_quote_of_the_day()
+        quote = get_quote_of_the_day(date)
         return jsonify(quote), 200
     except Exception as e:
         logger.error(f"Error fetching QOTD: {str(e)}")

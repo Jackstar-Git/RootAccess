@@ -23,11 +23,12 @@ def load_quotes(filepath: str = "data/quotes.json") -> List[Quote]:
 def get_quote_of_the_day(date: Optional[dt_date] = None) -> Quote:
     if date is None:
         date = dt_date.today()
+        seed_str: str = date.strftime("%Y-%m-%d")
         logger.info(f"Using today's date for quote of the day: {date}")
-    
+    else:
+        seed_str: str = date
+
     quotes: List[Quote] = load_quotes()
-    seed_str: str = date.strftime("%Y-%m-%d")
-    
     random.seed(seed_str)
     qotd: Quote = random.choice(quotes)
     random.seed()
