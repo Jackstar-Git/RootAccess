@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/blog-settings.css') }}">
+    <title>Admin Panel - Blog Configuration</title>
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja-html" %}
+
+        <div class="main-content">
+            <div class="header-actions">
+                <h2>Blog Configuration</h2>
+            </div>
+            
+            <p class="settings-description">Manage your blog's categorization structure. These changes will reflect in the blog creation filters and public view.</p>
+
+            <div class="config-section">
+                <div class="section-header">
+                    <h3>Topics</h3>
+                </div>
+
+                <div class="config-list">
+                    {% if settings.topics|length == 0 %}
+                        <div class="empty-state">
+                            <h3>No topics configured yet!</h3>
+                        </div>
+                    {% endif %}
+
+                    {% for topic in settings.topics %}
+                        <div class="config-item">
+                            <div class="item-info">
+                                <span class="item-icon"><i class="fas fa-hashtag"></i></span>
+                                <h3>{{ topic }}</h3>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn edit-btn" onclick="editTopic('{{ topic }}')" title="Edit Topic"><i class="fas fa-edit"></i></button>
+                                <button class="btn delete-btn" onclick="deleteTopic('{{ topic }}')" title="Delete Topic"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="config-item add-new-item">
+                        <form method="POST" action="/api/settings/topics/add" class="inline-form">
+                            <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
+                            <div class="input-group">
+                                <i class="fas fa-plus input-icon"></i>
+                                <input type="text" name="new_topic" placeholder="Enter new topic name..." required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Topic</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-section">
+                <div class="section-header">
+                    <h3>Blog Types</h3>
+                </div>
+
+                <div class="config-list">
+                    {% if settings.types|length == 0 %}
+                        <div class="empty-state">
+                            <h3>No blog types configured yet!</h3>
+                        </div>
+                    {% endif %}
+
+                    {% for type in settings.types %}
+                        <div class="config-item">
+                            <div class="item-info">
+                                <span class="item-icon"><i class="{{ type.icon }}"></i></span>
+                                <h3>{{ type.name }}</h3>
+                                <span class="type-meta">{{ type.icon }}</span>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn edit-btn" onclick="editType('{{ type.name }}', '{{ type.icon }}')" title="Edit Type"><i class="fas fa-edit"></i></button>
+                                <button class="btn delete-btn" onclick="deleteType('{{ type.name }}')" title="Delete Type"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="config-item add-new-item">
+                        <form method="POST" action="/api/settings/types/add" class="inline-form">
+                            <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
+                            <div class="input-group">
+                                <i class="fas fa-font input-icon"></i>
+                                <input type="text" name="type_name" placeholder="Type Name (e.g. Guide)" required>
+                            </div>
+                            <div class="input-group">
+                                <i class="fas fa-icons input-icon"></i>
+                                <input type="text" name="type_icon" placeholder="Icon Class (e.g. fa-solid fa-star)" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Type</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/admin-global.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/blog-settings.js')}}"></script>
+
+</body>
+</html>

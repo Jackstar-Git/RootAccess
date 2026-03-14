@@ -1,0 +1,173 @@
+/* Header alignment for title and 'New' button */
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-actions h2 {
+    margin: 0;
+}
+
+/* Filters */
+.blog-filters {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.blog-filters > div, form.search-bar {
+    flex: 1; /* Distribute space evenly */
+}
+
+.blog-filters .search-bar input,
+.blog-filters .sort-options select,
+.blog-filters .filter-menu select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: var(--font-size-md);
+    width: 100%;
+    background-color: var(--main-bg);
+    color: var(--font-color);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.blog-filters input:focus, 
+.blog-filters select:focus {
+    border-color: #2196F3;
+}
+
+/* List Container */
+.blogs-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Individual Item */
+.blog-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px 20px;
+    background-color: var(--main-bg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+}
+
+.blog-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+/* ID Column */
+.id-column {
+    margin-right: 20px;
+    font-weight: bold;
+    color: var(--third-font-color);
+    font-family: monospace;
+    min-width: 70px; /* Ensure consistent spacing for 8-char IDs */
+}
+
+/* Thumbnail */
+.blog-thumbnail {
+    width: 120px;
+    height: 80px;
+    object-fit: cover; /* Prevents stretching of remote images */
+    border-radius: 4px;
+    margin-right: 25px;
+    background-color: #f5f5f5;
+}
+
+/* Info Section */
+.blog-info {
+    flex: 2; /* Takes up most of the remaining space */
+    min-width: 0; /* Prevents flexbox text overflow */
+}
+
+.blog-info h3 {
+    color: var(--main-color);
+    font-size: 1.15rem;
+    margin: 0 0 8px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds '...' if title is too long */
+}
+
+.blog-info a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.blog-info a:hover {
+    color: #2196F3;
+}
+
+.categories-tags {
+    font-size: 0.85rem;
+    color: var(--third-font-color);
+    margin: 0;
+}
+
+/* Meta Section (Author & Date) */
+.blog-meta {
+    flex: 1;
+    margin-inline: 30px;
+    font-size: 0.95rem;
+    color: var(--font-color);
+    line-height: 1.6;
+}
+
+.blog-meta .author {
+    font-weight: 500;
+}
+
+.blog-meta .date {
+    color: var(--third-font-color);
+    font-size: 0.85rem;
+}
+
+/* Actions Section */
+.blog-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    padding: 10px 14px;
+    font-size: var(--font-size-md);
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn:hover {
+    opacity: 0.85;
+}
+
+.btn-primary { background-color: var(--main-color); }
+.edit-btn { background-color: var(--secondary-color, #4CAF50); }
+.delete-btn { background-color: var(--warning-color, #F44336); }
+.view-btn { background-color: #2196F3; }
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    background: var(--secondary-bg, #f9f9f9);
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+}
