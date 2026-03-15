@@ -1,0 +1,31 @@
+from flask import request, render_template, jsonify, Blueprint
+from flask_wtf.csrf import CSRFError
+from utility.logging_utility import logger
+
+error_blueprint = Blueprint("error", __name__)
+
+@error_blueprint.errorhandler(405)
+def method_not_allowed(error):
+    logger.warning(f"405 Method Not Allowed: {request.path}; {error}")
+    return jsonify({"error": str(error), "code": 405})
+
+@error_blueprint.errorhandler(404)
+def page_not_found(error):
+    logger.warning(f"A page was not found: {request.path}; {error}")
+    return render_template("meta/404.jinja")
+
+@error_blueprint.errorhandler(403)
+def access_denied(error):
+    logger.warning(f"403 Access Denied: {request.path}; {error}")
+    return render_template("meta/403.jinja")
+
+@error_blueprint.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    if "missing" in str(e):
+        return jsonify({"error": "CSRF token missing", "code": 400})
+    return jsonify({"error": "CSRF error", "code": 400})
+
+@error_blueprint.errorhandler(Exception)
+def handle_general_errors(e):
+    logger.critical(f"An unexpected error occurred: {str(e)}", exc_info=True)
+    return jsonify({"error": "Internal Server Error", "code": 500})

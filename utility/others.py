@@ -2,6 +2,7 @@ import re
 from typing import List, Tuple, Pattern, Final
 from functools import lru_cache
 
+
 def convert_markdown_to_html(markdown_text: str) -> str:
     translation_table: Final[dict[int, str]] = str.maketrans({
         "&": "&amp;",
