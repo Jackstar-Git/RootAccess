@@ -191,10 +191,45 @@ input:focus, select:focus, textarea:focus {
 
 /* Responsive */
 @media (max-width: 768px) {
-    .contact-wrapper {
-        grid-template-columns: 1fr;
+    .contact-section {
+        padding: var(--spacing-xl) 0; /* Reduced padding for smaller screens */
     }
+
+    .container {
+        width: 95%; /* Slightly more breathing room on mobile */
+    }
+
+    .contact-wrapper {
+        grid-template-columns: 1fr; /* Stack the Info and Form vertically */
+        gap: 0; /* Remove gap so they join together */
+        padding: 0; /* Let the children handle padding */
+        overflow: hidden;
+    }
+
+    .contact-info {
+        padding: var(--spacing-xl);
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0; /* Round only the top corners */
+        text-align: center;
+    }
+
+    .contact-details li {
+        justify-content: center; /* Center icons and text on mobile */
+    }
+
+    .contact-form-card {
+        padding: var(--spacing-xl);
+    }
+
     .form-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Stack First Name and Email */
+    }
+
+    .captcha-options {
+        justify-content: center; /* Center the icons for easier tapping */
+        flex-wrap: wrap;
+    }
+
+    .btn-submit {
+        padding: var(--spacing-lg); /* Larger tap target for mobile fingers */
     }
 }

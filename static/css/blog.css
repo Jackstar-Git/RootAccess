@@ -177,6 +177,10 @@
     color: var(--main-color-900);
 }
 
+.main-text-flow a {
+    overflow-wrap: anywhere;
+}
+
 /* --- Modern Tag Section --- */
 .article-end {
     margin-top: var(--spacing-4xl);
