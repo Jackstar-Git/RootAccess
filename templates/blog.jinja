@@ -38,7 +38,7 @@
                         </div>
                         <div class="author-meta">
                             <span class="names">{{ blog.author | join(', ') }}</span>
-                            <span class="timestamp">{{ blog.time_created | datetimeformat }} • 4 min read</span>
+                            <span class="timestamp">{{ blog.time_created | datetimeformat }} • {{blog.calc_read_time|default("5")}} min read</span>
                         </div>
                     </div>
                     <div class="action-icons">

@@ -14,7 +14,7 @@
     </div>
     <div class="card-content">
         <div class="card-meta">
-            <span class="reading-time"><i class="fa-regular fa-clock"></i> {{ blog.reading_time|default('5') }} min read</span>
+            <span class="reading-time"><i class="fa-regular fa-clock"></i> {{ blog.calc_read_time|default('5') }} min read</span>
             <span class="dot">•</span>
             <span class="date">{{ blog.time_created | datetimeformat }}</span>
         </div>

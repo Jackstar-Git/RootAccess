@@ -4,6 +4,8 @@ import time
 from typing import List, Union, Optional, TypedDict, Any, Dict
 from functools import lru_cache
 import uuid
+from datetime import datetime
+from typing import List, Dict, Any, Tuple, Optional
 from .others import convert_markdown_to_html
 
 class BlogPost(TypedDict):
@@ -66,6 +68,8 @@ def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
     new_blog.setdefault("categories", [])
     new_blog.setdefault("time_created", now)
     new_blog["last_modified"] = now
+    new_blog["calc_read_time"] = calculate_reading_time(new_blog["content_raw"])
+
 
     blogs.append(new_blog) 
     _save_and_refresh_cache(blogs)
@@ -86,6 +90,9 @@ def update_blog(blog_id: Union[int, str], updated_data: Dict[str, Any]) -> bool:
             # Automatically update HTML if the raw content is being changed
             if "content_raw" in updated_data:
                 updated_data["content_html"] = convert_markdown_to_html(updated_data["content_raw"])
+                updated_data["calc_read_time"] = calculate_reading_time(updated_data["content_raw"])
+
+                
 
             blogs[i].update(updated_data)
             blogs[i]["last_modified"] = int(time.time())
@@ -144,3 +151,58 @@ def query_blogs(limit: int = 10, exclude_id: Optional[Any] = None, **criteria: A
             filtered_results.append(blog)
 
     return filtered_results[:limit]
+
+def filter_by_date_range(blog_list: List[BlogPost], start_date: Optional[str], end_date: Optional[str]) -> List[BlogPost]:
+    if not start_date and not end_date:
+        return blog_list
+
+    start_ts: Optional[int] = None
+    end_ts: Optional[int] = None
+
+    if start_date:
+        try:
+            start_ts = int(datetime.strptime(start_date, "%Y-%m-%d").timestamp())
+        except ValueError:
+            pass
+
+    if end_date:
+        try:
+            dt = datetime.strptime(end_date, "%Y-%m-%d").replace(hour=23, minute=59, second=59)
+            end_ts = int(dt.timestamp())
+        except ValueError:
+            pass
+
+    filtered: List[BlogPost] = []
+    for blog in blog_list:
+        t: int = blog.get("time_created", 0)
+        if start_ts and t < start_ts:
+            continue
+        if end_ts and t > end_ts:
+            continue
+        filtered.append(blog)
+
+    return filtered
+
+def calculate_reading_time(content: str) -> int:
+    words_per_minute: int = 150
+    word_count: int = len(content.split())
+    return int(max(1, round(word_count / words_per_minute, 0)))
+
+
+def sort_blogs(blog_list: List[BlogPost], sort_by: str) -> List[BlogPost]:
+    reverse_order: bool = sort_by != "oldest"
+    return sorted(
+        blog_list, 
+        key=lambda x: x.get("time_created", 0), 
+        reverse=reverse_order
+    )
+
+def paginate_blogs(blog_list: List[BlogPost], offset: int, per_page: int) -> Tuple[List[BlogPost], bool, int, int]:
+    total: int = len(blog_list)
+    page_slice: List[BlogPost] = blog_list[offset : offset + per_page]
+    has_more: bool = (offset + per_page) < total
+    next_offset: int = offset + per_page
+    
+    return page_slice, has_more, next_offset, total
+
+

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, abort, request
 from utility.logging_utility import logger
-from utility import blogs, blog_helpers, get_settings
+from utility import blogs, get_settings
 from math import ceil
 from urllib.parse import urlencode
 
@@ -42,12 +42,12 @@ def blogs_page():
         blog_list = [b for b in blog_list if b.get("type") == query["type"]]
 
     if query.get("start_date") or query.get("end_date"):
-        blog_list = blog_helpers.filter_by_date_range(blog_list, query.get("start_date"), query.get("end_date"))
+        blog_list = blogs.filter_by_date_range(blog_list, query.get("start_date"), query.get("end_date"))
     
     if query.get("reading_time"):
-        blog_list = blog_helpers.filter_by_reading_time(blog_list, query["reading_time"])
+        blog_list = blogs.filter_by_reading_time(blog_list, query["reading_time"])
 
-    blog_list = blog_helpers.sort_blogs(blog_list, sort_by)
+    blog_list = blogs.sort_blogs(blog_list, sort_by)
 
 
     total_count = len(blog_list)
