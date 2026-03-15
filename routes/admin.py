@@ -9,9 +9,12 @@ from werkzeug.security import check_password_hash
 
 from utility.auth import login_required
 from utility.blogs import load_blogs, add_blog, get_item_by_id, update_blog
+from utility.events import get_events 
+from utility.contact import load_contacts # <-- New Import
 from utility.calendar import generate_calendar
 from utility.logging_utility import logger
 from utility.settings import get_settings, update_settings
+from utility.others import convert_markdown_to_html
 
 logger = logging.getLogger(__name__)
 admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
@@ -57,10 +60,16 @@ def dashboard() -> render_template:
     month: int = request.args.get("month", default=today.month, type=int)
 
     cal = generate_calendar(year, month)
-
-    events: List[Dict[str, Any]] = []
-
+    events: List[Dict[str, Any]] = get_events() 
     month_name: str = datetime(year, month, 1).strftime("%B")
+
+    notes_path = "data/notes.md"
+    raw_note = ""
+    if os.path.exists(notes_path):
+        with open(notes_path, "r", encoding="utf-8") as f:
+            raw_note = f.read()
+    
+    html_note = convert_markdown_to_html(raw_note)
 
     return render_template(
         "admin/admin.jinja",
@@ -69,8 +78,23 @@ def dashboard() -> render_template:
         month=month,
         month_name=month_name,
         calendar=cal,
-        events=events
+        events=events,
+        raw_note=raw_note,
+        html_note=html_note
     )
+
+# ============== CONTACTS DASHBOARD ==============
+@admin_blueprint.route("/requests/contact", methods=["GET"])
+@login_required
+def manage_contacts() -> render_template:
+    contacts = load_contacts()
+    contacts.sort(key=lambda x: x.get("time_created", 0), reverse=True)
+    
+    for c in contacts:
+        c["formatted_date"] = datetime.fromtimestamp(c.get("time_created", 0)).strftime('%Y-%m-%d %H:%M')
+
+    return render_template("admin/contacts.jinja", contacts=contacts)
+
 
 # ============== MEDIA LIBRARY ==============
 @admin_blueprint.route("/media/all", methods=["GET"])

@@ -140,6 +140,53 @@ progress::-moz-progress-bar {
 .medium::-webkit-progress-value { background-color: var(--main-color-500); }
 .high::-webkit-progress-value { background-color: var(--warning-color); }
 
+/* Notes Design */
+.notes-container {
+    background: rgba(255, 255, 255, 0.2);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-lg);
+}
+
+.note-content {
+    background: rgba(255, 255, 255, 0.1);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-height: 150px;
+    color: var(--font-color);
+}
+
+#noteTextarea {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.2);
+    font-size: var(--font-size-sm);
+    color: var(--font-color);
+    transition: all var(--transition-medium);
+    resize: vertical;
+}
+
+#noteTextarea:focus {
+    outline: none;
+    border-color: var(--main-color-500);
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 0 2px rgba(37, 161, 167, 0.2);
+}
+
 /* Calendar Design - Updated with grid layout */
 .calendar-container {
     background: rgba(255, 255, 255, 0.2);
@@ -363,6 +410,7 @@ progress::-moz-progress-bar {
     font-size: var(--font-size-sm);
     color: var(--font-color);
     transition: all var(--transition-medium);
+    resize: vertical;
 }
 
 .input-group input:focus,
@@ -429,7 +477,8 @@ progress::-moz-progress-bar {
 
 /* Dark Mode Adjustments */
 [data-theme="dark"] .status-card,
-[data-theme="dark"] .quicklink-card {
+[data-theme="dark"] .quicklink-card,
+[data-theme="dark"] .notes-container {
     background: rgba(0, 0, 0, 0.3);
     border-color: rgba(255, 255, 255, 0.1);
 }

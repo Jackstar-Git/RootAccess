@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/contacts.css') }}">
+    <title>Admin Panel - Contact Requests</title>
+</head>
+<body>
+    <input type="hidden" id="csrf_token" value="{{ generate_token() }}">
+    <div class="main-container">
+        {% include "admin/sidebar.jinja" %}
+
+        <div class="main-content">
+            <div class="header-actions">
+                <h2>Contact Requests</h2>
+            </div>
+            
+            <p class="settings-description">Manage messages sent via the public contact form.</p>
+
+            <div class="config-section">
+                <div class="section-header">
+                    <h3>Inbox</h3>
+                </div>
+
+                <div class="config-list">
+                    {% if contacts|length == 0 %}
+                        <div class="empty-state">
+                            <h3>No contact requests found.</h3>
+                        </div>
+                    {% endif %}
+
+                    {% for c in contacts %}
+                        <div class="config-item {% if c.is_read %}read{% else %}unread{% endif %}">
+                            <div class="item-header">
+                                <div class="item-info">
+                                    <span class="item-icon"><i class="fas fa-envelope{% if c.is_read %}-open{% endif %}"></i></span>
+                                    <div>
+                                        <h3>{{ c.subject }} <span class="topic-badge">{{ c.topic }}</span></h3>
+                                        <div class="contact-meta">
+                                            <strong>From:</strong> {{ c.name }} (<a href="mailto:{{ c.email }}">{{ c.email }}</a>) • <strong>Date:</strong> {{ c.formatted_date }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item-actions">
+                                    {% if not c.is_read %}
+                                        <button class="btn btn-primary" onclick="markAsRead('{{ c.id }}')" title="Mark as Read"><i class="fas fa-check"></i></button>
+                                    {% endif %}
+                                    <a href="mailto:{{ c.email }}?subject=Re: {{ c.subject }}" class="btn edit-btn" title="Reply"><i class="fas fa-reply"></i></a>
+                                    <button class="btn delete-btn" onclick="deleteContact('{{ c.id }}')" title="Delete Request"><i class="fas fa-trash-alt"></i></button>
+                                </div>
+                            </div>
+                            
+                            <div class="message-body">
+                                {{ c.message | replace("\n", "<br>") | safe }}
+                            </div>
+
+                            {% if c.attachments %}
+                                <div class="attachments">
+                                    <strong>Attachments:</strong><br>
+                                    {% for att in c.attachments %}
+                                        <a href="{{ att }}" target="_blank"><i class="fas fa-paperclip"></i> View File {{ loop.index }}</a>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/admin/admin-global.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/admin/contacts.js')}}"></script>
+</body>
+</html>

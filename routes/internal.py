@@ -3,11 +3,13 @@ import os
 import platform
 import shutil
 import subprocess
+import time
 import zipfile
 from typing import Tuple, Union
 
-from flask import Blueprint, jsonify, request, session, abort, send_file, Response, redirect
-from werkzeug.utils import secure_filename
+from flask import Blueprint, jsonify, request, session, abort, send_file, Response, redirect, url_for, flash
+from utility.events import get_events, add_event, delete_event
+from utility.contact import add_contact, delete_contact, mark_contact_read # <-- Imported Contact logic
 import psutil
 
 from FlaskClass import app, csrf
@@ -84,7 +86,77 @@ def download(filepath: str) -> Response:
     logger.error(f"Invalid path provided | Path: {filepath}")
     abort(400, description="Invalid path provided.")
 
-# ============== API ENDPOINTS ==============
+# ============== PUBLIC CONTACT ENDPOINT ==============
+@internal_blueprint.route("/api/contact", methods=["POST"])
+def api_contact_submit():
+    name = request.form.get("name", "").strip()
+    email = request.form.get("email", "").strip()
+    topic = request.form.get("topic", "").strip()
+    subject = request.form.get("subject", "").strip()
+    message = request.form.get("message", "").strip()
+
+    if not all([name, email, topic, subject, message]):
+        flash("All fields are required.", "error")
+        return redirect(request.referrer or "/")
+
+    attachments = []
+    if "attachments" in request.files:
+        files = request.files.getlist("attachments")
+        upload_dir = os.path.join(app.root_path, "uploads", "contacts")
+        os.makedirs(upload_dir, exist_ok=True)
+        
+        for file in files:
+            if file and file.filename:
+                # Sanitize and timestamp to prevent collisions
+                filename = sanitize_filename(f"{int(time.time())}_{file.filename}")
+                file_path = os.path.join(upload_dir, filename)
+                file.save(file_path)
+                attachments.append(f"/uploads/contacts/{filename}")
+
+    contact_data = {
+        "name": name,
+        "email": email,
+        "topic": topic,
+        "subject": subject,
+        "message": message,
+        "attachments": attachments
+    }
+    
+    try:
+        add_contact(contact_data)
+        flash("Your message has been sent successfully!", "success")
+    except Exception as e:
+        logger.error(f"Failed to save contact request: {e}")
+        flash("Failed to send message. Please try again later.", "error")
+        
+    return redirect(request.referrer or "/")
+
+# ============== ADMIN CONTACTS API ==============
+@internal_blueprint.route("/api/admin/contacts/<action>", methods=["POST"])
+@login_required
+def api_admin_contacts(action):
+    data = request.get_json()
+    contact_id = data.get("id")
+    
+    if not contact_id:
+        return jsonify({"error": "Missing contact ID"}), 400
+        
+    try:
+        if action == "delete":
+            success = delete_contact(contact_id)
+        elif action == "read":
+            success = mark_contact_read(contact_id)
+        else:
+            return jsonify({"error": "Invalid action"}), 400
+            
+        if success:
+            return jsonify({"success": True})
+        return jsonify({"error": "Action failed or item not found"}), 404
+    except Exception as e:
+        logger.error(f"Failed to process contact action ({action}): {e}")
+        return jsonify({"error": "Internal server error"}), 500
+
+# ============== EVENT ENDPOINTS ==============
 @internal_blueprint.route("/api/add-events/", methods=["POST"])
 @login_required
 def add_events() -> Union[Response, Tuple[Response, int]]:
@@ -120,19 +192,7 @@ def add_events() -> Union[Response, Tuple[Response, int]]:
     except ValueError:
         return jsonify({"error": "Year, month, and day must be integers"}), 400
 
-    from utility.events import get_events, add_event
-    events = get_events()
-    existing_ids = []
-    for event in events:
-        try:
-            existing_ids.append(int(event["id"]))
-        except (ValueError, TypeError):
-            continue
-
-    new_id = str(max(existing_ids, default=0) + 1)
-
     new_event = {
-        "id": new_id,
         "year": year,
         "month": month,
         "day": day,
@@ -141,15 +201,67 @@ def add_events() -> Union[Response, Tuple[Response, int]]:
     }
 
     try:
-        add_event(new_event)
+        added = add_event(new_event)
         return jsonify({
             "message": "Event added successfully",
-            "event": new_event
+            "event": added
         }), 201
     except Exception as e:
         logger.error(f"Failed to add event | Error: {str(e)}", exc_info=True)
         return jsonify({"error": "Internal server error"}), 500
 
+@internal_blueprint.route("/api/get-events/", methods=["GET"])
+@login_required
+def api_get_events():
+    try:
+        year = request.args.get("year", type=int)
+        month = request.args.get("month", type=int)
+        day = request.args.get("day", type=int)
+        
+        all_events = get_events()
+        filtered = [
+            e for e in all_events 
+            if e.get("year") == year and e.get("month") == month and e.get("day") == day
+        ]
+        return jsonify(filtered)
+    except Exception as e:
+        logger.error(f"Failed to fetch events: {e}")
+        return jsonify({"error": "Internal server error"}), 500
+
+@internal_blueprint.route("/api/delete-event", methods=["GET"])
+@login_required
+def api_delete_event():
+    event_id = request.args.get("id")
+    if event_id:
+        try:
+            delete_event(event_id)
+        except Exception as e:
+            logger.error(f"Failed to delete event: {e}")
+    
+    return redirect(request.referrer or url_for("admin.dashboard"))
+
+# ============== NOTES ENDPOINTS ==============
+@internal_blueprint.route("/api/save-note", methods=["POST"])
+@login_required
+def api_save_note() -> Response:
+    data = request.get_json()
+    if not data or "note" not in data:
+        return jsonify({"error": "No note content provided."}), 400
+    
+    note_content = data["note"]
+    try:
+        os.makedirs("data", exist_ok=True)
+        with open("data/notes.md", "w", encoding="utf-8") as f:
+            f.write(note_content)
+            
+        html_content = convert_markdown_to_html(note_content)
+        return jsonify({"success": True, "html": html_content})
+    except Exception as e:
+        logger.error(f"Failed to save note: {e}")
+        return jsonify({"error": "Internal server error"}), 500
+
+
+# ============== API ENDPOINTS ==============
 @internal_blueprint.route("/api/get-system-info/", methods=["GET"])
 @login_required
 def get_system_info() -> Union[Response, Tuple[Response, int]]:

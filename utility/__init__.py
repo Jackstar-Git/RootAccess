@@ -7,6 +7,7 @@ from . import calendar
 from . import events
 from . import path_files as path_utils
 from . import auth
+from . import contact
 
 # convenience imports
 def __getattr__(name):
@@ -28,4 +29,6 @@ def __getattr__(name):
         return path_utils
     if name == "auth":
         return auth
+    if name == "contact":
+        return contact
     raise AttributeError(f"module {__name__} has no attribute {name}")

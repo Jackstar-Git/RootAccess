@@ -9,7 +9,6 @@
     <title>Contact - RootAccess</title>
     
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
-
 </head>
 <body>
     {% include "snippets/navbar.jinja" %}
@@ -31,6 +30,8 @@
 
                     <div class="contact-form-card">
                         <form action="/api/contact" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
+                            
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="name">Full Name</label>
@@ -87,6 +88,7 @@
         </section>
     </main>
     {% include "snippets/footer.jinja" %}
+    
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
 </body>
 </html>

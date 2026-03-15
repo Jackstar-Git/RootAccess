@@ -76,6 +76,51 @@ async function fetchSystemUsage() {
     }
 }
 
+// ----- Notes Functions -----
+
+function toggleEditNote() {
+    const display = document.getElementById("noteDisplay");
+    const editArea = document.getElementById("noteEditArea");
+    const editBtn = document.getElementById("editNoteBtn");
+    
+    if (editArea.classList.contains("hidden-form")) {
+        editArea.classList.remove("hidden-form");
+        display.style.display = "none";
+        editBtn.style.display = "none";
+    } else {
+        editArea.classList.add("hidden-form");
+        display.style.display = "block";
+        editBtn.style.display = "inline-block";
+    }
+}
+
+async function saveNote() {
+    const noteContent = document.getElementById("noteTextarea").value;
+    const csrfToken = document.getElementById("csrf_token") ? document.getElementById("csrf_token").value : "";
+    
+    try {
+        const response = await fetch("/api/save-note", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body: JSON.stringify({ note: noteContent })
+        });
+        
+        if (!response.ok) throw new Error("Failed to save note");
+        
+        const data = await response.json();
+        document.getElementById("noteDisplay").innerHTML = data.html;
+        toggleEditNote();
+        
+    } catch (error) {
+        alert("Error saving note: " + error.message);
+    }
+}
+
+// ----- Calendar Functions -----
+
 function updateCalendar() {
     const selectedMonth = document.getElementById("monthSelect").value;
     const selectedYear = document.getElementById("yearInput").value;
@@ -209,5 +254,3 @@ async function submitEvent(event) {
 }
 
 fetchSystemUsage();
-
-

@@ -63,6 +63,28 @@
                 <i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Refresh Stats
             </button>
 
+            <div class="notes-container">
+                <div class="notes-header">
+                    <h2>Quick Notes</h2>
+                    <button id="editNoteBtn" class="btn-outline" onclick="toggleEditNote()" aria-label="Edit note">
+                        <i class="fa-solid fa-pen"></i> Edit
+                    </button>
+                </div>
+                <div id="noteDisplay" class="note-content">
+                    {{ html_note | safe }}
+                    {% if not raw_note %}
+                        <p class="third-font-color"><em>No notes found. Click edit to create one!</em></p>
+                    {% endif %}
+                </div>
+                <div id="noteEditArea" class="hidden-form">
+                    <textarea id="noteTextarea" rows="10" placeholder="Write your markdown notes here...">{{ raw_note }}</textarea>
+                    <div class="form-actions">
+                        <button type="button" class="btn-outline" onclick="toggleEditNote()">Cancel</button>
+                        <button type="button" class="btn-secondary" onclick="saveNote()">Save Notes</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="calendar-container">
                 <h2>Calendar</h2>
                 <table class="calendar" role="grid" aria-label="Calendar">
@@ -135,8 +157,7 @@
                 </div>
 
                 <div id="modalContent" class="modal-body">
-                    <!-- Event content will be loaded here -->
-                </div>
+                    </div>
 
                 <div class="modal-footer">
                     <button id="addEventBtn" class="btn-secondary" onclick="toggleAddEventForm()" aria-label="Add new event">
@@ -161,6 +182,6 @@
         </main>
     </div>
 
-    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin/admin.js') }}"></script>
 </body>
 </html>

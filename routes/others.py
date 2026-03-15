@@ -1,10 +1,11 @@
-from flask import Blueprint, render_template, url_for, request, send_from_directory, make_response
+from flask import Blueprint, render_template, url_for, request, send_from_directory, make_response, flash, redirect
 from datetime import datetime
 from utility import blogs, projects
 import urllib
 from FlaskClass import app
 from utility.logging_utility import logger
 from utility.quotes import get_quote_of_the_day
+from utility.auth import verify_captcha, generate_captcha
 
 
 others_blueprint = Blueprint("others", __name__)
@@ -19,8 +20,25 @@ def about():
 
 @others_blueprint.route("/contact", methods=["GET", "POST"])
 def contact():
-    logger.info("Contact route accessed")
-    return render_template("contact.jinja")
+    if request.method == "POST":
+        user_captcha = request.form.get("captcha_choice")
+        if not verify_captcha(user_captcha):
+            flash("Security check failed. Please try again.", "error")
+            return redirect(url_for("contact.contact"))
+        
+        # Capture form data
+        name = request.form.get("name")
+        email = request.form.get("email")
+        subject = request.form.get("subject")
+        message = request.form.get("message")
+        
+        # ... logic for handling the message (e.g., saving to DB or sending email) ...
+        
+        flash("Message sent successfully!", "success")
+        return redirect(url_for("contact.contact"))
+
+    captcha_challenge = generate_captcha()
+    return render_template("contact.jinja", captcha=captcha_challenge)
 
 
 @others_blueprint.route("/imprint", methods=["GET", "POST"])
