@@ -1,0 +1,185 @@
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-actions h2 { margin: 0; }
+
+.project-filters {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.project-filters > div, form.search-bar { flex: 1; }
+
+.project-filters .search-bar input,
+.project-filters .sort-options select,
+.project-filters .filter-menu select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: var(--font-size-md);
+    width: 100%;
+    background-color: var(--main-bg);
+    color: var(--font-color);
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.project-filters input:focus, .project-filters select:focus { border-color: #2196F3; }
+
+.projects-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.project-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px 20px;
+    background-color: var(--main-bg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+}
+
+.project-item:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+.id-column {
+    margin-right: 20px;
+    font-weight: bold;
+    color: var(--third-font-color);
+    font-family: monospace;
+    min-width: 50px; 
+}
+
+.project-thumbnail {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 25px;
+    background-color: #f5f5f5;
+}
+
+.placeholder-thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #ccc;
+}
+
+.project-info {
+    flex: 2;
+    min-width: 0; 
+}
+
+.project-info h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--main-color);
+    font-size: 1.15rem;
+    margin: 0 0 5px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.version-badge {
+    font-size: 0.75rem;
+    background: var(--background-2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--third-font-color);
+}
+
+.project-info a { text-decoration: none; color: inherit; }
+.project-info a:hover { color: #2196F3; }
+
+.description-short {
+    font-size: 0.9rem;
+    color: var(--font-color);
+    margin: 0 0 8px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.categories-tags {
+    font-size: 0.85rem;
+    color: var(--third-font-color);
+    margin: 0;
+}
+
+.project-meta {
+    flex: 1;
+    margin-inline: 30px;
+    font-size: 0.95rem;
+    color: var(--font-color);
+    line-height: 1.6;
+}
+
+.project-meta .date {
+    color: var(--third-font-color);
+    font-size: 0.85rem;
+}
+
+.status-badge, .activity-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-stable { background: rgba(46, 204, 113, 0.1); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.2); }
+.status-mvp { background: rgba(241, 196, 15, 0.1); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.2); }
+.status-legacy { background: rgba(149, 165, 166, 0.1); color: #7f8c8d; border: 1px solid rgba(149, 165, 166, 0.2); }
+.activity-badge { background: var(--background-2); color: var(--font-color); border: 1px solid #ccc; }
+
+.project-actions { display: flex; gap: 8px; }
+
+.btn {
+    padding: 10px 14px;
+    font-size: var(--font-size-md);
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn:hover { opacity: 0.85; }
+.btn-primary { background-color: var(--main-color); }
+.edit-btn { background-color: var(--secondary-color, #4CAF50); }
+.delete-btn { background-color: var(--warning-color, #F44336); }
+.view-btn { background-color: #2196F3; }
+
+.empty-state {
+    text-align: center;
+    padding: 50px 20px;
+    background: var(--secondary-bg, #f9f9f9);
+    border-radius: 8px;
+    border: 1px dashed #ccc;
+}

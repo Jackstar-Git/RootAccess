@@ -1,7 +1,9 @@
 import json
 import os
-from typing import Any, List, Union, Optional, TypedDict
+from typing import Any, List, Union, Optional, TypedDict, Dict
 from functools import lru_cache
+import time
+import uuid
 
 class Project(TypedDict):
     id: Union[int, str]
@@ -90,3 +92,59 @@ def query_projects(limit: int = 10, exclude_id: Optional[Any] = None, **criteria
             filtered_results.append(project)
 
     return filtered_results[:limit]
+
+def add_project(data: Dict[str, Any]) -> str:
+    """Creates a new project entry with metadata."""
+    projects = load_projects()
+    
+    new_project = {
+        "id": str(uuid.uuid4())[:8],  # Generate a short unique ID
+        "title": data.get("title"),
+        "version": data.get("version", "1.0.0"),
+        "description_short": data.get("description_short"),
+        "content_raw": data.get("content_raw"),
+        "image_url": data.get("image_url"),
+        "github_url": data.get("github_url"),
+        "demo_url": data.get("demo_url"),
+        "download_file": data.get("download_file"),
+        "tech_stack": data.get("tech_stack", []),
+        "tags": data.get("tags", []),
+        "maturity": data.get("maturity", "MVP"),
+        "activity": data.get("activity", "Active"),
+        "topic": data.get("topic", "Personal"),
+        "time_created": int(time.time()),
+        "last_updated": int(time.time())
+    }
+    
+    projects.append(new_project)
+    save_projects(projects)
+    return new_project["id"]
+
+def update_project(project_id: str, updated_data: Dict[str, Any]) -> bool:
+    """Updates an existing project by ID."""
+    projects = load_projects()
+    for p in projects:
+        if p["id"] == project_id:
+            # Update fields while preserving ID and creation time
+            p.update(updated_data)
+            p["last_updated"] = int(time.time())
+            save_projects(projects)
+            return True
+    return False
+
+def delete_project(project_id: str) -> bool:
+    """Removes a project and its associated image if applicable."""
+    projects = load_projects()
+    original_count = len(projects)
+    projects = [p for p in projects if p["id"] != project_id]
+    
+    if len(projects) < original_count:
+        save_projects(projects)
+        return True
+    return False
+
+def save_projects(projects: List[Dict[str, Any]]) -> None:
+    """Saves the project list to the JSON database."""
+    os.makedirs(os.path.dirname(DATA_FILE), exist_ok=True)
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(projects, f, indent=4)

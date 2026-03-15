@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/edit-project.css') }}">
+    <title>Admin - Edit Project</title>
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja" %}
+
+        <main class="main-content">
+            <header class="editor-header">
+                <h2>Edit Project</h2>
+                <div class="header-actions">
+                    <a href="/admin/projects/all" class="btn-discard" onclick="return confirm('Discard changes?')">Discard</a>
+                </div>
+            </header>
+
+            <form method="POST" action="{{ url_for('admin.edit_project', project_id=project.id) }}" enctype="multipart/form-data" class="modern-form" id="project-form">
+                <input type="hidden" name="csrf_token" id="csrf_token" value="{{ generate_token() }}">
+
+                <div class="editor-layout">
+                    <section class="content-area">
+                        <div class="title-version-group">
+                            <input type="text" id="title" name="title" class="title-input" value="{{ project.title }}" required>
+                            <input type="text" id="version" name="version" class="version-input" value="{{ project.version }}" required>
+                        </div>
+                        
+                        <textarea id="description_short" name="description_short" class="short-desc-input" required>{{ project.description_short }}</textarea>
+
+                        <div class="toolbar-sticky">
+                            <div class="toolbar">
+                                <button type="button" onclick="applyStyle('bold')" title="Bold"><i class="fas fa-bold"></i></button>
+                                <button type="button" onclick="applyStyle('italic')" title="Italic"><i class="fas fa-italic"></i></button>
+                                <button type="button" onclick="applyLineStyle('codeblock')" title="Code Block"><i class="fas fa-code"></i></button>
+                                <button type="button" onclick="addLink()" title="Link"><i class="fas fa-link"></i></button>
+                                <span class="divider"></span>
+                                <button type="button" id="toggle-view-button" onclick="toggleView()" class="btn-preview">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                            </div>
+                        </div>
+
+                        <textarea id="content" name="content_raw">{{ project.content_raw }}</textarea>
+                        <div id="preview-output" class="markdown-body" style="display: none;"></div>
+                    </section>
+
+                    <aside class="settings-sidebar">
+                        <div class="settings-group">
+                            <label>Featured Image</label>
+                            <div class="upload-container" id="drop-zone">
+                                <input type="file" id="thumbnail-upload" name="thumbnail" accept="image/*" hidden>
+                                <div id="thumbnail-preview" class="preview-box">
+                                    {% if project.image_url %}
+                                        <img src="{{ project.image_url }}" style="max-width:100%; border-radius:8px;">
+                                    {% else %}
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Click to upload</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-group">
+                            <label>Tech Stack</label>
+                            <div id="tech-list">
+                                {% for tech in project.tech_stack %}
+                                <div class="dynamic-input">
+                                    <input name="tech_stack[]" type="text" value="{{ tech }}" required>
+                                    <button type="button" class="btn-remove-author" onclick="this.parentElement.remove()" title="Remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <button type="button" class="btn-add" onclick="addTech()">+ Add Technology</button>
+                        </div>
+
+                        <div class="settings-group">
+                            <label>External Links</label>
+                            <input type="url" name="github_url" class="modern-input link-input" value="{{ project.github_url or '' }}" placeholder="GitHub Repository URL">
+                            <input type="url" name="demo_url" class="modern-input link-input" value="{{ project.demo_url or '' }}" placeholder="Live Demo URL">
+                            <input type="text" name="download_file" class="modern-input link-input" value="{{ project.download_file or '' }}" placeholder="Downloadable File Name">
+                        </div>
+
+                        <div class="settings-group">
+                            <label>Topic / Category</label>
+                            <select name="topic" class="modern-select" required>
+                                <option value="Personal" {% if project.topic == 'Personal' %}selected{% endif %}>Personal</option>
+                                <option value="Productivity" {% if project.topic == 'Productivity' %}selected{% endif %}>Productivity</option>
+                                <option value="E-commerce" {% if project.topic == 'E-commerce' %}selected{% endif %}>E-commerce</option>
+                                <option value="UI/UX" {% if project.topic == 'UI/UX' %}selected{% endif %}>UI/UX</option>
+                                <option value="Game Development" {% if project.topic == 'Game Development' %}selected{% endif %}>Game Development</option>
+                                <option value="Utility" {% if project.topic == 'Utility' %}selected{% endif %}>Utility</option>
+                                <option value="Desktop App" {% if project.topic == 'Desktop App' %}selected{% endif %}>Desktop App</option>
+                            </select>
+                        </div>
+
+                        <div class="settings-group">
+                            <label>Tags (Comma separated)</label>
+                            <input type="text" name="tags" class="modern-input" value="{{ project.tags | join(', ') }}">
+                        </div>
+
+                        <div class="settings-group">
+                            <label>Maturity</label>
+                            <select name="maturity" class="modern-select">
+                                <option value="MVP" {% if project.maturity == 'MVP' %}selected{% endif %}>MVP</option>
+                                <option value="Stable" {% if project.maturity == 'Stable' %}selected{% endif %}>Stable</option>
+                                <option value="Legacy" {% if project.maturity == 'Legacy' %}selected{% endif %}>Legacy</option>
+                            </select>
+                        </div>
+
+                        <div class="settings-group">
+                            <label>Activity</label>
+                            <select name="activity" class="modern-select">
+                                <option value="Active" {% if project.activity == 'Active' %}selected{% endif %}>Active</option>
+                                <option value="Maintained" {% if project.activity == 'Maintained' %}selected{% endif %}>Maintained</option>
+                                <option value="On hold" {% if project.activity == 'On hold' %}selected{% endif %}>On hold</option>
+                                <option value="Stalled" {% if project.activity == 'Stalled' %}selected{% endif %}>Stalled</option>
+                                <option value="Archived" {% if project.activity == 'Archived' %}selected{% endif %}>Archived</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-primary btn-publish">Update Project</button>
+                    </aside>
+                </div>
+            </form>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/admin/edit-projects.js')}}"></script>
+</body>
+</html>

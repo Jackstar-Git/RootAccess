@@ -123,7 +123,14 @@ def search_blogs(search_query: str) -> List[BlogPost]:
         if query in b.get("title", "").lower() or query in b.get("content_raw", "").lower()
     ]
 
-def query_blogs(limit: int = 10, exclude_id: Optional[Any] = None, **criteria: Any) -> List[BlogPost]:
+from typing import List, Optional, Any, Literal
+
+def query_blogs(
+    limit: int = 10, 
+    exclude_id: Optional[Any] = None, 
+    match_mode: Literal["AND", "OR"] = "AND",
+    **criteria: Any
+) -> List[BlogPost]:
     blog_list: List[BlogPost] = load_blogs()
     filtered_results: List[BlogPost] = []
 
@@ -131,21 +138,26 @@ def query_blogs(limit: int = 10, exclude_id: Optional[Any] = None, **criteria: A
         if exclude_id is not None and blog.get("id") == exclude_id:
             continue
 
-        is_match: bool = True
+        if not criteria:
+            filtered_results.append(blog)
+            continue
+
+        matches = []
         for key, target in criteria.items():
             current = blog.get(key)
+            item_match = False
             
             if isinstance(current, list):
                 if isinstance(target, list):
-                    if not any(item in current for item in target):
-                        is_match = False
-                elif target not in current:
-                    is_match = False
-            elif current != target:
-                is_match = False
+                    item_match = any(item in current for item in target)
+                else:
+                    item_match = target in current
+            else:
+                item_match = (current == target)
+            
+            matches.append(item_match)
 
-            if not is_match:
-                break
+        is_match = all(matches) if match_mode == "AND" else any(matches)
 
         if is_match:
             filtered_results.append(blog)

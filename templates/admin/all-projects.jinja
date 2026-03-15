@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/all-projects.css') }}">
+    <title>Admin Panel - All Projects</title>
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja" %}
+
+        <div class="main-content">
+            <div class="header-actions">
+                <h2>Projects Overview</h2>
+                <a href="/admin/projects/create" class="btn btn-primary"><i class="fas fa-plus"></i> New Project</a>
+            </div>
+            
+            <div class="project-filters">
+                <form class="search-bar" method="GET" action="/admin/projects/all">
+                    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ generate_token() }}">
+                    <input type="hidden" name="topic" value="{{ query_params.get('topic', 'all') }}">
+                    <input type="text" name="search" id="search-input" placeholder="Search by title or tech..." value="{{ query_params.get('search', '') }}">
+                    <button type="submit" style="display: none;">Search</button>
+                </form>
+
+                <div class="sort-options">
+                    <select id="sort-options" onchange="window.location.href=this.value">
+                        <option value="">Sort by</option>
+                        <option value="?sort=newest">Newest First</option>
+                        <option value="?sort=oldest">Oldest First</option>
+                        <option value="?sort=title-asc">Title: A-Z</option>
+                        <option value="?sort=title-desc">Title: Z-A</option>
+                    </select>
+                </div>
+
+                <div class="filter-menu">
+                    <select id="topic-filter" onchange="window.location.href='?topic=' + this.value">
+                        <option value="all">All Topics</option>
+                        <option {% if query_params.get('topic') == 'Personal' %}selected{% endif %} value="Personal">Personal</option>
+                        <option {% if query_params.get('topic') == 'Productivity' %}selected{% endif %} value="Productivity">Productivity</option>
+                        <option {% if query_params.get('topic') == 'E-commerce' %}selected{% endif %} value="E-commerce">E-commerce</option>
+                        <option {% if query_params.get('topic') == 'UI/UX' %}selected{% endif %} value="UI/UX">UI/UX</option>
+                        <option {% if query_params.get('topic') == 'Game Development' %}selected{% endif %} value="Game Development">Game Development</option>
+                        <option {% if query_params.get('topic') == 'Utility' %}selected{% endif %} value="Utility">Utility</option>
+                        <option {% if query_params.get('topic') == 'Desktop App' %}selected{% endif %} value="Desktop App">Desktop App</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="projects-list">
+                {% if projects|length == 0 %}
+                    <div class="empty-state">
+                        <h3>No matching projects found!</h3>
+                        <a href="/admin/projects/all" class="btn view-btn">Clear Filters</a>
+                    </div>
+                {% endif %}
+
+                {% for project in projects %}
+                    <div class="project-item">
+                        <div class="id-column">{{ project.id }}</div>
+                        
+                        {% if project.image_url %}
+                            <img src="{{ project.image_url }}" alt="Thumbnail" class="project-thumbnail">
+                        {% else %}
+                            <div class="project-thumbnail placeholder-thumb"><i class="fas fa-code"></i></div>
+                        {% endif %}
+
+                        <div class="project-info">
+                            <h3>
+                                <a href="/admin/projects/edit/{{ project.id }}">{{ project.title }}</a>
+                                <span class="version-badge">v{{ project.version }}</span>
+                            </h3>
+                            <p class="description-short">{{ project.description_short }}</p>
+                            <p class="categories-tags">
+                                <i class="fas fa-layer-group"></i> {{ project.tech_stack | join(', ') }} 
+                                {% if project.tags %}
+                                    &nbsp;|&nbsp;<i class="fas fa-hashtag"></i> {{ project.tags | join(', ') }}
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <div class="project-meta">
+                            <span class="status-badge status-{{ project.maturity | lower | replace(' ', '-') }}"><i class="fas fa-seedling"></i> {{ project.maturity }}</span>
+                            <br>
+                            <span class="activity-badge"><i class="fas fa-chart-line"></i> {{ project.activity }}</span>
+                            <br>    
+                            <span class="date"><i class="fas fa-calendar-alt"></i> {{ project.time_created | datetimeformat }}</span>
+                        </div>
+
+                        <div class="project-actions">
+                            {% if project.github_url %}
+                                <a href="{{ project.github_url }}" target="_blank" class="btn view-btn" title="GitHub"><i class="fab fa-github"></i></a>
+                            {% endif %}
+                            {% if project.demo_url %}
+                                <a href="{{ project.demo_url }}" target="_blank" class="btn view-btn" title="Live Demo"><i class="fas fa-external-link-alt"></i></a>
+                            {% endif %}
+                            <a href="/admin/projects/edit/{{ project.id }}" class="btn edit-btn" title="Edit Project"><i class="fas fa-edit"></i></a>
+                            <button class="btn delete-btn" onclick="deleteProject('{{project.id}}')" title="Delete Project"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/admin/admin-global.js')}}"></script>
+    <script>
+        async function deleteProject(id) {
+            if(confirm('Are you sure you want to delete this project?')) {
+                try {
+                    const res = await fetch("/api/delete-project", {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ id: id })
+                    });
+                    if(res.ok) window.location.reload();
+                    else alert("Failed to delete project.");
+                } catch(e) { console.error(e); }
+            }
+        }
+    </script>
+</body>
+</html>

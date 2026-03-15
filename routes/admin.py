@@ -10,11 +10,12 @@ from werkzeug.security import check_password_hash
 from utility.auth import login_required
 from utility.blogs import load_blogs, add_blog, get_item_by_id, update_blog
 from utility.events import get_events 
-from utility.contact import load_contacts # <-- New Import
+from utility.contact import load_contacts
 from utility.calendar import generate_calendar
 from utility.logging_utility import logger
 from utility.settings import get_settings, update_settings
 from utility.others import convert_markdown_to_html
+from utility.projects import query_projects, search_projects, load_projects, get_project_by_id, update_project, add_project
 
 logger = logging.getLogger(__name__)
 admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
@@ -36,7 +37,10 @@ def login() -> Union[render_template, redirect]:
 
         if stored_hash and check_password_hash(stored_hash, input_pass):
             session.clear()
-            session.permanent = True
+            if request.form.get("remember"):
+                session.permanent = True
+            else:
+                session.permanent = False
             session["is_admin"] = True
             return redirect(url_for("admin.dashboard"))
 
@@ -306,3 +310,119 @@ def edit_blog(blog_id: str):
         blog=blog,
         settings=get_settings("blog_config")
     )
+
+# ============== PROJECTS ==============
+@admin_blueprint.route("/projects/all", methods=["GET"])
+@login_required
+def all_projects() -> render_template:
+    search_query: str = request.args.get("search", "").lower()
+    topic_query: str = request.args.get("topic", "all")
+
+    raw_projects = load_projects()
+    display_projects: List[Dict[str, Any]] = []
+
+    for project in raw_projects:
+        if topic_query != "all" and topic_query != project.get("topic", ""):
+            continue
+
+        if search_query:
+            title_match: bool = search_query in project.get("title", "").lower()
+            tech_match: bool = any(search_query in tech.lower() for tech in project.get("tech_stack", []))
+            if not (title_match or tech_match):
+                continue
+
+        display_projects.append(project)
+
+    # Note: Sort by newest based on time_created
+    display_projects.sort(key=lambda x: x.get("time_created", 0), reverse=True)
+
+    return render_template(
+        "admin/all-projects.jinja",
+        projects=display_projects,
+        query_params=request.args
+    )
+
+@admin_blueprint.route("/projects/create/", methods=["GET", "POST"])
+@login_required
+def create_project():
+    logger.info("Accessing project creation portal.")
+
+    if request.method == "POST":
+        thumbnail_file = request.files.get("thumbnail")
+        image_url = None
+        
+        if thumbnail_file and thumbnail_file.filename:
+            upload_folder = "uploads/projects"
+            os.makedirs(upload_folder, exist_ok=True)
+            filename = f"{int(time.time())}_{thumbnail_file.filename}"
+            thumbnail_file.save(os.path.join(upload_folder, filename))
+            image_url = f"/uploads/projects/{filename}"
+
+        project_data = {
+            "title": request.form.get("title"),
+            "version": request.form.get("version"),
+            "description_short": request.form.get("description_short"),
+            "content_raw": request.form.get("content_raw"),
+            "image_url": image_url,
+            "github_url": request.form.get("github_url") or None,
+            "demo_url": request.form.get("demo_url") or None,
+            "download_file": request.form.get("download_file") or None,
+            "tech_stack": request.form.getlist("tech_stack[]"),
+            "tags": [tag.strip() for tag in request.form.get("tags", "").split(",") if tag.strip()],
+            "maturity": request.form.get("maturity"),
+            "activity": request.form.get("activity"),
+            "topic": request.form.get("topic")
+        }
+        
+        try:
+            add_project(project_data)
+            logger.info(f"Project '{project_data['title']}' created successfully.")
+            flash("Project published!", "success")
+            return redirect(url_for('admin.all_projects'))
+        except Exception as e:
+            logger.error(f"Failed to save project: {str(e)}")
+            flash("Error saving project.", "error")
+
+    return render_template("admin/add-project.jinja")
+
+@admin_blueprint.route("/projects/edit/<project_id>", methods=["GET", "POST"])
+@login_required
+def edit_project(project_id: str):
+    project = get_project_by_id(project_id)
+
+    if not project:
+        flash("Project not found.", "error")
+        return redirect(url_for('admin.all_projects'))
+
+    if request.method == "POST":
+        thumbnail_file = request.files.get("thumbnail")
+        image_url = project.get("image_url")
+
+        if thumbnail_file and thumbnail_file.filename:
+            upload_folder = "uploads/projects"
+            os.makedirs(upload_folder, exist_ok=True)
+            filename = f"{int(time.time())}_{thumbnail_file.filename}"
+            thumbnail_file.save(os.path.join(upload_folder, filename))
+            image_url = f"/uploads/projects/{filename}"
+
+        updated_data = {
+            "title": request.form.get("title"),
+            "version": request.form.get("version"),
+            "description_short": request.form.get("description_short"),
+            "content_raw": request.form.get("content_raw"),
+            "image_url": image_url,
+            "github_url": request.form.get("github_url") or None,
+            "demo_url": request.form.get("demo_url") or None,
+            "download_file": request.form.get("download_file") or None,
+            "tech_stack": request.form.getlist("tech_stack[]"),
+            "tags": [tag.strip() for tag in request.form.get("tags", "").split(",") if tag.strip()],
+            "maturity": request.form.get("maturity"),
+            "activity": request.form.get("activity"),
+            "topic": request.form.get("topic")
+        }
+
+        if update_project(project_id, updated_data):
+            flash("Successfully updated!", "success")
+            return redirect(url_for('admin.all_projects'))
+
+    return render_template("admin/edit-project.jinja", project=project)

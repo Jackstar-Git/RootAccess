@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
         togglePassword.addEventListener("click", () => {
             const type = password.getAttribute("type") === "password" ? "text" : "password";
             password.setAttribute("type", type);
-            
+
             eyeIcon.classList.toggle("fa-eye");
             eyeIcon.classList.toggle("fa-eye-slash");
         });

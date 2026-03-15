@@ -115,3 +115,18 @@
     color: #ef4444;
     border: 1px solid rgba(239, 68, 68, 0.2);
 }
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.remember-me input {
+    margin-right: 0.5rem;
+}
+
+.remember-me label {
+    color: var(--main-color-600);
+}
