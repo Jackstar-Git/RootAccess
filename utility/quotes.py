@@ -2,7 +2,7 @@ import json
 import random
 from datetime import date as dt_date
 from functools import lru_cache
-from typing import List, Dict, Optional, Final
+from typing import List, Dict, Optional, Final, Union
 from utility.logging_utility import logger
 
 Quote = Dict[str, str]
@@ -20,17 +20,28 @@ def load_quotes(filepath: str = "data/quotes.json") -> List[Quote]:
     except (FileNotFoundError, json.JSONDecodeError):
         return [DEFAULT_QUOTE]
 
-def get_quote_of_the_day(date: Optional[dt_date] = None) -> Quote:
-    if date is None:
-        date = dt_date.today()
-        seed_str: str = date.strftime("%Y-%m-%d")
-        logger.info(f"Using today's date for quote of the day: {date}")
+def get_quote_of_the_day(date_input: Optional[Union[dt_date, str]] = None) -> Quote:
+    if date_input is None:
+        target_date = dt_date.today()
+    elif isinstance(date_input, str):
+        target_date = dt_date.fromisoformat(date_input)
     else:
-        seed_str: str = date
+        target_date = date_input
 
     quotes: List[Quote] = load_quotes()
-    random.seed(seed_str)
-    qotd: Quote = random.choice(quotes)
-    random.seed()
+    num_quotes = len(quotes)
     
-    return qotd
+    if num_quotes == 0:
+        raise ValueError("No quotes available to pick from.")
+
+    abs_day = target_date.toordinal()
+    
+    cycle_number = abs_day // num_quotes
+    day_in_cycle = abs_day % num_quotes
+    
+    cycle_rng = random.Random(f"cycle_{cycle_number}")
+    indices = list(range(num_quotes))
+    cycle_rng.shuffle(indices)
+    
+    selected_index = indices[day_in_cycle]
+    return quotes[selected_index]
