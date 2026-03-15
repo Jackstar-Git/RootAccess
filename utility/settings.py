@@ -22,7 +22,7 @@ def _save_settings(settings: Dict[str, Any]) -> None:
     """Save settings to file"""
     _ensure_data_dir()
     with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
-        json.dump(settings, f, indent=2, ensure_ascii=False)
+        json.dump(settings, f, indent=4, ensure_ascii=False)
 
 @lru_cache(maxsize=1)
 def _load_settings_cached() -> Dict[str, Any]:
@@ -53,11 +53,6 @@ def get_settings(key: str = None) -> Any:
     return data.get(key)
 
 def update_settings(new_settings: Dict[str, Any]) -> None:
-    """
-    Update settings with new values.
-    Can handle both top-level and nested keys.
-    Automatically clears cache.
-    """
     current_settings = _load_settings()
     updated = _deep_update(current_settings, new_settings)
     _save_settings(updated)
@@ -65,10 +60,6 @@ def update_settings(new_settings: Dict[str, Any]) -> None:
     _load_settings.cache_clear()
 
 def _deep_update(original: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Deep update dictionary with new values.
-    Preserves original structure while updating values.
-    """
     for key, value in new.items():
         if isinstance(value, dict) and key in original and isinstance(original[key], dict):
             original[key] = _deep_update(original[key], value)
@@ -77,10 +68,6 @@ def _deep_update(original: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, Any
     return original
 
 def set_setting(key: str, value: Any) -> None:
-    """
-    Set a single setting value.
-    Can handle nested keys with '-' separator.
-    """
     current = _load_settings()
     keys = key.split("-")
     target = current
