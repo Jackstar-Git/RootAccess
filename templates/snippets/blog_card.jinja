@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/snippets/blog_card.css') }}">
 <article class="blog-card-v2">
     <div class="card-image">
-        <img src="{{ blog.image_url }}" alt="{{ blog.title }} Cover">
+        <img src="{{ blog.image_url }}" alt="{{ blog.title }} Cover" loading="lazy">
         <div class="glass-tags-container">
             {% if blog.tags %}
                 {% for tag in blog.tags[:3] %}
