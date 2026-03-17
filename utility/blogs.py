@@ -7,6 +7,7 @@ import uuid
 from datetime import datetime
 from typing import List, Dict, Any, Tuple, Optional
 from .others import convert_markdown_to_html
+import math
 
 class BlogPost(TypedDict):
     id: str
@@ -198,7 +199,7 @@ def filter_by_date_range(blog_list: List[BlogPost], start_date: Optional[str], e
 def calculate_reading_time(content: str) -> int:
     words_per_minute: int = 150
     word_count: int = len(content.split())
-    return int(max(1, round(word_count / words_per_minute, 0)))
+    return int(max(1, math.ceil(word_count / words_per_minute)))
 
 
 def sort_blogs(blog_list: List[BlogPost], sort_by: str) -> List[BlogPost]:

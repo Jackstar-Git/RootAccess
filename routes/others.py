@@ -61,11 +61,11 @@ def sitemap():
 
     default_lastmod = datetime.now()
 
-    excluded_paths = ["/admin", "/static", "/upload", "/download", "/google7825769118bcd42a.html"]
+    excluded_paths = ["/admin", "/static", "/upload", "/download", "/google7825769118bcd42a.html", "/api"]
 
     for blog in blogs.query_blogs():
         blog_id = blog.get("id", 0)
-        url = urllib.parse.urljoin(request.url_root, f"blogs/{blog_id}")
+        url = urllib.parse.urljoin(request.url_root, f"blog/{blog_id}")
         
         pages.append({
             "loc": url,
