@@ -3,80 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ project.title }} // RootAccess — A project that actually runs (mostly)</title>
+    <meta name="description" content="{{ project.description_short or 'Another digital artifact salvaged from the depths of my hard drive.' }}">
+    <meta name="author" content="Jackstar">
+    <meta name="keywords" content="source code, documentation, probably-finished, tech, rootaccess">
+    <meta name="robots" content="index, follow">
+    <meta name="copyright" content="© 2026 RootAccess. All rights and wrongs reserved.">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
 
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin> 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/project.css') }}">
 
-    <title>{{ project.title }}</title>
-    
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
     {% include "snippets/navbar.jinja" %}
 
-    <main>
+    <main role="main">
         <div class="article-wrapper">
-            <div class="progress-indicator" id="readingProgress"></div>
+            <div class="progress-indicator" 
+                 id="readingProgress" 
+                 role="progressbar" 
+                 aria-label="Project reading progress" 
+                 aria-valuemin="0" 
+                 aria-valuemax="100"></div>
 
-            <article class="article-container">
+            <article class="article-container" aria-labelledby="project-title">
                 <header class="project-header">
                     <div class="header-top-row">
-                        <span class="project-version-badge">v{{ project.version }}</span>
-                        <div class="project-maturity-badge maturity-{{ project.maturity | lower }}">
+                        <span class="project-version-badge" aria-label="Current version">v{{ project.version }}</span>
+                        <div class="project-maturity-badge maturity-{{ project.maturity | lower }}" 
+                             aria-label="Project maturity level">
                             {{ project.maturity | default('MVP') }}
                         </div>
                     </div>
                     
-                    <h1 class="article-display-title">{{ project.title }}</h1>
+                    <h1 class="article-display-title" id="project-title">{{ project.title }}</h1>
                     <p class="project-lead-text">{{ project.description_short }}</p>
                     
-                    <div class="project-action-bar">
+                    <div class="project-action-bar" aria-label="Project links and interactions">
                         <div class="external-links">
                             {% if project.github_url %}
-                                <a href="{{ project.github_url }}" target="_blank" class="btn-project btn-github">
-                                    <i class="fa-brands fa-github"></i> Repository
+                                <a href="{{ project.github_url }}" target="_blank" class="btn-project btn-github" rel="noopener">
+                                    <i class="fa-brands fa-github" aria-hidden="true"></i> Repository
                                 </a>
                             {% endif %}
 
                             {% if project.demo_url %}
-                                <a href="{{ project.demo_url }}" target="_blank" class="btn-project btn-demo">
-                                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Live Demo
+                                <a href="{{ project.demo_url }}" target="_blank" class="btn-project btn-demo" rel="noopener">
+                                    <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Live Demo
                                 </a>
                             {% endif %}
+                            
                             {% if project.download_file %}
                                 <a href="/download/uploads/projects/{{ project.download_file }}" class="btn-project btn-download">
-                                    <i class="fa-solid fa-download"></i> Download
+                                    <i class="fa-solid fa-download" aria-hidden="true"></i> Download
                                 </a>
                             {% endif %}
                         </div>
 
                         <div class="action-icons">
-                            <i class="fa-regular fa-bookmark" title="Bookmark"></i>
-                            <i class="fa-regular fa-share-from-square" title="Share"></i>
+                            <button type="button" aria-label="Bookmark this project" title="Bookmark">
+                                <i class="fa-regular fa-bookmark" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" aria-label="Share this project" title="Share">
+                                <i class="fa-regular fa-share-from-square" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
 
-                    <div class="project-meta-bar">
+                    <div class="project-meta-bar" aria-label="Project metadata">
                         <div class="meta-item">
-                            <span class="activity-chip activity-{{ project.activity | lower | replace(' ', '-') }}">
+                            <span class="activity-chip activity-{{ project.activity | lower | replace(' ', '-') }}" 
+                                  aria-label="Development status: {{ project.activity }}">
                                 <span class="activity-dot"></span>
                                 <strong>{{ project.activity | default('Unknown') }}</strong>
                             </span>
                         </div>
-                        <div class="meta-divider"></div>
+                        <div class="meta-divider" aria-hidden="true"></div>
                         <div class="meta-item dates">
-                            <span><i class="fa-regular fa-calendar-plus"></i> Created: {{ project.time_created | datetimeformat }}</span>
+                            <span aria-label="Date created">
+                                <i class="fa-regular fa-calendar-plus" aria-hidden="true"></i> Created: {{ project.time_created | datetimeformat }}
+                            </span>
                             {% if project.last_modified %}
-                                <span><i class="fa-regular fa-pen-to-square"></i> Updated: {{ project.last_modified | datetimeformat }}</span>
+                                <span aria-label="Date last updated">
+                                    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Updated: {{ project.last_modified | datetimeformat }}
+                                </span>
                             {% endif %}
                         </div>
                     </div>
@@ -85,20 +105,24 @@
                 <div class="glass-article-body">
                     <figure class="featured-figure">
                         <img src="{{ project.image_url if project.image_url else '/static/assets/images/default/default-project.png' }}" 
-                            alt="{{ project.title }}" class="featured-image" fetchpriority="high">
+                             alt="Featured image for {{ project.title }}" 
+                             class="featured-image" 
+                             fetchpriority="high">
                     </figure>
 
-                    <main class="main-text-flow">
+                    <section class="main-text-flow" aria-label="Project content">
                         {{ project.content_raw | safe }}
-                    </main>
+                    </section>
 
                     <footer class="article-end">
                         <div class="footer-tag-groups">
                             <div class="tag-group">
                                 <h4 class="footer-label">Tech Stack</h4>
-                                <div class="tag-row-modern">
+                                <div class="tag-row-modern" aria-label="Technologies used">
                                     {% for tech in project.tech_stack %}
-                                        <a href="/projects?tech_stack={{ tech }}"><span class="tech-tag">#{{ tech }}</span></a>
+                                        <a href="/projects?tech_stack={{ tech }}" aria-label="View more {{ tech }} projects">
+                                            <span class="tech-tag">#{{ tech }}</span>
+                                        </a>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -106,10 +130,10 @@
                             {% if project.tags %}
                             <div class="tag-group mt-3">
                                 <h4 class="footer-label">Project Tags</h4>
-                                <div class="tag-row-modern">
+                                <div class="tag-row-modern" aria-label="Project tags">
                                     {% for tag in project.tags %}
                                         <a href="/projects?tags={{ tag }}" class="modern-tag">
-                                            <span class="tag-hash">#</span>{{ tag }}
+                                            <span class="tag-hash" aria-hidden="true">#</span>{{ tag }}
                                         </a>
                                     {% endfor %}
                                 </div>
@@ -118,7 +142,8 @@
                         </div>
                     </footer>
                 </div>
-                <section class="see-also-section">
+
+                <section class="see-also-section" aria-label="Related projects">
                     <h3 class="section-heading">See also</h3>
                     <div class="related-grid">
                         {% if suggestions %}
@@ -128,9 +153,8 @@
                                 {% endwith %}
                             {% endfor %}
                         {% else %}
-                            No related projects found.
+                            <p class="no-results">No related projects found. It's lonely here.</p>
                         {% endif %}
-                        
                     </div>
                 </section>
             </article>
@@ -138,6 +162,7 @@
     </main>
 
     {% include "snippets/footer.jinja" %}
+
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
     <script src="{{ url_for('static', filename='js/project.js') }}"></script>
 </body>

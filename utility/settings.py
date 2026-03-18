@@ -6,12 +6,10 @@ from typing import Any, Optional, Dict, Final
 SETTINGS_FILE: Final[str] = "data/settings.json"
 
 def _ensure_data_dir() -> None:
-    """Ensure the data directory exists"""
     os.makedirs(os.path.dirname(SETTINGS_FILE), exist_ok=True)
 
 @lru_cache(maxsize=1)
 def _load_settings() -> Dict[str, Any]:
-    """Load settings from file, return empty dict if file doesn't exist"""
     try:
         with open(SETTINGS_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -19,22 +17,15 @@ def _load_settings() -> Dict[str, Any]:
         return {}
 
 def _save_settings(settings: Dict[str, Any]) -> None:
-    """Save settings to file"""
     _ensure_data_dir()
     with open(SETTINGS_FILE, "w", encoding="utf-8") as f:
         json.dump(settings, f, indent=4, ensure_ascii=False)
 
 @lru_cache(maxsize=1)
 def _load_settings_cached() -> Dict[str, Any]:
-    """Cached version of settings loading"""
     return _load_settings()
 
 def get_settings(key: str = None) -> Any:
-    """
-    Get settings value by key.
-    If key is None, returns entire settings dict.
-    Supports nested keys with '-' separator.
-    """
     data: Dict[str, Any] = _load_settings_cached()
 
     if key is None:
@@ -53,11 +44,16 @@ def get_settings(key: str = None) -> Any:
     return data.get(key)
 
 def update_settings(new_settings: Dict[str, Any]) -> None:
+    from CustomFlaskClass import app
+
     current_settings = _load_settings()
     updated = _deep_update(current_settings, new_settings)
+
     _save_settings(updated)
     _load_settings_cached.cache_clear()
     _load_settings.cache_clear()
+
+    app.update_config(updated.get("server_config"))
 
 def _deep_update(original: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, Any]:
     for key, value in new.items():

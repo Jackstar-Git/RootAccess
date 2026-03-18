@@ -1,4 +1,5 @@
-﻿import io
+﻿# ========== IMPORTS ==========
+import io
 import os
 import platform
 import shutil
@@ -8,21 +9,24 @@ import zipfile
 from typing import Tuple, Union
 
 from flask import Blueprint, jsonify, request, session, abort, send_file, Response, redirect, url_for, flash
-from utility.events import get_events, add_event, delete_event
-from utility.contact import add_contact, delete_contact, mark_contact_read # <-- Imported Contact logic
 import psutil
 
-from FlaskClass import app, csrf
+from CustomFlaskClass import app
 from utility.auth import login_required
-from utility.blogs import add_blog, delete_blog, update_blog
+from utility.blogs import add_blog, delete_blog, update_blog, load_blogs, get_item_by_id
+from utility.calendar import generate_calendar
+from utility.contact import add_contact, delete_contact, mark_contact_read
+from utility.events import get_events, add_event, delete_event
 from utility.logging_utility import logger
-from utility.path_files import MAX_FILE_SIZE, ROOT_DIR, is_safe_path, sanitize_filename
-from utility.settings import get_settings, update_settings
 from utility.others import convert_markdown_to_html
+from utility.path_files import MAX_FILE_SIZE, ROOT_DIR, is_safe_path, sanitize_filename
+from utility.projects import query_projects, search_projects, load_projects, get_project_by_id
+from utility.settings import get_settings, update_settings, _load_settings, _load_settings_cached
 
+# ========== BLUEPRINT INITIALIZATION ==========
 internal_blueprint = Blueprint("internal", __name__, template_folder="./templates")
 
-# ============== FILE SERVING ROUTES ==============
+# ========== FILE HANDLING ROUTES ==========
 @internal_blueprint.route("/uploads/<path:filename>", methods=["GET"])
 def uploads(filename: str) -> Response:
     logger.info(f"GET request received for serving file from uploads | Filename: {filename}")
@@ -86,9 +90,9 @@ def download(filepath: str) -> Response:
     logger.error(f"Invalid path provided | Path: {filepath}")
     abort(400, description="Invalid path provided.")
 
-# ============== PUBLIC CONTACT ENDPOINT ==============
+# ========== CONTACT ROUTES ==========
 @internal_blueprint.route("/api/contact", methods=["POST"])
-def api_contact_submit():
+def api_contact_submit() -> Response:
     name = request.form.get("name", "").strip()
     email = request.form.get("email", "").strip()
     topic = request.form.get("topic", "").strip()
@@ -104,10 +108,9 @@ def api_contact_submit():
         files = request.files.getlist("attachments")
         upload_dir = os.path.join(app.root_path, "uploads", "contacts")
         os.makedirs(upload_dir, exist_ok=True)
-        
+
         for file in files:
             if file and file.filename:
-                # Sanitize and timestamp to prevent collisions
                 filename = sanitize_filename(f"{int(time.time())}_{file.filename}")
                 file_path = os.path.join(upload_dir, filename)
                 file.save(file_path)
@@ -121,26 +124,25 @@ def api_contact_submit():
         "message": message,
         "attachments": attachments
     }
-    
+
     try:
         add_contact(contact_data)
         flash("Your message has been sent successfully!", "success")
     except Exception as e:
         logger.error(f"Failed to save contact request: {e}")
         flash("Failed to send message. Please try again later.", "error")
-        
+
     return redirect(request.referrer or "/")
 
-# ============== ADMIN CONTACTS API ==============
 @internal_blueprint.route("/api/admin/contacts/<action>", methods=["POST"])
 @login_required
-def api_admin_contacts(action):
+def api_admin_contacts(action: str) -> Response:
     data = request.get_json()
     contact_id = data.get("id")
-    
+
     if not contact_id:
         return jsonify({"error": "Missing contact ID"}), 400
-        
+
     try:
         if action == "delete":
             success = delete_contact(contact_id)
@@ -148,7 +150,7 @@ def api_admin_contacts(action):
             success = mark_contact_read(contact_id)
         else:
             return jsonify({"error": "Invalid action"}), 400
-            
+
         if success:
             return jsonify({"success": True})
         return jsonify({"error": "Action failed or item not found"}), 404
@@ -156,7 +158,7 @@ def api_admin_contacts(action):
         logger.error(f"Failed to process contact action ({action}): {e}")
         return jsonify({"error": "Internal server error"}), 500
 
-# ============== EVENT ENDPOINTS ==============
+# ========== EVENTS ROUTES ==========
 @internal_blueprint.route("/api/add-events/", methods=["POST"])
 @login_required
 def add_events() -> Union[Response, Tuple[Response, int]]:
@@ -212,15 +214,15 @@ def add_events() -> Union[Response, Tuple[Response, int]]:
 
 @internal_blueprint.route("/api/get-events/", methods=["GET"])
 @login_required
-def api_get_events():
+def api_get_events() -> Response:
     try:
         year = request.args.get("year", type=int)
         month = request.args.get("month", type=int)
         day = request.args.get("day", type=int)
-        
+
         all_events = get_events()
         filtered = [
-            e for e in all_events 
+            e for e in all_events
             if e.get("year") == year and e.get("month") == month and e.get("day") == day
         ]
         return jsonify(filtered)
@@ -230,38 +232,37 @@ def api_get_events():
 
 @internal_blueprint.route("/api/delete-event", methods=["GET"])
 @login_required
-def api_delete_event():
+def api_delete_event() -> Response:
     event_id = request.args.get("id")
     if event_id:
         try:
             delete_event(event_id)
         except Exception as e:
             logger.error(f"Failed to delete event: {e}")
-    
+
     return redirect(request.referrer or url_for("admin.dashboard"))
 
-# ============== NOTES ENDPOINTS ==============
+# ========== NOTES ROUTES ==========
 @internal_blueprint.route("/api/save-note", methods=["POST"])
 @login_required
 def api_save_note() -> Response:
     data = request.get_json()
     if not data or "note" not in data:
         return jsonify({"error": "No note content provided."}), 400
-    
+
     note_content = data["note"]
     try:
         os.makedirs("data", exist_ok=True)
         with open("data/notes.md", "w", encoding="utf-8") as f:
             f.write(note_content)
-            
+
         html_content = convert_markdown_to_html(note_content)
         return jsonify({"success": True, "html": html_content})
     except Exception as e:
         logger.error(f"Failed to save note: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
-
-# ============== API ENDPOINTS ==============
+# ========== SYSTEM ROUTES ==========
 @internal_blueprint.route("/api/get-system-info/", methods=["GET"])
 @login_required
 def get_system_info() -> Union[Response, Tuple[Response, int]]:
@@ -296,7 +297,7 @@ def get_system_info() -> Union[Response, Tuple[Response, int]]:
         logger.error(f"Failed to retrieve system information: {str(e)}", exc_info=True)
         return jsonify({"error": "Internal server error"}), 500
 
-# ============== FILE MANAGEMENT ENDPOINTS ==============
+# ========== FILE MANAGEMENT ROUTES ==========
 @internal_blueprint.route("/api/files/upload", methods=["POST"])
 @login_required
 def upload_file() -> Response:
@@ -481,7 +482,7 @@ def create_folder() -> Response:
         logger.error(f"Failed to create folder | Path: {full_path} | Error: {str(e)}")
         return jsonify({"error": "Failed to create folder"}), 500
 
-# ============== SYSTEM INFORMATION AND LOGGING ==============
+# ========== LOGS ROUTES ==========
 @internal_blueprint.route("/api/get-logs", methods=["POST"])
 @login_required
 def get_logs() -> Response:
@@ -536,6 +537,7 @@ def clear_logs() -> Response:
         logger.error(f"Failed to clear logs: {e}")
         return jsonify({"error": "Error occurred while clearing logs."}), 500
 
+# ========== COMMAND ROUTES ==========
 @internal_blueprint.route("/api/execute-command", methods=["POST"])
 @login_required
 def execute_command() -> Response:
@@ -596,7 +598,7 @@ def execute_command() -> Response:
     except Exception as e:
         return jsonify({"output": f"Execution Error: {str(e)}", "status": "error"}), 500
 
-# ============== BLOG MANAGEMENT ==============
+# ========== BLOGS ROUTES ==========
 @internal_blueprint.route("/api/add-blog", methods=["POST"])
 @login_required
 def api_add_blog() -> Response:
@@ -649,24 +651,41 @@ def api_delete_blog() -> Response:
         logger.error(f"Failed to delete blog {blog_id}: {e}")
         return jsonify({"error": "Error occurred while deleting blog."}), 500
 
+# ========== CACHE ROUTES ==========
 @internal_blueprint.route("/api/clear-cache", methods=["POST"])
 @login_required
-def api_clear_cache():
+def api_clear_cache() -> Response:
     try:
-        get_settings.cache_clear()
-        logger.info("Cache cleared by admin")
+        # Targeting specific lru_cache decorated functions
+        cacheable_functions = [
+            get_settings,
+            _load_settings,
+            _load_settings_cached,
+            load_blogs,
+            get_item_by_id,
+            query_projects,
+            search_projects,
+            load_projects,
+            get_project_by_id,
+            get_events,
+            generate_calendar
+        ]
+
+        cleared_count = 0
+        for func in cacheable_functions:
+            if hasattr(func, "cache_clear"):
+                func.cache_clear()
+                cleared_count += 1
+
         return jsonify({
             "success": True,
-            "message": "Cache cleared successfully"
+            "message": f"Global cache cleared successfully ({cleared_count} modules)."
         })
     except Exception as e:
         logger.error(f"Error clearing cache: {str(e)}")
-        return jsonify({
-            "success": False,
-            "message": str(e)
-        }), 500
+        return jsonify({"success": False, "message": str(e)}), 500
 
-# ============== FRONTEND PREVIEW HANDLER ==============
+# ========== MARKDOWN ROUTES ==========
 @internal_blueprint.route("/api/markdown-to-html/", methods=["POST"])
 @login_required
 def api_markdown_to_html() -> Response:
@@ -680,51 +699,48 @@ def api_markdown_to_html() -> Response:
     except Exception as e:
         logger.error(f"Failed to convert markdown to HTML: {e}")
         return Response("<p><em>Error rendering preview</em></p>", status=500, mimetype="text/html")
-    
+
+# ========== BLOG SETTINGS ROUTES ==========
 @internal_blueprint.route("/api/settings/topics/add", methods=["POST"])
 @login_required
-def add_topic():
+def add_topic() -> Response:
     new_topic = request.form.get("new_topic", "").strip()
-    
+
     try:
         current_config = get_settings("blog_config") or {"topics": [], "types": []}
         topics = current_config.get("topics", [])
-        
+
         if new_topic and new_topic not in topics:
             topics.append(new_topic)
             update_settings({"blog_config": {"topics": topics}})
-            
+
     except Exception as e:
         logger.error(f"Failed to add new blog topic: {e}")
-        
+
     return redirect(request.referrer or "/")
 
 @internal_blueprint.route("/api/settings/types/add", methods=["POST"])
 @login_required
-def add_type():
+def add_type() -> Response:
     type_name = request.form.get("type_name", "").strip()
     type_icon = request.form.get("type_icon", "").strip()
-    
+
     try:
         current_config = get_settings("blog_config") or {"topics": [], "types": []}
         types = current_config.get("types", [])
-        
-        # Prevent duplicate type names
+
         if type_name and not any(t.get("name") == type_name for t in types):
             types.append({"name": type_name, "icon": type_icon})
             update_settings({"blog_config": {"types": types}})
-            
+
     except Exception as e:
         logger.error(f"Failed to add new blog type: {e}")
-        
+
     return redirect(request.referrer or "/")
-
-
-# ============== BLOG CONFIG: JS API HANDLERS (EDIT/DELETE) ==============
 
 @internal_blueprint.route("/api/settings/topics", methods=["PUT", "DELETE"])
 @login_required
-def api_manage_topics():
+def api_manage_topics() -> Response:
     data = request.get_json()
     if not data:
         return jsonify({"error": "No data provided."}), 400
@@ -741,11 +757,10 @@ def api_manage_topics():
                 return jsonify({"error": "Missing parameters."}), 400
 
             if old_name in topics:
-                # Update in place to maintain list order
                 topics = [new_name if t == old_name else t for t in topics]
                 update_settings({"blog_config": {"topics": topics}})
                 return jsonify({"success": True})
-            
+
             return jsonify({"error": "Topic not found."}), 404
 
         elif request.method == "DELETE":
@@ -755,17 +770,16 @@ def api_manage_topics():
                 topics.remove(topic_name)
                 update_settings({"blog_config": {"topics": topics}})
                 return jsonify({"success": True})
-            
+
             return jsonify({"error": "Topic not found."}), 404
 
     except Exception as e:
         logger.error(f"API Error managing topics: {e}")
         return jsonify({"error": "Internal server error."}), 500
 
-
 @internal_blueprint.route("/api/settings/types", methods=["PUT", "DELETE"])
 @login_required
-def api_manage_types():
+def api_manage_types() -> Response:
     data = request.get_json()
     if not data:
         return jsonify({"error": "No data provided."}), 400
@@ -788,20 +802,19 @@ def api_manage_types():
                     t["icon"] = new_icon
                     update_settings({"blog_config": {"types": types}})
                     return jsonify({"success": True})
-                    
+
             return jsonify({"error": "Type not found."}), 404
 
         elif request.method == "DELETE":
             type_name = data.get("type_name")
 
-            # Filter out the deleted type
             initial_length = len(types)
             types = [t for t in types if t.get("name") != type_name]
-            
+
             if len(types) < initial_length:
                 update_settings({"blog_config": {"types": types}})
                 return jsonify({"success": True})
-                
+
             return jsonify({"error": "Type not found."}), 404
 
     except Exception as e:

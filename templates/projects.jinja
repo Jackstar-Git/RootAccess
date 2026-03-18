@@ -3,96 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects – Jackstar’s Portfolio</title>
-    <meta name="description" content="A curated showcase of projects by Jackstar covering fintech, AI/ML, and creative work.">
+
+    <title>Projects // RootAccess</title>
+    <meta name="description" content="Jackstar's digital attic. A collection of my projects and work and various things that actually run sometimes.">
     <meta name="author" content="Jackstar">
+    <meta name="keywords" content="code, mistakes, things that work, rootaccess, jackstar">
+    <meta name="robots" content="index, follow">
+    <meta name="copyright" content="© 2026 RootAccess. All rights and wrongs reserved.">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
 
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin> 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/projects.css') }}">
+
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
     {% include "snippets/navbar.jinja" %}
 
-    <main class="project-page-wrapper container">
+    <main class="project-page-wrapper container" role="main">
         <header class="project-header">
-            <div class="project-label">Portfolio</div>
+            <div class="project-label" aria-hidden="true">Portfolio</div>
             <h1>Selected Projects</h1>
         </header>
 
-        <section class="project-toolbar">
+        <section class="project-toolbar" aria-label="Project filtering and search">
             <div class="search-wrapper">
-                <input type="text" placeholder="Search articles..." id="search-input">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" 
+                       placeholder="Search articles..." 
+                       id="search-input" 
+                       aria-label="Search through projects" 
+                       role="searchbox">
+                <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
             </div>
-            
-            <button class="filter-toggle-btn" id="filter-btn">
-                <i class="fa-solid fa-sliders"></i>
+
+            <button class="filter-toggle-btn" 
+                    id="filter-btn" 
+                    aria-expanded="false" 
+                    aria-controls="filter-drawer" 
+                    aria-label="Toggle project filters">
+                <i class="fa-solid fa-sliders" aria-hidden="true"></i>
                 <span>Filters</span>
             </button>
         </section>
 
-        <section class="filter-drawer" id="filter-drawer">
+        <section class="filter-drawer" id="filter-drawer" aria-label="Filter options" hidden>
             <div class="drawer-inner">
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-sort"></i> Sort</label>
+                    <label for="sort-select"><i class="fa-solid fa-sort" aria-hidden="true"></i> Sort</label>
                     <div class="filter-select-wrapper">
-                        <select id="sort-select">
+                        <select id="sort-select" aria-label="Sort projects by date">
                             <option value="newest">🔽 Newest</option>
                             <option value="oldest">🔼 Oldest</option>
                         </select>
-                        <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+                        <i class="fa-solid fa-chevron-down dropdown-icon" aria-hidden="true"></i>
                     </div>
                 </div>
+
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-folder-open"></i> Topics</label>
+                    <label for="category-select"><i class="fa-solid fa-folder-open" aria-hidden="true"></i> Topics</label>
                     <div class="filter-select-wrapper">
-                        <select id="category-select">
+                        <select id="category-select" aria-label="Filter by project category">
                             <option value="">All</option>
                             {% for topic in settings.topics %}
                                 <option>{{ topic }}</option>
                             {% endfor %}
                         </select>
-                        <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+                        <i class="fa-solid fa-chevron-down dropdown-icon" aria-hidden="true"></i>
                     </div>
                 </div>
+
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-tags"></i> Tech Stack</label>
+                    <label for="tags-input"><i class="fa-solid fa-tags" aria-hidden="true"></i> Tech Stack</label>
                     <div class="tag-input">
-                        <input type="text" placeholder="e.g. Python, JavaScript, HTML" id="tags-input">
-                        <div class="tag-suggestions">
+                        <input type="text" 
+                               placeholder="e.g. Python, JavaScript, HTML" 
+                               id="tags-input" 
+                               aria-label="Filter by technologies">
+                        <div class="tag-suggestions" aria-label="Suggested technologies">
                             <span>#Python</span>
                             <span>#JavaScript</span>
                             <span>#HTML</span>
                         </div>
                     </div>
                 </div>
+
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-calendar-days"></i> Date</label>
+                    <label><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Date</label>
                     <div class="filter-date-range">
-                        <input type="date" id="start-date"><span>to</span><input type="date" id="end-date">
+                        <input type="date" id="start-date" aria-label="Start date">
+                        <span aria-hidden="true">to</span>
+                        <input type="date" id="end-date" aria-label="End date">
                     </div>
                 </div>
-                
+
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-clock"></i> Activity</label>
-                    
-                    <select name="reading_time" class="native-multiselect" multiple>
+                    <label><i class="fa-solid fa-clock" aria-hidden="true"></i> Activity</label>
+                    <select name="reading_time" class="native-multiselect" multiple aria-label="Filter by activity status">
                         {% for activity in settings.activity_statuses %}
                             <option value="{{ activity }}">{{ activity }}</option>
                         {% endfor %}
                     </select>
 
-                    <div class="custom-multiselect" id="reading-time-multiselect" style="display: none;">
+                    <div class="custom-multiselect" id="reading-time-multiselect" style="display: none;" aria-hidden="true">
                         <div class="multiselect-header">
                             <div class="multiselect-pills"></div>
                             <input type="text" class="multiselect-search" placeholder="Search...">
@@ -104,7 +123,10 @@
                             </div>
                             <div class="multiselect-options">
                                 {% for activity in settings.activity_statuses %}
-                                    <label class="filter-list-item"><input type="checkbox" value="{{ activity }}"> <span>{{ activity }}</span></label>
+                                    <label class="filter-list-item">
+                                        <input type="checkbox" value="{{ activity }}"> 
+                                        <span>{{ activity }}</span>
+                                    </label>
                                 {% endfor %}
                             </div>
                         </div>
@@ -112,15 +134,14 @@
                 </div>
 
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-bars-progress"></i> Maturity</label>
-                    
-                    <select name="maturity" class="native-multiselect" multiple>
+                    <label><i class="fa-solid fa-bars-progress" aria-hidden="true"></i> Maturity</label>
+                    <select name="maturity" class="native-multiselect" multiple aria-label="Filter by project maturity">
                         {% for maturity in settings.maturity_levels %}
                             <option value="{{ maturity }}">{{ maturity }}</option>
                         {% endfor %}
                     </select>
 
-                    <div class="custom-multiselect" id="type-multiselect" style="display: none;">
+                    <div class="custom-multiselect" id="type-multiselect" style="display: none;" aria-hidden="true">
                         <div class="multiselect-header">
                             <div class="multiselect-pills"></div>
                             <input type="text" class="multiselect-search" placeholder="Search...">
@@ -141,21 +162,25 @@
                         </div>
                     </div>
                 </div>
-
             </div>
+
             <div class="filter-actions">
-                <button class="clear-filters-btn"><i class="fa-solid fa-rotate-left"></i> Clear All</button>
-                <button class="apply-filters-btn"><i class="fa-solid fa-check"></i> Apply Filters</button>
+                <button class="clear-filters-btn" aria-label="Reset all filters">
+                    <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Clear All
+                </button>
+                <button class="apply-filters-btn" aria-label="Apply selected filters">
+                    <i class="fa-solid fa-check" aria-hidden="true"></i> Apply Filters
+                </button>
             </div>
         </section>
 
-        <section class="project-main-grid">
-           {% if projects %}
+        <section class="project-main-grid" aria-live="polite">
+            {% if projects %}
                 {% for project in projects %}
                     {% include "snippets/project_card.jinja" %}
                 {% endfor %}
             {% else %}
-                <p class="no-results">
+                <p class="no-results" role="alert">
                     {% if search_query %}
                         No projects found matching "{{ search_query }}". Try different keywords.
                     {% else %}
@@ -165,9 +190,10 @@
             {% endif %}
         </section>
     </main>
+
     {% include "snippets/footer.jinja" %}
+
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
     <script src="{{ url_for('static', filename='js/projects.js') }}"></script>
-
 </body>
 </html>

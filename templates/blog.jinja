@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ blog.title }} // RootAccess</title>
+    <meta name="description" content="{{ blog.description if blog.description else 'Another deep dive into the digital abyss by Jackstar.' }}">
+    <meta name="author" content="{{ blog.author | join(', ') if blog.author else 'Jackstar' }}">
+    <meta name="keywords" content="{% for cat in blog.categories %}{{ cat }}{{ ', ' if not loop.last }}{% endfor %}, blog, RootAccess, tech, dev">
+    <meta name="robots" content="index, follow">
+    <meta name="copyright" content="© 2026 RootAccess. Read at your own risk.">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
-
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin> 
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/blog.css') }}">
-    <title>{{ blog.title }}</title>
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
@@ -23,65 +28,72 @@
     {% include "snippets/navbar.jinja" %}
 
     <div class="article-wrapper">
-        <div class="progress-indicator" id="progressBar"></div>
+        <div class="progress-indicator" id="progressBar" role="progressbar" aria-label="Reading progress" aria-valuemin="0" aria-valuemax="100"></div>
 
-        <article class="article-container">
+        <article class="article-container" role="article" aria-labelledby="article-title">
             <header class="article-header-minimal">
                 <div class="header-top-row">
-                    <span class="article-type-badge"><a href="/blog?type={{ blog.type | lower if blog.type else 'article' }}">{{ blog.type if blog.type else "Article" }}</a></span>
-                    <div class="category-list">
+                    <span class="article-type-badge">
+                        <a href="/blog?type={{ blog.type | lower if blog.type else 'article' }}" aria-label="Filter by type: {{ blog.type if blog.type else 'Article' }}">
+                            {{ blog.type if blog.type else "Article" }}
+                        </a>
+                    </span>
+                    <nav class="category-list" aria-label="Article categories">
                         {% for cat in blog.categories %}
                             <span class="category-tag">{{ cat }}</span>
                         {% endfor %}
-                    </div>
+                    </nav>
                 </div>
 
-                <h1 class="article-display-title">{{ blog.title }}</h1>
+                <h1 class="article-display-title" id="article-title">{{ blog.title }}</h1>
 
                 <div class="article-author-bar">
                     <div class="author-group">
-                        <div class="avatar-ring">
+                        <div class="avatar-ring" aria-hidden="true">
                             {% for name in blog.author %}
                                 <img src="https://ui-avatars.com/api/?name={{ name }}&background=25a1a7&color=fff"
-                                    alt="{{ name }}" class="avatar-img">
+                                     alt="{{ name }}" class="avatar-img">
                             {% endfor %}
                         </div>
                         <div class="author-meta">
-                            <span class="names">{{ blog.author | join(', ') }}</span>
-                            <span class="timestamp">{{ blog.time_created | datetimeformat }} • {{blog.calc_read_time|default("5")}} min read</span>
+                            <span class="names" aria-label="Authors">{{ blog.author | join(', ') }}</span>
+                            <span class="timestamp">
+                                <time datetime="{{ blog.time_created }}">{{ blog.time_created | datetimeformat }}</time>
+                                • {{blog.calc_read_time|default("5")}} min read
+                            </span>
                         </div>
                     </div>
                     <div class="action-icons">
-                        <i class="fa-regular fa-bookmark"></i>
-                        <i class="fa-regular fa-share-from-square"></i>
+                        <button type="button" aria-label="Bookmark this article" class="icon-btn"><i class="fa-regular fa-bookmark" aria-hidden="true"></i></button>
+                        <button type="button" aria-label="Share this article" class="icon-btn"><i class="fa-regular fa-share-from-square" aria-hidden="true"></i></button>
                     </div>
                 </div>
             </header>
 
             <div class="glass-article-body">
                 <figure class="featured-figure">
-                    <img src="{{ blog.image_url }}" alt="{{ blog.title }}" class="featured-image" fetchpriority="high">
+                    <img src="{{ blog.image_url }}" alt="Featured image for {{ blog.title }}" class="featured-image" fetchpriority="high">
                 </figure>
 
-                <main class="main-text-flow">
+                <main class="main-text-flow" role="presentation">
                     {{ blog.content_html | safe }}
                 </main>
 
                 <footer class="article-end">
                     <h4 class="footer-label">Related Tags</h4>
-                    <div class="tag-row-modern">
+                    <nav class="tag-row-modern" aria-label="Article tags">
                         {% for tag in blog.tags %}
                             <a href="/blog?tags={{ tag }}" class="modern-tag">
-                                <span class="tag-hash">#</span>{{ tag }}
+                                <span class="tag-hash" aria-hidden="true">#</span>{{ tag }}
                             </a>
                         {% endfor %}
-                    </div>
+                    </nav>
                 </footer>
             </div>
 
-            <section class="see-also-section">
-                <h3 class="section-heading">See also</h3>
-                <div class="related-grid">
+            <section class="see-also-section" aria-labelledby="suggestions-heading">
+                <h3 class="section-heading" id="suggestions-heading">See also</h3>
+                <div class="related-grid" aria-live="polite">
                     {% if suggestions %}
                         {% for suggestion in suggestions %}
                             {% with blog=suggestion %}
@@ -91,12 +103,13 @@
                     {% else %}
                         <p>No related blogs found.</p>
                     {% endif %}
-
                 </div>
             </section>
         </article>
     </div>
+
     {% include "snippets/footer.jinja" %}
+
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
     <script src="{{ url_for('static', filename='js/blog.js') }}"></script>
 </body>

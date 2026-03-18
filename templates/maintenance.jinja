@@ -1,8 +1,61 @@
-{% extends "base.jinja" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block title %}Maintenance – Portfolio{% endblock %}
+    <title>Under the Hood // RootAccess — Temporary technical hiatus</title>
+    <meta name="description" content="RootAccess is currently undergoing a bit of a digital facelift. We're chasing bugs and polishing pixels. Be back before the coffee runs out.">
+    <meta name="author" content="Jackstar">
+    <meta name="keywords" content="RootAccess, maintenance, portfolio update, Jackstar, technical difficulties">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="copyright" content="© 2026 RootAccess. Still here, just hiding.">
 
-{% block content %}
-<h1>Site Under Maintenance</h1>
-<p>Sorry for the inconvenience. We're performing some updates and will be back shortly.</p>
-{% endblock %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+</head>
+<body>
+    {% include "snippets/navbar.jinja" %}
+    
+    <main role="main">
+        <section class="hero-section" aria-labelledby="maintenance-heading">
+            <div class="container hero-container">
+                <div class="hero-text">
+                    <span class="badge" role="status">Maintenance Mode</span>
+                    <h1 id="maintenance-heading">
+                        Site Under Maintenance
+                    </h1>
+                    <p>Sorry for the inconvenience. We're performing some updates and will be back shortly.</p>
+                    <div class="hero-actions">
+                        <a href="/admin/login" class="btn-primary" aria-label="Log in to the administrative panel">Admin Login</a>
+                    </div>
+                </div>
+                <div class="hero-3d-wrapper" aria-hidden="true">
+                    <div class="hero-3d-card" id="tilt-card">
+                        <div class="card-content">
+                            <i class="fa-solid fa-terminal"></i>
+                            <div class="line"></div>
+                            <div class="line short"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    {% include "snippets/footer.jinja" %}
+
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>

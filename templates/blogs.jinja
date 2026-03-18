@@ -3,58 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog – Root.Access</title>
-    <meta name="description" content="Read articles, guides, and opinions from Jackstar on web development, design, and technology.">
+
+    <title>Blogs // RootAccess</title>
+    <meta name="description" content="Browse through a catalog of articles, guides, and opinions from mostly me. Mostly tech and topics I want to rant about">
     <meta name="author" content="Jackstar">
+    <meta name="keywords" content="{% for topic in settings.topics %}{{ topic }}{{ ', ' if not loop.last }}{% endfor %}, tech blog, programming, development archive">
+    <meta name="robots" content="index, follow">
+    <meta name="copyright" content="© 2026 RootAccess. Thoughts are free;">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
-
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin> 
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/blogs.css') }}">
+
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
     {% include "snippets/navbar.jinja" %}
 
-    <main class="blog-container container">
+    <main class="blog-container container" role="main">
         <header class="blog-minimal-header">
-            <div class="section-label">Journal</div>
+            <div class="section-label" aria-hidden="true">Journal</div>
             <h1>Articles & Perspectives</h1>
         </header>
 
-        <section class="blog-toolbar">
+        <section class="blog-toolbar" aria-label="Search and filter tools">
             <div class="search-wrapper">
-                <input type="text" placeholder="Search articles..." id="search-input">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <label for="search-input" class="sr-only">Search articles</label>
+                <input type="text" placeholder="Search articles..." id="search-input" aria-controls="blog-list-results">
+                <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
             </div>
             
-            <button class="filter-toggle-btn" id="filter-btn">
-                <i class="fa-solid fa-sliders"></i>
+            <button class="filter-toggle-btn" id="filter-btn" aria-expanded="false" aria-controls="filter-drawer">
+                <i class="fa-solid fa-sliders" aria-hidden="true"></i>
                 <span>Filters</span>
             </button>
         </section>
 
-        <section class="filter-drawer" id="filter-drawer">
+        <section class="filter-drawer" id="filter-drawer" aria-label="Filter articles" hidden>
             <div class="drawer-inner">
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-sort"></i> Sort</label>
+                    <label for="sort-select"><i class="fa-solid fa-sort" aria-hidden="true"></i> Sort</label>
                     <div class="filter-select-wrapper">
                         <select id="sort-select">
                             <option value="newest">🔽 Newest</option>
                             <option value="oldest">🔼 Oldest</option>
                         </select>
-                        <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+                        <i class="fa-solid fa-chevron-down dropdown-icon" aria-hidden="true"></i>
                     </div>
                 </div>
+
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-folder-open"></i> Topics</label>
+                    <label for="category-select"><i class="fa-solid fa-folder-open" aria-hidden="true"></i> Topics</label>
                     <div class="filter-select-wrapper">
                         <select id="category-select">
                             <option value="">All</option>
@@ -62,37 +68,40 @@
                                 <option>{{ topic }}</option>
                             {% endfor %}
                         </select>
-                        <i class="fa-solid fa-chevron-down dropdown-icon"></i>
+                        <i class="fa-solid fa-chevron-down dropdown-icon" aria-hidden="true"></i>
                     </div>
                 </div>
+
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-tags"></i> Tags</label>
+                    <label for="tags-input"><i class="fa-solid fa-tags" aria-hidden="true"></i> Tags</label>
                     <div class="tag-input">
                         <input type="text" placeholder="e.g. Python, UI Design" id="tags-input">
-                        <div class="tag-suggestions">
-                            <span>#Python</span>
-                            <span>#AI</span>
-                            <span>#UI-Design</span>
+                        <div class="tag-suggestions" role="list" aria-label="Suggested tags">
+                            <span role="listitem">#Python</span>
+                            <span role="listitem">#AI</span>
+                            <span role="listitem">#UI-Design</span>
                         </div>
                     </div>
                 </div>
+
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-calendar-days"></i> Date</label>
+                    <label><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Date Range</label>
                     <div class="filter-date-range">
-                        <input type="date" id="start-date"><span>to</span><input type="date" id="end-date">
+                        <input type="date" id="start-date" aria-label="Start date">
+                        <span>to</span>
+                        <input type="date" id="end-date" aria-label="End date">
                     </div>
                 </div>
                 
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-clock"></i> Reading Time</label>
-                    
-                    <select name="reading_time" class="native-multiselect" multiple>
+                    <label><i class="fa-solid fa-clock" aria-hidden="true"></i> Reading Time</label>
+                    <select name="reading_time" class="native-multiselect" multiple aria-label="Select reading times">
                         <option value="short">Short (&lt;5 min)</option>
                         <option value="medium">Medium (5‑10 min)</option>
                         <option value="deep">Deep Dive (&gt;10 min)</option>
                     </select>
 
-                    <div class="custom-multiselect" id="reading-time-multiselect" style="display: none;">
+                    <div class="custom-multiselect" id="reading-time-multiselect" style="display: none;" aria-hidden="true">
                         <div class="multiselect-header">
                             <div class="multiselect-pills"></div>
                             <input type="text" class="multiselect-search" placeholder="Search...">
@@ -112,15 +121,14 @@
                 </div>
 
                 <div class="filter-col filter-group">
-                    <label><i class="fa-solid fa-list"></i> Type</label>
-                    
-                    <select name="type" class="native-multiselect" multiple>
+                    <label><i class="fa-solid fa-list" aria-hidden="true"></i> Content Type</label>
+                    <select name="type" class="native-multiselect" multiple aria-label="Select content types">
                         {% for type in settings.types %}
                             <option value="{{ type.name }}">{{ type.name }}</option>
                         {% endfor %}
                     </select>
 
-                    <div class="custom-multiselect" id="type-multiselect" style="display: none;">
+                    <div class="custom-multiselect" id="type-multiselect" style="display: none;" aria-hidden="true">
                         <div class="multiselect-header">
                             <div class="multiselect-pills"></div>
                             <input type="text" class="multiselect-search" placeholder="Search...">
@@ -142,21 +150,21 @@
                         </div>
                     </div>
                 </div>
-
             </div>
+
             <div class="filter-actions">
-                <button class="clear-filters-btn"><i class="fa-solid fa-rotate-left"></i> Clear All</button>
-                <button class="apply-filters-btn"><i class="fa-solid fa-check"></i> Apply Filters</button>
+                <button class="clear-filters-btn" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Clear All</button>
+                <button class="apply-filters-btn" type="button"><i class="fa-solid fa-check" aria-hidden="true"></i> Apply Filters</button>
             </div>
         </section>
 
-        <section class="blog-list">
+        <section class="blog-list" id="blog-list-results" aria-live="polite">
             {% if blogs %}
                 {% for blog in blogs %}
                     {% include "snippets/blog_card.jinja" %}
                 {% endfor %}
             {% else %}
-                <p class="no-results">
+                <p class="no-results" role="alert">
                     {% if search_query %}
                         No articles found matching "{{ search_query }}". Try different keywords.
                     {% else %}
@@ -167,40 +175,39 @@
         </section>
 
         {% if total_pages and total_pages > 1 %}
-        {% if base_query_string %}
-            {% set qprefix = '?' + base_query_string + '&' %}
-        {% else %}
-            {% set qprefix = '?' %}
-        {% endif %}
-        <div class="blog-pagination">
-            <nav class="pagination">
-                <a class="page-arrow" href="{{ qprefix + 'page=' + (page-1)|string }}" {% if page <= 1 %}aria-disabled="true"{% endif %}>&laquo;</a>
+            {% if base_query_string %}
+                {% set qprefix = '?' + base_query_string + '&' %}
+            {% else %}
+                {% set qprefix = '?' %}
+            {% endif %}
+            <div class="blog-pagination">
+                <nav class="pagination" aria-label="Page navigation">
+                    <a class="page-arrow" href="{{ qprefix + 'page=' + (page-1)|string }}" {% if page <= 1 %}aria-disabled="true" tabindex="-1"{% endif %} aria-label="Previous Page">&laquo;</a>
 
-                <a class="page-link" href="{{ qprefix + 'page=1' }}">1</a>
+                    <a class="page-link {% if page == 1 %}current{% endif %}" href="{{ qprefix + 'page=1' }}" {% if page == 1 %}aria-current="page"{% endif %}>1</a>
 
-                {% if page > 3 %}
-                    <span class="ellipsis">…</span>
-                {% endif %}
-
-                {% if page != 1 and page != total_pages %}
-                    <span class="page-link current">{{ page }}</span>
-                {% endif %}
-
-                {% if page < total_pages - 2 %}
-                    <span class="ellipsis">…</span>
-                {% endif %}
-
-                {% if total_pages > 1 %}
-                    {% if total_pages != 1 %}
-                        <a class="page-link" href="{{ qprefix + 'page=' + total_pages|string }}">{{ total_pages }}</a>
+                    {% if page > 3 %}
+                        <span class="ellipsis" aria-hidden="true">…</span>
                     {% endif %}
-                {% endif %}
 
-                <a class="page-arrow" href="{{ qprefix + 'page=' + (page+1)|string }}" {% if page >= total_pages %}aria-disabled="true"{% endif %}>&raquo;</a>
-            </nav>
-        </div>
+                    {% if page != 1 and page != total_pages %}
+                        <a class="page-link current" href="{{ qprefix + 'page=' + page|string }}" aria-current="page">{{ page }}</a>
+                    {% endif %}
+
+                    {% if page < total_pages - 2 %}
+                        <span class="ellipsis" aria-hidden="true">…</span>
+                    {% endif %}
+
+                    {% if total_pages > 1 %}
+                        <a class="page-link {% if page == total_pages %}current{% endif %}" href="{{ qprefix + 'page=' + total_pages|string }}" {% if page == total_pages %}aria-current="page"{% endif %}>{{ total_pages }}</a>
+                    {% endif %}
+
+                    <a class="page-arrow" href="{{ qprefix + 'page=' + (page+1)|string }}" {% if page >= total_pages %}aria-disabled="true" tabindex="-1"{% endif %} aria-label="Next Page">&raquo;</a>
+                </nav>
+            </div>
         {% endif %}
     </main>
+
     {% include "snippets/footer.jinja" %}
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
     <script src="{{ url_for('static', filename='js/blogs.js') }}"></script>

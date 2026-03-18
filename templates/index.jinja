@@ -3,42 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Root.Access — Portfolio & Blog</title>
-    <meta name="description" content="Root.Access - Portfolio and Blog  of Jackstar, a full-stack developer building modern web experiences.">
+
+    <title>RootAccess // Digital Playground — Serious Code, Less serious person</title>
+    <meta name="description" content="The official portfolio and blog of Jackstar (me). Mostly Python, some accidental front-end, and a whole lot of projects that (mostly) work.">
     <meta name="author" content="Jackstar">
-    <!-- global core styles -->
+    <meta name="keywords" content="Jackstar, RootAccess, Full-stack Developer, Python Backend, Portfolio, Austrian Tech Blog">
+    <meta name="robots" content="index, follow">
+    <meta name="copyright" content="© 2026 RootAccess. Developed with equal parts logic and luck.">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com"> 
-
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin> 
-        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">    
-
     <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
     {% include "snippets/navbar.jinja" %}
-    <main>
-        <section class="hero-section">
+
+    <main role="main">
+        <section class="hero-section" aria-labelledby="hero-heading">
             <div class="container hero-container">
                 <div class="hero-text">
-                    <span class="badge">404: Bugs not found.</span>
-                    <h1>
+                    <span class="badge" role="status">404: Bugs not found.</span>
+                    <h1 id="hero-heading">
                         Serious About <span class="text-gradient">Code</span> 
                         <br>
                         Less About <span class="text-gradient">Me</span>  
                     </h1>
                     <p>I’m a Python developer with a strong focus on back-end, but I also have a side interest in front-end development. While HTML, CSS, and JS weren't exactly part of my original plan, I've picked them up along the way - and surprisingly, they tend to (mostly) work when I need them to.</p>
                     <div class="hero-actions">
-                        <a href="/projects" class="btn-primary">Explore Projects</a>
-                        <a href="/contact" class="btn-outline">Say Hello</a>
+                        <a href="/projects" class="btn-primary" aria-label="Explore my coding projects">Explore Projects</a>
+                        <a href="/contact" class="btn-outline" aria-label="Send me a message">Say Hello</a>
                     </div>
                 </div>
-                <div class="hero-3d-wrapper">
+                <div class="hero-3d-wrapper" aria-hidden="true">
                     <div class="hero-3d-card" id="tilt-card">
                         <div class="card-content">
                             <i class="fa-solid fa-terminal"></i>
@@ -50,12 +55,12 @@
             </div>
         </section>
 
-        <section class="about-section">
+        <section class="about-section" aria-labelledby="identity-heading">
             <div class="container">
-                <div class="section-label">01. Identity</div>
+                <div class="section-label" aria-hidden="true">01. Identity</div>
                 <div class="about-grid">
                     <div class="about-info">
-                        <h2>
+                        <h2 id="identity-heading">
                             Hey, I'm Jackstar 
                             <br>
                             Austrian by birth, coder by choice
@@ -63,9 +68,9 @@
                         <p>
                             I'm based in Austria, where I spend my time building things - some of which actually work. In my free time, I enjoy diving into personal projects, experimenting with new ideas, and exploring the more creative side of tech. Whether it's coding just for the fun of it or working on professional projects
                         </p>
-                        <a href="/about" class="text-link">Learn more about my me →</a>
+                        <a href="/about" class="text-link">Learn more about me →</a>
                     </div>
-                    <div class="about-stats">
+                    <div class="about-stats" aria-label="Quick statistics">
                         <div class="stat-box">
                             <span class="number">15+</span>
                             <span class="label">Projects</span>
@@ -79,16 +84,16 @@
             </div>
         </section>
 
-        <section class="projects-preview">
+        <section class="projects-preview" aria-labelledby="portfolio-heading">
             <div class="container">
                 <div class="section-header">
                     <div>
-                        <div class="section-label">02. Portfolio</div>
-                        <h2>My Latest Projects & Selected Work</h2>
+                        <div class="section-label" aria-hidden="true">02. Portfolio</div>
+                        <h2 id="portfolio-heading">My Latest Projects & Selected Work</h2>
                     </div>
                     <a href="/projects" class="btn-secondary">View Gallery</a>
                 </div>
-                <div class="project-grid">
+                <div class="project-grid" aria-live="polite">
                     {% if preview_projects %}
                         {% for project in preview_projects %}
                             {% include "snippets/project_card.jinja" %}
@@ -100,14 +105,14 @@
             </div>
         </section>
 
-        <section class="blog-preview">
+        <section class="blog-preview" aria-labelledby="blog-heading">
             <div class="container">
-                <div class="section-label">03. Insights</div>
+                <div class="section-label" aria-hidden="true">03. Insights</div>
                 <div class="section-header">
-                    <h2>Latest from the Blog</h2>
+                    <h2 id="blog-heading">Latest from the Blog</h2>
                     <a href="/blog" class="btn-secondary">Browse all articles</a>
                 </div>
-                <div class="blog-list">
+                <div class="blog-list" aria-live="polite">
                     {% if preview_blogs %}
                         {% for blog in preview_blogs %}
                             {% include "snippets/blog_card.jinja" %}
@@ -119,7 +124,9 @@
             </div>
         </section>
     </main>
+
     {% include "snippets/footer.jinja" %}
+
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
     <script src="{{ url_for('static', filename='js/index.js') }}"></script>
 </body>

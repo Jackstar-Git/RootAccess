@@ -3,53 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact // RootAccess — Send a packet my way</title>
+    <meta name="description" content="Reach out to Jackstar at RootAccess. Whether it's a bug report, a collaboration idea, or just a digital hello, the form is right here.">
+    <meta name="author" content="Jackstar">
+    <meta name="keywords" content="contact Jackstar, RootAccess contact, freelance developer Austria, hire python developer, feedback">
+    <meta name="robots" content="index, follow">
+    <meta name="copyright" content="© 2026 RootAccess. Expect a reply once the code compiles.">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
-
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin> 
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
 
-    <title>Contact - RootAccess</title>
-    
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
     {% include "snippets/navbar.jinja" %}
 
-    <main>
-        <section class="contact-section">
+    <main role="main">
+        <section class="contact-section" aria-labelledby="contact-heading">
             <div class="container">
                 <div class="contact-wrapper">
                     
                     <div class="contact-info">
-                        <h2 class="section-title">Let’s Connect</h2>
+                        <h2 class="section-title" id="contact-heading">Let’s Connect</h2>
                         <p>Have a specific inquiry or just want to say hi? Fill out the form and I'll get back to you as soon as possible.</p>
                         
-                        <ul class="contact-details">
-                            <li><a href="mailto:jackstarhimself@gmail.com"><i class="fas fa-envelope"></i> jackstarhimself@gmail.com</a></li>
-                            <li><i class="fas fa-location-dot"></i> Austria</li>
+                        <ul class="contact-details" aria-label="Contact Information">
+                            <li>
+                                <a href="mailto:jackstarhimself@gmail.com" aria-label="Email Jackstar at jackstarhimself@gmail.com">
+                                    <i class="fas fa-envelope" aria-hidden="true"></i> jackstarhimself@gmail.com
+                                </a>
+                            </li>
+                            <li>
+                                <i class="fas fa-location-dot" aria-hidden="true"></i> 
+                                <span aria-label="Location">Austria</span>
+                            </li>
                         </ul>
                     </div>
 
                     <div class="contact-form-card">
-                        <form action="/api/contact" method="POST" enctype="multipart/form-data">
+                        <form action="/api/contact" method="POST" enctype="multipart/form-data" aria-describedby="contact-heading">
                             <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
                             
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label for="name">Full Name</label>
-                                    <input type="text" id="name" name="name" placeholder="John Doe" required>
+                                    <input type="text" id="name" name="name" placeholder="John Doe" autocomplete="name" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email Address</label>
-                                    <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                                    <input type="email" id="email" name="email" placeholder="john@example.com" autocomplete="email" required>
                                 </div>
                             </div>
 
@@ -77,18 +88,18 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Attachments (Optional)</label>
+                                <label id="attachments-label">Attachments (Optional)</label>
                                 <div class="file-upload-wrapper">
-                                    <input type="file" id="attachments" name="attachments" multiple>
+                                    <input type="file" id="attachments" name="attachments" multiple aria-labelledby="attachments-label">
                                     <label for="attachments" class="file-label">
-                                        <i class="fas fa-paperclip"></i> 
-                                        <span>Choose files...</span>
+                                        <i class="fas fa-paperclip" aria-hidden="true"></i> 
+                                        <span id="file-status" aria-live="polite">Choose files...</span>
                                     </label>
                                 </div>
                             </div>
 
                             <button type="submit" class="btn-submit">
-                                Send Message <i class="fas fa-paper-plane"></i>
+                                Send Message <i class="fas fa-paper-plane" aria-hidden="true"></i>
                             </button>
                         </form>
                     </div>
@@ -97,6 +108,7 @@
             </div>
         </section>
     </main>
+
     {% include "snippets/footer.jinja" %}
     
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>

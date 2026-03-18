@@ -4,77 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/settings.css') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
-
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin> 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
-
-    <title>Admin Panel - Servereinstellungen</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/server-settings.css') }}">
+    <title>Server Settings</title>
 </head>
 <body>
     <div class="main-container">
         {% include "admin/sidebar.jinja" %}
-        
         <div class="main-content">
-            <h2>Servereinstellungen</h2>
+            <input type="hidden" id="csrf_token" value="{{ generate_token() }}">
             
-            <!-- Einstellungsformular -->
-            <form class="settings-form" method="POST" enctype="multipart/form-data">
-                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ generate_token() }}">
-                <div class="form-group">
-                    <label for="maintenance">Wartungsmodus:<span class="tooltip-icon" title="Aktiviert den Wartungsmodus, um die Website vorübergehend offline zu schalten. Nur für Admins sichtbar.">i</span></label>
-                    <label class="switch">
-                        <input type="checkbox" id="maintenance" name="maintenance" {% if settings['server_config']['maintenance'] %}checked{% endif %}>
-                        <span class="slider round"></span>
-                    </label>
+            <div class="filter-bar">
+                <div class="filter-controls">
+                    <h2 style="margin:0; font-size: 1.2rem; color: #1e293b;">Server Configuration</h2>
                 </div>
+                <button class="btn-primary" onclick="submitServerSettings()">
+                    <i class="fa-solid fa-floppy-disk"></i> Save Settings
+                </button>
+                <button class="btn-danger" onclick="clearGlobalCache()">
+                    <i class="fa-solid fa-broom"></i> Clear Cache
+                </button>
+            </div>
 
-                <!-- robots.txt verwalten -->
-                <div class="form-group">
-                    <label for="robots_txt">robots.txt verwalten:<span class="tooltip-icon" title="Verwalten der robots.txt-Datei, um Suchmaschinen-Crawler zu steuern. Warnung: Nur für erfahrene Nutzer.">i</span></label>
-                    <textarea id="robots_txt" name="robots_txt" rows="10" required>{{ robots }}</textarea>
-                </div>
+            <div class="settings-card">
+                <form id="serverSettingsForm">
+                    <div class="settings-grid">
+                        <div class="form-group checkbox-group">
+                            <label for="maintenance">Maintenance Mode</label>
+                            <input type="checkbox" id="maintenance" name="maintenance" {% if server_config.maintenance %}checked{% endif %}>
+                        </div>
 
-                <!-- Cache löschen -->
-                <div class="form-group">
-                    <label for="clear_cache">Cache löschen:<span class="tooltip-icon" title="Löscht den Cache, um mögliche Fehler zu beheben und die Website zu aktualisieren.">i</span><br><span class="tooltip">Bei Fehlern kann das Löschen vom Cache hilfreich sein.</span></label>
-                    <button type="button" id="clear_cache" name="clear_cache" class="btn-clear-cache" onclick="clearCache()"><i class="fa-solid fa-rotate"></i> Cache löschen</button>
-                </div>
+                        <div class="form-group">
+                            <label for="max_content_length">Max Content Length (Bytes)</label>
+                            <input type="number" id="max_content_length" name="max_content_length" value="{{ server_config.MAX_CONTENT_LENGTH or 12582912 }}">
+                        </div>
 
-                <!-- MAX_CONTENT_LENGTH -->
-                <div class="form-group">
-                    <label for="max_content_length">Maximale Inhaltsgröße (in Bytes):<span class="tooltip-icon" title="Legt die maximale Größe für hochgeladene Inhalte in Bytes fest. Bezieht sich auf alle Uploads, auch für Uploads über das Admin Dashboard.">i</span></label>
-                    <input type="number" id="max_content_length" name="max_content_length" value="{{ settings['server_config']['MAX_CONTENT_LENGTH'] }}" required>
-                </div>
+                        <div class="form-group">
+                            <label for="session_cookie_name">Session Cookie Name</label>
+                            <input type="text" id="session_cookie_name" name="session_cookie_name" value="{{ server_config.SESSION_COOKIE_NAME or 'session' }}">
+                        </div>
 
-                <!-- PERMANENT_SESSION_LIFETIME -->
-                <div class="form-group">
-                    <label for="permanent_session_lifetime">Dauer der Sitzung (in Sekunden):<span class="tooltip-icon" title="Bestimmt die Dauer einer Sitzung in Sekunden. Wirkungsdauer für Cookies. Warnung: Nur für erfahrene Nutzer.">i</span></label>
-                    <input type="number" id="permanent_session_lifetime" name="permanent_session_lifetime" value="{{ settings['server_config']['PERMANENT_SESSION_LIFETIME'] }}" required>
-                </div>
+                        <div class="form-group">
+                            <label for="permanent_session_lifetime">Session Lifetime (Seconds)</label>
+                            <input type="number" id="permanent_session_lifetime" name="permanent_session_lifetime" value="{{ server_config.PERMANENT_SESSION_LIFETIME or 1800 }}">
+                        </div>
 
-                <!-- SESSION_COOKIE_NAME -->
-                <div class="form-group">
-                    <label for="session_cookie_name">Name des Sitzungscookies:<span class="tooltip-icon" title="Definiert den Namen des Sitzungscookies. Warnung: Nur für erfahrene Nutzer. Warnung: Ändern meldet ALLE Nutzer ab und LÖSCHT ALLE WARENKÖRBE.">i</span></label>
-                    <input type="text" id="session_cookie_name" name="session_cookie_name" value="{{ settings['server_config']['SESSION_COOKIE_NAME'] }}" required>
-                </div>
+                        <div class="form-group checkbox-group">
+                            <label for="session_cookie_httponly">HttpOnly Cookie</label>
+                            <input type="checkbox" id="session_cookie_httponly" name="session_cookie_httponly" {% if server_config.SESSION_COOKIE_HTTPONLY != False %}checked{% endif %}>
+                        </div>
 
-                <!-- Einstellungen speichern Button -->
-                <div class="form-group">
-                    <button type="submit" class="btn"><i class="fa-solid fa-floppy-disk"></i> Einstellungen speichern</button>
-                </div>
-            </form>
+                        <div class="form-group checkbox-group">
+                            <label for="session_cookie_secure">Secure Cookie (HTTPS)</label>
+                            <input type="checkbox" id="session_cookie_secure" name="session_cookie_secure" {% if server_config.SESSION_COOKIE_SECURE != False %}checked{% endif %}>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="session_cookie_samesite">SameSite Policy</label>
+                            <select id="session_cookie_samesite" name="session_cookie_samesite">
+                                <option value="Lax" {% if server_config.SESSION_COOKIE_SAMESITE == 'Lax' %}selected{% endif %}>Lax</option>
+                                <option value="Strict" {% if server_config.SESSION_COOKIE_SAMESITE == 'Strict' %}selected{% endif %}>Strict</option>
+                                <option value="None" {% if server_config.SESSION_COOKIE_SAMESITE == 'None' %}selected{% endif %}>None</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width" style="margin-top: 20px;">
+                        <label for="robots_txt">Edit robots.txt</label>
+                        <textarea id="robots_txt" name="robots_txt" rows="12" placeholder="User-agent: *...">{{ robots_txt }}</textarea>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-
-    <script src="{{ url_for('static', filename='js/admin/settings.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin/server-settings.js') }}"></script>
 </body>
 </html>

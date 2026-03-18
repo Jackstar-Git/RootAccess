@@ -1,15 +1,19 @@
-﻿import os
+﻿# ========== IMPORTS ==========
+import os
 import sys
 import threading
-import requests
 import time
+from typing import Any, List
 
+import requests
 from dotenv import load_dotenv
 from waitress import serve
-from FlaskClass import app
+
+from CustomFlaskClass import app
 from utility.logging_utility import logger
 from routes import blueprints
 
+# ========== INITIALIZATION ==========
 load_dotenv()
 logger.debug("Environment variables have been loaded successfully.")
 
@@ -21,9 +25,9 @@ logger.debug("Registered routes:")
 for rule in app.url_map.iter_rules():
     logger.debug(f"Route: {rule.rule}, Endpoint: {rule.endpoint}")
 
-def stay_alive():
-    """Background thread periodically pings a URL to keep the host awake."""
-    def send_request(server_url):
+# ========== BACKGROUND THREAD ==========
+def stay_alive() -> None:
+    def send_request(server_url: str) -> None:
         while True:
             try:
                 if server_url:
@@ -38,13 +42,14 @@ def stay_alive():
         thread.daemon = True
         thread.start()
 
+# ========== MAIN ==========
 if __name__ == "__main__":
     os.chdir(os.path.dirname(__file__))
     logger.info("*" * 50)
-    logger.info("Application Server started!")    
+    logger.info("Application Server started!")
     if len(sys.argv) > 1 and sys.argv[1] == "--development":
         logger.info("Running in development mode.")
         app.run(host="localhost", port=8080, debug=True)
-    else:   
-        stay_alive()    
+    else:
+        stay_alive()
         serve(app, port=8080, threads=64, url_scheme="https")

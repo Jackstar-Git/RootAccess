@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('internal.uploads', filename='Logo.png') }}" type="image">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/appearance.css') }}">
+    <title>Admin Panel - Appearance</title>
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja" %}
+        <div class="main-content">
+            <h2>Change Colors</h2>
+            <div class="selection-preview">
+                <form action="" method="POST" class="form-styles" id="color-form">
+                    {% for property_name, property in styles.items() %}
+                        <div class="form-group">
+                            <label for="{{ property_name }}">{{ property_name }}:</label>
+                            <input type="color" id="{{ property_name }}" name="{{ property_name }}" value="{{ property }}" onchange="updateContrastRatios()" data-original="{{ property }}">
+                            <button type="button" class="reset-value" onclick="resetColor(event)"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+                        </div>
+                    {% endfor %}
+                    <button type="button" class="btn-preview" onclick="openModal()"><i class="fa-solid fa-eye"></i> Preview</button>
+                    <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+                </form>
+                <div class="palette-creation">
+                    <h3>Color Palette - Contrast</h3>
+                    <table id="contrast-table">
+                        <thead>
+                            <tr>
+                                <th>Color Combination</th>
+                                <th>Contrast</th>
+                                <th>Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1. Font Color to Main Background</td>
+                                <td id="font1-main-bg-contrast"></td>
+                                <td id="font1-main-bg-rating"></td>
+                            </tr>
+                            <tr>
+                                <td>1. Font Color to Secondary Background</td>
+                                <td id="font1-secondary-bg-contrast"></td>
+                                <td id="font1-secondary-bg-rating"></td>
+                            </tr>
+                            <tr>
+                                <td>2. Font Color to Third Background</td>
+                                <td id="font2-third-bg-contrast"></td>
+                                <td id="font2-third-bg-rating"></td>
+                            </tr>
+                            <tr>
+                                <td>3. Font Color to Main Background</td>
+                                <td id="font3-main-bg-contrast"></td>
+                                <td id="font3-main-bg-rating"></td>
+                            </tr>
+                            <tr>
+                                <td>3. Font Color to Secondary Background</td>
+                                <td id="font3-secondary-bg-contrast"></td>
+                                <td id="font3-secondary-bg-rating"></td>
+                            </tr>
+                            <tr>
+                                <td>Main Color to Main Background</td>
+                                <td id="main-color-main-bg-contrast"></td>
+                                <td id="main-color-main-bg-rating"></td>
+                            </tr>
+                            <tr>
+                                <td>Main Color to Secondary Background</td>
+                                <td id="main-color-secondary-bg-contrast"></td>
+                                <td id="main-color-secondary-bg-rating"></td>
+                            </tr>
+                            <tr>
+                                <td>Main Color to Third Background</td>
+                                <td id="main-color-third-bg-contrast"></td>
+                                <td id="main-color-third-bg-rating"></td>
+                            </tr>
+                            <tr>
+                                <td>Secondary Color to Main Background</td>
+                                <td id="secondary-color-main-bg-contrast"></td>
+                                <td id="secondary-color-main-bg-rating"></td>
+                            </tr>
+                            <tr>
+                                <td>Secondary Color to Secondary Background</td>
+                                <td id="secondary-color-secondary-bg-contrast"></td>
+                                <td id="secondary-color-secondary-bg-rating"></td>
+                            </tr>
+                            <tr>
+                                <td>Secondary Color to Third Background</td>
+                                <td id="secondary-color-third-bg-contrast"></td>
+                                <td id="secondary-color-third-bg-rating"></td>
+                            </tr>
+                            <tr>
+                                <td>1. Font Color to Warning Color</td>
+                                <td id="font1-warning-contrast"></td>
+                                <td id="font1-warning-rating"></td>
+                            </tr>
+                            <tr>
+                                <td>Warning Color to Main Background</td>
+                                <td id="warning-main-bg-contrast"></td>
+                                <td id="warning-main-bg-rating"></td>
+                            </tr>
+                            <tr class="note-row">
+                                <td colspan="3">
+                                    Note: The following contrast ratios are displayed but are not relevant for evaluating the color palette.
+                                </td>
+                            </tr>
+                            <tr class="irrelevant-row">
+                                <td>1. Font Color to Third Background</td>
+                                <td id="font1-third-bg-contrast"></td>
+                                <td id="font1-third-bg-rating"></td>
+                            </tr>
+                            <tr class="irrelevant-row">
+                                <td>2. Font Color to Main Background</td>
+                                <td id="font2-main-bg-contrast"></td>
+                                <td id="font2-main-bg-rating"></td>
+                            </tr>
+                            <tr class="irrelevant-row">
+                                <td>2. Font Color to Secondary Background</td>
+                                <td id="font2-secondary-bg-contrast"></td>
+                                <td id="font2-secondary-bg-rating"></td>
+                            </tr>
+                            <tr class="irrelevant-row">
+                                <td>3. Font Color to Third Background</td>
+                                <td id="font3-third-bg-contrast"></td>
+                                <td id="font3-third-bg-rating"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="preview-modal" class="modal" onclick="closeModal(event)">
+                <div class="modal-content">
+                    <iframe src="/" frameborder="0" id="preview-iframe" onload="updatePreview()"></iframe>
+                    <button type="button" class="btn-close-modal" onclick="closeModal(event)">X</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/admin/appearance.js')}}"></script>
+</body>
+</html>

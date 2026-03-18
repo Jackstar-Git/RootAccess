@@ -1,0 +1,226 @@
+@import url(../root.css);
+
+.selection-preview {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.settings-form {
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.settings-form h2 {
+    font-size: 1.6rem;
+    color: var(--main-color);
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+label {
+    font-size: 1rem;
+    line-height: 40px;
+    width: 170px;
+    color: var(--font-color);
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="color"] {
+    width: 120px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button.btn-preview,
+button.btn-save {
+    padding: 10px 20px;
+    background-color: var(--main-color);
+    color: var(--secondary-font-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+
+
+
+button.reset-value {
+    margin-left: 20px;
+    height: 40px;
+    width: 40px;;
+    padding: 5px;
+    background-color: var(--main-color);
+    color: var(--secondary-font-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--secondary-color);
+}
+
+.form-styles {
+    flex: 1;
+    flex-basis: 40%;
+}
+
+.palette-creation {
+    flex: 1;
+    flex-basis: 60%;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: var(--secondary-bg);
+}
+
+.palette-colors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.color-box {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.btn-create-palette {
+    padding: 10px 20px;
+    background-color: var(--main-color);
+    color: var(--secondary-font-color);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    margin-inline: auto;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 30px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: var(--main-bg);
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-content #preview-iframe{
+    width: 100%;
+    height: 100%;
+}
+
+.btn-close-modal {
+    background-color: var(--warning-color);
+    color: var(--secondary-font-color);
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#contrast-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: var(--main-bg);
+}
+
+#contrast-table th,
+#contrast-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+#contrast-table th {
+    background-color: var(--main-bg);
+    font-weight: bold;
+}
+
+#contrast-table td {
+    font-size: 1rem;
+}
+
+.excellent {
+    color: rgb(3, 246, 3);
+    font-weight: bold;
+}
+
+.good {
+    color: #45a301;
+    font-weight: bold;
+}
+
+.fair {
+    color: #f8c600;
+    font-weight: bold;
+}
+
+.poor {
+    color: var(--warning-color);
+    font-weight: bold;
+}
+
+.irrelevant-row, .note-row {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.note-row {
+    font-weight: bold;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+
+}
+
+@media (max-width: 768px) {
+    .selection-preview {
+        flex-direction: column;
+    }
+
+    .form-styles {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .iframe-container {
+        width: 100%;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .palette-creation {
+        width: 100%;
+    }
+
+    .modal-content {
+        width: 100%;
+        padding: 15px;
+    }
+}

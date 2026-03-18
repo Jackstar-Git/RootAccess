@@ -1,10 +1,13 @@
+# ========== IMPORTS ==========
 from flask import render_template
-from utility.logging_utility import logger
-from FlaskClass import app
-from utility import projects, blogs
 
+from CustomFlaskClass import app
+from utility import blogs, projects
+from utility.logging_utility import logger
+
+# ========== ROUTES ==========
 @app.route("/")
-def home():
+def home() -> render_template:
     logger.info("Home page accessed.")
     all_blogs = blogs.query_blogs(status="visible")
     sorted_blogs = blogs.sort_blogs(all_blogs, "newest")

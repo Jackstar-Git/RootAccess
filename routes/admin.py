@@ -1,31 +1,28 @@
-﻿import logging
+﻿# ========== IMPORTS ==========
 import os
-from datetime import datetime
+import re
 import time
-from typing import Any, Dict, List, Optional, Tuple, Union
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
 
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash
 
+from CustomFlaskClass import app
 from utility.auth import login_required
-from utility.blogs import load_blogs, add_blog, get_item_by_id, update_blog
-from utility.events import get_events 
-from utility.contact import load_contacts
+from utility.blogs import add_blog, get_item_by_id, load_blogs, update_blog
 from utility.calendar import generate_calendar
+from utility.contact import load_contacts
+from utility.events import get_events
 from utility.logging_utility import logger
-from utility.settings import get_settings, update_settings
 from utility.others import convert_markdown_to_html
-from utility.projects import query_projects, search_projects, load_projects, get_project_by_id, update_project, add_project
+from utility.projects import add_project, get_project_by_id, load_projects, update_project
+from utility.settings import get_settings, update_settings
 
-logger = logging.getLogger(__name__)
+# ========== BLUEPRINT INITIALIZATION ==========
 admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
 
-# ============== AUTHENTICATION ==============
-@admin_blueprint.before_request
-def protect_admin() -> Optional[redirect]:
-    if request.endpoint != "admin.login" and not session.get("is_admin"):
-        return redirect(url_for("admin.login"))
-
+# ========== AUTHENTICATION ROUTES ==========
 @admin_blueprint.route("/login", methods=["GET", "POST"])
 def login() -> Union[render_template, redirect]:
     if session.get("is_admin"):
@@ -54,7 +51,7 @@ def logout() -> redirect:
     session.clear()
     return redirect(url_for("admin.login"))
 
-# ============== DASHBOARD ==============
+# ========== DASHBOARD ROUTES ==========
 @admin_blueprint.route("/dashboard")
 @login_required
 def dashboard() -> render_template:
@@ -64,7 +61,7 @@ def dashboard() -> render_template:
     month: int = request.args.get("month", default=today.month, type=int)
 
     cal = generate_calendar(year, month)
-    events: List[Dict[str, Any]] = get_events() 
+    events: List[Dict[str, Any]] = get_events()
     month_name: str = datetime(year, month, 1).strftime("%B")
 
     notes_path = "data/notes.md"
@@ -72,7 +69,7 @@ def dashboard() -> render_template:
     if os.path.exists(notes_path):
         with open(notes_path, "r", encoding="utf-8") as f:
             raw_note = f.read()
-    
+
     html_note = convert_markdown_to_html(raw_note)
 
     return render_template(
@@ -87,21 +84,27 @@ def dashboard() -> render_template:
         html_note=html_note
     )
 
-# ============== CONTACTS DASHBOARD ==============
+# ========== ANALYTICS ROUTES ==========
+@admin_blueprint.route("/analytics")
+@login_required
+def analytics() -> render_template:
+    return render_template("admin/analytics.jinja")
+
+# ========== CONTACT ROUTES ==========
 @admin_blueprint.route("/requests/contact", methods=["GET"])
 @login_required
 def manage_contacts() -> render_template:
     contacts = load_contacts()
     contacts.sort(key=lambda x: x.get("time_created", 0), reverse=True)
-    
+
     for c in contacts:
-        c["formatted_date"] = datetime.fromtimestamp(c.get("time_created", 0)).strftime('%Y-%m-%d %H:%M')
+        c["formatted_date"] = datetime.fromtimestamp(c.get("time_created", 0)).strftime("%Y-%m-%d %H:%M")
 
     return render_template("admin/contacts.jinja", contacts=contacts)
 
-
-# ============== MEDIA LIBRARY ==============
+# ========== MEDIA ROUTES ==========
 @admin_blueprint.route("/media/all", methods=["GET"])
+@login_required
 def library() -> render_template:
     ROOT_DIR: str = "uploads"
     current_path: str = request.args.get("path", "/")
@@ -119,11 +122,11 @@ def library() -> render_template:
             ext: str = os.path.splitext(item)[1].lower()
             if os.path.isdir(item_path):
                 file_type: str = "folder"
-            elif ext in ['.jpg', '.jpeg', '.png', '.gif', '.webp']:
+            elif ext in [".jpg", ".jpeg", ".png", ".gif", ".webp"]:
                 file_type = "image"
-            elif ext in ['.mp4', '.mov', '.avi']:
+            elif ext in [".mp4", ".mov", ".avi"]:
                 file_type = "video"
-            elif ext in ['.zip', '.rar', '.7z']:
+            elif ext in [".zip", ".rar", ".7z"]:
                 file_type = "archive"
             else:
                 file_type = "document"
@@ -131,11 +134,11 @@ def library() -> render_template:
             files_data.append({
                 "name": item,
                 "type": file_type,
-                "last_modified": datetime.fromtimestamp(stats.st_mtime).strftime('%Y-%m-%d %H:%M'),
+                "last_modified": datetime.fromtimestamp(stats.st_mtime).strftime("%Y-%m-%d %H:%M"),
                 "size": stats.st_size if not os.path.isdir(item_path) else 0
             })
 
-    files_data.sort(key=lambda x: (x['type'] != 'folder', x['name'].lower()))
+    files_data.sort(key=lambda x: (x["type"] != "folder", x["name"].lower()))
 
     return render_template(
         "admin/media-library.jinja",
@@ -144,8 +147,9 @@ def library() -> render_template:
         root=ROOT_DIR
     )
 
-# ============== LOGS ==============
+# ========== LOGS ROUTES ==========
 @admin_blueprint.route("/settings/logs", methods=["GET"])
+@login_required
 def server_logs() -> render_template:
     logger.info("Server logs route accessed")
     with open("logs/app.log", "r", encoding="utf-8") as file:
@@ -155,7 +159,7 @@ def server_logs() -> render_template:
     logger.info("Rendering server logs page")
     return render_template("admin/logs.jinja", logs=clean_lines)
 
-# ============== BLOGS ==============
+# ========== BLOGS ROUTES ==========
 @admin_blueprint.route("/blogs/all", methods=["GET"])
 @login_required
 def all_blogs() -> render_template:
@@ -189,41 +193,7 @@ def all_blogs() -> render_template:
 @admin_blueprint.route("/blogs/categories", methods=["GET"])
 @login_required
 def blogs_categories() -> render_template:
-    return render_template("admin/blog-settings.jinja", settings=get_settings("blog_config"))  
-
-@admin_blueprint.route("/settings/server", methods=["GET", "POST"])
-@login_required
-def server_settings():
-    if request.method == "POST":
-        try:
-            settings = get_settings()
-            form_data = request.form.to_dict()
-
-            settings['server_config']['maintenance'] = 'maintenance' in form_data
-            settings['server_config']['MAX_CONTENT_LENGTH'] = int(form_data.get('max_content_length', 0))
-            settings['server_config']['PERMANENT_SESSION_LIFETIME'] = int(form_data.get('permanent_session_lifetime', 0))
-            settings['server_config']['SESSION_COOKIE_NAME'] = form_data.get('session_cookie_name', '')
-            settings['robots_txt'] = form_data.get('robots_txt', '')
-
-            update_settings(settings)
-            logger.info("Server settings updated successfully")
-
-            return jsonify({
-                "success": True,
-                "message": "Settings updated successfully"
-            })
-        except Exception as e:
-            logger.error(f"Error updating server settings: {str(e)}")
-            return jsonify({
-                "success": False,
-                "message": str(e)
-            }), 400
-
-    settings = get_settings()
-    return render_template("admin/server-settings.jinja",
-                         settings=settings,
-                         robots=settings.get('robots_txt', ''))
-
+    return render_template("admin/blog-settings.jinja", settings=get_settings("blog_config"))
 
 @admin_blueprint.route("/blogs/create/", methods=["GET", "POST"])
 @login_required
@@ -232,8 +202,8 @@ def create_blog():
 
     if request.method == "POST":
         thumbnail_file = request.files.get("thumbnail")
-        image_url = "/static/assets/images/defaults/blog-placeholder.png" 
-        
+        image_url = "/static/assets/images/defaults/blog-placeholder.png"
+
         if thumbnail_file and thumbnail_file.filename:
             upload_folder = "uploads"
             os.makedirs(upload_folder, exist_ok=True)
@@ -253,18 +223,18 @@ def create_blog():
             "reading_time": request.form.get("reading_time"),
             "description": request.form.get("description")
         }
-        
+
         try:
             add_blog(blog_data)
-            logger.info(f"Blog '{blog_data['title']}' created successfully.")
+            logger.info(f'Blog "{blog_data["title"]}" created successfully.')
             flash("Blog post published!", "success")
-            return redirect(url_for('admin.all_blogs'))
+            return redirect(url_for("admin.all_blogs"))
         except Exception as e:
             logger.error(f"Failed to save blog: {str(e)}")
             flash("Error saving blog post.", "error")
 
     return render_template(
-        "admin/add-blog.jinja", 
+        "admin/add-blog.jinja",
         settings=get_settings("blog_config")
     )
 
@@ -275,7 +245,7 @@ def edit_blog(blog_id: str):
 
     if not blog:
         flash("Post not found.", "error")
-        return redirect(url_for('admin.all_blogs'))
+        return redirect(url_for("admin.all_blogs"))
 
     if request.method == "POST":
         thumbnail_file = request.files.get("thumbnail")
@@ -303,7 +273,7 @@ def edit_blog(blog_id: str):
 
         if update_blog(blog_id, updated_data):
             flash("Successfully updated!", "success")
-            return redirect(url_for('admin.all_blogs'))
+            return redirect(url_for("admin.all_blogs"))
 
     return render_template(
         "admin/edit-blog.jinja",
@@ -311,7 +281,7 @@ def edit_blog(blog_id: str):
         settings=get_settings("blog_config")
     )
 
-# ============== PROJECTS ==============
+# ========== PROJECTS ROUTES ==========
 @admin_blueprint.route("/projects/all", methods=["GET"])
 @login_required
 def all_projects() -> render_template:
@@ -333,7 +303,6 @@ def all_projects() -> render_template:
 
         display_projects.append(project)
 
-    # Note: Sort by newest based on time_created
     display_projects.sort(key=lambda x: x.get("time_created", 0), reverse=True)
 
     return render_template(
@@ -350,7 +319,7 @@ def create_project():
     if request.method == "POST":
         thumbnail_file = request.files.get("thumbnail")
         image_url = None
-        
+
         if thumbnail_file and thumbnail_file.filename:
             upload_folder = "uploads/projects"
             os.makedirs(upload_folder, exist_ok=True)
@@ -373,12 +342,12 @@ def create_project():
             "activity": request.form.get("activity"),
             "topic": request.form.get("topic")
         }
-        
+
         try:
             add_project(project_data)
-            logger.info(f"Project '{project_data['title']}' created successfully.")
+            logger.info(f'Project "{project_data["title"]}" created successfully.')
             flash("Project published!", "success")
-            return redirect(url_for('admin.all_projects'))
+            return redirect(url_for("admin.all_projects"))
         except Exception as e:
             logger.error(f"Failed to save project: {str(e)}")
             flash("Error saving project.", "error")
@@ -392,7 +361,7 @@ def edit_project(project_id: str):
 
     if not project:
         flash("Project not found.", "error")
-        return redirect(url_for('admin.all_projects'))
+        return redirect(url_for("admin.all_projects"))
 
     if request.method == "POST":
         thumbnail_file = request.files.get("thumbnail")
@@ -423,6 +392,156 @@ def edit_project(project_id: str):
 
         if update_project(project_id, updated_data):
             flash("Successfully updated!", "success")
-            return redirect(url_for('admin.all_projects'))
+            return redirect(url_for("admin.all_projects"))
 
     return render_template("admin/edit-project.jinja", project=project)
+
+# ========== SETTINGS ROUTES ==========
+@admin_blueprint.route("/settings/server", methods=["GET", "POST"])
+@login_required
+def server_settings():
+    if request.method == "POST":
+        try:
+            settings = get_settings() or {}
+            form_data = request.form.to_dict()
+
+            if "server_config" not in settings:
+                settings["server_config"] = {}
+
+            settings["server_config"]["maintenance"] = "maintenance" in form_data
+            settings["server_config"]["MAX_CONTENT_LENGTH"] = int(form_data.get("max_content_length", 12582912))
+            settings["server_config"]["PERMANENT_SESSION_LIFETIME"] = int(form_data.get("permanent_session_lifetime", 1800))
+            settings["server_config"]["SESSION_COOKIE_NAME"] = form_data.get("session_cookie_name", "session")
+            settings["server_config"]["SESSION_COOKIE_HTTPONLY"] = "session_cookie_httponly" in form_data
+            settings["server_config"]["SESSION_COOKIE_SECURE"] = "session_cookie_secure" in form_data
+            settings["server_config"]["SESSION_COOKIE_SAMESITE"] = form_data.get("session_cookie_samesite", "Lax")
+
+            with open("robots.txt", "w") as file:
+                file.write(form_data.get("robots_txt", "").replace("\n", ""))
+
+            update_settings(settings)
+            return jsonify({"success": True, "message": "Settings updated successfully"})
+        except Exception as e:
+            return jsonify({"success": False, "message": str(e)}), 400
+
+    robots = ""
+    with open("robots.txt", "r") as file:
+        robots = file.read()
+
+    settings = get_settings() or {}
+    return render_template("admin/server-settings.jinja",
+                           settings=settings,
+                           server_config=settings.get("server_config", {}),
+                           robots_txt=robots)
+
+@admin_blueprint.route("/settings/general", methods=["GET", "POST"])
+@login_required
+def general_settings():
+    if request.method == "POST":
+        try:
+            settings = get_settings() or {}
+            form_data = request.form.to_dict()
+
+            if "general_config" not in settings:
+                settings["general_config"] = {}
+
+            settings["general_config"]["site_name"] = form_data.get("site_name", "")
+            settings["general_config"]["site_description"] = form_data.get("site_description", "")
+
+            update_settings(settings)
+            return jsonify({"success": True, "message": "Settings updated successfully"})
+        except Exception as e:
+            return jsonify({"success": False, "message": str(e)}), 400
+
+    settings = get_settings() or {}
+    return render_template("admin/general-settings.jinja",
+                           settings=settings,
+                           general_config=settings.get("general_config", {}))
+
+# ========== APPEARANCE ROUTES ==========
+@admin_blueprint.route("/appearance/colors", methods=["GET", "POST"])
+def general_appearance():
+    if request.method == "POST":
+        logger.info("General appearance settings updated")
+
+        with open("static/css/root.css", "r") as file:
+            css_content = file.read()
+
+        for key, value in request.form.items():
+            pattern = rf"--{key}:\s*[^;]+;"
+
+            replacement = f"--{key}: {value};"
+            if re.search(pattern, css_content):
+                css_content = re.sub(pattern, replacement, css_content)
+            else:
+                css_content += f"\n{replacement}"
+
+        with open("static/css/root.css", "w") as file:
+            file.write(css_content)
+
+        return redirect(url_for("admin.general_appearance"))
+
+    logger.info("General appearance route accessed")
+    with open("static/css/root.css") as file:
+        content: str = file.read()
+
+    root_styles = {}
+    root_regex = r"--([a-zA-Z0-9-]+)\s*:\s*([^;]+);"
+    matches = re.findall(root_regex, content)
+    for match in matches:
+        root_styles[f"{str(match[0])}"] = str(match[1]).strip()
+
+    logger.debug("Rendering general appearance settings page")
+    return render_template("admin/appearance.jinja", styles=root_styles)
+
+@admin_blueprint.route("/appearance/templates", methods=["GET", "POST"])
+def template_appearance():
+    logger.info("Edit Templates route accessed")
+    return render_template("admin/edit-templates.jinja")
+
+@admin_blueprint.route("/appearance/templates/edit/<path:template>", methods=["GET", "POST"])
+def template_appearance_edit(template):
+    logger.info("Edit Templates route accessed")
+    template_path = os.path.join(app.root_path, "templates", f"{template}")
+
+    if request.method == "POST":
+        new_content = request.form.get("template_content", "")
+        with open(template_path, "w", encoding="utf-8") as file:
+            file.write(new_content)
+
+            template = app.jinja_env.get_template(sanitize_path(template))
+            template.environment.cache.clear()
+        logger.info("Template file saved successfully")
+        return redirect(url_for("admin.template_appearance_edit", template=template))
+
+    with open(template_path, "r", encoding="utf-8") as file:
+        template_content = str(file.read())
+
+    template_content = template_content.replace("<", "&lt;").replace(">", "&gt;")
+
+    return render_template("admin/edit-template.jinja", template_content=template_content)
+
+@admin_blueprint.route("/appearance/static", methods=["GET", "POST"])
+def change_static_files():
+    logger.info("Edit Static route accessed")
+    return render_template("admin/edit-static.jinja")
+
+@admin_blueprint.route("/appearance/static/edit/<path:file>", methods=["GET", "POST"])
+def change_static_files_edit(file):
+    logger.info("Edit Templates route accessed")
+    file_path = os.path.join(app.root_path, "static", f"{file}")
+
+    if request.method == "POST":
+        new_content = request.form.get("template_content", "")
+        with open(file_path, "w", encoding="utf-8") as file:
+            file.write(new_content)
+
+        logger.info("Static file saved successfully")
+        return redirect(url_for("admin.template_appearance_edit", template=file))
+
+    with open(file_path, "r", encoding="utf-8") as file:
+        file_content = str(file.read())
+
+    file_content = file_content.replace("<", "&lt;").replace(">", "&gt;")
+
+    return render_template("admin/edit-template.jinja", template_content=file_content)
