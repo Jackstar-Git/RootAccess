@@ -38,6 +38,10 @@
             {
                 "name": "Story",
                 "icon": "fa-solid fa-book-open"
+            },
+            {
+                "name": "Analysis",
+                "icon": "fa-solid fa-chart-line"
             }
         ],
         "topics": [
@@ -50,7 +54,8 @@
             "Education",
             "Business",
             "Ethics & Religion",
-            "Society"
+            "Society",
+            "Economy"
         ]
     },
     "project_config": {

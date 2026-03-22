@@ -159,6 +159,7 @@
     font-size: var(--font-size-md);
     line-height: 1.8;
     color: var(--font-color);
+    hyphens: auto;
 }
 
 .main-text-flow p {
