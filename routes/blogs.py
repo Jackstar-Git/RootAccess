@@ -11,7 +11,7 @@ from utility.logging_utility import logger
 blogs_blueprint = Blueprint("blogs", __name__)
 
 # ========== CONSTANTS ==========
-BLOGS_PER_PAGE = 15
+BLOGS_PER_PAGE = 10
 
 # ========== ROUTES ==========
 @blogs_blueprint.route("/blog", methods=["GET"])
