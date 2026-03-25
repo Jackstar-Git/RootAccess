@@ -114,3 +114,41 @@ if (document.readyState === "loading") {
 } else {
     initGlobal();
 }
+
+
+(function() {
+    const startTime = Date.now();
+    const url = window.location.pathname;
+    const visitorId = btoa(navigator.userAgent).substring(0, 16);
+
+    const sendData = (isHeartbeat = false) => {
+        const endTime = Date.now();
+        const timeSpent = isHeartbeat ? (endTime - startTime) / 1000 : 0;
+
+        const payload = JSON.stringify({
+            url: url,
+            visitor_id: visitorId,
+            time_spent: timeSpent,
+            is_heartbeat: isHeartbeat
+        });
+
+        if (isHeartbeat && navigator.sendBeacon) {
+            const blob = new Blob([payload], { type: "application/json" });
+            navigator.sendBeacon("/api/analytics/track", blob);
+        } else {
+            fetch("/api/analytics/track", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: payload
+            }).catch(() => {}); 
+        }
+    };
+
+    sendData(false);
+
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") {
+            sendData(true);
+        }
+    });
+})();

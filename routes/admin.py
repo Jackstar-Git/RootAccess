@@ -18,6 +18,7 @@ from utility.logging_utility import logger
 from utility.others import convert_markdown_to_html
 from utility.projects import add_project, get_project_by_id, load_projects, update_project
 from utility.settings import get_settings, update_settings
+from utility.analytics import get_all_analytics
 
 # ========== BLUEPRINT INITIALIZATION ==========
 admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
@@ -87,8 +88,19 @@ def dashboard() -> render_template:
 # ========== ANALYTICS ROUTES ==========
 @admin_blueprint.route("/analytics")
 @login_required
-def analytics() -> render_template:
-    return render_template("admin/analytics.jinja")
+def analytics():
+    analytics_data = get_all_analytics() 
+    analytics_list = list(analytics_data.values()) 
+    
+    total_visits = sum(item.get("visits", 0) for item in analytics_list)
+    total_unique = sum(item.get("unique_visits", 0) for item in analytics_list)
+    
+    return render_template(
+        "admin/analytics.jinja", 
+        analytics=analytics_list,
+        total_visits=total_visits, 
+        total_unique=total_unique
+    )
 
 # ========== CONTACT ROUTES ==========
 @admin_blueprint.route("/requests/contact", methods=["GET"])
@@ -205,11 +217,11 @@ def create_blog():
         image_url = "/static/assets/images/defaults/blog-placeholder.png"
 
         if thumbnail_file and thumbnail_file.filename:
-            upload_folder = "uploads"
+            upload_folder = "uploads/blogs"
             os.makedirs(upload_folder, exist_ok=True)
             filename = f"{int(time.time())}_{thumbnail_file.filename}"
             thumbnail_file.save(os.path.join(upload_folder, filename))
-            image_url = f"/uploads/{filename}"
+            image_url = f"/{upload_folder}/{filename}"
 
         blog_data = {
             "author": request.form.getlist("authors[]"),

@@ -8,6 +8,7 @@ from . import events
 from . import path_files as path_utils
 from . import auth
 from . import contact
+from . import analytics
 
 # convenience imports
 def __getattr__(name):
@@ -31,4 +32,6 @@ def __getattr__(name):
         return auth
     if name == "contact":
         return contact
+    if name == "analytics":
+        return analytics
     raise AttributeError(f"module {__name__} has no attribute {name}")

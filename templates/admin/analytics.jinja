@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Jackstar">
+    <meta name="copyright" content="RootAccess 2026">
+    <meta name="description" content="Analytics dashboard for tracking visitors on RootAccess. Because someone has to watch the watchers.">
+    <meta name="keywords" content="{{ 'analytics, dashboard, admin, RootAccess, tracking, big brother, surveillance, metrics' if not keywords else keywords }}">
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>RootAccess | Analytics Tracker</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/x-icon">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/analytics.css') }}">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="dashboard-layout">
+        {% include "admin/sidebar.jinja" %}
+        
+        <main class="analytics-viewport container" role="main" aria-labelledby="analytics-heading">
+            <h1 id="analytics-heading" class="analytics-title text-gradient">Visitor Analytics</h1>
+            <input type="hidden" id="csrf_token" value="{{ generate_token() }}">
+
+            <div class="kpi-grid" role="region" aria-label="Global Statistics">
+                <div class="kpi-card" role="status">
+                    <i class="fa-solid fa-users" aria-hidden="true"></i>
+                    <h3>Total Visits</h3>
+                    <p class="kpi-value">{{ total_visits }}</p>
+                </div>
+                <div class="kpi-card" role="status">
+                    <i class="fa-solid fa-user-secret" aria-hidden="true"></i>
+                    <h3>Unique Users</h3>
+                    <p class="kpi-value">{{ total_unique }}</p>
+                </div>
+                <div class="kpi-card action-card" onclick="clearData()" role="button" aria-label="Reset all analytics data" tabindex="0">
+                    <i class="fa-solid fa-fire" aria-hidden="true"></i>
+                    <h3>Reset Everything</h3>
+                    <p>Wipe the slate clean.</p>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-container">
+                    <h4 class="chart-label">Traffic Distribution</h4>
+                    <div class="canvas-wrapper" aria-label="Visual representation of traffic distribution" role="img">
+                        <canvas id="visitorDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-table-container">
+                <h2 class="section-subtitle">Endpoint Breakdown</h2>
+                <table class="analytics-table" role="grid" aria-label="Detailed per-page analytics">
+                    <thead>
+                        <tr>
+                            <th scope="col">URL Path</th>
+                            <th scope="col">Total Visits</th>
+                            <th scope="col">Unique</th>
+                            <th scope="col">Avg. Time (s)</th>
+                            <th scope="col">Management</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in analytics %}
+                        <tr>
+                            <td class="cell-path"><code>{{ item.url }}</code></td>
+                            <td>{{ item.visits }}</td>
+                            <td>{{ item.unique_visits }}</td>
+                            <td>{{ item.average_time_spent }}s</td>
+                            <td>
+                                <button class="btn-delete-row" onclick="clearData('{{ item.url }}')" aria-label="Delete analytics for {{ item.url }}">
+                                    <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="data-table-container mt-xl">
+                <div class="section-header-row">
+                    <h2 class="section-subtitle">Ignored Endpoints</h2>
+                    <div class="ignore-input-group">
+                        <input type="text" id="newIgnoreUrl" placeholder="e.g. /admin/dashboard" aria-label="Endpoint to ignore">
+                        <button class="btn-add" onclick="addIgnoredUrl()" aria-label="Add ignored endpoint">
+                            <i class="fa-solid fa-plus" aria-hidden="true"></i> Add
+                        </button>
+                    </div>
+                </div>
+                <table class="analytics-table" id="ignoredUrlsTable" role="grid" aria-label="List of ignored endpoints">
+                    <thead>
+                        <tr>
+                            <th scope="col">Ignored Path</th>
+                            <th scope="col">Management</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { initAnalyticsChart, clearData, loadIgnoredUrls, addIgnoredUrl, removeIgnoredUrl } from "{{ url_for('static', filename='js/admin/chart.js') }}";
+
+        const analyticsPayload = {
+            labels: [{% for item in analytics %}"{{ item.url }}",{% endfor %}],
+            datasets: [{
+                label: 'Visits',
+                data: [{% for item in analytics %}{{ item.visits }},{% endfor %}],
+                backgroundColor: 'rgba(37, 161, 167, 0.4)',
+                borderColor: '#25A1A7',
+                borderWidth: 1
+            }]
+        };
+
+        initAnalyticsChart('visitorDistributionChart', analyticsPayload);
+        
+        window.clearData = clearData;
+        window.addIgnoredUrl = addIgnoredUrl;
+        window.removeIgnoredUrl = removeIgnoredUrl;
+        
+        document.addEventListener('DOMContentLoaded', loadIgnoredUrls);
+    </script>
+</body>
+</html>

@@ -4,26 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Media Library</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin> 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
-
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" as="font" crossorigin> 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link href="{{ url_for('static', filename='css/admin/media-library.css') }}" rel="stylesheet">
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image">
 </head>
@@ -33,9 +24,7 @@
         <div class="main-content">
             <input type="hidden" id="csrf_token" name="csrf_token" value="{{ generate_token() }}">
 
-            <!-- Toolbar -->
             <div class="toolbar-container">
-                <!-- Navigation Toolbar -->
                 <div class="toolbar navigation-toolbar">
                     <button class="toolbar-btn icon-btn" id="back-btn" onclick="folderUp()" aria-label="Go back">
                         <i class="fa-solid fa-arrow-left"></i>
@@ -59,7 +48,6 @@
                     </div>
                 </div>
 
-                <!-- Action Toolbar -->
                 <div class="toolbar action-toolbar">
                     <button class="toolbar-btn" onclick="createLocation()">
                         <i class="fa-solid fa-folder-plus"></i> New Folder
@@ -70,6 +58,9 @@
                     <div class="toolbar-divider"></div>
                     <button class="toolbar-btn" onclick="copyPath()" id="copy-btn">
                         <i class="fa-solid fa-copy"></i> Copy
+                    </button>
+                    <button class="toolbar-btn" onclick="cutPath()" id="cut-btn">
+                        <i class="fa-solid fa-scissors"></i> Cut
                     </button>
                     <button class="toolbar-btn" onclick="pastePath()" id="paste-btn">
                         <i class="fa-solid fa-paste"></i> Paste
@@ -83,8 +74,6 @@
                 </div>
             </div>
 
-
-            <!-- File List -->
             <div class="file-list-container">
                 <div class="file-list-header">
                     <div class="file-header-checkbox">

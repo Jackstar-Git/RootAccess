@@ -2,6 +2,8 @@
 import json
 import os
 import secrets
+import threading
+import time
 from datetime import datetime
 from typing import Any, Dict, Union
 
@@ -17,6 +19,12 @@ class CustomFlask(Flask):
         self.load_server_config()
         self.logger.disabled = True
         self.secret_key = secrets.token_hex(64)
+        
+        # Analytics Cache Setup
+        self.analytics_cache = {}
+        self.analytics_lock = threading.Lock()
+        self.last_analytics_flush = time.time()
+        self._load_initial_analytics()
 
         self.add_template_filter(self.datetime_filter, name="datetimeformat")
         self.before_request(self.request_handler)
@@ -45,6 +53,19 @@ class CustomFlask(Flask):
             with open(settings_path, "r", encoding="utf-8") as f:
                 return json.load(f)
         return {}
+        
+    def _load_initial_analytics(self) -> None:
+        analytics_path = "data/analytics.json"
+        if os.path.exists(analytics_path):
+            try:
+                with open(analytics_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, list):
+                        app.analytics_cache = {} 
+                    else:
+                        self.analytics_cache = data
+            except Exception as e:
+                logger.error(f"Failed to load initial analytics cache: {e}")
 
     def request_handler(self) -> Union[None, Response]:
         request.query_params = dict(request.args)

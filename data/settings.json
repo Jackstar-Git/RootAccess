@@ -82,5 +82,11 @@
             "Utility",
             "Other"
         ]
+    },
+    "analytics_config": {
+        "ignored_urls": [
+            "/admin/login"
+        ],
+        "update_interval": 120
     }
 }

@@ -11,7 +11,8 @@ from typing import Tuple, Union
 from flask import Blueprint, jsonify, request, session, abort, send_file, Response, redirect, url_for, flash
 import psutil
 
-from CustomFlaskClass import app
+from CustomFlaskClass import app, csrf
+from utility.analytics import track_visit, clear_analytics
 from utility.auth import login_required
 from utility.blogs import add_blog, delete_blog, update_blog, load_blogs, get_item_by_id
 from utility.calendar import generate_calendar
@@ -457,6 +458,37 @@ def copy_file() -> Response:
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@internal_blueprint.route("/api/files/move", methods=["POST"])
+@login_required
+def move_file() -> Response:
+    data = request.get_json()
+    required = ["path", "file_name", "new_path"]
+    if not all(field in data for field in required):
+        return jsonify({"error": "Missing required fields"}), 400
+
+    path = data["path"].lstrip("/")
+    file_name = data["file_name"].lstrip("/")
+    new_path = data["new_path"].lstrip("/")
+    root_dir = data.get("root", ROOT_DIR).lstrip("/")
+
+    source = os.path.join(app.root_path, root_dir, path, file_name)
+    destination = os.path.join(app.root_path, root_dir, new_path, file_name)
+
+    if not is_safe_path(os.path.join(app.root_path, root_dir), source) or not is_safe_path(os.path.join(app.root_path, root_dir), destination):
+        return jsonify({"error": "Invalid path"}), 400
+
+    if not os.path.exists(source):
+        return jsonify({"error": "Source not found"}), 404
+
+    if os.path.exists(destination):
+        return jsonify({"error": "Destination exists"}), 409
+
+    try:
+        shutil.move(source, destination)
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @internal_blueprint.route("/api/files/create_folder", methods=["POST"])
 @login_required
 def create_folder() -> Response:
@@ -820,3 +852,73 @@ def api_manage_types() -> Response:
     except Exception as e:
         logger.error(f"API Error managing types: {e}")
         return jsonify({"error": "Internal server error."}), 500
+
+# ========== ANALYTICS ROUTES ==========
+
+@internal_blueprint.route("/api/analytics/track", methods=["POST"])
+@csrf.exempt 
+def api_track_analytics() -> Response:
+    if session.get("is_admin"):
+        return jsonify({"status": "ignored", "reason": "Admins are invisible."})
+        
+    data = request.get_json()
+    if not data: 
+        return jsonify({"error": "No data provided"}), 400
+        
+    url = data.get("url")
+    visitor_id = data.get("visitor_id") or request.remote_addr 
+    time_spent = data.get("time_spent", 0)
+    is_heartbeat = data.get("is_heartbeat", False)
+
+    # Check ignored URLs before committing to disk
+    analytics_config = get_settings("analytics_config") or {}
+    ignored_urls = analytics_config.get("ignored_urls", [])
+    
+    if url in ignored_urls:
+        return jsonify({"status": "ignored", "reason": "Endpoint is in the abyss (ignored)."})
+
+    if url:
+        track_visit(url, visitor_id, time_spent, is_heartbeat)
+        return jsonify({"status": "success"})
+    
+    return jsonify({"status": "failed", "reason": "Missing URL"}), 400
+
+@internal_blueprint.route("/api/analytics/ignore", methods=["GET", "POST", "DELETE"])
+@login_required
+def api_manage_ignored_urls() -> Response:
+    analytics_config = get_settings("analytics_config") or {"ignored_urls": []}
+    ignored_urls = analytics_config.get("ignored_urls", [])
+
+    if request.method == "GET":
+        return jsonify({"ignored_urls": ignored_urls})
+
+    data = request.get_json()
+    if not data or not data.get("url"):
+        return jsonify({"error": "No URL provided."}), 400
+
+    url = data.get("url")
+
+    if request.method == "POST":
+        if url not in ignored_urls:
+            ignored_urls.append(url)
+            update_settings({"analytics_config": {"ignored_urls": ignored_urls}})
+        return jsonify({"success": True})
+
+    elif request.method == "DELETE":
+        if url in ignored_urls:
+            ignored_urls.remove(url)
+            update_settings({"analytics_config": {"ignored_urls": ignored_urls}})
+        return jsonify({"success": True})
+
+@internal_blueprint.route("/api/analytics/clear", methods=["POST"])
+@login_required
+def api_clear_analytics() -> Response:
+    data = request.get_json()
+    url = data.get("url") if data else None
+    
+    try:
+        clear_analytics(url)
+        return jsonify({"status": "success"})
+    except Exception as e:
+        logger.error(f"Failed to clear analytics: {e}")
+        return jsonify({"error": "Failed to clear data"}), 500
