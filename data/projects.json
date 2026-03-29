@@ -35,7 +35,7 @@
         "content_raw": "main",
         "image_url": "/static/assets//images/projects/WhatsApp.png",
         "github_url": "https://github.com/Jackstar-Git/WhatsappWeb-EnhancedPrivacy-Extension",
-        "demo_url": "test",
+        "demo_url": null,
         "tech_stack": [
             "JavaScript",
             "HTML",
@@ -50,7 +50,8 @@
         "maturity": "MVP",
         "activity": "Active",
         "topic": "Productivity",
-        "download_file": null
+        "download_file": null,
+        "last_updated": 1774796258
     },
     {
         "id": "2",

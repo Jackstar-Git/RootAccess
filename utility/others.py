@@ -4,7 +4,7 @@ from functools import lru_cache
 
 
 def convert_markdown_to_html(markdown_text: str) -> str:
-    translation_table: Final[dict[int, str]] = str.maketrans({
+    translation_table: Final[dict[str, str]] = str.maketrans({
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
