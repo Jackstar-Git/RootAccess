@@ -264,11 +264,11 @@ def edit_blog(blog_id: str):
         image_url = blog.get("image_url")
 
         if thumbnail_file and thumbnail_file.filename:
-            upload_folder = "uploads"
+            upload_folder = "uploads/blogs"
             os.makedirs(upload_folder, exist_ok=True)
             filename = f"{int(time.time())}_{thumbnail_file.filename}"
             thumbnail_file.save(os.path.join(upload_folder, filename))
-            image_url = f"/uploads/{filename}"
+            image_url = f"/uploads/blogs/{filename}"
 
         updated_data = {
             "author": request.form.getlist("authors[]"),
