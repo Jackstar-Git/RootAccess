@@ -15,3 +15,34 @@ const daysPassed = calculateDaysSinceStart();
 const halfYears = roundDownToHalfYear(daysPassed);
 
 document.getElementById("years-of-experience").textContent = `${halfYears}+`;
+
+
+function startAccidentalRecursion(count = 0) {
+    const element = document.getElementById("accidental-recursions");
+    if (!element) return;
+
+    element.textContent = count.toLocaleString();
+    const jitter = Math.floor(Math.random() * 100) + 500;
+    
+    setTimeout(() => {
+        startAccidentalRecursion(count + 1);
+    }, jitter);
+}
+
+startAccidentalRecursion();
+
+
+function triggerTypeErrorGlitch() {
+    const errorEl = document.getElementById("type-error-stat");
+    const errors = ["null", "undefined", "NaN", "[object Object]", "404", "Error", "TypeError", "AttributeError", "ReferenceError"];
+    
+    setInterval(() => {
+        const randomError = errors[Math.floor(Math.random() * errors.length)];
+        errorEl.textContent = randomError;
+        
+        setTimeout(() => {
+            errorEl.style.color = ""; 
+        }, 150);
+    }, 3000); 
+}
+triggerTypeErrorGlitch();
