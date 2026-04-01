@@ -20,7 +20,7 @@
 .project-filters .sort-options select,
 .project-filters .filter-menu select {
     padding: 12px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--background-2);
     border-radius: 6px;
     font-size: var(--font-size-md);
     width: 100%;
@@ -30,7 +30,7 @@
     transition: border-color 0.2s;
 }
 
-.project-filters input:focus, .project-filters select:focus { border-color: #2196F3; }
+.project-filters input:focus, .project-filters select:focus { border-color: var(--main-color-500); }
 
 .projects-list {
     list-style: none;
@@ -46,7 +46,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--background-2);
     border-radius: 8px;
     padding: 15px 20px;
     background-color: var(--main-bg);
@@ -73,7 +73,7 @@
     object-fit: cover;
     border-radius: 4px;
     margin-right: 25px;
-    background-color: #f5f5f5;
+    background-color: var(--background-1);
 }
 
 .placeholder-thumb {
@@ -81,7 +81,7 @@
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    color: #ccc;
+    color: var(--background-2);
 }
 
 .project-info {
@@ -110,7 +110,7 @@
 }
 
 .project-info a { text-decoration: none; color: inherit; }
-.project-info a:hover { color: #2196F3; }
+.project-info a:hover { color: var(--main-color-500); }
 
 .description-short {
     font-size: 0.9rem;
@@ -154,14 +154,14 @@
 .status-stable { background: rgba(46, 204, 113, 0.1); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.2); }
 .status-mvp { background: rgba(241, 196, 15, 0.1); color: #f1c40f; border: 1px solid rgba(241, 196, 15, 0.2); }
 .status-legacy { background: rgba(149, 165, 166, 0.1); color: #7f8c8d; border: 1px solid rgba(149, 165, 166, 0.2); }
-.activity-badge { background: var(--background-2); color: var(--font-color); border: 1px solid #ccc; }
+.activity-badge { background: var(--background-2); color: var(--font-color); border: 1px solid var(--background-2); }
 
 .project-actions { display: flex; gap: 8px; }
 
 .btn {
     padding: 10px 14px;
     font-size: var(--font-size-md);
-    color: #fff;
+    color: white;
     border-radius: 6px;
     text-decoration: none;
     text-align: center;
@@ -174,12 +174,109 @@
 .btn-primary { background-color: var(--main-color); }
 .edit-btn { background-color: var(--secondary-color, #4CAF50); }
 .delete-btn { background-color: var(--warning-color, #F44336); }
-.view-btn { background-color: #2196F3; }
+.view-btn { background-color: var(--main-color-500); }
 
 .empty-state {
     text-align: center;
     padding: 50px 20px;
-    background: var(--secondary-bg, #f9f9f9);
+    background: var(--secondary-bg, var(--background-1));
     border-radius: 8px;
-    border: 1px dashed #ccc;
+    border: 1px dashed var(--background-2);
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .project-filters {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .project-filters > div,
+    form.search-bar {
+        flex: 1 1 100%;
+    }
+
+    .project-filters .search-bar input,
+    .project-filters .sort-options select,
+    .project-filters .filter-menu select {
+        padding: 10px;
+        font-size: var(--font-size-md);
+    }
+
+    .project-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+        padding: 12px;
+    }
+
+    .id-column {
+        margin-right: 0;
+        margin-bottom: var(--spacing-sm);
+        width: 100%;
+        font-size: 0.85rem;
+    }
+
+    .project-thumbnail {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 10;
+        margin-right: 0;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .project-info {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .project-info h3 {
+        font-size: 1rem;
+        margin: 0 0 4px 0;
+    }
+
+    .version-badge {
+        font-size: 0.7rem;
+        padding: 1px 4px;
+    }
+
+    .description-short {
+        font-size: 0.85rem;
+        margin: 0 0 6px 0;
+    }
+
+    .categories-tags {
+        font-size: 0.8rem;
+    }
+
+    .project-meta {
+        flex: 1 1 100%;
+        margin-inline: 0;
+        margin-bottom: var(--spacing-sm);
+        font-size: 0.9rem;
+    }
+
+    .project-meta .date {
+        font-size: 0.8rem;
+    }
+
+    .status-badge,
+    .activity-badge {
+        padding: 1px 6px;
+        font-size: 0.7rem;
+    }
+
+    .project-actions {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+        flex: 1 1 auto;
+        min-width: 0;
+    }
 }

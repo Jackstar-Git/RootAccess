@@ -303,11 +303,10 @@
 }
 
 .discord-pill {
-    background: #5865f2;
-    color: white;
+    text-decoration: none;
     padding: var(--spacing-md) var(--spacing-lg);
     border-radius: 30px;
-    text-decoration: none;
+    color: white;
     font-weight: var(--font-weight-medium);
     transition: box-shadow var(--transition-fast);
 }

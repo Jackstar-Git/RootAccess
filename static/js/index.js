@@ -1,3 +1,25 @@
+function initHeroTilt() {
+    const wrapper = document.querySelector(".hero-3d-wrapper");
+    if (!wrapper) return;
+
+    document.addEventListener("mousemove", (e) => {
+        let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+        let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+        wrapper.style.transform = `rotateY(${-xAxis}deg) rotateX(${yAxis}deg)`;
+    });
+
+    document.addEventListener("mouseleave", () => {
+        wrapper.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        wrapper.style.transition = "all 0.5s ease";
+    });
+
+    document.addEventListener("mouseenter", () => {
+        wrapper.style.transition = "none";
+    });
+}
+
+initHeroTilt();
+
 function calculateDaysSinceStart() {
     const startDate = new Date("2021-07-25");
     const currentDate = new Date();

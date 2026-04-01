@@ -27,6 +27,7 @@ class CustomFlask(Flask):
         self._load_initial_analytics()
 
         self.add_template_filter(self.datetime_filter, name="datetimeformat")
+        self.add_template_filter(self.strftime_filter, name="strftime")
         self.before_request(self.request_handler)
         self.context_processor(self.utility_processor)
 
@@ -78,6 +79,12 @@ class CustomFlask(Flask):
 
     @staticmethod
     def datetime_filter(value: int, format: str = "%B %d, %Y") -> str:
+        if not value:
+            return ""
+        return datetime.fromtimestamp(value).strftime(format)
+
+    @staticmethod
+    def strftime_filter(value: int, format: str = "%Y-%m-%d %H:%M") -> str:
         if not value:
             return ""
         return datetime.fromtimestamp(value).strftime(format)

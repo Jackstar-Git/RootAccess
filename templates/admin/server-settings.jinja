@@ -14,11 +14,14 @@
     <div class="main-container">
         {% include "admin/sidebar.jinja" %}
         <div class="main-content">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" title="Toggle Menu" aria-label="Toggle navigation menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
             <input type="hidden" id="csrf_token" value="{{ generate_token() }}">
             
             <div class="filter-bar">
                 <div class="filter-controls">
-                    <h2 style="margin:0; font-size: 1.2rem; color: #1e293b;">Server Configuration</h2>
+                    <h2>Server Configuration</h2>
                 </div>
                 <button class="btn-primary" onclick="submitServerSettings()">
                     <i class="fa-solid fa-floppy-disk"></i> Save Settings

@@ -524,4 +524,103 @@ progress::-moz-progress-bar {
         width: 95%;
         max-width: none;
     }
+
+    .quicklinks-container {
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .quicklink-card {
+        padding: var(--spacing-lg);
+    }
+
+    .quicklink-card i {
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .quicklink-card h3 {
+        font-size: 0.95rem;
+        margin: 0 0 6px 0;
+    }
+
+    .quicklink-card p {
+        font-size: 0.8rem;
+        margin: 0;
+    }
+
+    .status-card {
+        min-height: 150px;
+        padding: var(--spacing-lg);
+    }
+
+    .status-card h4 {
+        font-size: var(--font-size-md);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .status-bars {
+        gap: var(--spacing-sm);
+    }
+
+    .status-bar-container label {
+        font-size: 0.85rem;
+    }
+
+    .status-bar {
+        height: 8px;
+    }
+
+    .notes-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .notes-header h3 {
+        width: 100%;
+    }
+
+    .notes-header button {
+        width: 100%;
+    }
+
+    .notes-list {
+        max-height: 300px;
+    }
+
+    .note-item {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .calendar {
+        font-size: 0.8rem;
+    }
+
+    .calendar th {
+        padding: 6px 2px;
+        font-size: 0.7rem;
+    }
+
+    .calendar td {
+        height: auto;
+        min-height: 50px;
+        padding: 4px 2px;
+        font-size: 0.7rem;
+    }
+
+    .event-count-badge {
+        font-size: 0.65rem;
+        padding: 2px 4px;
+    }
+
+    .copy-icon {
+        font-size: 0.6rem;
+    }
+
+    .page-title {
+        font-size: var(--font-size-xl);
+        margin-bottom: var(--spacing-lg);
+    }
 }

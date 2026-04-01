@@ -389,3 +389,62 @@
 .file-icon i {
     display: inline-block;
 }
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .media-filters {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .media-filters input,
+    .media-filters select {
+        width: 100%;
+        padding: 8px;
+    }
+
+    .file-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .file-item {
+        padding: 10px;
+        flex-direction: column;
+    }
+
+    .file-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
+
+    .file-info {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .file-name {
+        font-size: 0.85rem;
+        word-break: break-word;
+    }
+
+    .file-meta {
+        font-size: 0.75rem;
+        margin-top: 4px;
+    }
+
+    .file-actions {
+        width: 100%;
+        gap: 4px;
+        margin-top: 8px;
+    }
+
+    .file-actions button {
+        padding: 6px 8px;
+        font-size: 0.75rem;
+        flex: 1;
+    }
+}

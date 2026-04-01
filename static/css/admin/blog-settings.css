@@ -22,7 +22,7 @@
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--background-2);
 }
 
 .section-header h3 {
@@ -101,7 +101,7 @@
 .btn {
     padding: 8px 12px;
     font-size: 0.95rem;
-    color: #fff;
+    color: white;
     border-radius: 6px;
     text-decoration: none;
     text-align: center;
@@ -115,7 +115,7 @@
 }
 
 .btn-primary { background-color: var(--main-color-500); }
-.edit-btn { background-color: var(--main-color-400); color: #fff; }
+.edit-btn { background-color: var(--main-color-400); color: white; }
 .delete-btn { background-color: var(--warning-color); }
 
 /* Inline Form for Adding New Items */
@@ -148,7 +148,7 @@
 .inline-form input {
     width: 100%;
     padding: 10px 10px 10px 35px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--background-2);
     border-radius: 6px;
     font-size: 0.95rem;
     outline: none;
@@ -164,6 +164,77 @@
     padding: 30px 20px;
     background: var(--background-1);
     border-radius: 8px;
-    border: 1px dashed #ccc;
+    border: 1px dashed var(--background-2);
     color: var(--third-font-color);
 }
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .header-actions {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .header-actions h2 {
+        width: 100%;
+    }
+
+    .header-actions a,
+    .header-actions button {
+        width: 100%;
+    }
+
+    .config-section {
+        margin-bottom: 20px;
+        padding: 15px;
+    }
+
+    .config-item {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 12px;
+    }
+
+    .item-icon {
+        width: 30px;
+        height: 30px;
+        min-width: 30px;
+        font-size: 1rem;
+    }
+
+    .item-actions {
+        width: 100%;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .btn {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+        flex: 1 1 auto;
+    }
+
+    .inline-form {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .inline-form input {
+        width: 100%;
+        padding: 8px;
+    }
+
+    .tag-input {
+        padding: 6px;
+        min-height: 35px;
+    }
+
+    .add-new-item {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+        width: 100%;
+    }
+}
+

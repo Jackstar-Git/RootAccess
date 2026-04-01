@@ -23,6 +23,9 @@
         {% include "admin/sidebar.jinja" %}
 
         <main class="main-content">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" title="Toggle Menu" aria-label="Toggle navigation menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
             <header class="editor-header">
                 <h2>Draft New Post</h2>
                 <div class="header-actions">
@@ -82,10 +85,34 @@
                         </div>
 
                         <textarea id="content" name="content" placeholder="Tell your story..." required></textarea>
-                        <div id="preview-output" class="markdown-body" style="display: none;"></div>
+                        <div id="preview-output" class="markdown-body"></div>
                     </section>
 
                     <aside class="settings-sidebar">
+                        <div class="settings-group">
+                            <label>Visibility Status</label>
+                            <select name="status" id="blog-status" class="modern-input select-auto">
+                                <option value="visible">Visible</option>
+                                <option value="draft" selected>Draft</option>
+                                <option value="hidden">Hidden</option>
+                            </select>
+                        </div>
+
+                        <div id="scheduling-group" class="settings-group">
+                            <label>Schedule Publication (Optional)</label>
+                            <p class="scheduling-help-text">Leave empty to keep as draft. Select a date/time to auto-publish.</p>
+                            <div class="scheduling-grid">
+                                <div>
+                                    <label>Date</label>
+                                    <input type="date" name="scheduled_date" id="scheduled-date" class="modern-input scheduling-input">
+                                </div>
+                                <div>
+                                    <label>Time</label>
+                                    <input type="time" name="scheduled_time" id="scheduled-time" class="modern-input scheduling-input" value="00:00">
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="settings-group">
                             <label>Featured Image</label>
                             <div class="upload-container" id="drop-zone">
@@ -128,16 +155,16 @@
 
                         <div class="settings-group">
                             <label>Type</label>
-                            <select name="type" class="modern-select">
+                            <select name="type" class="modern-select" style="min-height: auto;">
                                 {% for type in settings.types %}
-                                    <option value="{{type.name}}"><i class="{{type.icon}}"></i>{{type.name}}</option>
+                                    <option value="{{type.name}}">{{type.name}}</option>
                                 {% endfor %}
                             </select>
                         </div>
 
                         <div class="settings-group">
                             <label>Reading Time</label>
-                            <select name="reading_time" class="modern-select">
+                            <select name="reading_time" class="modern-select" style="min-height: auto;">
                                 <option value="short">Short (&lt;5 min)</option>
                                 <option value="medium">Medium (5‑10 min)</option>
                                 <option value="deep">Deep Dive (&gt;10 min)</option>

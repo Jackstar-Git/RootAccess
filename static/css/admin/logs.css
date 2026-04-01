@@ -7,10 +7,10 @@
     gap: 12px;
     margin: 20px 0;
     padding: 16px;
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
+    background-color: var(--main-bg);
+    border: 1px solid var(--background-2);
     border-radius: 8px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
     z-index: 100;
 }
 
@@ -24,9 +24,9 @@
     flex-grow: 1;
     padding: 10px;
     font-size: 14px;
-    color: #334155;
-    background-color: #f8fafc;
-    border: 1px solid #cbd5e1;
+    color: var(--font-color);
+    background-color: var(--background-1);
+    border: 1px solid var(--background-2);
     border-radius: 6px;
     outline: none;
     cursor: pointer;
@@ -34,7 +34,7 @@
 }
 
 .filter-bar select:focus {
-    border-color: var(--main-color, #3b82f6);
+    border-color: var(--main-color-500);
 }
 
 .btn-primary, .btn-danger {
@@ -48,8 +48,8 @@
 }
 
 .btn-primary {
-    background-color: var(--main-color, #3b82f6);
-    color: var(--secondary-font-color, #ffffff);
+    background-color: var(--main-color-500);
+    color: white;
 }
 
 .btn-primary:hover {
@@ -57,19 +57,19 @@
 }
 
 .btn-danger {
-    background-color: #ef4444;
-    color: #ffffff;
+    background-color: var(--warning-color);
+    color: white;
 }
 
 .btn-danger:hover {
-    background-color: #dc2626;
+    opacity: 0.85;
 }
 
 .logs-container {
     margin-top: 20px;
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 #logsOutput {
@@ -151,4 +151,70 @@
 
 .btn-console:hover {
     background-color: #059669;
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .logs-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .logs-header h2 {
+        width: 100%;
+    }
+
+    .logs-controls {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .logs-filters {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .logs-filters select {
+        width: 100%;
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+
+    .logs-actions {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .logs-actions button {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .logs-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .logs-table table {
+        font-size: 0.8rem;
+    }
+
+    .logs-table th,
+    .logs-table td {
+        padding: 8px;
+        word-break: break-word;
+    }
+
+    .logs-table thead {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+    }
 }

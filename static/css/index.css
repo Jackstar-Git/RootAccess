@@ -1,7 +1,6 @@
 /* Hero Section */
 .hero-section {
     background: var(--background-1);
-    /* clamp() scales padding smoothly between 3rem and the max spacing */
     padding: clamp(3rem, 8vw, var(--spacing-6xl)) 0;
     perspective: 1200px;
 }

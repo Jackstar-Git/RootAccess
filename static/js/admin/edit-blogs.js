@@ -159,6 +159,40 @@ function addAuthor() {
     container.appendChild(div);
 }
 
+/**
+ * Toggles the visibility of the scheduling group based on blog status
+ */
+function toggleScheduling() {
+    const status = document.getElementById('blog-status');
+    const schedulingGroup = document.getElementById('scheduling-group');
+    
+    if (status && schedulingGroup) {
+        if (status.value === 'draft') {
+            schedulingGroup.classList.add('active');
+        } else {
+            schedulingGroup.classList.remove('active');
+        }
+    }
+}
+
+function initScheduling() {
+    const statusSelect = document.getElementById('blog-status');
+    const scheduledDateInput = document.getElementById('scheduled-date');
+    
+    // Set minimum date to today
+    if (scheduledDateInput) {
+        const today = new Date().toISOString().split('T')[0];
+        scheduledDateInput.min = today;
+    }
+    
+    // Add event listener for status changes
+    if (statusSelect) {
+        statusSelect.addEventListener('change', toggleScheduling);
+        // Initial toggle on page load
+        toggleScheduling();
+    }
+}
+
 // Global Event Listeners
 document.addEventListener("DOMContentLoaded", () => {
     const thumbUpload = document.getElementById("thumbnail-upload");
@@ -178,5 +212,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+    
+    // Initialize scheduling
+    initScheduling();
 });
 

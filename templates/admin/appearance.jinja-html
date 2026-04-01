@@ -11,6 +11,9 @@
     <div class="main-container">
         {% include "admin/sidebar.jinja" %}
         <div class="main-content">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" title="Toggle Menu" aria-label="Toggle navigation menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
             <h2>Change Colors</h2>
             <div class="selection-preview">
                 <form action="" method="POST" class="form-styles" id="color-form">

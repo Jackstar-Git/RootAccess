@@ -208,6 +208,121 @@
 }
 
 @media (max-width: 768px) {
-    .kpi-grid { grid-template-columns: 1fr; }
-    .analytics-table { display: block; overflow-x: auto; }
+    .analytics-viewport {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .analytics-title {
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .kpi-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .kpi-card {
+        padding: var(--spacing-lg);
+    }
+
+    .kpi-card i {
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .kpi-value {
+        font-size: var(--font-size-lg);
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-lg);
+    }
+
+    .chart-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+
+    .time-filters {
+        flex-wrap: wrap;
+        gap: var(--spacing-xs);
+    }
+
+    .time-filters span {
+        padding: 1px 6px;
+        font-size: 0.7rem;
+    }
+
+    .chart-container {
+        max-height: 300px;
+    }
+
+    .data-table-container {
+        overflow-x: auto;
+        margin: var(--spacing-lg) 0;
+    }
+
+    .analytics-table {
+        display: block;
+        overflow-x: auto;
+        font-size: 0.85rem;
+    }
+
+    .analytics-table th,
+    .analytics-table td {
+        padding: 8px;
+        font-size: 0.8rem;
+    }
+
+    .analytics-table thead {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+    }
+
+    .cell-path {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        min-width: 150px;
+    }
+
+    .cell-path code {
+        font-size: 0.75rem;
+        max-width: 100%;
+        word-break: break-all;
+    }
+
+    .data-input-group {
+        flex-direction: column;
+    }
+
+    .data-input-group input {
+        width: 100%;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .data-input-group .btn-add {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .ignore-input-group {
+        flex-direction: column;
+    }
+
+    .ignore-input-group input {
+        width: 100%;
+        margin-bottom: var(--spacing-sm);
+        padding: 8px;
+    }
+
+    .ignore-input-group .btn-add {
+        width: 100%;
+        justify-content: center;
+    }
 }

@@ -23,6 +23,9 @@
         {% include "admin/sidebar.jinja" %}
 
         <main class="main-content">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" title="Toggle Menu" aria-label="Toggle navigation menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
             <header class="editor-header">
                 <h2>Edit: {{ blog.title }}</h2>
                 <div class="header-actions">
@@ -73,17 +76,34 @@
                         </div>
 
                         <textarea id="content" name="content" required>{{ blog.content_raw }}</textarea>
-                        <div id="preview-output" class="markdown-body" style="display: none;"></div>
+                        <div id="preview-output" class="markdown-body"></div>
                     </section>
 
                     <aside class="settings-sidebar">
                         <div class="settings-group">
                             <label>Visibility Status</label>
-                            <select name="status" class="modern-input" style="height: auto;">
+                            <select name="status" id="blog-status" class="modern-input select-auto">
                                 <option value="visible" {% if blog.status == 'visible' %}selected{% endif %}>Visible</option>
                                 <option value="draft" {% if blog.status == 'draft' or not blog.status %}selected{% endif %}>Draft</option>
                                 <option value="hidden" {% if blog.status == 'hidden' %}selected{% endif %}>Hidden</option>
                             </select>
+                        </div>
+
+                        <div id="scheduling-group" class="settings-group">
+                            <label>Schedule Publication (Optional)</label>
+                            <p class="scheduling-help-text">Leave empty to keep as draft. Select a date/time to auto-publish.</p>
+                            <div class="scheduling-grid">
+                                <div>
+                                    <label>Date</label>
+                                    <input type="date" name="scheduled_date" id="scheduled-date" class="modern-input scheduling-input"
+                                        {% if blog.scheduled_date %}value="{{ blog.scheduled_date | strftime('%Y-%m-%d') }}"{% endif %}>
+                                </div>
+                                <div>
+                                    <label>Time</label>
+                                    <input type="time" name="scheduled_time" id="scheduled-time" class="modern-input scheduling-input"
+                                        value="{% if blog.scheduled_date %}{{ blog.scheduled_date | strftime('%H:%M') }}{% else %}00:00{% endif %}">
+                                </div>
+                            </div>
                         </div>
 
                         <div class="settings-group">
@@ -91,7 +111,7 @@
                             <div class="upload-container" id="drop-zone">
                                 <input type="file" id="thumbnail-upload" name="thumbnail" accept="image/*" hidden>
                                 <div id="thumbnail-preview" class="preview-box">
-                                    <img src="{{ blog.image_url }}" style="max-width: 200px; max-height: 200px; border-radius: 4px; margin-bottom: 10px;">
+                                    <img src="{{ blog.image_url }}" class="preview-image">
                                     <p>Click to change image</p>
                                 </div>
                             </div>
@@ -157,7 +177,6 @@
             </form>
         </main>
     </div>
-
     <script src="{{ url_for('static', filename='js/admin/edit-blogs.js')}}"></script>
     <script src="{{ url_for('static', filename='js/admin/admin-global.js')}}"></script>
 </body>

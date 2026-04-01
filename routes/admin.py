@@ -236,6 +236,35 @@ def create_blog():
             "description": request.form.get("description")
         }
 
+        # Handle scheduled publish date
+        if blog_data["status"] == "draft":
+            scheduled_date = request.form.get("scheduled_date")
+            scheduled_time = request.form.get("scheduled_time", "00:00")
+            
+            if scheduled_date:
+                try:
+                    # Combine date and time, convert to timestamp
+                    datetime_str = f"{scheduled_date} {scheduled_time}"
+                    dt = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
+                    scheduled_timestamp = int(dt.timestamp())
+                    
+                    # Validate that scheduled time is in the future
+                    if scheduled_timestamp > int(time.time()):
+                        blog_data["scheduled_date"] = scheduled_timestamp
+                    else:
+                        flash("Scheduled date/time must be in the future.", "error")
+                        return render_template(
+                            "admin/add-blog.jinja",
+                            settings=get_settings("blog_config")
+                        )
+                except ValueError as e:
+                    logger.error(f"Invalid scheduled date format: {str(e)}")
+                    flash("Invalid scheduled date/time format.", "error")
+                    return render_template(
+                        "admin/add-blog.jinja",
+                        settings=get_settings("blog_config")
+                    )
+
         try:
             add_blog(blog_data)
             logger.info(f'Blog "{blog_data["title"]}" created successfully.')
@@ -282,6 +311,43 @@ def edit_blog(blog_id: str):
             "type": request.form.get("type"),
             "reading_time": request.form.get("reading_time")
         }
+
+        # Handle scheduled publish date
+        if updated_data["status"] == "draft":
+            scheduled_date = request.form.get("scheduled_date")
+            scheduled_time = request.form.get("scheduled_time", "00:00")
+            
+            if scheduled_date:
+                try:
+                    # Combine date and time, convert to timestamp
+                    datetime_str = f"{scheduled_date} {scheduled_time}"
+                    dt = datetime.strptime(datetime_str, "%Y-%m-%d %H:%M")
+                    scheduled_timestamp = int(dt.timestamp())
+                    
+                    # Validate that scheduled time is in the future
+                    if scheduled_timestamp > int(time.time()):
+                        updated_data["scheduled_date"] = scheduled_timestamp
+                    else:
+                        flash("Scheduled date/time must be in the future.", "error")
+                        return render_template(
+                            "admin/edit-blog.jinja",
+                            blog=blog,
+                            settings=get_settings("blog_config")
+                        )
+                except ValueError as e:
+                    logger.error(f"Invalid scheduled date format: {str(e)}")
+                    flash("Invalid scheduled date/time format.", "error")
+                    return render_template(
+                        "admin/edit-blog.jinja",
+                        blog=blog,
+                        settings=get_settings("blog_config")
+                    )
+            elif blog.get("scheduled_date"):
+                # If draft but no new schedule, remove old schedule
+                updated_data["scheduled_date"] = None
+        else:
+            # If not draft, remove scheduled_date
+            updated_data["scheduled_date"] = None
 
         if update_blog(blog_id, updated_data):
             flash("Successfully updated!", "success")
