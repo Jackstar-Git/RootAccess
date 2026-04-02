@@ -93,9 +93,9 @@
                             <span aria-label="Date created">
                                 <i class="fa-regular fa-calendar-plus" aria-hidden="true"></i> Created: {{ project.time_created | datetimeformat }}
                             </span>
-                            {% if project.last_modified %}
+                            {% if project.last_updated %}
                                 <span aria-label="Date last updated">
-                                    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Updated: {{ project.last_modified | datetimeformat }}
+                                    <i class="fa-regular fa-pen-to-square" aria-hidden="true"></i> Updated: {{ project.last_updated | datetimeformat }}
                                 </span>
                             {% endif %}
                         </div>
@@ -111,7 +111,7 @@
                     </figure>
 
                     <section class="main-text-flow" aria-label="Project content">
-                        {{ project.content_raw | safe }}
+                        {{ project.content_html | safe }}
                     </section>
 
                     <footer class="article-end">

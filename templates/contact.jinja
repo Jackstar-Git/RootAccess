@@ -98,6 +98,31 @@
                                 </div>
                             </div>
 
+                            <!-- Captcha Verification -->
+                            <div class="form-group captcha-group">
+                                <div class="captcha-prompt">
+                                    <label>Security Verification</label>
+                                    <p>Click the icon that represents: <strong id="captcha-category" aria-live="polite">{{ captcha.category|capitalize }}</strong></p>
+                                </div>
+                                
+                                <div class="captcha-choices" role="group" aria-label="Select the icon matching the category">
+                                    {% for icon in captcha.choices %}
+                                    <button type="button" class="captcha-icon-btn" data-icon="{{ icon }}" title="Select {{ icon }}" aria-label="Select {{ icon }}" tabindex="0">
+                                        <i class="fas fa-{{ icon }}" aria-hidden="true"></i>
+                                    </button>
+                                    {% endfor %}
+                                </div>
+                                
+                                <input type="hidden" id="captcha-id" name="captcha_id" value="{{ captcha.captcha_id }}">
+                                <input type="hidden" id="captcha-answer" name="captcha_answer" value="">
+                                
+                                <div id="captcha-feedback" class="captcha-feedback" aria-live="polite" aria-atomic="true"></div>
+                                
+                                <button type="button" class="btn-refresh-captcha" id="refresh-captcha-btn" title="Generate a new captcha" aria-label="Generate a new captcha">
+                                    <i class="fas fa-rotate-right" aria-hidden="true"></i> Refresh
+                                </button>
+                            </div>
+
                             <button type="submit" class="btn-submit">
                                 Send Message <i class="fas fa-paper-plane" aria-hidden="true"></i>
                             </button>
@@ -112,5 +137,6 @@
     {% include "snippets/footer.jinja" %}
     
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/contact.js') }}"></script>
 </body>
 </html>

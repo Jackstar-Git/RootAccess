@@ -4,10 +4,10 @@
         "title": "RootAccess - Portfolio",
         "version": "1.0.0",
         "description_short": "This is the code for my personal portfolio and blogging website, built with Flask and Jinja2.",
-        "content_raw": "",
-        "image_url": null,
+        "content_raw": "# RootAccess - Portfolio\r\n## Description\r\nThis is the source code for a personal portfolio and blogging platform. It serves as a central hub for displaying professional work and sharing insights through integrated blog functionality, utilizing a clean and responsive interface.\r\n## Motivation/Idea behind the project\r\nThe project was driven by two primary goals. First, I wanted a dedicated, personal space to share my opinions and insights through a blog. Second, I prefer building from scratch; this approach allowed for maximum customizability, ensuring every setting and design element is 100% aligned with my vision.\r\n## Features\r\n- **Personal Portfolio & Blog**: A combined space for showcasing professional work and publishing long-form articles.\r\n- **Built-in CMS**: A custom management system for handling contact requests, server settings, and general site configuration.\r\n- **Content & Style Management**: Includes tools for managing content, simple analytics, and the ability to adjust templates and styles directly.\r\n## Tech Stack\r\n- **Languages/Frameworks**: JavaScript, HTML, CSS, Jinja2, Flask (Python)\r\n- **Environment**: Web-based, typically deployed on Linux-based containers (e.g., Render)\r\n- **Python Version**: 3.12-3.14 (tested), may work on other versions\r\n## Plans / Status / Future\r\n- **Status**: Active\r\n- **Future**: Plans include migrating to a dedicated database, completing the implementation of all pending features, and potentially adding multi-language support.\r\n## Notes & Disclaimers\r\nThe information on this page might not me up-to-date since this project is in constant development. \r\n### License\r\nAll Rights Reserved. No usage, reproduction, or distribution is permitted without explicit written permission from the author.",
+        "image_url": "/uploads/projects/RootAccess.png",
         "github_url": "https://github.com/Jackstar-Git/RootAccess",
-        "demo_url": "https://https://portfolio-h6m8.onrender.com/",
+        "demo_url": "https://rootaccess.onrender.com/",
         "tech_stack": [
             "JavaScript",
             "HTML",
@@ -15,8 +15,8 @@
             "Jinja2",
             "Flask"
         ],
-        "time_created": 1709302224,
-        "last_modified": 1709815526,
+        "time_created": 1772391600,
+        "last_updated": 1775160799,
         "tags": [
             "Personal",
             "Portfolio",
@@ -24,16 +24,17 @@
         ],
         "maturity": "Stable",
         "activity": "Active",
-        "topic": "Personal",
-        "download_file": null
+        "topic": "Web Development",
+        "download_file": null,
+        "content_html": "<h1>RootAccess - Portfolio</h1>\n<h2>Description</h2>\n<p>This is the source code for a personal portfolio and blogging platform. It serves as a central hub for displaying professional work and sharing insights through integrated blog functionality, utilizing a clean and responsive interface.</p>\n<h2>Motivation/Idea behind the project</h2>\n<p>The project was driven by two primary goals. First, I wanted a dedicated, personal space to share my opinions and insights through a blog. Second, I prefer building from scratch; this approach allowed for maximum customizability, ensuring every setting and design element is 100% aligned with my vision.</p>\n<h2>Features</h2>\n<ul>\n\t<li><strong>Personal Portfolio & Blog</strong>: A combined space for showcasing professional work and publishing long-form articles.</li>\n\t<li><strong>Built-in CMS</strong>: A custom management system for handling contact requests, server settings, and general site configuration.</li>\n\t<li><strong>Content & Style Management</strong>: Includes tools for managing content, simple analytics, and the ability to adjust templates and styles directly.</li>\n</ul>\n<h2>Tech Stack</h2>\n<ul>\n\t<li><strong>Languages/Frameworks</strong>: JavaScript, HTML, CSS, Jinja2, Flask (Python)</li>\n\t<li><strong>Environment</strong>: Web-based, typically deployed on Linux-based containers (e.g., Render)</li>\n\t<li><strong>Python Version</strong>: 3.12-3.14 (tested), may work on other versions</li>\n</ul>\n<h2>Plans / Status / Future</h2>\n<ul>\n\t<li><strong>Status</strong>: Active</li>\n\t<li><strong>Future</strong>: Plans include migrating to a dedicated database, completing the implementation of all pending features, and potentially adding multi-language support.</li>\n</ul>\n<h2>Notes & Disclaimers</h2>\n<p>The information on this page might not me up-to-date since this project is in constant development.</p>\n<h3>License</h3>\n<p>All Rights Reserved. No usage, reproduction, or distribution is permitted without explicit written permission from the author.</p>"
     },
     {
         "id": "1",
-        "title": "WhatsappWeb-EnhancedPrivacy-Extension",
+        "title": "WhatsApp-Web Privacy-Extension",
         "version": "1.1.0",
         "description_short": "Enhances privacy on WhatsApp Web by blurring sensitive content.",
-        "content_raw": "main",
-        "image_url": "/static/assets//images/projects/WhatsApp.png",
+        "content_raw": "# WhatsApp-Web Privacy-Extension - V1.1.0\r\n## Description\r\nThis browser extension is designed to protect your privacy when using WhatsApp Web in public or shared spaces. It selectively hides sensitive information like chat messages, contact names, and profile pictures, ensuring your private conversations remain private from so called \"shoulder surfers.\"\r\n## Motivation/Idea behind the project\r\nThe project was born out of a practical need for privacy while working in highly public environments, specifically in school and when using public transport. It aims to eliminate the discomfort of others potentially reading over your shoulder while you manage your messages.\r\n## Features\r\n- **Sensitive Content Hiding**: Automatically hides Profile Pictures (PFP), message previews, contact names, and timestamps.\r\n- **Customizable Privacy**: All blurring features come with individual toggle settings, allowing the user to choose exactly what remains hidden and what stays visible.\r\n## Tech Stack\r\n- **Languages**: JavaScript, HTML, CSS\r\n- **Platform**: Browser Extension (Chrome/Edge/Firefox)\r\n- **Environment**: Client-side content scripting\r\n## Plans / Status / Future\r\n- **Status**: MVP (Minimum Viable Product)\r\n- **Future**: Plans include expanding the feature set with advanced privacy settings and addressing known visual bugs to reach a stable release.\r\n## Note & Disclaimers\r\nThe information on this page might not be up-to-date since this project is in constant development. \r\nPlease be aware that known visual bugs exist; while the extension is functional, it is currently in an MVP state and may not be perfectly stable.\r\n### License\r\n**Mozilla Public License 2.0**\r\nThe MPL-2.0 is a \"weak copyleft\" license. It requires that modifications to the original files remain open-source, while allowing you to combine them with other code to create a larger project without forcing the entire work to be open-source.",
+        "image_url": "/uploads/projects/WhatsApp.png",
         "github_url": "https://github.com/Jackstar-Git/WhatsappWeb-EnhancedPrivacy-Extension",
         "demo_url": null,
         "tech_stack": [
@@ -42,24 +43,24 @@
             "CSS"
         ],
         "time_created": 1764621692,
-        "last_modified": 1764622793,
+        "last_updated": 1775161768,
         "tags": [
             "Privacy",
             "Browser Extension"
         ],
         "maturity": "MVP",
         "activity": "Active",
-        "topic": "Productivity",
+        "topic": "Web Development",
         "download_file": null,
-        "last_updated": 1774796258
+        "content_html": "<h1>WhatsApp-Web Privacy-Extension - V1.1.0</h1>\n<h2>Description</h2>\n<p>This browser extension is designed to protect your privacy when using WhatsApp Web in public or shared spaces. It selectively hides sensitive information like chat messages, contact names, and profile pictures, ensuring your private conversations remain private from so called \"shoulder surfers.\"</p>\n<h2>Motivation/Idea behind the project</h2>\n<p>The project was born out of a practical need for privacy while working in highly public environments, specifically in school and when using public transport. It aims to eliminate the discomfort of others potentially reading over your shoulder while you manage your messages.</p>\n<h2>Features</h2>\n<ul>\n\t<li><strong>Sensitive Content Hiding</strong>: Automatically hides Profile Pictures (PFP), message previews, contact names, and timestamps.</li>\n\t<li><strong>Customizable Privacy</strong>: All blurring features come with individual toggle settings, allowing the user to choose exactly what remains hidden and what stays visible.</li>\n</ul>\n<h2>Tech Stack</h2>\n<ul>\n\t<li><strong>Languages</strong>: JavaScript, HTML, CSS</li>\n\t<li><strong>Platform</strong>: Browser Extension (Chrome/Edge/Firefox)</li>\n\t<li><strong>Environment</strong>: Client-side content scripting</li>\n</ul>\n<h2>Plans / Status / Future</h2>\n<ul>\n\t<li><strong>Status</strong>: MVP (Minimum Viable Product)</li>\n\t<li><strong>Future</strong>: Plans include expanding the feature set with advanced privacy settings and addressing known visual bugs to reach a stable release.</li>\n</ul>\n<h2>Note & Disclaimers</h2>\n<p>The information on this page might not be up-to-date since this project is in constant development.</p>\n<p>Please be aware that known visual bugs exist; while the extension is functional, it is currently in an MVP state and may not be perfectly stable.</p>\n<h3>License</h3>\n<p><strong>Mozilla Public License 2.0</strong></p>\n<p>The MPL-2.0 is a \"weak copyleft\" license. It requires that modifications to the original files remain open-source, while allowing you to combine them with other code to create a larger project without forcing the entire work to be open-source.</p>"
     },
     {
         "id": "2",
-        "title": "Chromium-Tab-Manager",
+        "title": "Chromium Tab-Manager",
         "version": "1.0.0",
         "description_short": "A tool to organize and manage high volumes of browser tabs.",
-        "content_raw": "",
-        "image_url": "/static/assets//images/projects/Tab-Manager.png",
+        "content_raw": "# Chromium Tab-Manager - V1.0.0\r\n## Description\r\nThis tool is designed to help users efficiently organize and manage a large number of browser tabs. It provides a structured way to view and interact with open windows, reducing the cognitive load and performance impact typically associated with \"tab hoarding\" in Chromium-based browsers.\r\n## Motivation/Idea behind the project\r\nThe project was born out of a personal struggle with managing over 100 open tabs during intensive coding sessions and research for my diploma thesis. It served as a practical solution for session persistence and a hands-on way to explore the capabilities of the Chromium Tabs API.\r\n## Features\r\n- **Session Export**: Allows the user to save all currently open tabs to a local file on the disk.\r\n- **Session Restoration**: Enables loading previously saved tab sessions from a file to restore the browsing environment instantly.\r\n- **Volume Management**: Engineered to track and handle high volumes of tabs as a single manageable dataset.\r\n## Tech Stack\r\n- **Languages**: JavaScript, HTML, CSS\r\n- **Platform**: Chromium-based browsers (Chrome, Edge, Brave, Opera, Vivaldi)\r\n- **Environment**: Browser extension architecture utilizing the Chromium Tabs and Storage APIs\r\n## Plans / Status / Future\r\n- **Status**: Stable / Maintained\r\n- **Future**: While the project is currently in maintenance mode, there may be potential future updates regaring UI improvements and more granular controls, such as the ability to save only specific selected tabs.\r\n## Note & Disclaimers\r\nWhile the extension may work in other browsers, it is neither tested nor officially supported outside of Chromium-based environments.\r\n### License\r\n**Mozilla Public License 2.0**\r\nThe MPL-2.0 is a \"weak copyleft\" license. It requires that modifications to the original files remain open-source, while allowing you to combine them with other code to create a larger project without forcing the entire work to be open-source.",
+        "image_url": "/uploads/projects/Tab-Manager.png",
         "github_url": "https://github.com/Jackstar-Git/Chromium-Tab-Manager",
         "demo_url": null,
         "tech_stack": [
@@ -68,15 +69,16 @@
             "CSS"
         ],
         "time_created": 1763763877,
-        "last_modified": 1763763904,
+        "last_updated": 1775161779,
         "tags": [
             "Productivity",
             "Browser Tool"
         ],
         "maturity": "Stable",
         "activity": "Maintained",
-        "topic": "Productivity",
-        "download_file": null
+        "topic": "Web Development",
+        "download_file": null,
+        "content_html": "<h1>Chromium Tab-Manager - V1.0.0</h1>\n<h2>Description</h2>\n<p>This tool is designed to help users efficiently organize and manage a large number of browser tabs. It provides a structured way to view and interact with open windows, reducing the cognitive load and performance impact typically associated with \"tab hoarding\" in Chromium-based browsers.</p>\n<h2>Motivation/Idea behind the project</h2>\n<p>The project was born out of a personal struggle with managing over 100 open tabs during intensive coding sessions and research for my diploma thesis. It served as a practical solution for session persistence and a hands-on way to explore the capabilities of the Chromium Tabs API.</p>\n<h2>Features</h2>\n<ul>\n\t<li><strong>Session Export</strong>: Allows the user to save all currently open tabs to a local file on the disk.</li>\n\t<li><strong>Session Restoration</strong>: Enables loading previously saved tab sessions from a file to restore the browsing environment instantly.</li>\n\t<li><strong>Volume Management</strong>: Engineered to track and handle high volumes of tabs as a single manageable dataset.</li>\n</ul>\n<h2>Tech Stack</h2>\n<ul>\n\t<li><strong>Languages</strong>: JavaScript, HTML, CSS</li>\n\t<li><strong>Platform</strong>: Chromium-based browsers (Chrome, Edge, Brave, Opera, Vivaldi)</li>\n\t<li><strong>Environment</strong>: Browser extension architecture utilizing the Chromium Tabs and Storage APIs</li>\n</ul>\n<h2>Plans / Status / Future</h2>\n<ul>\n\t<li><strong>Status</strong>: Stable / Maintained</li>\n\t<li><strong>Future</strong>: While the project is currently in maintenance mode, there may be potential future updates regaring UI improvements and more granular controls, such as the ability to save only specific selected tabs.</li>\n</ul>\n<h2>Note & Disclaimers</h2>\n<p>While the extension may work in other browsers, it is neither tested nor officially supported outside of Chromium-based environments.</p>\n<h3>License</h3>\n<p><strong>Mozilla Public License 2.0</strong></p>\n<p>The MPL-2.0 is a \"weak copyleft\" license. It requires that modifications to the original files remain open-source, while allowing you to combine them with other code to create a larger project without forcing the entire work to be open-source.</p>"
     },
     {
         "id": "3",
@@ -94,7 +96,7 @@
             "JavaScript"
         ],
         "time_created": 1763615074,
-        "last_modified": 1764647866,
+        "last_updated": 1764647866,
         "tags": [
             "E-commerce",
             "CMS"
@@ -106,11 +108,11 @@
     },
     {
         "id": "4",
-        "title": "ShareButtonWidget",
+        "title": "Share-Button Widget",
         "version": "1.0.2",
         "description_short": "A plug-and-play social sharing widget for websites.",
-        "content_raw": "main",
-        "image_url": "/static/assets//images/projects/ShareWidget.png",
+        "content_raw": "# Share-Button Widget - V1.0.2\r\n## Description\r\nA lightweight, plug-and-play social sharing widget designed for seamless integration into any website. It provides a clean and modern user interface for visitors to quickly share content across various social media platforms without the need for heavy third-party libraries.\r\n## Motivation/Idea behind the project\r\nThis project was developed primarily as a creative exercise. Born out of a moment of boredom, it served as a fun way to experiment with UI/UX components and create a functional tool from scratch.\r\n## Features\r\n- **Plug-and-Play**: Designed to be dropped into any HTML structure with minimal configuration.\r\n- **Cross-Platform Support**: Includes pre-configured sharing links for major social networks.\r\n## Tech Stack\r\n- **Languages**: JavaScript, HTML, CSS\r\n- **Environment**: Client-side web browsers\r\n- **Integration**: Vanilla JS (No external libraries required)\r\n## Plans / Status / Future\r\n- **Status**: Archived\r\n- **Future**: As an archived project, there are no active plans for new features or updates. It remains available as a reference or for legacy use.\r\n## Note\r\nThe information on this page might not be up-to-date since this project is archived. It may not work anymore when using modern browser versions.\r\n### License\r\n**MIT License**\r\nA short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.",
+        "image_url": "/uploads/projects/ShareWidget.png",
         "github_url": "https://github.com/Jackstar-Git/ShareButtonWidget",
         "demo_url": null,
         "tech_stack": [
@@ -119,15 +121,16 @@
             "CSS"
         ],
         "time_created": 1752115467,
-        "last_modified": 1752130549,
+        "last_updated": 1775161795,
         "tags": [
             "UI/UX",
             "Widget"
         ],
         "maturity": "Stable",
         "activity": "Archived",
-        "topic": "UI/UX",
-        "download_file": null
+        "topic": "Web Development",
+        "download_file": null,
+        "content_html": "<h1>Share-Button Widget - V1.0.2</h1>\n<h2>Description</h2>\n<p>A lightweight, plug-and-play social sharing widget designed for seamless integration into any website. It provides a clean and modern user interface for visitors to quickly share content across various social media platforms without the need for heavy third-party libraries.</p>\n<h2>Motivation/Idea behind the project</h2>\n<p>This project was developed primarily as a creative exercise. Born out of a moment of boredom, it served as a fun way to experiment with UI/UX components and create a functional tool from scratch.</p>\n<h2>Features</h2>\n<ul>\n\t<li><strong>Plug-and-Play</strong>: Designed to be dropped into any HTML structure with minimal configuration.</li>\n\t<li><strong>Cross-Platform Support</strong>: Includes pre-configured sharing links for major social networks.</li>\n</ul>\n<h2>Tech Stack</h2>\n<ul>\n\t<li><strong>Languages</strong>: JavaScript, HTML, CSS</li>\n\t<li><strong>Environment</strong>: Client-side web browsers</li>\n\t<li><strong>Integration</strong>: Vanilla JS (No external libraries required)</li>\n</ul>\n<h2>Plans / Status / Future</h2>\n<ul>\n\t<li><strong>Status</strong>: Archived</li>\n\t<li><strong>Future</strong>: As an archived project, there are no active plans for new features or updates. It remains available as a reference or for legacy use.</li>\n</ul>\n<h2>Note</h2>\n<p>The information on this page might not be up-to-date since this project is archived. It may not work anymore when using modern browser versions.</p>\n<h3>License</h3>\n<p><strong>MIT License</strong></p>\n<p>A short and simple permissive license with conditions only requiring preservation of copyright and license notices. Licensed works, modifications, and larger works may be distributed under different terms and without source code.</p>"
     },
     {
         "id": "5",
@@ -135,7 +138,7 @@
         "version": "1.0.0",
         "description_short": "A lightweight, dependency-free image carousel.",
         "content_raw": "main",
-        "image_url": "/static/assets/images/projects/Carousel.png",
+        "image_url": "/uploads/projects/Carousel.png",
         "github_url": "https://github.com/Jackstar-Git/Simple-JS-Carousel",
         "demo_url": null,
         "tech_stack": [
@@ -144,7 +147,7 @@
             "CSS"
         ],
         "time_created": 1727462661,
-        "last_modified": 1764652998,
+        "last_updated": 1764652998,
         "tags": [
             "UI/UX",
             "Frontend"
@@ -167,7 +170,7 @@
             "Python"
         ],
         "time_created": 1693041837,
-        "last_modified": 1708275545,
+        "last_updated": 1708275545,
         "tags": [
             "Desktop App",
             "Productivity"
@@ -190,7 +193,7 @@
             "Python"
         ],
         "time_created": 1686919254,
-        "last_modified": 1692988857,
+        "last_updated": 1773601181,
         "tags": [
             "Utility",
             "Automation"
@@ -198,8 +201,7 @@
         "maturity": "Stable",
         "activity": "Archived",
         "topic": "Utility",
-        "download_file": null,
-        "last_updated": 1773601181
+        "download_file": null
     },
     {
         "id": "8",
@@ -207,14 +209,14 @@
         "version": "1.0.0",
         "description_short": "A snake-game made in Python using the Pygame library.",
         "content_raw": "main",
-        "image_url": "/static/assets/images/projects/Snake.png",
+        "image_url": "/uploads/projects/Snake.png",
         "github_url": "https://github.com/Jackstar-Git/snake",
         "demo_url": null,
         "tech_stack": [
             "Python"
         ],
         "time_created": 1668625518,
-        "last_modified": 1668626110,
+        "last_updated": 1668626110,
         "tags": [
             "Game Development",
             "Pygame"
@@ -230,14 +232,14 @@
         "version": "2.0.2",
         "description_short": "A Windows Notepad clone built with Python and Tkinter.",
         "content_raw": "main",
-        "image_url": "/static/assets/images/projects/Notepad.png",
+        "image_url": "/uploads/projects/Notepad.png",
         "github_url": "https://github.com/Jackstar-Git/Notepad-Clone",
         "demo_url": null,
         "tech_stack": [
             "Python"
         ],
         "time_created": 1666456775,
-        "last_modified": 1679572489,
+        "last_updated": 1679572489,
         "tags": [
             "Desktop App",
             "GUI"
@@ -253,14 +255,14 @@
         "version": "1.0.0",
         "description_short": "A calculator made in Python using the TkInter module!",
         "content_raw": "main",
-        "image_url": "/static/assets/images/projects/Calculator.png",
+        "image_url": "/uploads/projects/Calculator.png",
         "github_url": "https://github.com/Jackstar-Git/Calculator",
         "demo_url": null,
         "tech_stack": [
             "Python"
         ],
         "time_created": 1664128560,
-        "last_modified": 1674944152,
+        "last_updated": 1674944152,
         "tags": [
             "Utility",
             "GUI"
@@ -276,14 +278,14 @@
         "version": "1.0.0",
         "description_short": "A little Hangman-Game made in Python!",
         "content_raw": "main",
-        "image_url": "/static/assets/images/projects/Hangman.png",
+        "image_url": "/uploads/projects/Hangman.png",
         "github_url": "https://github.com/Jackstar-Git/Hangman",
         "demo_url": null,
         "tech_stack": [
             "Python"
         ],
         "time_created": 1664127522,
-        "last_modified": 1664642011,
+        "last_updated": 1664642011,
         "tags": [
             "Game Development",
             "Logic"
@@ -306,7 +308,7 @@
             "Python"
         ],
         "time_created": 1694634065,
-        "last_modified": 1694634102,
+        "last_updated": 1694634102,
         "tags": [
             "Utility",
             "Automation"

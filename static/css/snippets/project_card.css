@@ -215,10 +215,17 @@
     margin-bottom: 0; /* Ensure there's no extra space at the bottom */
 }
 
-/* Maturity Colors */
-.maturity-concept { background-color: #3b82f6; } /* Blue for Concept */
-.maturity-prototype { background-color: #eab308; } /* Yellow for Prototype */
-.maturity-mvp { background-color: #f97316; } /* Orange for MVP */
-.maturity-stable { background-color: #10b981; } /* Green for Stable */
-.maturity-legacy { background-color: #94a3b8; } /* Gray for Legacy */
+
+.maturity-concept { background-color: #3b82f6; }
+.maturity-prototype { background-color: #eab308; } 
+.maturity-mvp { background-color: #f97316; }
+.maturity-stable { background-color: #10b981; }
+.maturity-legacy { background-color: #94a3b8; } 
+
+.activity-active { color: #10b981; } .activity-active .activity-dot { background: #10b981; box-shadow: 0 0 8px #10b981; }
+.activity-maintained { color: #3b82f6; } .activity-maintained .activity-dot { background: #3b82f6; }
+.activity-on-hold { color: #eab308; } .activity-on-hold .activity-dot { background: #eab308; }
+.activity-stalled { color: #f97316; } .activity-stalled .activity-dot { background: #f97316; }
+.activity-archived { color: #94a3b8; } .activity-archived .activity-dot { background: #94a3b8; }
+.activity-unknown { color: #a855f7; } .activity-unknown .activity-dot { background: #a855f7; }
 

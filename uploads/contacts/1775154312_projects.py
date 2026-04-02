@@ -3,7 +3,7 @@ import datetime
 
 from flask import Blueprint, render_template, abort, request
 
-from utility.projects import sort_projects, load_projects, get_project_by_id, query_projects, search_projects
+from utility import projects
 from utility.logging_utility import logger
 from utility.settings import get_settings
 
@@ -18,13 +18,12 @@ def projects_page() -> render_template:
     sort_by: str = query.get("sort", "newest").strip()
 
     if search:
-        project_list = search_projects(search)
+        project_list = projects.search_projects(search)
     else:
-        project_list = load_projects()
+        project_list = projects.load_projects()
 
-    # Filter by topic (not category)
     if query.get("category"):
-        project_list = [p for p in project_list if p.get("topic") == query.get("category")]
+        project_list = [p for p in project_list if p.get("category") == query.get("category")]
 
     if query.get("tech_stack"):
         q_tech = {t.strip().lower() for t in query.get("tech_stack", "").split(",")}
@@ -51,7 +50,8 @@ def projects_page() -> render_template:
     except ValueError:
         pass
 
-    project_list = sort_projects(project_list, sort_by)
+    reverse = (sort_by == "newest")
+    project_list.sort(key=lambda x: x.get("time_created", 0), reverse=reverse)
 
     return render_template(
         "projects.jinja",
@@ -65,20 +65,9 @@ def projects_page() -> render_template:
 def project(project_id: str) -> render_template:
     logger.info(f"Accessing project: {project_id}")
 
-    project_data = get_project_by_id(project_id)
+    project_data = projects.get_project_by_id(project_id)
     if not project_data:
         logger.warning(f"Project {project_id} not found")
         abort(404)
 
-    suggestions = query_projects(
-        limit=2, 
-        exclude_id=project_id,
-        topic=project_data.get("topic", "")
-    )
-
-    return render_template(
-        "project.jinja", 
-        project=project_data, 
-        suggestions=suggestions,
-        settings=get_settings("project_config")
-    )
+    return render_template("project.jinja", project=project_data, suggestions=projects.query_projects(topic=project_data.get("topic", ""), limit=2, exclude_id=project_id))

@@ -56,3 +56,27 @@ def clear_analytics(url: str = None) -> None:
         elif not url:
             app.analytics_cache.clear()
         _save_analytics(app)
+
+
+def adjust_analytics(url: str, visits_change: int, unique_visits_change: int = 0) -> bool:
+    app = current_app
+    with app.analytics_lock:
+        if url not in app.analytics_cache:
+            logger.warning(f"Attempted to adjust analytics for non-existent URL: {url}")
+            return False
+        
+        data = app.analytics_cache[url]
+        
+        data["visits"] = max(0, data["visits"] + visits_change)
+        
+        data["unique_visits"] = max(0, min(data["unique_visits"] + unique_visits_change, data["visits"]))
+        
+        if data["visits"] > 0:
+            data["average_time_spent"] = round(data["total_time_spent"] / data["visits"], 2)
+        else:
+            data["average_time_spent"] = 0.0
+        
+        _save_analytics(app)
+        logger.info(f"Adjusted analytics for URL '{url}': visits={visits_change:+d}, unique_visits={unique_visits_change:+d}")
+        
+        return True

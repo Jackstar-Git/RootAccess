@@ -7,7 +7,7 @@
         "SESSION_COOKIE_HTTPONLY": true,
         "SESSION_COOKIE_SECURE": true,
         "SESSION_COOKIE_SAMESITE": "Lax",
-        "PERMANENT_SESSION_LIFETIME": 3600
+        "PERMANENT_SESSION_LIFETIME": 604800
     },
     "blog_config": {
         "types": [

@@ -15,35 +15,39 @@ BLOGS_PER_PAGE = 10
 
 # ========== ROUTES ==========
 @blogs_blueprint.route("/blog", methods=["GET"])
-def blogs_page():
+def blogs_page() -> render_template:
     query = request.args.to_dict()
-    
-    search: str = query.pop("search", "").strip()
-    sort_by: str = query.pop("sort", "newest").strip()
+    search: str = query.get("search", "").strip()
+    sort_by: str = query.get("sort", "newest").strip()
 
     try:
-        page: int = int(query.pop("page", 1))
+        page: int = int(query.get("page", 1))
     except (TypeError, ValueError):
         page = 1
     if page < 1:
         page = 1
 
-    if "tags" in query:
-        query["tags"] = [tag.strip() for tag in query["tags"].split(",") if tag.strip()]
-
-    if "category" in query:
-        query["categories"] = query.pop("category")
-
-    raw_data = blogs.search_blogs(search) if search else blogs.query_blogs(limit=None, status="visible", **query)
+    raw_data = blogs.search_blogs(search) if search else blogs.query_blogs(status="visible")
 
     blog_list = raw_data if isinstance(raw_data, list) else [
         {**content, "id": b_id} for b_id in raw_data for b_id, content in raw_data.items()
     ]
 
-    start_date = query.pop("start_date", None)
-    end_date = query.pop("end_date", None)
-    if start_date or end_date:
-        blog_list = blogs.filter_by_date_range(blog_list, start_date, end_date)
+    if query.get("category"):
+        blog_list = [b for b in blog_list if query.get("category") in b.get("categories", [])]
+
+    if query.get("tags"):
+        q_tags = {t.strip().lower() for t in query.get("tags", "").split(",")}
+        blog_list = [b for b in blog_list if q_tags.intersection(map(str.lower, b.get("tags", [])))]
+
+    if query.get("type"):
+        blog_list = [b for b in blog_list if b.get("type") == query.get("type")]
+
+    if query.get("start_date") or query.get("end_date"):
+        blog_list = blogs.filter_by_date_range(blog_list, query.get("start_date"), query.get("end_date"))
+
+    if query.get("reading_time"):
+        blog_list = blogs.filter_by_reading_time(blog_list, query.get("reading_time", ""))
 
     blog_list = blogs.sort_blogs(blog_list, sort_by)
 
@@ -53,7 +57,7 @@ def blogs_page():
     end: int = start + BLOGS_PER_PAGE
     paginated = blog_list[start:end]
 
-    base_query = {k: v for k, v in request.args.items() if k != "page"}
+    base_query = {k: v for k, v in query.items() if k != "page"}
     base_query_string = urlencode(base_query)
 
     return render_template(

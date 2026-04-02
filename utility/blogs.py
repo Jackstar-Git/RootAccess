@@ -61,7 +61,6 @@ def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
     if isinstance(new_blog.get("author"), str):
         new_blog["author"] = [new_blog["author"]]
     
-    # Generate HTML content on creation
     raw_content = new_blog.get("content_raw", "")
     new_blog["content_html"] = convert_markdown_to_html(raw_content)
 
@@ -126,12 +125,7 @@ def search_blogs(search_query: str) -> List[BlogPost]:
 
 from typing import List, Optional, Any, Literal
 
-def query_blogs(
-    limit: int = 10, 
-    exclude_id: Optional[Any] = None, 
-    match_mode: Literal["AND", "OR"] = "AND",
-    **criteria: Any
-) -> List[BlogPost]:
+def query_blogs(limit: int = 10, exclude_id: Optional[Any] = None, match_mode: Literal["AND", "OR"] = "AND",**criteria: Any) -> List[BlogPost]:
     blog_list: List[BlogPost] = load_blogs()
     filtered_results: List[BlogPost] = []
 
@@ -164,37 +158,6 @@ def query_blogs(
             filtered_results.append(blog)
 
     return filtered_results[:limit]
-
-def filter_by_date_range(blog_list: List[BlogPost], start_date: Optional[str], end_date: Optional[str]) -> List[BlogPost]:
-    if not start_date and not end_date:
-        return blog_list
-
-    start_ts: Optional[int] = None
-    end_ts: Optional[int] = None
-
-    if start_date:
-        try:
-            start_ts = int(datetime.strptime(start_date, "%Y-%m-%d").timestamp())
-        except ValueError:
-            pass
-
-    if end_date:
-        try:
-            dt = datetime.strptime(end_date, "%Y-%m-%d").replace(hour=23, minute=59, second=59)
-            end_ts = int(dt.timestamp())
-        except ValueError:
-            pass
-
-    filtered: List[BlogPost] = []
-    for blog in blog_list:
-        t: int = blog.get("time_created", 0)
-        if start_ts and t < start_ts:
-            continue
-        if end_ts and t > end_ts:
-            continue
-        filtered.append(blog)
-
-    return filtered
 
 def calculate_reading_time(content: str) -> int:
     words_per_minute: int = 150

@@ -1,33 +1,1 @@
-User-agent: *
-Disallow: /api/                         # Disallow access to API endpoints
-Disallow: /plugins/                     # Disallow access to plugins directory
-Disallow: /404                          # Disallow access to the 404 error page
-Disallow: /403                          # Disallow access to the 403 error page
-Disallow: /google7825769118bdc2a.html   # Disallow access to the google search engine verification page
-
-# Allow access to all product pages
-Allow: /projects/                # Allow access to projects pages
-Allow: /blog/                   # Allow access to the blog list page
-Allow: /about/  
-
-# Allow access to all legal routes
-Allow: /imprint/       
-Allow: /privacy/    
-
-# Allow access to the home page and sitemap
-Allow: /                       # Allow access to the home page
-Allow: /sitemap.xml           # Allow access to the sitemap
-
-Sitemap: https://rootaccess.onrender.com/sitemap.xml
-
-# Here is a friendly robot to say hello!
-#
-#         ,     ,
-#        (\____/)
-#         (_oo_)
-#           (O)
-#         __||__    \)
-#    []/______\[] /
-#    / \______/ \/
-#   /    /__\
-# (\   /____\
+User-agent: *Disallow: /api/                         # Disallow access to API endpointsDisallow: /plugins/                     # Disallow access to plugins directoryDisallow: /404                          # Disallow access to the 404 error pageDisallow: /403                          # Disallow access to the 403 error pageDisallow: /google7825769118bdc2a.html   # Disallow access to the google search engine verification page# Allow access to all product pagesAllow: /projects/                # Allow access to projects pagesAllow: /blog/                   # Allow access to the blog list pageAllow: /about/  # Allow access to all legal routesAllow: /imprint/       Allow: /privacy/    # Allow access to the home page and sitemapAllow: /                       # Allow access to the home pageAllow: /sitemap.xml           # Allow access to the sitemapSitemap: https://rootaccess.onrender.com/sitemap.xml# Here is a friendly robot to say hello!##         ,     ,#        (\____/)#         (_oo_)#           (O)#         __||__    \)#    []/______\[] /#    / \______/ \/#   /    /__\# (\   /____\

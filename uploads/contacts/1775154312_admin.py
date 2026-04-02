@@ -430,7 +430,7 @@ def create_project():
             logger.error(f"Failed to save project: {str(e)}")
             flash("Error saving project.", "error")
 
-    return render_template("admin/add-project.jinja", settings=get_settings("project_config"))
+    return render_template("admin/add-project.jinja")
 
 @admin_blueprint.route("/projects/edit/<project_id>", methods=["GET", "POST"])
 @login_required
@@ -472,7 +472,7 @@ def edit_project(project_id: str):
             flash("Successfully updated!", "success")
             return redirect(url_for("admin.all_projects"))
 
-    return render_template("admin/edit-project.jinja", project=project, settings=get_settings("project_config"))
+    return render_template("admin/edit-project.jinja", project=project)
 
 # ========== SETTINGS ROUTES ==========
 @admin_blueprint.route("/settings/server", methods=["GET", "POST"])

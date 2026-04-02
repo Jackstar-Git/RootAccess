@@ -87,6 +87,9 @@
                                 <button class="btn-delete-row" onclick="clearData('{{ item.url }}')" aria-label="Delete analytics for {{ item.url }}">
                                     <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
                                 </button>
+                                <button class="btn-adjust-row" onclick="openAdjustModal('{{ item.url }}', {{ item.visits }}, {{ item.unique_visits }})" aria-label="Adjust analytics for {{ item.url }}">
+                                    <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                                </button>
                             </td>
                         </tr>
                         {% endfor %}
@@ -115,11 +118,55 @@
                         </tbody>
                 </table>
             </div>
+
+            <!-- Analytics Adjustment Modal -->
+            <div id="adjustAnalyticsModal" class="modal" role="dialog" aria-labelledby="adjustModalTitle" aria-hidden="true">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 id="adjustModalTitle">Adjust Analytics for <code id="adjustModalUrl"></code></h2>
+                        <button class="modal-close-btn" onclick="closeAdjustModal()" aria-label="Close dialog">
+                            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="adjust-form-group">
+                            <label for="visitsInput">Visits Change</label>
+                            <div class="input-with-buttons">
+                                <button type="button" class="btn-decrease" onclick="decreaseVisits()" aria-label="Decrease visits by 1">−</button>
+                                <input type="number" id="visitsInput" placeholder="Enter number (positive to add, negative to subtract)" value="0">
+                                <button type="button" class="btn-increase" onclick="increaseVisits()" aria-label="Increase visits by 1">+</button>
+                            </div>
+                            <small>Enter positive numbers to add visits, negative to subtract.</small>
+                        </div>
+                        
+                        <div class="adjust-form-group">
+                            <label for="uniqueInput">Unique Visits Change</label>
+                            <div class="input-with-buttons">
+                                <button type="button" class="btn-decrease" onclick="decreaseUnique()" aria-label="Decrease unique visits by 1">−</button>
+                                <input type="number" id="uniqueInput" placeholder="Enter number (positive to add, negative to subtract)" value="0">
+                                <button type="button" class="btn-increase" onclick="increaseUnique()" aria-label="Increase unique visits by 1">+</button>
+                            </div>
+                            <small>Leave at 0 to keep unique visit count unchanged.</small>
+                        </div>
+
+                        <div class="adjust-summary">
+                            <p><strong>Current:</strong> <span id="currentVisits">0</span> visits · <span id="currentUnique">0</span> unique</p>
+                            <p><strong>After adjustment:</strong> <span id="projectedVisits">0</span> visits · <span id="projectedUnique">0</span> unique</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-cancel" onclick="closeAdjustModal()">Cancel</button>
+                        <button class="btn-apply" onclick="applyAnalyticsAdjustment()">Apply Adjustment</button>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
     <script type="module">
         import { initAnalyticsChart, clearData, loadIgnoredUrls, addIgnoredUrl, removeIgnoredUrl } from "{{ url_for('static', filename='js/admin/chart.js') }}";
+        import { initAdjustmentModal } from "{{ url_for('static', filename='js/admin/analytics-adjust.js') }}";
 
         const analyticsPayload = {
             labels: [{% for item in analytics %}"{{ item.url }}",{% endfor %}],
@@ -133,6 +180,7 @@
         };
 
         initAnalyticsChart('visitorDistributionChart', analyticsPayload);
+        initAdjustmentModal();
         
         window.clearData = clearData;
         window.addIgnoredUrl = addIgnoredUrl;

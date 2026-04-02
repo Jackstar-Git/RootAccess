@@ -5,20 +5,33 @@ function applyStyle(style) {
     const selectedText = textarea.value.substring(start, end);
 
     if (selectedText.length > 0) {
-        let openTag = ""; let closeTag = "";
+        let openTag = "";
+        let closeTag = "";
+
         switch (style) {
             case "bold": openTag = closeTag = "**"; break;
             case "italic": openTag = closeTag = "*"; break;
             case "underline": openTag = closeTag = "_"; break;
             case "strikethrough": openTag = closeTag = "~~"; break;
             case "inlinecode": openTag = closeTag = "`"; break;
+            case "superscript": 
+                openTag = "[^"; 
+                closeTag = "]"; 
+                break;
+            case "subscript": 
+                openTag = "[_"; 
+                closeTag = "]"; 
+                break;
             default: return;
         }
+
         const newText = `${openTag}${selectedText}${closeTag}`;
         textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
         textarea.focus();
+        textarea.setSelectionRange(start + openTag.length, start + openTag.length + selectedText.length);
     }
 }
+
 
 function applyLineStyle(style) {
     const textarea = document.getElementById("content");
@@ -29,13 +42,53 @@ function applyLineStyle(style) {
     if (selectedText.length > 0) {
         let newText = "";
         switch (style) {
-            case "codeblock": newText = `\`\`\`\n${selectedText}\n\`\`\``; break;
+            case "blockquote":
+                newText = selectedText.split('\n').map(line => `> ${line}`).join('\n');
+                break;
+            case "codeblock":
+                newText = `\`\`\`\n${selectedText}\n\`\`\``;
+                break;
+            case "html":
+                newText = `{html}\n${selectedText}\n{/html}`;
+                break;
+            case "h1": newText = `# ${selectedText}`; break;
+            case "h2": newText = `## ${selectedText}`; break;
+            case "h3": newText = `### ${selectedText}`; break;
+            case "unordered":
+                newText = selectedText.split('\n').map(line => `- ${line}`).join('\n');
+                break;
             default: return;
         }
+
         textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
         textarea.focus();
     }
 }
+
+function applyColor() {
+    const color = prompt("Enter Hex Color (e.g., #ff0000):", "#");
+    if (color && color.startsWith("#")) {
+        const textarea = document.getElementById("content");
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const selectedText = textarea.value.substring(start, end);
+        
+        const newText = `{color:${color}}${selectedText || "text"}{/color}`;
+        textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
+    }
+}
+
+
+function applyAlignment(pos) {
+    const textarea = document.getElementById("content");
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+    
+    const newText = `{align:${pos}}${selectedText || "text"}{/align}`;
+    textarea.value = textarea.value.substring(0, start) + newText + textarea.value.substring(end);
+}
+
 
 function addLink() {
     const url = prompt("Enter the URL:");
@@ -45,9 +98,11 @@ function addLink() {
         const end = textarea.selectionEnd;
         const selectedText = textarea.value.substring(start, end);
         const linkText = `[${selectedText || "Link Text"}](${url})`;
+
         textarea.value = textarea.value.substring(0, start) + linkText + textarea.value.substring(end);
     }
 }
+
 
 function toggleView() {
     const sourceTextarea = document.getElementById("content");
@@ -73,11 +128,18 @@ function toggleView() {
                 "X-CSRFToken": csrfToken
             }
         })
-        .then(response => response.text())
+        .then(response => {
+            if (!response.ok) throw new Error('Preview failed');
+            return response.text();
+        })
         .then(html => { outputDiv.innerHTML = html; })
-        .catch(err => console.error(err));
+        .catch(err => { 
+            console.error(err);
+            outputDiv.innerHTML = "<p style='color:red;'>Could not render preview. Check console for details.</p>"; 
+        });
     }
 }
+
 
 function addTech() {
     const container = document.getElementById("tech-list");
@@ -91,6 +153,7 @@ function addTech() {
     `;
     container.appendChild(div);
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const thumbUpload = document.getElementById("thumbnail-upload");

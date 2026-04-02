@@ -4,7 +4,7 @@
     <div class="project-card-visual">
         <img src="{{ project.image_url if project.image_url else '/static/assets/images/default/default-project.png' }}" alt="{{ project.title }}" loading="lazy">
         <div class="glass-tags-container">
-            <span class="glass-tag">{{ project.category }}</span>
+            <span class="glass-tag">{{ project.topic }}</span>
         </div>
     </div>
 
@@ -31,7 +31,7 @@
                 <div class="project-date-wrapper updated">
                     <i class="fa-regular fa-pen-to-square"></i>
                     <span class="date-label">Updated:</span>
-                    <span class="project-date">{{ project.last_modified | datetimeformat if project.last_modified else 'Unknown' }}</span>
+                    <span class="project-date">{{ project.last_updated | datetimeformat if project.last_updated else 'Unknown' }}</span>
                 </div>
             </div>
         </div>
