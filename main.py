@@ -48,7 +48,7 @@ if __name__ == "__main__":
     os.chdir(os.path.dirname(__file__))
     logger.info("*" * 50)
     logger.info("Application Server started!")
-    start_scheduler()
+    #start_scheduler()
     if len(sys.argv) > 1 and sys.argv[1] == "--development":
         logger.info("Running in development mode.")
         app.run(host="localhost", port=8080, debug=True)

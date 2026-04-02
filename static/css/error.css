@@ -1,42 +1,42 @@
-/* error.css (now relies on static/css/core.css loaded by templates) */
+/* ===== ERROR PAGE WRAPPER ===== */
 .error-page-wrapper {
+    position: relative;
     height: 100vh;
+    padding: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--background-2); /* use global neutral background */
+    background: var(--background-2);
     overflow: hidden;
-    position: relative;
-    padding: 2rem;
 }
 
-/* Glass Container */
+/* ===== GLASS CONTAINER ===== */
 .error-glass-container {
     position: relative;
     z-index: 10;
     max-width: 550px;
     width: 100%;
     padding: 4rem 3rem;
+    border: 1px solid var(--background-1);
+    border-radius: 40px;
     background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--background-1);
-    border-radius: 40px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
     text-align: center;
 }
 
-/* 404 Text Effect */
+/* ===== ERROR CODE STYLING ===== */
 .error-code {
+    margin: 0;
     font-size: calc(var(--font-size-3xl));
     font-weight: 900;
-    margin: 0;
     line-height: 1;
+    letter-spacing: -5px;
     background: linear-gradient(135deg, var(--main-color-950), var(--main-color-500));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: -5px;
     animation: float 6s ease-in-out infinite;
 }
 
@@ -45,13 +45,13 @@
 }
 
 .error-message {
-    color: var(--third-font-color);
-    line-height: 1.6;
     margin-bottom: 2.5rem;
     font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--third-font-color);
 }
 
-/* Buttons */
+/* ===== ERROR ACTION BUTTONS ===== */
 .error-actions {
     display: flex;
     gap: 1rem;
@@ -60,28 +60,29 @@
 
 .error-primary-btn {
     padding: 1rem 2rem;
+    border-radius: 14px;
     background: var(--main-color-950);
     color: white;
     text-decoration: none;
-    border-radius: 14px;
     font-weight: 700;
     transition: 0.3s;
 }
 
 .error-secondary-btn {
     padding: 1rem 2rem;
+    border: 1px solid var(--main-color-100);
+    border-radius: 14px;
     background: var(--background-1);
     color: var(--main-color-950);
     text-decoration: none;
-    border-radius: 14px;
     font-weight: 700;
-    border: 1px solid var(--main-color-100);
     transition: 0.3s;
 }
 
-.error-primary-btn:hover, .error-secondary-btn:hover {
+.error-primary-btn:hover,
+.error-secondary-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Background Animated Blobs */

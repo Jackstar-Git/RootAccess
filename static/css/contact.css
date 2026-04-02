@@ -1,56 +1,58 @@
+/* ===== CONTACT PAGE - OUTSIDE-IN PROPERTY ORDERING ===== */
+
 .contact-section {
-    padding: var(--spacing-4xl) 0;
-    background-color: var(--background-1);
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: var(--spacing-4xl) 0;
+    background-color: var(--background-1);
 }
 
 .container {
     width: 90%;
-    max-width: var(--container-max-width);
     margin: 0 auto;
+    max-width: var(--container-max-width);
 }
 
 .contact-wrapper {
     display: grid;
     grid-template-columns: 1fr 1.5fr;
     gap: var(--spacing-2xl);
+    padding: var(--spacing-xl);
     background: var(--background-4);
-    padding: var(--spacing-xl); 
     border-radius: var(--radius-xl);
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
 .contact-info {
-    background: var(--main-color-700);
-    padding: var(--spacing-2xl);
-    border-radius: var(--radius-lg);
-    color: var(--font-color);
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding: var(--spacing-2xl);
+    background: var(--main-color-700);
+    border-radius: var(--radius-lg);
+    color: var(--font-color);
 }
 
 .section-title {
-    font-size: var(--font-size-xxl);
     margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-xxl);
     color: white;
 }
 
 .contact-details {
-    list-style: none;
-    padding: 0;
     margin: var(--spacing-xl) 0;
+    padding: 0;
+    list-style: none;
 }
 
 .contact-details li {
-    margin-bottom: var(--spacing-md);
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
 }
-/* Form Styling */
+/* ===== FORM STYLING ===== */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -63,9 +65,9 @@
 
 label {
     display: block;
-    font-weight: var(--font-weight-medium);
     margin-bottom: var(--spacing-xxs);
     font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
     color: var(--third-font-color);
 }
 
@@ -74,25 +76,27 @@ input, select, textarea {
     padding: var(--spacing-sm) var(--spacing-md);
     border: 1px solid var(--background-2);
     border-radius: var(--radius-sm);
+    outline: none;
     font-family: var(--font-family);
     font-size: var(--font-size-md);
     transition: border var(--transition-fast);
-    outline: none;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
     border-color: var(--main-color-500);
 }
 
-/* Custom File Upload */
+/* ===== CUSTOM FILE UPLOAD ===== */
 .file-upload-wrapper {
     position: relative;
 }
 
 #attachments {
-    opacity: 0;
     position: absolute;
     z-index: -1;
+    opacity: 0;
 }
 
 .file-label {
@@ -102,8 +106,8 @@ input:focus, select:focus, textarea:focus {
     padding: var(--spacing-sm) var(--spacing-md);
     border: 2px dashed var(--main-color-200);
     border-radius: var(--radius-sm);
-    cursor: pointer;
     color: var(--main-color-600);
+    cursor: pointer;
     transition: var(--transition-fast);
 }
 
@@ -113,16 +117,16 @@ input:focus, select:focus, textarea:focus {
 }
 
 .btn-submit {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-xl);
+    border: none;
+    border-radius: var(--radius-md);
     background: var(--main-color-500);
     color: white;
-    border: none;
-    padding: var(--spacing-md) var(--spacing-xl);
-    border-radius: var(--radius-md);
     font-weight: var(--font-weight-semibold);
     cursor: pointer;
-    width: 100%;
     transition: var(--transition-medium);
-    margin-top: var(--spacing-md);
 }
 
 .btn-submit:hover {
@@ -130,21 +134,21 @@ input:focus, select:focus, textarea:focus {
     transform: translateY(-2px);
 }
 
-
+/* ===== CAPTCHA SECTION ===== */
 .captcha-container {
     margin: 20px 0;
     padding: 15px;
-    background: var(--main-bg);
     border: 1px solid var(--background-2);
     border-radius: 8px;
     max-width: 100%;
+    background: var(--main-bg);
 }
 
 .captcha-question {
-    font-size: 0.9rem;
     margin-bottom: 12px;
-    color: var(--font-color);
+    font-size: 0.9rem;
     font-weight: 600;
+    color: var(--font-color);
 }
 
 .captcha-options {
@@ -154,19 +158,19 @@ input:focus, select:focus, textarea:focus {
 }
 
 .captcha-option {
-    cursor: pointer;
-    font-size: 1.4rem;
-    padding: 12px;
-    border: 2px solid transparent;
-    border-radius: 8px;
-    background: var(--background-1);
-    transition: all 0.2s ease;
-    color: var(--main-color-600);
     display: flex;
     align-items: center;
     justify-content: center;
     width: 50px;
     height: 50px;
+    padding: 12px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background: var(--background-1);
+    color: var(--main-color-600);
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .captcha-option:hover {
@@ -183,37 +187,38 @@ input:focus, select:focus, textarea:focus {
 }
 
 .captcha-error {
-    color: var(--warning-color);
-    font-size: 0.8rem;
     margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--warning-color);
     display: none;
 }
 
-/* Responsive */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .contact-section {
-        padding: var(--spacing-xl) 0; /* Reduced padding for smaller screens */
+        padding: var(--spacing-xl) 0;
     }
 
     .container {
-        width: 95%; /* Slightly more breathing room on mobile */
+        width: 95%;
     }
 
     .contact-wrapper {
-        grid-template-columns: 1fr; /* Stack the Info and Form vertically */
-        gap: 0; /* Remove gap so they join together */
-        padding: 0; /* Let the children handle padding */
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0;
         overflow: hidden;
     }
 
     .contact-info {
-        padding: var(--spacing-xl);
-        border-radius: var(--radius-xl) var(--radius-xl) 0 0; /* Round only the top corners */
         text-align: center;
+        padding: var(--spacing-xl);
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     }
 
     .contact-details li {
-        justify-content: center; /* Center icons and text on mobile */
+        justify-content: center;
     }
 
     .contact-form-card {
@@ -221,15 +226,17 @@ input:focus, select:focus, textarea:focus {
     }
 
     .form-grid {
-        grid-template-columns: 1fr; /* Stack First Name and Email */
+        display: grid;
+        grid-template-columns: 1fr;
     }
 
     .captcha-options {
-        justify-content: center; /* Center the icons for easier tapping */
+        display: flex;
+        justify-content: center;
         flex-wrap: wrap;
     }
 
     .btn-submit {
-        padding: var(--spacing-lg); /* Larger tap target for mobile fingers */
+        padding: var(--spacing-lg);
     }
 }
