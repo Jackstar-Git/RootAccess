@@ -1,6 +1,6 @@
 from functools import wraps
 from typing import Any, Callable, TypeVar, cast
-from flask import redirect, url_for, request, session
+from flask import abort, redirect, url_for, request, session
 from utility.logging_utility import logger
 import random
 import string
@@ -15,6 +15,17 @@ def login_required(f: F) -> F:
             return redirect(url_for("admin.login", next=request.path))
         return f(*args, **kwargs)
     return cast(F, decorated_function)
+
+
+def pw_protected(password: str) -> Callable[[F], F]:
+    def decorator(f: F) -> F:
+        @wraps(f)
+        def decorated_function(*args: Any, **kwargs: Any) -> Any:
+            if request.args.get("password") != password:
+                abort(401)
+            return f(*args, **kwargs)
+        return cast(F, decorated_function)
+    return decorator
 
 
 # ========== CAPTCHA FUNCTIONS ==========

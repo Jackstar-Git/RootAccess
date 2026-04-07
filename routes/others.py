@@ -63,7 +63,7 @@ def sitemap() -> Response:
 
         pages.append({
             "loc": url,
-            "lastmod": datetime.fromtimestamp(project.get("last_modified", default_lastmod)).date().isoformat(),
+            "lastmod": datetime.fromtimestamp(project.get("last_updated", default_lastmod)).date().isoformat(),
             "changefreq": "monthly",
             "priority": "0.5"
         })
