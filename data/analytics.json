@@ -1,2 +1,22 @@
 {
+    "/": {
+        "url": "/",
+        "visits": 1,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 66.673,
+        "average_time_spent": 66.67
+    },
+    "/about": {
+        "url": "/about",
+        "visits": 1,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 396.00600000000003,
+        "average_time_spent": 396.01
+    }
 }

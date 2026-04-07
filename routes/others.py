@@ -3,13 +3,13 @@ import urllib
 from datetime import datetime
 from typing import Any, Dict, List, Union
 
-from flask import Blueprint, render_template, url_for, request, send_from_directory, make_response, flash, redirect, Response
+from flask import Blueprint, render_template, render_template_string, url_for, request, send_from_directory, make_response, flash, redirect, Response
 
 from CustomFlaskClass import app
 from utility import blogs, projects
 from utility.logging_utility import logger
 from utility.quotes import get_quote_of_the_day
-from utility.auth import generate_captcha
+from utility.auth import generate_captcha, pw_protected
 
 # ========== BLUEPRINT INITIALIZATION ==========
 others_blueprint = Blueprint("others", __name__)
@@ -44,7 +44,7 @@ def sitemap() -> Response:
 
     default_lastmod = datetime.now()
 
-    excluded_paths = ["/admin", "/static", "/upload", "/download", "/google7825769118bcd42a.html", "/api"]
+    excluded_paths = ["/admin", "/static", "/upload", "/download", "/google7825769118bcd42a.html", "/api", "/ikt-aufgabe"]
 
     for blog in blogs.query_blogs():
         blog_id = blog.get("id", 0)
@@ -101,3 +101,9 @@ def robots() -> Response:
 @app.route("/google7825769118bcd42a.html")
 def google_verification() -> Response:
     return send_from_directory("/google7825769118bcd42a.html")
+
+
+@app.route("/ikt-aufgabe", methods=["GET"])
+@pw_protected("scrypt:32768:8:1$NwzEbXd62KBtlfpg$1cd45a74d0ab8e61b27ffb30233a5d4992c0518a3bbeac5b98d4b511860f2efc92e79ff047cf20d1ebed8c7289b1c4a916eef2b39078aff4b11f458d24799756")
+def ikt_aufgabe() -> render_template:
+    return send_from_directory("./", "temp.html")
