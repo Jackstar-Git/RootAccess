@@ -101,3 +101,4 @@ def robots() -> Response:
 @app.route("/google7825769118bcd42a.html")
 def google_verification() -> Response:
     return send_from_directory("./","google7825769118bcd42a.html")
+
