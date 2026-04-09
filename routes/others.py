@@ -44,7 +44,7 @@ def sitemap() -> Response:
 
     default_lastmod = datetime.now()
 
-    excluded_paths = ["/admin", "/static", "/upload", "/download", "/google7825769118bcd42a.html", "/api", "/ikt-aufgabe"]
+    excluded_paths = ["/admin", "/static", "/upload", "/download", "/google7825769118bcd42a.html", "/api"]
 
     for blog in blogs.query_blogs():
         blog_id = blog.get("id", 0)
@@ -100,10 +100,4 @@ def robots() -> Response:
 # ========== GOOGLE VERIFICATION ROUTE ==========
 @app.route("/google7825769118bcd42a.html")
 def google_verification() -> Response:
-    return send_from_directory("/google7825769118bcd42a.html")
-
-
-@app.route("/ikt-aufgabe", methods=["GET"])
-@pw_protected("scrypt:32768:8:1$NwzEbXd62KBtlfpg$1cd45a74d0ab8e61b27ffb30233a5d4992c0518a3bbeac5b98d4b511860f2efc92e79ff047cf20d1ebed8c7289b1c4a916eef2b39078aff4b11f458d24799756")
-def ikt_aufgabe() -> render_template:
-    return send_from_directory("./", "temp.html")
+    return send_from_directory("./","google7825769118bcd42a.html")
