@@ -1,5 +1,6 @@
 ﻿# ========== IMPORTS ==========
 import io
+import json
 import os
 import platform
 import shutil
@@ -9,6 +10,7 @@ import zipfile
 from typing import Tuple, Union
 
 from flask import Blueprint, jsonify, request, session, abort, send_file, Response, redirect, url_for, flash
+from werkzeug.security import generate_password_hash
 import psutil
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -990,3 +992,101 @@ def api_clear_analytics() -> Response:
     except Exception as e:
         logger.error(f"Failed to clear analytics: {e}")
         return jsonify({"error": "Failed to clear data"}), 500
+
+@internal_blueprint.route("/admin/settings/general/file/read/<file_name>", methods=["GET"])
+@login_required
+def read_data_file(file_name: str) -> Response:
+    try:
+        valid_files = ["analytics", "blogs", "contacts", "events", "projects", "quotes", "settings"]
+        if file_name not in valid_files:
+            return jsonify({"success": False, "message": "Invalid file name"}), 400
+
+        file_path = f"data/{file_name}.json"
+        
+        if not os.path.exists(file_path):
+            return jsonify({"success": False, "message": "File not found"}), 404
+
+        with open(file_path, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        return jsonify({"success": True, "content": content})
+    except Exception as e:
+        logger.error(f"Failed to read file {file_name}: {str(e)}")
+        return jsonify({"success": False, "message": str(e)}), 400
+
+@internal_blueprint.route("/admin/settings/general/file/save/<file_name>", methods=["POST"])
+@login_required
+def save_data_file(file_name: str) -> Response:
+    try:
+        valid_files = ["analytics", "blogs", "contacts", "events", "projects", "quotes", "settings"]
+        if file_name not in valid_files:
+            return jsonify({"success": False, "message": "Invalid file name"}), 400
+
+        data = request.get_json()
+        content = data.get("content", "")
+
+        try:
+            json.loads(content)
+        except json.JSONDecodeError as e:
+            return jsonify({"success": False, "message": f"Invalid JSON: {str(e)}"}), 400
+
+        file_path = f"data/{file_name}.json"
+        
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(content)
+
+        logger.info(f"File {file_name}.json has been updated")
+        
+        if file_name in ["blogs", "projects", "events", "analytics"]:
+            cacheable = [get_item_by_id, load_blogs, load_projects, query_projects, search_projects, get_project_by_id, get_events]
+            for func in cacheable:
+                if hasattr(func, "cache_clear"):
+                    func.cache_clear()
+
+        return jsonify({"success": True, "message": f"{file_name}.json has been saved successfully"})
+    except Exception as e:
+        logger.error(f"Failed to save file {file_name}: {str(e)}")
+        return jsonify({"success": False, "message": str(e)}), 400
+
+@internal_blueprint.route("/admin/settings/general/file/upload/<file_name>", methods=["POST"])
+@login_required
+def upload_data_file(file_name: str) -> Response:
+    try:
+        valid_files = ["analytics", "blogs", "contacts", "events", "projects", "quotes", "settings"]
+        if file_name not in valid_files:
+            return jsonify({"success": False, "message": "Invalid file name"}), 400
+
+        if "file" not in request.files:
+            return jsonify({"success": False, "message": "No file provided"}), 400
+
+        file = request.files["file"]
+        
+        if file.filename == "":
+            return jsonify({"success": False, "message": "No file selected"}), 400
+
+        if not file.filename.endswith(".json"):
+            return jsonify({"success": False, "message": "Only JSON files are allowed"}), 400
+
+        try:
+            content = file.read().decode("utf-8")
+            json.loads(content)
+        except (json.JSONDecodeError, UnicodeDecodeError) as e:
+            return jsonify({"success": False, "message": f"Invalid JSON file: {str(e)}"}), 400
+
+        file_path = f"data/{file_name}.json"
+        
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(content)
+
+        logger.info(f"File {file_name}.json has been uploaded and replaced")
+        
+        if file_name in ["blogs", "projects", "events", "analytics"]:
+            cacheable = [get_item_by_id, load_blogs, load_projects, query_projects, search_projects, get_project_by_id, get_events]
+            for func in cacheable:
+                if hasattr(func, "cache_clear"):
+                    func.cache_clear()
+
+        return jsonify({"success": True, "message": f"{file_name}.json has been uploaded successfully"})
+    except Exception as e:
+        logger.error(f"Failed to upload file {file_name}: {str(e)}")
+        return jsonify({"success": False, "message": str(e)}), 400

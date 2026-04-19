@@ -1,4 +1,4 @@
-﻿# ========== IMPORTS ==========
+# ========== IMPORTS ==========
 import os
 import sys
 import threading

@@ -1,6 +1,6 @@
 {
     "admin-password-hash": "scrypt:32768:8:1$Jq3zQ5hzXxA8S3IT$c823ab0be3fc91a3161008a2d62bcdd3b5b304f7e8f13cece02697e7b6dad34357adf355811826cbf6b49dc80da4a93bd997a2d511a2d3bd7eb5cc5e31608fcb",
-    "timezone": "UTC+2",
+    "timezone": "UTC +2",
     "server_config": {
         "MAX_CONTENT_LENGTH": 12582912,
         "SESSION_COOKIE_NAME": "session",
@@ -89,5 +89,7 @@
             "/admin/login"
         ],
         "update_interval": 120
-    }
+    },
+    "site_name": "",
+    "site_description": ""
 }

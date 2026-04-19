@@ -6,7 +6,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from CustomFlaskClass import app
 from utility.auth import login_required
@@ -520,21 +520,23 @@ def general_settings():
             settings = get_settings() or {}
             form_data = request.form.to_dict()
 
-            if "general_config" not in settings:
-                settings["general_config"] = {}
+            settings["site_name"] = form_data.get("site_name", "")
+            settings["site_description"] = form_data.get("site_description", "")
+            settings["timezone"] = form_data.get("timezone", "UTC")
 
-            settings["general_config"]["site_name"] = form_data.get("site_name", "")
-            settings["general_config"]["site_description"] = form_data.get("site_description", "")
+            admin_password = form_data.get("admin_password")
+            if admin_password:
+                settings["admin-password-hash"] = generate_password_hash(admin_password)
+                logger.info("Admin password has been changed")
 
             update_settings(settings)
             return jsonify({"success": True, "message": "Settings updated successfully"})
         except Exception as e:
+            logger.error(f"Failed to update general settings: {str(e)}")
             return jsonify({"success": False, "message": str(e)}), 400
 
     settings = get_settings() or {}
-    return render_template("admin/general-settings.jinja",
-                           settings=settings,
-                           general_config=settings.get("general_config", {}))
+    return render_template("admin/general-settings.jinja", settings=settings)
 
 # ========== APPEARANCE ROUTES ==========
 @admin_blueprint.route("/appearance/colors", methods=["GET", "POST"])
