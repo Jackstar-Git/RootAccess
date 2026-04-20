@@ -14,7 +14,7 @@
 .card-image {
     margin-block: auto;
     aspect-ratio: 16 / 10;
-    width: 100%; /* Ensure it stays within the grid column */
+    width: 100%;
     max-width: 100%; 
     height: auto;
     border-radius: var(--radius-md);
@@ -72,6 +72,7 @@
     position: absolute;
     bottom: var(--spacing-sm);
     left: var(--spacing-sm);
+    right: var(--spacing-sm);
     display: flex;
     gap: var(--spacing-xs);
     z-index: 2;
@@ -92,6 +93,8 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .card-content {
@@ -108,17 +111,25 @@
     gap: var(--spacing-xs);
 }
 
-.card-meta::after {
-    content: '•';
-    margin-left: var(--spacing-xs);
-    opacity: 0.3;
-}
-
 .reading-time {
     color: var(--main-color-600);
     display: flex;
     align-items: center;
     gap: 4px;
+}
+
+.blog-type {
+    background: rgba(37, 161, 167, 0.12);
+    color: var(--main-color-700);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 .card-title {

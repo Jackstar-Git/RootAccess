@@ -45,52 +45,11 @@
                         
                         <textarea id="description_short" name="description_short" class="short-desc-input" placeholder="Write a short summary of the project..." required></textarea>
 
-                        <div class="toolbar-sticky">
-                            <div class="toolbar">
-                                <button type="button" onclick="applyStyle('bold')" title="Bold"><i class="fas fa-bold"></i></button>
-                                <button type="button" onclick="applyStyle('italic')" title="Italic"><i class="fas fa-italic"></i></button>
-                                <button type="button" onclick="applyStyle('underline')" title="Underline"><i class="fas fa-underline"></i></button>
-                                <button type="button" onclick="applyStyle('strikethrough')" title="Strikethrough"><i class="fas fa-strikethrough"></i></button>
+                        {% set markdown_editor_textarea_id = 'content' %}
+                        {% set markdown_editor_textarea_name = 'content_raw' %}
+                        {% set markdown_editor_textarea_placeholder = 'Detailed project documentation or breakdown...' %}
+                        {% include "snippets/markdown_editor.jinja" %}
 
-                                <span class="divider"></span>
-
-                                <button type="button" onclick="applyStyle('superscript')" title="Superscript"><i class="fas fa-superscript"></i></button>
-                                <button type="button" onclick="applyStyle('subscript')" title="Subscript"><i class="fas fa-subscript"></i></button>
-                                <button type="button" onclick="applyColor()" title="Text Color"><i class="fas fa-palette"></i></button>
-
-                                <span class="divider"></span>
-
-                                <select onchange="applyAlignment(this.value); this.value='';" class="toolbar-select">
-                                    <option value="" disabled selected>Align</option>
-                                    <option value="left">Left</option>
-                                    <option value="center">Center</option>
-                                    <option value="right">Right</option>
-                                </select>
-
-                                <button type="button" onclick="applyLineStyle('blockquote')" title="Quote"><i class="fas fa-quote-right"></i></button>
-                                <button type="button" onclick="applyLineStyle('codeblock')" title="Code Block"><i class="fas fa-code"></i></button>
-                                <button type="button" onclick="applyStyle('inlinecode')" title="Inline Code"><i class="fas fa-terminal"></i></button>
-
-                                <select onchange="applyLineStyle(this.value); this.value='';" class="toolbar-select">
-                                    <option value="" disabled selected>H</option>
-                                    <option value="h1">H1</option>
-                                    <option value="h2">H2</option>
-                                    <option value="h3">H3</option>
-                                </select>
-
-                                <button type="button" onclick="addLink()" title="Link"><i class="fas fa-link"></i></button>
-                                <button type="button" onclick="applyLineStyle('html')" title="HTML Injection"><i class="fab fa-html5"></i></button>
-
-                                <span class="divider"></span>
-
-                                <button type="button" id="toggle-view-button" onclick="toggleView()" class="btn-preview">
-                                    <i class="fas fa-eye"></i> Preview
-                                </button>
-                            </div>
-                        </div>
-
-                        <textarea id="content" name="content_raw" placeholder="Detailed project documentation or breakdown..."></textarea>
-                        <div id="preview-output" class="markdown-body" style="display: none;"></div>
                     </section>
 
                     <aside class="settings-sidebar">

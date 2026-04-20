@@ -185,6 +185,14 @@
     overflow-wrap: anywhere;
 }
 
+.main-text-flow blockquote {
+    border-left: 4px solid var(--main-color-400);
+    padding-left: 1em;
+    margin-left: 0;
+    color: var(--third-font-color);
+    font-style: italic;
+}
+
 /* --- Modern Tag Section --- */
 .article-end {
     margin-top: var(--spacing-4xl);

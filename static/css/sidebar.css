@@ -169,6 +169,7 @@
     height: 40px;
     border-radius: var(--radius-sm);
     object-fit: cover;
+    border-radius: 50%;
 }
 
 .profile-section .profile-name {

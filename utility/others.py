@@ -1,9 +1,14 @@
 import re
 from typing import List, Tuple, Pattern, Final
-from functools import lru_cache
-
 
 def convert_markdown_to_html(markdown_text: str) -> str:
+    markdown_text = re.sub(
+        r'{indent}(.*?){/indent}', 
+        r'\n<div style="padding-left: 2em;">\n\1\n</div>\n', 
+        markdown_text, 
+        flags=re.DOTALL
+    )
+
     translation_table: Final[dict[str, str]] = str.maketrans({
         "&": "&amp;",
         "<": "&lt;",
@@ -11,6 +16,8 @@ def convert_markdown_to_html(markdown_text: str) -> str:
     })
 
     patterns: Final[List[Tuple[Pattern[str], str]]] = [
+        (re.compile(r'!\[(.+?)\]\((.+?)\)'), r'<img src="\2" alt="\1">'),
+        (re.compile(r'\[video\((.+?)\)\]', re.DOTALL), r'<video src="\1" controls></video>'),
         (re.compile(r'(?<!\\)\*\*\*(.+?)\*\*\*'), r'<strong><em>\1</em></strong>'),
         (re.compile(r'(?<!\\)\*\*(.+?)\*\*'), r'<strong>\1</strong>'),
         (re.compile(r'(?<!\\)\*(.+?)\*'), r'<em>\1</em>'),
@@ -36,6 +43,16 @@ def convert_markdown_to_html(markdown_text: str) -> str:
 
     for line in lines:
         stripped: str = line.strip()
+        if not stripped and not state["codeblock"]:
+            if state["list"]:
+                html_output.append("</ul>")
+                state["list"] = False
+            if state["blockquote"]:
+                html_output.append("</blockquote>")
+                state["blockquote"] = False
+            
+            html_output.append("<br>")
+            continue
 
         if stripped.startswith("{html}"):
             state["html"] = True
@@ -60,6 +77,7 @@ def convert_markdown_to_html(markdown_text: str) -> str:
         is_quote: bool = stripped.startswith("> ") and not stripped.startswith("\\> ")
         is_header: bool = stripped.startswith("#") and not stripped.startswith("\\#")
         is_hr: bool = stripped.startswith("---") and not stripped.startswith("\\---")
+        is_structural: bool = stripped.startswith("<div") or stripped.startswith("</div")
 
         clean_text: str = stripped
         header_level: int = 0
@@ -77,6 +95,7 @@ def convert_markdown_to_html(markdown_text: str) -> str:
         for char in ['*', '_', '~', '{', '#', '-', '[', '^']:
             clean_text = clean_text.replace(f'\\{char}', char)
 
+        # List Logic
         if is_list:
             if not state["list"]:
                 state["list"] = True
@@ -90,21 +109,19 @@ def convert_markdown_to_html(markdown_text: str) -> str:
         if is_quote:
             if not state["blockquote"]:
                 state["blockquote"] = True
-                html_output.append("blockquote>")
+                html_output.append("<blockquote>")
             html_output.append(clean_text)
             continue
         elif state["blockquote"]:
             html_output.append("</blockquote>")
             state["blockquote"] = False
 
-        if not clean_text and not stripped:
-            html_output.append("<br>")
-            continue
-
         if is_header:
             html_output.append(f"<h{header_level}>{clean_text}</h{header_level}>")
         elif is_hr:
             html_output.append("<hr>")
+        elif is_structural:
+            html_output.append(clean_text)
         else:
             html_output.append(f"<p>{clean_text}</p>")
 

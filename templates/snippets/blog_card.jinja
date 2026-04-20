@@ -17,6 +17,10 @@
             <span class="reading-time"><i class="fa-regular fa-clock"></i> {{ blog.calc_read_time|default('5') }} min read</span>
             <span class="dot">•</span>
             <span class="date">{{ blog.time_created | datetimeformat }}</span>
+            {% if blog.type %}
+                <span class="dot">•</span>
+                <span class="blog-type">{{ blog.type }}</span>
+            {% endif %}
         </div>
 
         <a href="/blog/{{ blog.id }}" class="card-title">
