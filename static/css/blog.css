@@ -158,6 +158,16 @@
 }
 
 /* --- Typography Flow --- */
+.main-text-flow h1,
+.main-text-flow h2,
+.main-text-flow h3,
+.main-text-flow p,
+.main-text-flow ul,
+.main-text-flow ol,
+.main-text-flow blockquote {
+    margin: 0;
+    padding: 0;
+}
 .main-text-flow {
     font-size: var(--font-size-md);
     line-height: 1.8;
@@ -177,7 +187,7 @@
 }
 
 .main-text-flow h2 {
-    margin-top: var(--spacing-3xl);
+    margin-top: var(--spacing-xl);
     color: var(--main-color-900);
 }
 
@@ -191,6 +201,12 @@
     margin-left: 0;
     color: var(--third-font-color);
     font-style: italic;
+}
+
+.main-text-flow .line-break {
+    display: block;
+    height: 10px;
+    content: "";
 }
 
 /* --- Modern Tag Section --- */

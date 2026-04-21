@@ -4,8 +4,7 @@ import time
 from typing import List, Union, Optional, TypedDict, Any, Dict, Tuple, Literal
 from functools import lru_cache
 import uuid
-import math
-from .others import convert_markdown_to_html
+from .converter import MarkdownConverter
 
 class Project(TypedDict):
     id: str
@@ -70,7 +69,7 @@ def add_project(new_project: Dict[str, Any]) -> Project:
 
     # Convert markdown content to HTML
     raw_content = new_project.get("content_raw", "")
-    new_project["content_html"] = convert_markdown_to_html(raw_content)
+    new_project["content_html"] = MarkdownConverter.quick_convert(raw_content)
 
     # Set defaults
     new_project.setdefault("tags", [])
@@ -100,7 +99,7 @@ def update_project(project_id: Union[int, str], updated_data: Dict[str, Any]) ->
             
             # Convert markdown if content is being updated
             if "content_raw" in updated_data:
-                updated_data["content_html"] = convert_markdown_to_html(updated_data["content_raw"])
+                updated_data["content_html"] = MarkdownConverter.quick_convert(updated_data["content_raw"])
 
             projects[i].update(updated_data)
             projects[i]["last_updated"] = int(time.time())

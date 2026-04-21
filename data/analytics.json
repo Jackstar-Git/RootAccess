@@ -1,13 +1,13 @@
 {
     "/": {
         "url": "/",
-        "visits": 8,
+        "visits": 9,
         "unique_visits": 1,
         "visitors": [
             "TW96aWxsYS81LjAg"
         ],
-        "total_time_spent": 1442.5169999999998,
-        "average_time_spent": 180.31
+        "total_time_spent": 1716.9499999999998,
+        "average_time_spent": 190.77
     },
     "/projects": {
         "url": "/projects",

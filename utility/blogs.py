@@ -6,7 +6,7 @@ from functools import lru_cache
 import uuid
 from datetime import datetime
 from typing import List, Dict, Any, Tuple, Optional
-from .others import convert_markdown_to_html
+from .converter import MarkdownConverter
 import math
 
 class BlogPost(TypedDict):
@@ -62,7 +62,7 @@ def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
         new_blog["author"] = [new_blog["author"]]
     
     raw_content = new_blog.get("content_raw", "")
-    new_blog["content_html"] = convert_markdown_to_html(raw_content)
+    new_blog["content_html"] = MarkdownConverter.quick_convert(raw_content)
 
     new_blog.setdefault("tags", [])
     new_blog.setdefault("categories", [])
@@ -87,9 +87,8 @@ def update_blog(blog_id: Union[int, str], updated_data: Dict[str, Any]) -> bool:
             if "author" in updated_data and isinstance(updated_data["author"], str):
                 updated_data["author"] = [updated_data["author"]]
 
-            # Automatically update HTML if the raw content is being changed
             if "content_raw" in updated_data:
-                updated_data["content_html"] = convert_markdown_to_html(updated_data["content_raw"])
+                updated_data["content_html"] = MarkdownConverter.quick_convert(updated_data["content_raw"])
                 updated_data["calc_read_time"] = calculate_reading_time(updated_data["content_raw"])
 
                 

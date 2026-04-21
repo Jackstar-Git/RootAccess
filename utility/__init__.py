@@ -9,6 +9,7 @@ from . import path_files as path_utils
 from . import auth
 from . import contact
 from . import analytics
+from . import converter
 
 # convenience imports
 def __getattr__(name):
@@ -34,4 +35,6 @@ def __getattr__(name):
         return contact
     if name == "analytics":
         return analytics
+    if name == "converter":
+        return converter
     raise AttributeError(f"module {__name__} has no attribute {name}")

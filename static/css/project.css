@@ -234,9 +234,56 @@
     background: var(--main-color-950);
 }
 
-.main-text-flow { font-size: 1.15rem; line-height: 1.8; color: var(--font-color); }
-.main-text-flow p { margin-bottom: 1.8rem; }
-.main-text-flow h2 { margin-top: var(--spacing-3xl); color: var(--main-color-900); }
+.main-text-flow h1,
+.main-text-flow h2,
+.main-text-flow h3,
+.main-text-flow p,
+.main-text-flow ul,
+.main-text-flow ol,
+.main-text-flow blockquote {
+    margin: 0;
+    padding: 0;
+}
+.main-text-flow {
+    font-size: var(--font-size-md);
+    line-height: 1.8;
+    color: var(--font-color);
+    hyphens: auto;
+}
+
+.main-text-flow p {
+    margin-bottom: 1rem;
+}
+
+.main-text-flow h1 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.main-text-flow h2 {
+    margin-top: var(--spacing-xl);
+    color: var(--main-color-900);
+}
+
+.main-text-flow a {
+    overflow-wrap: anywhere;
+}
+
+.main-text-flow blockquote {
+    border-left: 4px solid var(--main-color-400);
+    padding-left: 1em;
+    margin-left: 0;
+    color: var(--third-font-color);
+    font-style: italic;
+}
+
+.main-text-flow .line-break {
+    display: block;
+    height: 10px;
+    content: "";
+}
 
 /* --- Tags & Footer --- */
 .article-end { margin-top: var(--spacing-4xl); padding-top: var(--spacing-2xl); border-top: 1px solid var(--background-2); }

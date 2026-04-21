@@ -15,7 +15,7 @@ from utility.calendar import generate_calendar
 from utility.contact import load_contacts
 from utility.events import get_events
 from utility.logging_utility import logger
-from utility.others import convert_markdown_to_html
+from utility.converter import MarkdownConverter
 from utility.projects import add_project, get_project_by_id, load_projects, update_project
 from utility.settings import get_settings, update_settings
 from utility.analytics import get_all_analytics
@@ -71,7 +71,7 @@ def dashboard() -> render_template:
         with open(notes_path, "r", encoding="utf-8") as f:
             raw_note = f.read()
 
-    html_note = convert_markdown_to_html(raw_note)
+    html_note = MarkdownConverter.quick_convert(raw_note)
 
     return render_template(
         "admin/admin.jinja",

@@ -23,7 +23,7 @@ from utility.calendar import generate_calendar
 from utility.contact import add_contact, delete_contact, mark_contact_read
 from utility.events import get_events, add_event, delete_event
 from utility.logging_utility import logger
-from utility.others import convert_markdown_to_html
+from utility.converter import MarkdownConverter
 from utility.path_files import MAX_FILE_SIZE, ROOT_DIR, is_safe_path, sanitize_filename
 from utility.projects import query_projects, search_projects, load_projects, get_project_by_id
 from utility.settings import get_settings, update_settings, _load_settings, _load_settings_cached
@@ -294,7 +294,7 @@ def api_save_note() -> Response:
         with open("data/notes.md", "w", encoding="utf-8") as f:
             f.write(note_content)
 
-        html_content = convert_markdown_to_html(note_content)
+        html_content = MarkdownConverter.quick_convert(note_content)
         return jsonify({"success": True, "html": html_content})
     except Exception as e:
         logger.error(f"Failed to save note: {e}")
@@ -763,7 +763,7 @@ def api_markdown_to_html() -> Response:
         return jsonify({"error": "No markdown data provided."}), 400
 
     try:
-        html_content = convert_markdown_to_html(data["data"])
+        html_content = MarkdownConverter.quick_convert(data["data"])
         return Response(html_content, mimetype="text/html")
     except Exception as e:
         logger.error(f"Failed to convert markdown to HTML: {e}")
