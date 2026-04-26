@@ -43,6 +43,10 @@
             {
                 "name": "Analysis",
                 "icon": "fa-solid fa-chart-line"
+            },
+            {
+                "name": "Satire",
+                "icon": "fa-solid fa-masks-theater"
             }
         ],
         "topics": [

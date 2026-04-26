@@ -20,6 +20,17 @@ def load_quotes(filepath: str = "data/quotes.json") -> List[Quote]:
     except (FileNotFoundError, json.JSONDecodeError):
         return [DEFAULT_QUOTE]
 
+def save_quotes(quotes: List[Quote], filepath: str = "data/quotes.json") -> None:
+    try:
+        with open(filepath, "w", encoding="utf-8") as f:
+            json.dump(quotes, f, indent=2, ensure_ascii=False)
+        # Clear the cache so next load_quotes call gets fresh data
+        load_quotes.cache_clear()
+        logger.info(f"Quotes saved to {filepath}")
+    except Exception as e:
+        logger.error(f"Failed to save quotes: {e}")
+        raise
+
 def get_quote_of_the_day(date_input: Optional[Union[dt_date, str]] = None) -> Quote:
     if date_input is None:
         target_date = dt_date.today()

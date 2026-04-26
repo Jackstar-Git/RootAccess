@@ -22,7 +22,7 @@
   {
     "text": "The world is full of the ruins of empires who thought they were eternal.",
     "author": "Camille Flammarion",
-    "original": null
+    "original": "L'histoire est pleine de ruines d'empires qui se croyaient éternels. (FR)"
   },
   {
     "text": "This world doesn’t like those who are different… Don’t let anyone tell you who you should be.",
@@ -77,7 +77,7 @@
   {
     "text": "Those who do not know the past are condemned to repeat it.",
     "author": "George Santayana",
-    "original": "Wer die Vergangenheit nicht kennt, ist dazu verurteilt, sie zu wiederholen."
+    "original": null
   },
   {
     "text": "When writing the story of your life, don't let anyone else hold the pen.",
@@ -117,7 +117,7 @@
   {
     "text": "Nothing is more dangerous than active ignorance.",
     "author": "Johann Wolfgang von Goethe",
-    "original": "Nichts ist gefährlicher als aktive Dummheit"
+    "original": "Es ist nichts schrecklicher als eine handelnde Unwissenheit."
   },
   {
     "text": "First, solve the problem. Then, write the code.",
@@ -137,7 +137,7 @@
   {
     "text": "A single death is a tragedy; a million deaths is a statistic.",
     "author": "Kurt Tucholsky",
-    "original": null
+    "original": "Der Tod eines Menschen: das ist eine Katastrophe. Hunderttausend Tote: das ist eine Statistik! (DE)"
   },
   {
     "text": "An eye for an eye only ends up making the whole world blind.",
@@ -147,12 +147,12 @@
   {
     "text": "I have never seen God, but I have seen people who have committed murders in his name.",
     "author": "Mahatma Gandhi",
-    "original": "Ich habe Gott nie gesehen, aber ich habe Menschen gesehen, die in seinem Namen Morde begangen haben."
+    "original": null
   },
   {
     "text": "History is a set of lies agreed upon.",
     "author": "Napoleon Bonaparte",
-    "original": null
+    "original": "L'histoire est une suite de mensonges sur lesquels on est d'accord. (FR)"
   },
   {
     "text": "What's the meaning of a scar if we don't learn to heal?",
@@ -170,7 +170,7 @@
     "original": null
   },
   {
-    "text": "Be loyal to what matters. Forget about the rest.",
+    "text": "Be loyal to what matters.",
     "author": "Arthur Morgan (Red Dead Redemption 2)",
     "original": null
   },
@@ -237,7 +237,7 @@
   {
     "text": "History is written by the victors.",
     "author": "Winston Churchill (Attributed)",
-    "original": "Only the winners write the history"
+    "original": null
   },
   {
     "text": "If you are going through hell, keep going! It ain't a place to stop!",
@@ -298,8 +298,25 @@
       "text": "The sad thing is good people do bad things",
       "author": "Hosea Matthews (Red Dead Redemption 2)",
       "original": null
+    },
+    {
+      "text": "Live in the present. You'll miss it in the future.",
+      "author": null,
+      "original": null
+    },
+    {
+      "text": "When saving lives, don't forget to save yours along the way.",
+      "author": null,
+      "original": null
+    },
+    {
+      "text": "Nobody made my path but me.",
+      "author": "John Marston (Red Dead Redemption 1)",
+      "original": null
+    },
+    {
+      "text": "A bad cause seldom fails to betray itself",
+      "author": "James Madison",
+      "original": null
     }
-
-
-
 ]

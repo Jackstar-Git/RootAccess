@@ -1,0 +1,388 @@
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.header-actions h2 {
+    margin: 0;
+    color: var(--main-color-900);
+}
+
+.settings-description {
+    color: var(--third-font-color);
+    margin-bottom: 30px;
+    font-size: 0.95rem;
+}
+
+.config-section {
+    margin-bottom: 40px;
+    background: var(--main-bg);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    border: 1px solid var(--background-2);
+}
+
+.section-header h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--main-color-700);
+    border-bottom: 2px solid var(--main-color-100);
+    padding-bottom: 10px;
+}
+
+/* List Container */
+.config-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Individual Config Item */
+.config-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 12px 20px;
+    background-color: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.config-item:not(.add-new-item):hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+}
+
+.item-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    flex: 1;
+}
+
+.item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--main-color-50);
+    color: var(--main-color-500);
+    border-radius: 6px;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* Quote Content */
+.quote-content {
+    flex: 1;
+}
+
+.quote-text {
+    margin: 0 0 8px 0;
+    font-size: 0.95rem;
+    color: var(--font-color);
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.quote-author {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--main-color-600);
+    font-weight: 600;
+}
+
+.quote-original {
+    margin: 6px 0 0 0;
+    font-size: 0.8rem;
+    color: var(--third-font-color);
+    font-style: italic;
+}
+
+/* Actions */
+.item-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+}
+
+.btn.edit-btn {
+    background-color: var(--main-color-100);
+    color: var(--main-color-600);
+}
+
+.btn.edit-btn:hover {
+    background-color: var(--main-color-200);
+    color: var(--main-color-700);
+}
+
+.btn.delete-btn {
+    background-color: #fee;
+    color: #d32f2f;
+}
+
+.btn.delete-btn:hover {
+    background-color: #fdd;
+    color: #c62828;
+}
+
+.btn-primary {
+    background-color: var(--main-color-500);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--main-color-600);
+}
+
+.btn-secondary {
+    background-color: var(--background-2);
+    color: var(--font-color);
+}
+
+.btn-secondary:hover {
+    background-color: #ddd;
+}
+
+/* Add New Item */
+.add-new-item {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px;
+    background-color: #fafafa;
+    border: 2px dashed var(--main-color-200);
+}
+
+.quote-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 6px;
+    color: var(--font-color);
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.form-icon {
+    position: absolute;
+    top: 30px;
+    left: 10px;
+    color: var(--main-color-400);
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea {
+    padding-left: 35px;
+    padding: 8px 12px;
+    border: 1px solid var(--background-2);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--font-color);
+    background-color: white;
+    transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--main-color-400);
+    box-shadow: 0 0 0 2px rgba(69, 170, 255, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 50px;
+}
+
+.form-group input[type="text"] {
+    padding-left: 35px;
+}
+
+.form-group textarea {
+    padding-left: 35px;
+}
+
+/* Add form button */
+.quote-form button {
+    align-self: flex-start;
+    margin-top: 10px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--third-font-color);
+}
+
+.empty-state h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--background-2);
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--main-color-900);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--third-font-color);
+    transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+    color: var(--font-color);
+}
+
+.modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding: 20px;
+    border-top: 1px solid var(--background-2);
+}
+
+#editForm {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#editForm .form-group input,
+#editForm .form-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--background-2);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--font-color);
+    background-color: white;
+}
+
+#editForm .form-group input:focus,
+#editForm .form-group textarea:focus {
+    outline: none;
+    border-color: var(--main-color-400);
+    box-shadow: 0 0 0 2px rgba(69, 170, 255, 0.1);
+}
+
+#editForm .form-group textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .config-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .item-info {
+        width: 100%;
+    }
+
+    .item-actions {
+        width: 100%;
+        margin-top: 10px;
+        justify-content: flex-end;
+    }
+
+    .quote-form {
+        gap: 12px;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+
+    .form-icon {
+        display: none;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        padding-left: 12px;
+    }
+
+    #editForm .form-group input,
+    #editForm .form-group textarea {
+        padding-left: 12px;
+    }
+}

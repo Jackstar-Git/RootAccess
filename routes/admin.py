@@ -19,6 +19,7 @@ from utility.converter import MarkdownConverter
 from utility.projects import add_project, get_project_by_id, load_projects, update_project
 from utility.settings import get_settings, update_settings
 from utility.analytics import get_all_analytics
+from utility.quotes import load_quotes
 
 # ========== BLUEPRINT INITIALIZATION ==========
 admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
@@ -473,6 +474,13 @@ def edit_project(project_id: str):
             return redirect(url_for("admin.all_projects"))
 
     return render_template("admin/edit-project.jinja", project=project, settings=get_settings("project_config"))
+
+# ========== CONTENT ROUTES ==========
+@admin_blueprint.route("/content/quotes", methods=["GET"])
+@login_required
+def manage_quotes():
+    quotes = load_quotes()
+    return render_template("admin/quotes.jinja", quotes=quotes)
 
 # ========== SETTINGS ROUTES ==========
 @admin_blueprint.route("/settings/server", methods=["GET", "POST"])

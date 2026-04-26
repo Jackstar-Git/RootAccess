@@ -39,7 +39,7 @@
     transform: scale(1.08);
 }
 
-.glass-tag {
+.project-tag {
     position: absolute;
     bottom: var(--spacing-sm);
     left: var(--spacing-sm);

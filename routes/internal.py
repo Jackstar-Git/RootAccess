@@ -27,6 +27,7 @@ from utility.converter import MarkdownConverter
 from utility.path_files import MAX_FILE_SIZE, ROOT_DIR, is_safe_path, sanitize_filename
 from utility.projects import query_projects, search_projects, load_projects, get_project_by_id
 from utility.settings import get_settings, update_settings, _load_settings, _load_settings_cached
+from utility.quotes import load_quotes, save_quotes
 
 # ========== INITIALIZATION ==========
 internal_blueprint = Blueprint("internal", __name__, template_folder="./templates")
@@ -888,6 +889,88 @@ def api_manage_types() -> Response:
 
     except Exception as e:
         logger.error(f"API Error managing types: {e}")
+        return jsonify({"error": "Internal server error."}), 500
+
+# ========== QUOTES ROUTES ==========
+
+@internal_blueprint.route("/api/quotes/add", methods=["POST"])
+@login_required
+def add_quote() -> Response:
+    text = request.form.get("quote_text", "").strip()
+    author = request.form.get("quote_author", "").strip()
+    original = request.form.get("quote_original", "").strip() or None
+
+    if not author:
+        return jsonify({"error": "Author is required."}), 400
+
+    try:
+        quotes = load_quotes()
+        new_quote = {
+            "text": text,
+            "author": author,
+            "original": original
+        }
+        quotes.append(new_quote)
+        save_quotes(quotes)
+        logger.info(f"Quote added: {author}")
+        return redirect(request.referrer or "/admin/content/quotes")
+    except Exception as e:
+        logger.error(f"Failed to add quote: {e}")
+        flash("Error adding quote.", "error")
+        return redirect(request.referrer or "/admin/content/quotes")
+
+@internal_blueprint.route("/api/quotes", methods=["PUT", "DELETE"])
+@login_required
+def api_manage_quotes() -> Response:
+    from utility.quotes import load_quotes, save_quotes
+    
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided."}), 400
+
+    try:
+        if request.method == "PUT":
+            index = data.get("index")
+            text = data.get("text", "").strip()
+            author = data.get("author", "").strip()
+            original = data.get("original", "").strip() or None
+
+            if not author:
+                return jsonify({"error": "Author is required."}), 400
+
+            if index is None or not isinstance(index, int):
+                return jsonify({"error": "Invalid quote index."}), 400
+
+            quotes = load_quotes()
+            if index < 0 or index >= len(quotes):
+                return jsonify({"error": "Quote not found."}), 404
+
+            quotes[index] = {
+                "text": text,
+                "author": author,
+                "original": original
+            }
+            save_quotes(quotes)
+            logger.info(f"Quote updated at index {index}: {author}")
+            return jsonify({"success": True})
+
+        elif request.method == "DELETE":
+            index = data.get("index")
+
+            if index is None or not isinstance(index, int):
+                return jsonify({"error": "Invalid quote index."}), 400
+
+            quotes = load_quotes()
+            if index < 0 or index >= len(quotes):
+                return jsonify({"error": "Quote not found."}), 404
+
+            removed_quote = quotes.pop(index)
+            save_quotes(quotes)
+            logger.info(f"Quote deleted: {removed_quote.get('author')}")
+            return jsonify({"success": True})
+
+    except Exception as e:
+        logger.error(f"API Error managing quotes: {e}")
         return jsonify({"error": "Internal server error."}), 500
 
 # ========== ANALYTICS ROUTES ==========

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+<link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/quotes.css') }}">
+    <title>Admin Panel - Quotes Management</title>
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja" %}
+
+        <div class="main-content">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" title="Toggle Menu" aria-label="Toggle navigation menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="header-actions">
+                <h2>Quotes Management</h2>
+            </div>
+            
+            <p class="settings-description">Add, edit, and manage quotes. The "Text" field is required, while "Author" and "Original" (original language version) are optional.</p>
+
+            <div class="config-section">
+                <div class="section-header">
+                    <h3>All Quotes</h3>
+                </div>
+
+                <div class="config-list">
+                    {% if quotes|length == 0 %}
+                        <div class="empty-state">
+                            <h3>No quotes yet!</h3>
+                        </div>
+                    {% endif %}
+
+                    {% for quote in quotes %}
+                        <div class="config-item quote-item" data-index="{{ loop.index0 }}">
+                            <div class="item-info">
+                                <span class="item-icon"><i class="fas fa-quote-left"></i></span>
+                                <div class="quote-content">
+                                    {% if quote.text %}
+                                        <p class="quote-text">"{{ quote.text }}"</p>
+                                    {% endif %}
+                                    <p class="quote-author">— {{ quote.author }}</p>
+                                    {% if quote.original %}
+                                        <p class="quote-original" title="Original language version">{{ quote.original }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn edit-btn" onclick='editQuote({{ loop.index0 }}, {{ quote|tojson }})' title="Edit Quote"><i class="fas fa-edit"></i></button>
+                                <button class="btn delete-btn" onclick='deleteQuote({{ loop.index0 }})' title="Delete Quote"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="config-item add-new-item">
+                        <form method="POST" action="/api/quotes/add" class="quote-form">
+                            <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
+                            <div class="form-group">
+                                <i class="fas fa-quote-left form-icon"></i>
+                                <textarea name="quote_text" placeholder="Quote text (required)" rows="2" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <i class="fas fa-user form-icon"></i>
+                                <input type="text" name="quote_author" placeholder="Author (optional)">
+                            </div>
+                            <div class="form-group">
+                                <i class="fas fa-language form-icon"></i>
+                                <textarea name="quote_original" placeholder="Original language version (optional)" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Quote</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="editModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Quote</h3>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editForm" method="PUT" onsubmit="submitEditForm(event)">
+                <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
+                <div class="form-group">
+                    <label for="editText">Quote Text (required)</label>
+                    <textarea id="editText" name="text" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editAuthor">Author</label>
+                    <input type="text" id="editAuthor" name="author">
+                </div>
+                <div class="form-group">
+                    <label for="editOriginal">Original Language Version</label>
+                    <textarea id="editOriginal" name="original" rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin/admin-global.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/admin/quotes.js')}}"></script>
+
+</body>
+</html>
