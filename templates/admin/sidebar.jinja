@@ -23,7 +23,7 @@
     </div>
 
     <div class="nav-links">
-        {% if 'system:admin' in current_user_permissions or 'admin' in current_user_permissions %}
+        {% if 'system:admin' in current_user_permissions or 'system:admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="/admin/dashboard" title="Dashboard">
                 <i class="fas fa-home-alt"></i> 
@@ -32,7 +32,7 @@
         </div>
         {% endif %}
 
-        {% if 'analytics:read' in current_user_permissions or 'analytics:update' in current_user_permissions or 'admin' in current_user_permissions %}
+        {% if 'analytics:read' in current_user_permissions or 'analytics:update' in current_user_permissions or 'system:admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="/admin/analytics" title="Analytics">
                 <i class="fa-solid fa-chart-line"></i> 
@@ -41,7 +41,7 @@
         </div>
         {% endif %}
 
-        {% if 'blogs:read' in current_user_permissions or 'blogs:create' in current_user_permissions or 'blogs:update' in current_user_permissions or 'blogs:update:own' in current_user_permissions or 'blogs:delete' in current_user_permissions or 'admin' in current_user_permissions %}
+        {% if 'blogs:read' in current_user_permissions or 'blogs:create' in current_user_permissions or 'blogs:update' in current_user_permissions or 'blogs:update:own' in current_user_permissions or 'blogs:delete' in current_user_permissions or 'system:admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Blogs">
                 <i class="fa-solid fa-blog"></i> 
@@ -55,7 +55,7 @@
         </div>
         {% endif %}
 
-        {% if 'projects:read' in current_user_permissions or 'projects:create' in current_user_permissions or 'projects:update' in current_user_permissions or 'admin' in current_user_permissions %}
+        {% if 'projects:read' in current_user_permissions or 'projects:create' in current_user_permissions or 'projects:update' in current_user_permissions or 'system:admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Projects">
                 <i class="fa-solid fa-briefcase"></i> 
@@ -69,7 +69,7 @@
         </div>
         {% endif %}
 
-        {% if 'quotes:read' in current_user_permissions or 'quotes:create' in current_user_permissions or 'quotes:update' in current_user_permissions or 'admin' in current_user_permissions %}
+        {% if 'quotes:read' in current_user_permissions or 'quotes:create' in current_user_permissions or 'quotes:update' in current_user_permissions or 'system:admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Content">
                 <i class="fa-solid fa-pen-nib"></i> 
@@ -81,7 +81,7 @@
         </div>
         {% endif %}
 
-        {% if 'media:read' in current_user_permissions or 'media:create' in current_user_permissions or 'media:update' in current_user_permissions or 'media:delete' in current_user_permissions or 'admin' in current_user_permissions %}
+        {% if 'media:read' in current_user_permissions or 'media:create' in current_user_permissions or 'media:update' in current_user_permissions or 'media:delete' in current_user_permissions or 'system:admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Media">
                 <i class="fa-solid fa-images"></i> 
@@ -93,7 +93,7 @@
         </div>
         {% endif %}
 
-        {% if 'contacts:read' in current_user_permissions or 'contacts:update' in current_user_permissions or 'admin' in current_user_permissions %}
+        {% if 'contacts:read' in current_user_permissions or 'contacts:update' in current_user_permissions or 'system:admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Requests">
                 <i class="fa-solid fa-envelope-open-text"></i> 
