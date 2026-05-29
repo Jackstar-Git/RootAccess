@@ -37,7 +37,7 @@
       ]
     },
     "Redshift": {
-      "password_hash": "scrypt:32768:8:1$l03S9Zxm6PNnsBXB$285c7bf14b8d18f429bb9263a7820426299cc7ee9b09481ba845973e9ea3f634b3e42d0c048312a833b6fdaef717bcce30713ae715183e33ca8c1718c9778c20",
+      "password_hash": "scrypt:32768:8:1$4jDD09NkNMShs5JJ$bce218b61587f4b0f137397a6e25741f5624317a8c699e0d3958f9063fb344c23dfde079e6b30a96954b562ed323f056d703b898ba38dba96808f1c0c8ad6401",
       "permissions": [
         "system:dashboard",
         "blogs:read",
