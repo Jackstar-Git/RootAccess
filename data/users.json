@@ -44,7 +44,8 @@
         "blogs:create",
         "blogs:update:own",
         "blogs:delete:own",
-        "media:create"
+        "media:create",
+        "notes:update"
       ]
     }
   }
