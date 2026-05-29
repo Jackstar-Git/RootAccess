@@ -5,11 +5,12 @@ import secrets
 import threading
 import time
 from datetime import datetime
-from typing import Any, Dict, Union
+from typing import Any, Dict, Union, Optional, List
 
 from flask import Flask, request, session, render_template, Response
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 
+from utility.auth import get_user_permissions
 from utility.logging_utility import logger
 
 # ========== CUSTOM FLASK CLASS ==========
@@ -19,6 +20,10 @@ class CustomFlask(Flask):
         self.load_server_config()
         self.logger.disabled = True
         self.secret_key = secrets.token_hex(64)
+        
+        # User Cache Setup
+        self.users_cache: Optional[Dict[str, Any]] = None
+        self.users_cache_mtime: Optional[float] = None
         
         # Analytics Cache Setup
         self.analytics_cache = {}
@@ -71,7 +76,7 @@ class CustomFlask(Flask):
     def request_handler(self) -> Union[None, Response]:
         request.query_params = dict(request.args)
 
-        if self.config.get("maintenance") and not request.path.startswith("/admin") and not request.path.startswith("/static") and not request.path.startswith("/uploads") and not session.get("login"):
+        if self.config.get("maintenance") and not request.path.startswith("/admin") and not request.path.startswith("/static") and not request.path.startswith("/uploads") and not session.get("username"):
             logger.warning("Maintenance mode is enabled.")
             response = Response(render_template("maintenance.jinja"), status=503)
             response.headers["Retry-After"] = "3600"
@@ -91,10 +96,21 @@ class CustomFlask(Flask):
 
     @staticmethod
     def utility_processor() -> Dict[str, Any]:
+
+        # Get current user info from session
+        current_username: Optional[str] = session.get("username")
+        current_user_permissions: List[str] = session.get("permissions", [])
+
+        if current_username and not current_user_permissions:
+            current_user_permissions = get_user_permissions(app, current_username)
+            session["permissions"] = current_user_permissions
+        
         return {
             "query_params": request.query_params,
             "session": session,
-            "generate_token": generate_csrf
+            "generate_token": generate_csrf,
+            "current_user": current_username,
+            "current_user_permissions": current_user_permissions,
         }
 
 # ========== APPLICATION INITIALIZATION ==========

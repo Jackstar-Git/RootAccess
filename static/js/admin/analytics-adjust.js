@@ -64,6 +64,7 @@ export async function applyAnalyticsAdjustment() {
 
     try {
         const response = await fetch("/api/analytics/adjust", {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

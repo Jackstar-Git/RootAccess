@@ -6,3 +6,4 @@ changelog.txt
 tests
 project/*
 !project/requirements.txt
+.vscode

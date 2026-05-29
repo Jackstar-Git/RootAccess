@@ -9,7 +9,7 @@ from flask import Blueprint, flash, jsonify, redirect, render_template, request,
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from CustomFlaskClass import app
-from utility.auth import login_required
+from utility.auth import permission_required, get_user, get_user_permissions
 from utility.blogs import add_blog, get_item_by_id, load_blogs, update_blog
 from utility.calendar import generate_calendar
 from utility.contact import load_contacts
@@ -27,24 +27,49 @@ admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
 # ========== AUTHENTICATION ROUTES ==========
 @admin_blueprint.route("/login", methods=["GET", "POST"])
 def login() -> Union[render_template, redirect]:
-    if session.get("is_admin"):
+    if session.get("username"):
         return redirect(url_for("admin.dashboard"))
 
     if request.method == "POST":
-        input_pass: Optional[str] = request.form.get("password")
-        stored_hash: Optional[str] = get_settings("admin-password-hash")
+        username: Optional[str] = request.form.get("username", "").strip()
+        password: Optional[str] = request.form.get("password", "")
 
-        if stored_hash and check_password_hash(stored_hash, input_pass):
-            session.clear()
-            if request.form.get("remember"):
-                session.permanent = True
-            else:
-                session.permanent = False
-            session["is_admin"] = True
-            return redirect(url_for("admin.dashboard"))
+        # Validate input
+        if not username or not password:
+            logger.warning(f"Login attempt with missing credentials from {request.remote_addr}")
+            flash("Please provide both username and password.", "error")
+            return render_template("admin/login.jinja")
 
-        logger.warning(f"Unauthorized admin access attempt from {request.remote_addr}")
-        flash("Access denied: Wrong password", "error")
+        # Get user from users.json
+        user_data: Optional[Dict[str, Any]] = get_user(app, username)
+        
+        if not user_data or not check_password_hash(user_data["password_hash"], password):
+            logger.warning(f"Failed login attempt for user '{username}' from {request.remote_addr}")
+            flash("Invalid username or password.", "error")
+            return render_template("admin/login.jinja")
+
+        # Successful authentication
+        session.clear()
+        
+        # Configure session persistence
+        if request.form.get("remember"):
+            session.permanent = True
+        else:
+            session.permanent = False
+        
+        # Store user info in session
+        session["username"] = username
+        session["permissions"] = get_user_permissions(app, username)
+        
+        logger.info(f"User '{username}' logged in successfully from {request.remote_addr}")
+        flash(f"Welcome, {username}!", "success")
+        
+        # Redirect to next page or dashboard
+        next_page: Optional[str] = request.args.get("next")
+        if next_page and next_page.startswith("/"):
+            return redirect(next_page)
+        
+        return redirect(url_for("admin.dashboard"))
 
     return render_template("admin/login.jinja")
 
@@ -55,7 +80,7 @@ def logout() -> redirect:
 
 # ========== DASHBOARD ROUTES ==========
 @admin_blueprint.route("/dashboard")
-@login_required
+@permission_required("system:dashboard")
 def dashboard() -> render_template:
     today: datetime = datetime.today()
 
@@ -88,7 +113,7 @@ def dashboard() -> render_template:
 
 # ========== ANALYTICS ROUTES ==========
 @admin_blueprint.route("/analytics")
-@login_required
+@permission_required("analytics:read")
 def analytics():
     analytics_data = get_all_analytics() 
     analytics_list = list(analytics_data.values()) 
@@ -105,7 +130,7 @@ def analytics():
 
 # ========== CONTACT ROUTES ==========
 @admin_blueprint.route("/requests/contact", methods=["GET"])
-@login_required
+@permission_required("contacts:read")
 def manage_contacts() -> render_template:
     contacts = load_contacts()
     contacts.sort(key=lambda x: x.get("time_created", 0), reverse=True)
@@ -117,7 +142,7 @@ def manage_contacts() -> render_template:
 
 # ========== MEDIA ROUTES ==========
 @admin_blueprint.route("/media/all", methods=["GET"])
-@login_required
+@permission_required("media:read")
 def library() -> render_template:
     ROOT_DIR: str = "uploads"
     current_path: str = request.args.get("path", "/")
@@ -162,7 +187,7 @@ def library() -> render_template:
 
 # ========== LOGS ROUTES ==========
 @admin_blueprint.route("/settings/logs", methods=["GET"])
-@login_required
+@permission_required("system:admin")
 def server_logs() -> render_template:
     logger.info("Server logs route accessed")
     with open("logs/app.log", "r", encoding="utf-8") as file:
@@ -174,7 +199,7 @@ def server_logs() -> render_template:
 
 # ========== BLOGS ROUTES ==========
 @admin_blueprint.route("/blogs/all", methods=["GET"])
-@login_required
+@permission_required("blogs:read")
 def all_blogs() -> render_template:
     search_query: str = request.args.get("search", "").lower()
     topic_query: str = request.args.get("topic", "all")
@@ -204,12 +229,12 @@ def all_blogs() -> render_template:
     )
 
 @admin_blueprint.route("/blogs/categories", methods=["GET"])
-@login_required
+@permission_required("blogs:read")
 def blogs_categories() -> render_template:
     return render_template("admin/blog-settings.jinja", settings=get_settings("blog_config"))
 
 @admin_blueprint.route("/blogs/create/", methods=["GET", "POST"])
-@login_required
+@permission_required("blogs:create")
 def create_blog():
     logger.info("Accessing blog creation portal.")
 
@@ -281,7 +306,7 @@ def create_blog():
     )
 
 @admin_blueprint.route("/blogs/edit/<blog_id>", methods=["GET", "POST"])
-@login_required
+@permission_required("blogs:update")
 def edit_blog(blog_id: str):
     blog = get_item_by_id(blog_id)
 
@@ -362,7 +387,7 @@ def edit_blog(blog_id: str):
 
 # ========== PROJECTS ROUTES ==========
 @admin_blueprint.route("/projects/all", methods=["GET"])
-@login_required
+@permission_required("projects:read")
 def all_projects() -> render_template:
     search_query: str = request.args.get("search", "").lower()
     topic_query: str = request.args.get("topic", "all")
@@ -391,7 +416,7 @@ def all_projects() -> render_template:
     )
 
 @admin_blueprint.route("/projects/create/", methods=["GET", "POST"])
-@login_required
+@permission_required("projects:create")
 def create_project():
     logger.info("Accessing project creation portal.")
 
@@ -434,7 +459,7 @@ def create_project():
     return render_template("admin/add-project.jinja", settings=get_settings("project_config"))
 
 @admin_blueprint.route("/projects/edit/<project_id>", methods=["GET", "POST"])
-@login_required
+@permission_required("projects:update")
 def edit_project(project_id: str):
     project = get_project_by_id(project_id)
 
@@ -477,14 +502,14 @@ def edit_project(project_id: str):
 
 # ========== CONTENT ROUTES ==========
 @admin_blueprint.route("/content/quotes", methods=["GET"])
-@login_required
+@permission_required("quotes:read")
 def manage_quotes():
     quotes = load_quotes()
     return render_template("admin/quotes.jinja", quotes=quotes)
 
 # ========== SETTINGS ROUTES ==========
 @admin_blueprint.route("/settings/server", methods=["GET", "POST"])
-@login_required
+@permission_required("system:admin")
 def server_settings():
     if request.method == "POST":
         try:
@@ -521,7 +546,7 @@ def server_settings():
                            robots_txt=robots)
 
 @admin_blueprint.route("/settings/general", methods=["GET", "POST"])
-@login_required
+@permission_required("system:admin")
 def general_settings():
     if request.method == "POST":
         try:
@@ -548,6 +573,7 @@ def general_settings():
 
 # ========== APPEARANCE ROUTES ==========
 @admin_blueprint.route("/appearance/colors", methods=["GET", "POST"])
+@permission_required("system:admin")
 def general_appearance():
     if request.method == "POST":
         logger.info("General appearance settings updated")
@@ -583,11 +609,13 @@ def general_appearance():
     return render_template("admin/appearance.jinja", styles=root_styles)
 
 @admin_blueprint.route("/appearance/templates", methods=["GET", "POST"])
+@permission_required("system:admin")
 def template_appearance():
     logger.info("Edit Templates route accessed")
     return render_template("admin/edit-templates.jinja")
 
 @admin_blueprint.route("/appearance/templates/edit/<path:template>", methods=["GET", "POST"])
+@permission_required("system:admin")
 def template_appearance_edit(template):
     logger.info("Edit Templates route accessed")
     template_path = os.path.join(app.root_path, "templates", f"{template}")
@@ -610,11 +638,13 @@ def template_appearance_edit(template):
     return render_template("admin/edit-template.jinja", template_content=template_content)
 
 @admin_blueprint.route("/appearance/static", methods=["GET", "POST"])
+@permission_required("system:admin")
 def change_static_files():
     logger.info("Edit Static route accessed")
     return render_template("admin/edit-static.jinja")
 
 @admin_blueprint.route("/appearance/static/edit/<path:file>", methods=["GET", "POST"])
+@permission_required("system:admin")
 def change_static_files_edit(file):
     logger.info("Edit Templates route accessed")
     file_path = os.path.join(app.root_path, "static", f"{file}")

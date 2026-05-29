@@ -23,20 +23,25 @@
     </div>
 
     <div class="nav-links">
+        {% if 'system:admin' in current_user_permissions or 'admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="/admin/dashboard" title="Dashboard">
                 <i class="fas fa-home-alt"></i> 
                 <span>Dashboard</span>
             </a>
         </div>
+        {% endif %}
 
+        {% if 'analytics:read' in current_user_permissions or 'analytics:update' in current_user_permissions or 'admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="/admin/analytics" title="Analytics">
                 <i class="fa-solid fa-chart-line"></i> 
                 <span>Analytics</span>
             </a>
         </div>
+        {% endif %}
 
+        {% if 'blogs:read' in current_user_permissions or 'blogs:create' in current_user_permissions or 'blogs:update' in current_user_permissions or 'blogs:update:own' in current_user_permissions or 'blogs:delete' in current_user_permissions or 'admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Blogs">
                 <i class="fa-solid fa-blog"></i> 
@@ -48,7 +53,9 @@
                 <a href="/admin/blogs/categories"><i class="fa-solid fa-tags"></i> Categories</a>
             </div>
         </div>
+        {% endif %}
 
+        {% if 'projects:read' in current_user_permissions or 'projects:create' in current_user_permissions or 'projects:update' in current_user_permissions or 'admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Projects">
                 <i class="fa-solid fa-briefcase"></i> 
@@ -60,7 +67,9 @@
                 <a href="/admin/projects/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
             </div>
         </div>
+        {% endif %}
 
+        {% if 'quotes:read' in current_user_permissions or 'quotes:create' in current_user_permissions or 'quotes:update' in current_user_permissions or 'admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Content">
                 <i class="fa-solid fa-pen-nib"></i> 
@@ -70,7 +79,9 @@
                 <a href="/admin/content/quotes"><i class="fa-solid fa-quote-left"></i> Quotes</a>
             </div>
         </div>
+        {% endif %}
 
+        {% if 'media:read' in current_user_permissions or 'media:create' in current_user_permissions or 'media:update' in current_user_permissions or 'media:delete' in current_user_permissions or 'admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Media">
                 <i class="fa-solid fa-images"></i> 
@@ -80,7 +91,9 @@
                 <a href="/admin/media/all"><i class="fa-solid fa-folder-open"></i> All Media</a>
             </div>
         </div>
+        {% endif %}
 
+        {% if 'contacts:read' in current_user_permissions or 'contacts:update' in current_user_permissions or 'admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Requests">
                 <i class="fa-solid fa-envelope-open-text"></i> 
@@ -90,7 +103,9 @@
                 <a href="/admin/requests/contact"><i class="fa-solid fa-address-book"></i> Contact Requests</a>
             </div>
         </div>
+        {% endif %}
 
+        {% if 'admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Appearance">
                 <i class="fa-solid fa-paint-brush"></i> 
@@ -102,7 +117,9 @@
                 <a href="/admin/appearance/statics"><i class="fa-solid fa-code"></i> CSS & JS</a>
             </div>
         </div>
+        {% endif %}
 
+        {% if 'admin' in current_user_permissions %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Settings">
                 <i class="fa-solid fa-gear"></i> 
@@ -114,12 +131,13 @@
                 <a href="/admin/settings/logs"><i class="fa-solid fa-terminal"></i> Logs</a>
             </div>
         </div>
+        {% endif %}
     </div>
     
     <div class="profile-section">
         <img src="{{ url_for('static', filename='assets/images/logos/Logo.png') }}" alt="Admin Profile">
         <div class="profile-name">
-            <span>Jackstar</span>
+            <span>{{ current_user or 'Admin' }}</span>
         </div>
         <div class="profile-info">
             <a href="/admin/logout" class="logout-link" title="Logout">

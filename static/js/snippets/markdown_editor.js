@@ -142,6 +142,7 @@ function toggleMarkdownPreview(buttonElement) {
         previewDiv.style.display = "block";
 
         fetch("/api/markdown-to-html/", {
+            credentials: "same-origin",
             method: "POST",
             body: JSON.stringify({ data: sourceTextarea.value }),
             headers: { 

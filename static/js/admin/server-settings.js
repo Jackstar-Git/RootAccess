@@ -5,6 +5,7 @@ async function submitServerSettings() {
 
     try {
         const response = await fetch("/admin/settings/server", {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "X-CSRF-Token": csrfToken
@@ -35,6 +36,7 @@ async function clearGlobalCache() {
 
     try {
         const response = await fetch("/api/clear-cache", {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

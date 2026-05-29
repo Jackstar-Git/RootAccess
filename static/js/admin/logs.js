@@ -6,6 +6,7 @@ async function fetchLogs() {
         const sorting = document.getElementById("sortingFilter").value;
 
         const response = await fetch("/api/get-logs", {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -63,6 +64,7 @@ async function clearLogs() {
     try {
         const csrfToken = document.getElementById("csrf_token").value;
         const response = await fetch("/api/clear-logs", {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -103,6 +105,7 @@ async function sendCommand() {
 
     try {
         const response = await fetch("/api/execute-command", {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

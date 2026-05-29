@@ -8,6 +8,7 @@ const defaultHeaders = {
 async function markAsRead(id) {
     try {
         const res = await fetch("/api/admin/contacts/read", {
+            credentials: "same-origin",
             method: "POST",
             headers: defaultHeaders,
             body: JSON.stringify({ id: id })
@@ -21,6 +22,7 @@ async function deleteContact(id) {
     if(confirm(`Are you sure you want to permanently delete this contact request?`)) {
         try {
             const res = await fetch("/api/admin/contacts/delete", {
+                credentials: "same-origin",
                 method: "POST",
                 headers: defaultHeaders,
                 body: JSON.stringify({ id: id })

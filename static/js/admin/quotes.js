@@ -41,6 +41,7 @@ async function submitEditForm(event) {
 
     try {
         const res = await fetch("/api/quotes", {
+            credentials: "same-origin",
             method: "PUT",
             headers: defaultHeaders,
             body: JSON.stringify({
@@ -72,6 +73,7 @@ async function deleteQuote(index) {
     if (confirm(`Are you sure you want to delete "${author}"?`)) {
         try {
             const res = await fetch("/api/quotes", {
+                credentials: "same-origin",
                 method: "DELETE",
                 headers: defaultHeaders,
                 body: JSON.stringify({ index: index })

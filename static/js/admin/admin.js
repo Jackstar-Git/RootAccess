@@ -18,7 +18,7 @@ function updateProgressBar(progressElement, value) {
 
 async function fetchSystemUsage() {
     try {
-        const response = await fetch("/api/get-system-info/");
+        const response = await fetch("/api/get-system-info/", { credentials: "same-origin" });
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -100,6 +100,7 @@ async function saveNote() {
     
     try {
         const response = await fetch("/api/save-note", {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -142,7 +143,7 @@ async function openModal(day, month, year) {
     modalOverlay.classList.add("active");
 
     try {
-        const response = await fetch(`/api/get-events/?year=${year}&month=${month}&day=${day}`);
+        const response = await fetch(`/api/get-events/?year=${year}&month=${month}&day=${day}`, { credentials: "same-origin" });
         if (!response.ok) throw new Error("Error fetching data.");
         
         const events = await response.json();
@@ -230,6 +231,7 @@ async function submitEvent(event) {
     try {
         const csrfToken = document.getElementById("csrf_token").value;
         const response = await fetch("/api/add-events/", {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -30,6 +30,7 @@ export async function clearData(url = null) {
 
     try {
         const response = await fetch("/api/analytics/clear", {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -50,7 +51,7 @@ export async function clearData(url = null) {
 
 export async function loadIgnoredUrls() {
     try {
-        const response = await fetch("/api/analytics/ignore");
+        const response = await fetch("/api/analytics/ignore", { credentials: "same-origin" });
         const data = await response.json();
         const tbody = document.querySelector("#ignoredUrlsTable tbody");
         if (!tbody) return;
@@ -85,6 +86,7 @@ export async function addIgnoredUrl() {
     const csrfToken = document.getElementById("csrf_token").value;
     try {
         const response = await fetch("/api/analytics/ignore", {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -110,6 +112,7 @@ export async function removeIgnoredUrl(url) {
     const csrfToken = document.getElementById("csrf_token").value;
     try {
         const response = await fetch("/api/analytics/ignore", {
+            credentials: "same-origin",
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",

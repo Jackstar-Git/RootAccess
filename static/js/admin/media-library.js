@@ -12,6 +12,7 @@ const getCsrfToken = () => document.getElementById("csrf_token")?.value || "";
 
 async function apiCall(endpoint, method, body = null, isRawBody = false) {
     const options = {
+        credentials: "same-origin",
         method,
         headers: {
             "X-CSRFToken": getCsrfToken()
@@ -210,7 +211,7 @@ async function createLocation() {
 
 async function displayFiles() {
     try {
-        const response = await fetch(`/api/files/list?path=${path}&root=${root}`);
+        const response = await fetch(`/api/files/list?path=${path}&root=${root}`, { credentials: "same-origin" });
         const files = await response.json();
         if (Array.isArray(files)) {
             renderFiles(sortFiles(files));

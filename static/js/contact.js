@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const csrfToken = document.querySelector('input[name="csrf_token"]').value;
                 
                 const response = await fetch("/api/captcha/refresh", {
+                    credentials: "same-origin",
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

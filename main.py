@@ -45,6 +45,7 @@ def stay_alive() -> None:
 
 # ========== MAIN ==========
 if __name__ == "__main__":
+    print(__file__)
     os.chdir(os.path.dirname(__file__))
     logger.info("*" * 50)
     logger.info("Application Server started!")

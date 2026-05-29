@@ -73,6 +73,7 @@ async function clearCache() {
     const csrfToken = document.getElementById("csrf_token").value;
     try {
         const response = await fetch("/api/clear-cache", {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "X-CSRF-Token": csrfToken

@@ -118,6 +118,7 @@ if (document.readyState === "loading") {
             navigator.sendBeacon("/api/analytics/track", blob);
         } else {
             fetch("/api/analytics/track", {
+                credentials: "same-origin",
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: payload

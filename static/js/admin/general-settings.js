@@ -65,6 +65,7 @@ async function submitGeneralSettings() {
 
     try {
         const response = await fetch("/admin/settings/general", {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "X-CSRF-Token": csrfToken
@@ -107,6 +108,7 @@ async function loadFileContent(fileName) {
     try {
         textarea.value = "Loading...";
         const response = await fetch(`/admin/settings/general/file/read/${fileName}`, {
+            credentials: "same-origin",
             method: "GET",
             headers: {
                 "X-CSRF-Token": csrfToken
@@ -133,6 +135,7 @@ async function saveFileContent(fileName) {
 
     try {
         const response = await fetch(`/admin/settings/general/file/save/${fileName}`, {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -158,6 +161,7 @@ async function saveFileContent(fileName) {
 async function downloadDataFile(fileName) {
     try {
         const response = await fetch(`/download/data/${fileName}.json`, {
+            credentials: "same-origin",
             method: "GET"
         });
 
@@ -205,6 +209,7 @@ async function handleFileUpload(event) {
 
     try {
         const response = await fetch(`/admin/settings/general/file/upload/${fileName}`, {
+            credentials: "same-origin",
             method: "POST",
             headers: {
                 "X-CSRF-Token": csrfToken

@@ -3,6 +3,7 @@ async function deletePost(blogId) {
 
     try {
         const response = await fetch(`/api/delete-blog`, {
+            credentials: "same-origin",
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
