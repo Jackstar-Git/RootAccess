@@ -45,7 +45,8 @@
         "blogs:update:own",
         "blogs:delete:own",
         "media:create",
-        "notes:update"
+        "notes:update",
+        "events:read"
       ]
     }
   }
