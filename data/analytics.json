@@ -1,0 +1,36 @@
+{
+    "/blog": {
+        "url": "/blog",
+        "visits": 0,
+        "unique_visits": 0,
+        "visitors": [],
+        "total_time_spent": 548.5,
+        "average_time_spent": 0.0
+    },
+    "/about": {
+        "url": "/about",
+        "visits": 1,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 1.674,
+        "average_time_spent": 1.67
+    },
+    "/admin/dashboard": {
+        "url": "/admin/dashboard",
+        "visits": 0,
+        "unique_visits": 0,
+        "visitors": [],
+        "total_time_spent": 4.718,
+        "average_time_spent": 0.0
+    },
+    "/": {
+        "url": "/",
+        "visits": 0,
+        "unique_visits": 0,
+        "visitors": [],
+        "total_time_spent": 187.972,
+        "average_time_spent": 0.0
+    }
+}
