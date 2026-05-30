@@ -1,7 +1,7 @@
 import json
 import os
 import time
-from typing import List, Union, Optional, TypedDict, Any, Dict
+from typing import List, Union, Optional, TypedDict, Any, Dict, Literal
 from functools import lru_cache
 import uuid
 from datetime import datetime
@@ -19,6 +19,8 @@ class BlogPost(TypedDict):
     last_modified: int
     tags: List[str]
     categories: List[str]
+    content_html: str
+    calc_read_time: int
 
 DATA_FILE: str = "data/blogs.json"
 
@@ -46,7 +48,7 @@ def _save_and_refresh_cache(blogs: List[BlogPost]) -> None:
     load_blogs.cache_clear()
     get_item_by_id.cache_clear()
 
-def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
+def add_blog(new_blog: BlogPost) -> BlogPost:
     blogs: List[BlogPost] = load_blogs()
     now = int(time.time())
 
@@ -58,8 +60,10 @@ def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
     else:
         new_blog["id"] = str(new_blog["id"])
 
-    if isinstance(new_blog.get("author"), str):
-        new_blog["author"] = [new_blog["author"]]
+    author_val = new_blog.get("author")
+
+    if isinstance(author_val, str):
+        new_blog["author"] = [author_val]
     
     raw_content = new_blog.get("content_raw", "")
     new_blog["content_html"] = MarkdownConverter.quick_convert(raw_content)
@@ -75,7 +79,7 @@ def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
     _save_and_refresh_cache(blogs)
     return new_blog
 
-def update_blog(blog_id: Union[int, str], updated_data: Dict[str, Any]) -> bool:
+def update_blog(blog_id: Union[int, str], updated_data: BlogPost) -> bool:
     blogs: List[BlogPost] = load_blogs()
     str_id: str = str(blog_id)
     
@@ -117,7 +121,6 @@ def search_blogs(search_query: str) -> List[BlogPost]:
         return blogs
     
     query: str = search_query.lower()
-    # Exclude posts that are explicitly set as draft/hidden from search results
     def is_visible_for_search(b: BlogPost) -> bool:
         status = b.get("status") or ""
         try:
@@ -130,9 +133,8 @@ def search_blogs(search_query: str) -> List[BlogPost]:
         if is_visible_for_search(b) and (query in b.get("title", "").lower() or query in b.get("content_raw", "").lower())
     ]
 
-from typing import List, Optional, Any, Literal
 
-def query_blogs(limit: int = 10, exclude_id: Optional[Any] = None, match_mode: Literal["AND", "OR"] = "AND",**criteria: Any) -> List[BlogPost]:
+def query_blogs(limit: Optional[int] = 10, exclude_id: Optional[Any] = None, match_mode: Literal["AND", "OR"] = "AND",**criteria: Any) -> List[BlogPost]:
     blog_list: List[BlogPost] = load_blogs()
     filtered_results: List[BlogPost] = []
 
@@ -187,5 +189,8 @@ def paginate_blogs(blog_list: List[BlogPost], offset: int, per_page: int) -> Tup
     next_offset: int = offset + per_page
     
     return page_slice, has_more, next_offset, total
+
+def filter_by_date_range(*args) -> Any:
+    pass
 
 

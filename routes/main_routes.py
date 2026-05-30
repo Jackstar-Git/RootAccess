@@ -1,20 +1,23 @@
 # ========== IMPORTS ==========
+from typing import List
 from flask import render_template
+from flask.typing import ResponseReturnValue
 
 from CustomFlaskClass import app
-from utility import blogs, projects
-from utility.logging_utility import logger
+from utility.blogs import BlogPost, query_blogs, sort_blogs
+from utility.projects import Project, sort_projects, load_projects
+from utility.logging_utility import logger, log_with_user
 
 # ========== ROUTES ==========
 @app.route("/")
-def home() -> render_template:
+def home() -> ResponseReturnValue:
     logger.info("Home page accessed.")
-    all_blogs = blogs.query_blogs(status="visible")
-    sorted_blogs = blogs.sort_blogs(all_blogs, "newest")
+    all_blogs = query_blogs(status="visible")
+    sorted_blogs = sort_blogs(all_blogs, "newest")
     preview_blogs = sorted_blogs[:3]
 
-    all_projects = projects.load_projects()
-    sorted_projects = blogs.sort_blogs(all_projects, "newest")
+    all_projects: List[Project] = load_projects()
+    sorted_projects = sort_projects(all_projects, "newest")
     preview_projects = sorted_projects[:6]
 
     return render_template(

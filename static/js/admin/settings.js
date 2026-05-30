@@ -85,7 +85,7 @@ async function clearCache() {
         }
 
         window.location.reload();
-        notify("Cache erfolgreich gelöscht!", 'info');
+        notify("Cache cleared successfully!", 'info');
 
     } catch (error) {
         console.error("Error clearing cache:", error);
@@ -98,6 +98,6 @@ fileInputs.forEach(input => {
     input.addEventListener('change', function() {
         const fileName = this.files.length > 0 ? this.files[0].name : '';
         const fileNameDisplay = document.getElementById(`${this.id}-name`);
-        fileNameDisplay.textContent = fileName ? `Ausgewählte Datei: ${fileName}` : '';
+        fileNameDisplay.textContent = fileName ? `Selected file: ${fileName}` : '';
     });
 });

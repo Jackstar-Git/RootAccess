@@ -1,9 +1,10 @@
 # ========== IMPORTS ==========
 from flask import Blueprint, jsonify, request
+from flask.typing import ResponseReturnValue
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-from utility.logging_utility import logger
+from utility.logging_utility import logger, log_with_user
 from utility.quotes import get_quote_of_the_day, load_quotes
 
 # ========== BLUEPRINT INITIALIZATION ==========
@@ -19,7 +20,7 @@ limiter = Limiter(
 # ========== ROUTES ==========
 @public_api_blueprint.route("/qotd", methods=["GET"])
 @limiter.limit("10 per minute")
-def qotd() -> jsonify:
+def qotd() -> ResponseReturnValue:
     date = request.args.get("date", None)
     try:
         quote = get_quote_of_the_day(date)
@@ -30,7 +31,7 @@ def qotd() -> jsonify:
 
 @public_api_blueprint.route("/quotes", methods=["GET"])
 @limiter.limit("5 per minute")
-def get_all_quotes() -> jsonify:
+def get_all_quotes() -> ResponseReturnValue:
     try:
         quotes = load_quotes()
         return jsonify({

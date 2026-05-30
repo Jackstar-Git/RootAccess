@@ -3,20 +3,22 @@ import os
 import re
 import time
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for
+from flask.typing import ResponseReturnValue
 from werkzeug.security import check_password_hash, generate_password_hash
+
 
 from CustomFlaskClass import app
 from utility.auth import AuthManager, permission_required, get_user, Permission
-from utility.blogs import add_blog, get_item_by_id, load_blogs, update_blog
+from utility.blogs import add_blog, get_item_by_id, load_blogs, update_blog, BlogPost
 from utility.calendar import generate_calendar
 from utility.contact import load_contacts
 from utility.events import get_events
-from utility.logging_utility import logger
+from utility.logging_utility import logger, log_with_user
 from utility.converter import MarkdownConverter
-from utility.projects import add_project, get_project_by_id, load_projects, update_project
+from utility.projects import add_project, get_project_by_id, load_projects, update_project, Project
 from utility.settings import get_settings, update_settings
 from utility.analytics import get_all_analytics
 from utility.quotes import load_quotes
@@ -26,13 +28,13 @@ admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
 
 # ========== AUTHENTICATION ROUTES ==========
 @admin_blueprint.route("/login", methods=["GET", "POST"])
-def login() -> Union[render_template, redirect]:
+def login() -> ResponseReturnValue:
     if session.get("username"):
         return redirect(url_for("admin.dashboard"))
 
     if request.method == "POST":
-        username: Optional[str] = request.form.get("username", "").strip()
-        password: Optional[str] = request.form.get("password", "")
+        username: str = request.form.get("username", "").strip()
+        password: str = request.form.get("password", "")
 
         # Validate input
         if not username or not password:
@@ -73,14 +75,14 @@ def login() -> Union[render_template, redirect]:
     return render_template("admin/login.jinja")
 
 @admin_blueprint.route("/logout")
-def logout() -> redirect:
+def logout() -> ResponseReturnValue:
     session.clear()
     return redirect(url_for("admin.login"))
 
 # ========== DASHBOARD ROUTES ==========
 @admin_blueprint.route("/dashboard")
 @permission_required(Permission.SYSTEM_DASHBOARD)
-def dashboard() -> render_template:
+def dashboard() -> ResponseReturnValue:
     today: datetime = datetime.today()
 
     year: int = request.args.get("year", default=today.year, type=int)
@@ -113,7 +115,7 @@ def dashboard() -> render_template:
 # ========== ANALYTICS ROUTES ==========
 @admin_blueprint.route("/analytics")
 @permission_required(Permission.ANALYTICS_READ)
-def analytics():
+def analytics() -> ResponseReturnValue:
     analytics_data = get_all_analytics() 
     analytics_list = list(analytics_data.values()) 
     
@@ -130,7 +132,7 @@ def analytics():
 # ========== CONTACT ROUTES ==========
 @admin_blueprint.route("/requests/contact", methods=["GET"])
 @permission_required(Permission.CONTACTS_READ)
-def manage_contacts() -> render_template:
+def manage_contacts() -> ResponseReturnValue:
     contacts = load_contacts()
     contacts.sort(key=lambda x: x.get("time_created", 0), reverse=True)
 
@@ -142,7 +144,7 @@ def manage_contacts() -> render_template:
 # ========== MEDIA ROUTES ==========
 @admin_blueprint.route("/media/all", methods=["GET"])
 @permission_required(Permission.MEDIA_READ)
-def library() -> render_template:
+def library() -> ResponseReturnValue:
     ROOT_DIR: str = "uploads"
     current_path: str = request.args.get("path", "/")
 
@@ -187,24 +189,25 @@ def library() -> render_template:
 # ========== LOGS ROUTES ==========
 @admin_blueprint.route("/settings/logs", methods=["GET"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def server_logs() -> render_template:
-    logger.info("Server logs route accessed")
-    with open("logs/app.log", "r", encoding="utf-8") as file:
-        lines: List[str] = file.readlines()
+def server_logs() -> ResponseReturnValue:
+    username: Optional[str] = session.get("username")
+    log_with_user("info", "Accessed server logs", username)
+    with open("logs/app.log", "r", encoding="utf-8") as f:
+        lines: List[str] = f.readlines()
 
     clean_lines: List[str] = lines[-50::]
-    logger.info("Rendering server logs page")
+    log_with_user("debug", "Rendered server logs page", username)
     return render_template("admin/logs.jinja", logs=clean_lines)
 
 # ========== BLOGS ROUTES ==========
 @admin_blueprint.route("/blogs/all", methods=["GET"])
 @permission_required(Permission.BLOGS_READ)
-def all_blogs() -> render_template:
+def all_blogs() -> ResponseReturnValue:
     search_query: str = request.args.get("search", "").lower()
     topic_query: str = request.args.get("topic", "all")
 
     raw_blogs = load_blogs()
-    display_blogs: List[Dict[str, Any]] = []
+    display_blogs: List[BlogPost] = []
 
     for blog in raw_blogs:
         if topic_query != "all" and topic_query not in blog.get("categories", []):
@@ -229,13 +232,14 @@ def all_blogs() -> render_template:
 
 @admin_blueprint.route("/blogs/categories", methods=["GET"])
 @permission_required(Permission.BLOGS_READ)
-def blogs_categories() -> render_template:
+def blogs_categories() -> ResponseReturnValue:
     return render_template("admin/blog-settings.jinja", settings=get_settings("blog_config"))
 
 @admin_blueprint.route("/blogs/create/", methods=["GET", "POST"])
 @permission_required(Permission.BLOGS_CREATE)
-def create_blog():
-    logger.info("Accessing blog creation portal.")
+def create_blog() -> ResponseReturnValue:
+    username: Optional[str] = session.get("username")
+    log_with_user("info", "Accessing blog creation portal", username)
 
     if request.method == "POST":
         thumbnail_file = request.files.get("thumbnail")
@@ -292,11 +296,11 @@ def create_blog():
 
         try:
             add_blog(blog_data)
-            logger.info(f'Blog "{blog_data["title"]}" created successfully.')
+            log_with_user("info", f'Blog "{blog_data["title"]}" created successfully', username)
             flash("Blog post published!", "success")
             return redirect(url_for("admin.all_blogs"))
         except Exception as e:
-            logger.error(f"Failed to save blog: {str(e)}")
+            log_with_user("error", f"Failed to save blog: {str(e)}", username)
             flash("Error saving blog post.", "error")
 
     return render_template(
@@ -306,7 +310,7 @@ def create_blog():
 
 @admin_blueprint.route("/blogs/edit/<blog_id>", methods=["GET", "POST"])
 @permission_required(Permission.BLOGS_UPDATE)
-def edit_blog(blog_id: str):
+def edit_blog(blog_id: str) -> ResponseReturnValue:
     blog = get_item_by_id(blog_id)
 
     if not blog:
@@ -387,12 +391,12 @@ def edit_blog(blog_id: str):
 # ========== PROJECTS ROUTES ==========
 @admin_blueprint.route("/projects/all", methods=["GET"])
 @permission_required(Permission.PROJECTS_READ)
-def all_projects() -> render_template:
+def all_projects() -> ResponseReturnValue:
     search_query: str = request.args.get("search", "").lower()
     topic_query: str = request.args.get("topic", "all")
 
     raw_projects = load_projects()
-    display_projects: List[Dict[str, Any]] = []
+    display_projects: List[Project] = []
 
     for project in raw_projects:
         if topic_query != "all" and topic_query != project.get("topic", ""):
@@ -416,7 +420,7 @@ def all_projects() -> render_template:
 
 @admin_blueprint.route("/projects/create/", methods=["GET", "POST"])
 @permission_required(Permission.PROJECTS_CREATE)
-def create_project():
+def create_project() -> ResponseReturnValue:
     logger.info("Accessing project creation portal.")
 
     if request.method == "POST":
@@ -459,7 +463,7 @@ def create_project():
 
 @admin_blueprint.route("/projects/edit/<project_id>", methods=["GET", "POST"])
 @permission_required(Permission.PROJECTS_UPDATE)
-def edit_project(project_id: str):
+def edit_project(project_id: str) -> ResponseReturnValue:
     project = get_project_by_id(project_id)
 
     if not project:
@@ -502,14 +506,14 @@ def edit_project(project_id: str):
 # ========== CONTENT ROUTES ==========
 @admin_blueprint.route("/content/quotes", methods=["GET"])
 @permission_required(Permission.QUOTES_READ)
-def manage_quotes():
+def manage_quotes() -> ResponseReturnValue:
     quotes = load_quotes()
     return render_template("admin/quotes.jinja", quotes=quotes)
 
 # ========== SETTINGS ROUTES ==========
 @admin_blueprint.route("/settings/server", methods=["GET", "POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def server_settings():
+def server_settings() -> ResponseReturnValue:
     if request.method == "POST":
         try:
             settings = get_settings() or {}
@@ -526,8 +530,8 @@ def server_settings():
             settings["server_config"]["SESSION_COOKIE_SECURE"] = "session_cookie_secure" in form_data
             settings["server_config"]["SESSION_COOKIE_SAMESITE"] = form_data.get("session_cookie_samesite", "Lax")
 
-            with open("robots.txt", "w") as file:
-                file.write(form_data.get("robots_txt", "").replace("\n", ""))
+            with open("robots.txt", "w") as f:
+                f.write(form_data.get("robots_txt", "").replace("\n", ""))
 
             update_settings(settings)
             return jsonify({"success": True, "message": "Settings updated successfully"})
@@ -535,8 +539,8 @@ def server_settings():
             return jsonify({"success": False, "message": str(e)}), 400
 
     robots = ""
-    with open("robots.txt", "r") as file:
-        robots = file.read()
+    with open("robots.txt", "r") as f:
+        robots = f.read()
 
     settings = get_settings() or {}
     return render_template("admin/server-settings.jinja",
@@ -546,7 +550,7 @@ def server_settings():
 
 @admin_blueprint.route("/settings/general", methods=["GET", "POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def general_settings():
+def general_settings() -> ResponseReturnValue:
     if request.method == "POST":
         try:
             settings = get_settings() or {}
@@ -573,12 +577,12 @@ def general_settings():
 # ========== APPEARANCE ROUTES ==========
 @admin_blueprint.route("/appearance/colors", methods=["GET", "POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def general_appearance():
+def general_appearance() -> ResponseReturnValue:
     if request.method == "POST":
         logger.info("General appearance settings updated")
 
-        with open("static/css/root.css", "r") as file:
-            css_content = file.read()
+        with open("static/css/root.css", "r") as f:
+            css_content = f.read()
 
         for key, value in request.form.items():
             pattern = rf"--{key}:\s*[^;]+;"
@@ -589,14 +593,14 @@ def general_appearance():
             else:
                 css_content += f"\n{replacement}"
 
-        with open("static/css/root.css", "w") as file:
-            file.write(css_content)
+        with open("static/css/root.css", "w") as f:
+            f.write(css_content)
 
         return redirect(url_for("admin.general_appearance"))
 
     logger.info("General appearance route accessed")
-    with open("static/css/root.css") as file:
-        content: str = file.read()
+    with open("static/css/root.css") as f:
+        content: str = f.read()
 
     root_styles = {}
     root_regex = r"--([a-zA-Z0-9-]+)\s*:\s*([^;]+);"
@@ -609,28 +613,29 @@ def general_appearance():
 
 @admin_blueprint.route("/appearance/templates", methods=["GET", "POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def template_appearance():
+def template_appearance() -> ResponseReturnValue:
     logger.info("Edit Templates route accessed")
     return render_template("admin/edit-templates.jinja")
 
 @admin_blueprint.route("/appearance/templates/edit/<path:template>", methods=["GET", "POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def template_appearance_edit(template):
+def template_appearance_edit(template: str) -> ResponseReturnValue:
     logger.info("Edit Templates route accessed")
     template_path = os.path.join(app.root_path, "templates", f"{template}")
 
     if request.method == "POST":
         new_content = request.form.get("template_content", "")
-        with open(template_path, "w", encoding="utf-8") as file:
-            file.write(new_content)
+        with open(template_path, "w", encoding="utf-8") as f:
+            f.write(new_content)
 
-            template = app.jinja_env.get_template(sanitize_path(template))
-            template.environment.cache.clear()
+            # Renamed variable to prevent shadowing argument 'template'
+            #jinja_template = app.jinja_env.get_template(sanitize_path(template))
+            #jinja_template.environment.cache.clear()
         logger.info("Template file saved successfully")
         return redirect(url_for("admin.template_appearance_edit", template=template))
 
-    with open(template_path, "r", encoding="utf-8") as file:
-        template_content = str(file.read())
+    with open(template_path, "r", encoding="utf-8") as f:
+        template_content = str(f.read())
 
     template_content = template_content.replace("<", "&lt;").replace(">", "&gt;")
 
@@ -638,26 +643,26 @@ def template_appearance_edit(template):
 
 @admin_blueprint.route("/appearance/static", methods=["GET", "POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def change_static_files():
+def change_static_files() -> ResponseReturnValue:
     logger.info("Edit Static route accessed")
     return render_template("admin/edit-static.jinja")
 
 @admin_blueprint.route("/appearance/static/edit/<path:file>", methods=["GET", "POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def change_static_files_edit(file):
+def change_static_files_edit(file: str) -> ResponseReturnValue:
     logger.info("Edit Templates route accessed")
     file_path = os.path.join(app.root_path, "static", f"{file}")
 
     if request.method == "POST":
         new_content = request.form.get("template_content", "")
-        with open(file_path, "w", encoding="utf-8") as file:
-            file.write(new_content)
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(new_content)
 
         logger.info("Static file saved successfully")
         return redirect(url_for("admin.template_appearance_edit", template=file))
 
-    with open(file_path, "r", encoding="utf-8") as file:
-        file_content = str(file.read())
+    with open(file_path, "r", encoding="utf-8") as f:
+        file_content = str(f.read())
 
     file_content = file_content.replace("<", "&lt;").replace(">", "&gt;")
 

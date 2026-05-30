@@ -1,44 +1,45 @@
 # ========== IMPORTS ==========
-import urllib
+import urllib.parse
 from datetime import datetime
 from typing import Any, Dict, List, Union
 
-from flask import Blueprint, render_template, render_template_string, url_for, request, send_from_directory, make_response, flash, redirect, Response
+from flask import Blueprint, render_template, url_for, request, send_from_directory, make_response, current_app
+from flask.typing import ResponseReturnValue
 
-from CustomFlaskClass import app
 from utility import blogs, projects
-from utility.logging_utility import logger
+from utility.logging_utility import logger, log_with_user
 from utility.quotes import get_quote_of_the_day
-from utility.auth import generate_captcha, pw_protected
+from utility.auth import generate_captcha
+from CustomFlaskClass import app
 
 # ========== BLUEPRINT INITIALIZATION ==========
 others_blueprint = Blueprint("others", __name__)
 
 # ========== ROUTES ==========
 @others_blueprint.route("/about", methods=["GET", "POST"])
-def about() -> render_template:
+def about() -> ResponseReturnValue:
     logger.info("About route accessed")
     daily_quote = get_quote_of_the_day()
     return render_template("about.jinja", quote=daily_quote)
 
 @others_blueprint.route("/contact", methods=["GET", "POST"])
-def contact() -> render_template:
+def contact() -> ResponseReturnValue:
     captcha = generate_captcha()
     return render_template("contact.jinja", captcha=captcha)
 
 @others_blueprint.route("/imprint", methods=["GET", "POST"])
-def imprint() -> render_template:
+def imprint() -> ResponseReturnValue:
     logger.info("Imprint route accessed")
     return render_template("legal/imprint.jinja")
 
 @others_blueprint.route("/privacy", methods=["GET", "POST"])
-def privacy() -> render_template:
+def privacy() -> ResponseReturnValue:
     logger.info("Privacy route accessed")
     return render_template("legal/privacy.jinja")
 
 # ========== SITE MAP ROUTE ==========
 @app.route("/sitemap.xml")
-def sitemap() -> Response:
+def sitemap() -> ResponseReturnValue:
     logger.info("Sitemap requested.")
     pages: List[Dict[str, Any]] = []
 
@@ -68,8 +69,8 @@ def sitemap() -> Response:
             "priority": "0.5"
         })
 
-    for rule in app.url_map.iter_rules():
-        if "GET" in rule.methods:
+    for rule in current_app.url_map.iter_rules():
+        if rule.methods and "GET" in rule.methods:
             if rule.arguments:
                 continue
 
@@ -94,11 +95,11 @@ def sitemap() -> Response:
 
 # ========== ROBOTS ROUTE ==========
 @app.route("/robots.txt")
-def robots() -> Response:
+def robots() -> ResponseReturnValue:
     return send_from_directory("./", "robots.txt")
 
 # ========== GOOGLE VERIFICATION ROUTE ==========
 @app.route("/google7825769118bcd42a.html")
-def google_verification() -> Response:
+def google_verification() -> ResponseReturnValue:
     return send_from_directory("./","google7825769118bcd42a.html")
 

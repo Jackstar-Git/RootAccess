@@ -1,5 +1,5 @@
 import re
-from typing import List, Dict, Any, Final
+from typing import List, Dict, Any, Final, Optional
 
 class MarkdownConverter:
     def __init__(self, plugin_base_path: str = "/plugins/carousel"):
@@ -158,8 +158,8 @@ class MarkdownConverter:
 
         if is_list or is_quote: clean_text = stripped[2:]
         elif is_header:
-            m = re.match(r'#+', stripped)
-            h_level = len(m.group(0))
+            m: Optional[re.Match[str]] = re.match(r'#+', stripped)
+            h_level = len(m.group(0)) if m else 0
             clean_text = stripped[h_level:].strip()
 
         clean_text = self._parse_media(clean_text)

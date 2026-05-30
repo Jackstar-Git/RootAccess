@@ -54,7 +54,7 @@ def _save_and_refresh_cache(projects: List[Project]) -> None:
     get_project_by_id.cache_clear()
 
 
-def add_project(new_project: Dict[str, Any]) -> Project:
+def add_project(new_project: Project) -> Project:
     projects: List[Project] = load_projects()
     now = int(time.time())
 
@@ -86,18 +86,15 @@ def add_project(new_project: Dict[str, Any]) -> Project:
     return new_project
 
 
-def update_project(project_id: Union[int, str], updated_data: Dict[str, Any]) -> bool:
-    """Update an existing project with markdown to HTML conversion"""
+def update_project(project_id: Union[int, str], updated_data: Project) -> bool:
     projects: List[Project] = load_projects()
     str_id: str = str(project_id)
     
     for i, project in enumerate(projects):
         if str(project.get("id")) == str_id:
-            # Remove protected fields
             updated_data.pop("id", None)
             updated_data.pop("time_created", None)
             
-            # Convert markdown if content is being updated
             if "content_raw" in updated_data:
                 updated_data["content_html"] = MarkdownConverter.quick_convert(updated_data["content_raw"])
 
@@ -111,7 +108,6 @@ def update_project(project_id: Union[int, str], updated_data: Dict[str, Any]) ->
 
 
 def delete_project(project_id: Union[int, str]) -> bool:
-    """Delete a project by ID"""
     projects: List[Project] = load_projects()
     str_id: str = str(project_id)
     

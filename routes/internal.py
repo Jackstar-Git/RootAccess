@@ -7,74 +7,80 @@ import shutil
 import subprocess
 import time
 import zipfile
-from typing import Tuple, Union
+from typing import Optional, List, Dict, Any, Union
 
-from flask import Blueprint, jsonify, request, session, abort, send_file, Response, redirect, url_for, flash
+from flask import Blueprint, jsonify, request, session, abort, send_file, Response, redirect, url_for, flash, current_app
+from flask.typing import ResponseReturnValue
 from werkzeug.security import generate_password_hash
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import psutil 
 
 
-from CustomFlaskClass import app, csrf
+from CustomFlaskClass import csrf
 from utility.analytics import track_visit, clear_analytics, get_all_analytics, adjust_analytics
 from utility.auth import AuthManager, permission_required, verify_captcha, refresh_captcha, Permission
 from utility.blogs import add_blog, delete_blog, update_blog, load_blogs, get_item_by_id
 from utility.calendar import generate_calendar
 from utility.contact import add_contact, delete_contact, mark_contact_read
 from utility.events import get_events, add_event, delete_event
-from utility.logging_utility import logger
+from utility.logging_utility import logger, log_with_user
 from utility.converter import MarkdownConverter
 from utility.path_files import MAX_FILE_SIZE, ROOT_DIR, is_safe_path, sanitize_filename
 from utility.projects import query_projects, search_projects, load_projects, get_project_by_id
 from utility.settings import get_settings, update_settings, _load_settings, _load_settings_cached
-from utility.quotes import load_quotes, save_quotes
+from utility.quotes import Quote, load_quotes, save_quotes
 
 # ========== INITIALIZATION ==========
 internal_blueprint = Blueprint("internal", __name__, template_folder="./templates")
 
 limiter = Limiter(
     key_func=get_remote_address,
-    app=app,
+    app=current_app,
     storage_uri="memory://"
 )
 
 # ========== FILE HANDLING ROUTES ==========
 @internal_blueprint.route("/uploads/<path:filename>", methods=["GET"])
 @limiter.limit("120 per minute")
-def uploads(filename: str) -> Response:
+def uploads(filename: str) -> ResponseReturnValue:
     logger.info(f"GET request received for serving file from uploads | Filename: {filename}")
     try:
-        return send_file(os.path.join(app.root_path, "uploads", filename))
+        return send_file(os.path.join(current_app.root_path, "uploads", filename))
     except Exception as e:
         logger.error(f"Error serving file from uploads | Filename: {filename} | Error: {str(e)}")
         abort(404)
 
 @internal_blueprint.route("/plugins/<path:filename>", methods=["GET"])
 @limiter.limit("120 per minute")
-def plugins(filename: str) -> Response:
+def plugins(filename: str) -> ResponseReturnValue:
     logger.info(f"GET request received for serving file from plugins | Filename: {filename}")
     try:
-        return send_file(os.path.join(app.root_path, "plugins", filename))
+        return send_file(os.path.join(current_app.root_path, "plugins", filename))
     except Exception as e:
         logger.error(f"Error serving file from plugins | Filename: {filename} | Error: {str(e)}")
         abort(404)
 
 @internal_blueprint.route("/download/<path:filepath>", methods=["GET"])
 @limiter.limit("30 per minute")
-def download(filepath: str) -> Response:
+def download(filepath: str) -> ResponseReturnValue:
     logger.info(f"GET request received for download | Path: {filepath}")
     is_public_path = filepath.startswith("uploads/")
-    is_admin = AuthManager.has_permission(app, session.get("username"), Permission.SYSTEM_ADMIN)
+    username: Optional[str] = session.get("username")
+
+    if username:
+        is_admin: bool = AuthManager.has_permission(current_app, username, Permission.SYSTEM_ADMIN)
+    else:
+        is_admin: bool = False
 
     if not is_public_path and not is_admin:
         logger.warning(f"Unauthorized download attempt to restricted path: {filepath}")
         return abort(403)
 
-    full_path = os.path.join(app.root_path, filepath)
+    full_path = os.path.join(current_app.root_path, filepath)
 
     if filepath == "all":
-        full_path = os.path.join(app.root_path)
+        full_path = os.path.join(current_app.root_path)
 
     if not os.path.exists(full_path):
         logger.error(f"File or directory not found | Path: {full_path}")
@@ -109,7 +115,7 @@ def download(filepath: str) -> Response:
 # ========== CONTACT ROUTES ==========
 @internal_blueprint.route("/api/contact", methods=["POST"])
 @limiter.limit("5 per minute")
-def api_contact_submit() -> Response:
+def api_contact_submit() -> ResponseReturnValue:
     name = request.form.get("name", "").strip()
     email = request.form.get("email", "").strip()
     topic = request.form.get("topic", "").strip()
@@ -133,7 +139,7 @@ def api_contact_submit() -> Response:
     attachments = []
     if "attachments" in request.files:
         files = request.files.getlist("attachments")
-        upload_dir = os.path.join(app.root_path, "uploads", "contacts")
+        upload_dir = os.path.join(current_app.root_path, "uploads", "contacts")
         os.makedirs(upload_dir, exist_ok=True)
 
         for file in files:
@@ -163,7 +169,7 @@ def api_contact_submit() -> Response:
 
 @internal_blueprint.route("/api/admin/contacts/<action>", methods=["POST"])
 @permission_required(Permission.CONTACTS_UPDATE)
-def api_admin_contacts(action: str) -> Response:
+def api_admin_contacts(action: str) -> ResponseReturnValue:
     data = request.get_json()
     contact_id = data.get("id")
 
@@ -188,7 +194,7 @@ def api_admin_contacts(action: str) -> Response:
 # ========== CAPTCHA ROUTES ==========
 @internal_blueprint.route("/api/captcha/refresh", methods=["POST"])
 @limiter.limit("5 per minute")
-def captcha_refresh() -> Response:
+def captcha_refresh() -> ResponseReturnValue:
     try:
         data = request.get_json() or {}
         current_captcha_id = data.get("current_captcha_id", "")
@@ -201,8 +207,9 @@ def captcha_refresh() -> Response:
 # ========== EVENTS ROUTES ==========
 @internal_blueprint.route("/api/add-events/", methods=["POST"])
 @permission_required(Permission.EVENTS_CREATE)
-def add_events() -> Union[Response, Tuple[Response, int]]:
-    logger.info("Received POST request for adding events")
+def add_events() -> ResponseReturnValue:
+    username: Optional[str] = session.get("username")
+    log_with_user("info", "Received POST request for adding events", username)
 
     data = request.get_json()
     if not data:
@@ -244,17 +251,18 @@ def add_events() -> Union[Response, Tuple[Response, int]]:
 
     try:
         added = add_event(new_event)
+        log_with_user("info", f"Event added: {data['name']} on {year}-{month:02d}-{day:02d}", username)
         return jsonify({
             "message": "Event added successfully",
             "event": added
         }), 201
     except Exception as e:
-        logger.error(f"Failed to add event | Error: {str(e)}", exc_info=True)
+        log_with_user("error", f"Failed to add event | Error: {str(e)}", username)
         return jsonify({"error": "Internal server error"}), 500
 
 @internal_blueprint.route("/api/get-events/", methods=["GET"])
 @permission_required(Permission.EVENTS_READ)
-def api_get_events() -> Response:
+def api_get_events() -> ResponseReturnValue:
     try:
         year = request.args.get("year", type=int)
         month = request.args.get("month", type=int)
@@ -272,20 +280,25 @@ def api_get_events() -> Response:
 
 @internal_blueprint.route("/api/delete-event", methods=["GET"])
 @permission_required(Permission.EVENTS_DELETE)
-def api_delete_event() -> Response:
+def api_delete_event() -> ResponseReturnValue:
+    username: Optional[str] = session.get("username")
     event_id = request.args.get("id")
     if event_id:
         try:
             delete_event(event_id)
+            log_with_user("info", f"Event deleted: {event_id}", username)
         except Exception as e:
-            logger.error(f"Failed to delete event: {e}")
+            log_with_user("error", f"Failed to delete event: {e}", username)
+    else:
+        log_with_user("warning", "Delete event attempted without event_id", username)
 
     return redirect(request.referrer or url_for("admin.dashboard"))
 
 # ========== NOTES ROUTES ==========
 @internal_blueprint.route("/api/save-note", methods=["POST"])
 @permission_required(Permission.NOTES_UPDATE)
-def api_save_note() -> Response:
+def api_save_note() -> ResponseReturnValue:
+    username: Optional[str] = session.get("username")
     data = request.get_json()
     if not data or "note" not in data:
         return jsonify({"error": "No note content provided."}), 400
@@ -296,16 +309,17 @@ def api_save_note() -> Response:
         with open("data/notes.md", "w", encoding="utf-8") as f:
             f.write(note_content)
 
+        log_with_user("info", f"Note updated ({len(note_content)} characters)", username)
         html_content = MarkdownConverter.quick_convert(note_content)
         return jsonify({"success": True, "html": html_content})
     except Exception as e:
-        logger.error(f"Failed to save note: {e}")
+        log_with_user("error", f"Failed to save note: {e}", username)
         return jsonify({"error": "Internal server error"}), 500
 
 # ========== SYSTEM ROUTES ==========
 @internal_blueprint.route("/api/get-system-info/", methods=["GET"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def get_system_info() -> Union[Response, Tuple[Response, int]]:
+def get_system_info() -> ResponseReturnValue:
     logger.info("Received GET request for system information")
 
     try:
@@ -340,7 +354,8 @@ def get_system_info() -> Union[Response, Tuple[Response, int]]:
 # ========== FILE MANAGEMENT ROUTES ==========
 @internal_blueprint.route("/api/files/upload", methods=["POST"])
 @permission_required(Permission.MEDIA_CREATE)
-def upload_file() -> Response:
+def upload_file() -> ResponseReturnValue:
+    username: Optional[str] = session.get("username")
     directory = request.args.get("dir", "").lstrip("/")
     root_dir = request.args.get("root", ROOT_DIR).lstrip("/")
 
@@ -351,8 +366,9 @@ def upload_file() -> Response:
     if not files:
         return jsonify({"error": "No selected files"}), 400
 
-    base_path = os.path.join(app.root_path, root_dir, directory)
-    if not is_safe_path(os.path.join(app.root_path, root_dir), base_path):
+    base_path = os.path.join(current_app.root_path, root_dir, directory)
+    if not is_safe_path(os.path.join(current_app.root_path, root_dir), base_path):
+        log_with_user("warning", f"Unsafe file upload path attempted: {base_path}", username)
         return jsonify({"error": "Invalid path"}), 400
 
     uploaded_files = []
@@ -362,6 +378,11 @@ def upload_file() -> Response:
         if file.content_length > MAX_FILE_SIZE:
             errors.append(f"{file.filename}: File too large")
             continue
+        
+        if file and file.filename:
+            filename = sanitize_filename(file.filename)
+        else:
+            return "No file selected", 400
 
         filename = sanitize_filename(file.filename)
         file_path = os.path.join(base_path, filename)
@@ -384,6 +405,11 @@ def upload_file() -> Response:
         except Exception as e:
             errors.append(f"{file.filename}: {str(e)}")
 
+    if uploaded_files:
+        log_with_user("info", f"Files uploaded: {', '.join([f['filename'] for f in uploaded_files])} to {directory or 'root'}", username)
+    if errors:
+        log_with_user("warning", f"File upload errors: {errors}", username)
+
     response = {"uploaded": uploaded_files}
     if errors:
         response["errors"] = errors
@@ -391,7 +417,7 @@ def upload_file() -> Response:
 
 @internal_blueprint.route("/api/files/delete", methods=["DELETE"])
 @permission_required(Permission.MEDIA_DELETE)
-def delete_files() -> Response:
+def delete_files() -> ResponseReturnValue:
     data = request.get_json()
     if not data or "files" not in data or "path" not in data:
         return jsonify({"error": "Invalid request"}), 400
@@ -403,8 +429,8 @@ def delete_files() -> Response:
     if not isinstance(files, list):
         return jsonify({"error": "Files must be an array"}), 400
 
-    base_path = os.path.join(app.root_path, root_dir, path)
-    if not is_safe_path(os.path.join(app.root_path, root_dir), base_path):
+    base_path = os.path.join(current_app.root_path, root_dir, path)
+    if not is_safe_path(os.path.join(current_app.root_path, root_dir), base_path):
         return jsonify({"error": "Invalid path"}), 400
 
     errors = []
@@ -433,7 +459,7 @@ def delete_files() -> Response:
 
 @internal_blueprint.route("/api/files/rename", methods=["POST"])
 @permission_required(Permission.MEDIA_UPDATE)
-def rename_file() -> Response:
+def rename_file() -> ResponseReturnValue:
     data = request.get_json()
     required = ["path", "name", "new_name"]
     if not all(field in data for field in required):
@@ -444,11 +470,11 @@ def rename_file() -> Response:
     new_name = sanitize_filename(data["new_name"].lstrip("/"))
     root_dir = data.get("root", ROOT_DIR).lstrip("/")
 
-    base_path = os.path.join(app.root_path, root_dir, path)
+    base_path = os.path.join(current_app.root_path, root_dir, path)
     old_path = os.path.join(base_path, old_name)
     new_path = os.path.join(base_path, new_name)
 
-    if not is_safe_path(os.path.join(app.root_path, root_dir), base_path) or not is_safe_path(os.path.join(app.root_path, root_dir), new_path):
+    if not is_safe_path(os.path.join(current_app.root_path, root_dir), base_path) or not is_safe_path(os.path.join(current_app.root_path, root_dir), new_path):
         return jsonify({"error": "Invalid path"}), 400
 
     if not os.path.exists(old_path):
@@ -465,7 +491,7 @@ def rename_file() -> Response:
 
 @internal_blueprint.route("/api/files/copy", methods=["POST"])
 @permission_required(Permission.MEDIA_CREATE)
-def copy_file() -> Response:
+def copy_file() -> ResponseReturnValue:
     data = request.get_json()
     required = ["path", "file_name", "new_path"]
     if not all(field in data for field in required):
@@ -476,10 +502,10 @@ def copy_file() -> Response:
     new_path = data["new_path"].lstrip("/")
     root_dir = data.get("root", ROOT_DIR).lstrip("/")
 
-    source = os.path.join(app.root_path, root_dir, path, file_name)
-    destination = os.path.join(app.root_path, root_dir, new_path, file_name)
+    source = os.path.join(current_app.root_path, root_dir, path, file_name)
+    destination = os.path.join(current_app.root_path, root_dir, new_path, file_name)
 
-    if not is_safe_path(os.path.join(app.root_path, root_dir), source) or not is_safe_path(os.path.join(app.root_path, root_dir), destination):
+    if not is_safe_path(os.path.join(current_app.root_path, root_dir), source) or not is_safe_path(os.path.join(current_app.root_path, root_dir), destination):
         return jsonify({"error": "Invalid path"}), 400
 
     if not os.path.exists(source):
@@ -499,7 +525,7 @@ def copy_file() -> Response:
 
 @internal_blueprint.route("/api/files/move", methods=["POST"])
 @permission_required(Permission.MEDIA_UPDATE)
-def move_file() -> Response:
+def move_file() -> ResponseReturnValue:
     data = request.get_json()
     required = ["path", "file_name", "new_path"]
     if not all(field in data for field in required):
@@ -510,10 +536,10 @@ def move_file() -> Response:
     new_path = data["new_path"].lstrip("/")
     root_dir = data.get("root", ROOT_DIR).lstrip("/")
 
-    source = os.path.join(app.root_path, root_dir, path, file_name)
-    destination = os.path.join(app.root_path, root_dir, new_path, file_name)
+    source = os.path.join(current_app.root_path, root_dir, path, file_name)
+    destination = os.path.join(current_app.root_path, root_dir, new_path, file_name)
 
-    if not is_safe_path(os.path.join(app.root_path, root_dir), source) or not is_safe_path(os.path.join(app.root_path, root_dir), destination):
+    if not is_safe_path(os.path.join(current_app.root_path, root_dir), source) or not is_safe_path(os.path.join(current_app.root_path, root_dir), destination):
         return jsonify({"error": "Invalid path"}), 400
 
     if not os.path.exists(source):
@@ -530,7 +556,7 @@ def move_file() -> Response:
 
 @internal_blueprint.route("/api/files/create_folder", methods=["POST"])
 @permission_required(Permission.MEDIA_CREATE)
-def create_folder() -> Response:
+def create_folder() -> ResponseReturnValue:
     data = request.get_json()
     required = ["path", "folder_name"]
     if not all(field in data for field in required):
@@ -540,8 +566,8 @@ def create_folder() -> Response:
     folder_name = sanitize_filename(data["folder_name"].lstrip("/"))
     root_dir = data.get("root", ROOT_DIR).lstrip("/")
 
-    full_path = os.path.join(app.root_path, root_dir, path, folder_name)
-    if not is_safe_path(os.path.join(app.root_path, root_dir), full_path):
+    full_path = os.path.join(current_app.root_path, root_dir, path, folder_name)
+    if not is_safe_path(os.path.join(current_app.root_path, root_dir), full_path):
         return jsonify({"error": "Invalid path"}), 400
 
     try:
@@ -556,7 +582,7 @@ def create_folder() -> Response:
 # ========== LOGS ROUTES ==========
 @internal_blueprint.route("/api/get-logs", methods=["POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def get_logs() -> Response:
+def get_logs() -> ResponseReturnValue:
     logger.info("POST request received for getting logs")
 
     data = request.get_json()
@@ -596,22 +622,23 @@ def get_logs() -> Response:
 
 @internal_blueprint.route("/api/clear-logs", methods=["POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def clear_logs() -> Response:
-    logger.info("POST request received to clear logs")
+def clear_logs() -> ResponseReturnValue:
+    username: Optional[str] = session.get("username")
+    log_with_user("info", "POST request received to clear logs", username)
     log_path = "logs/app.log"
 
     try:
         open(log_path, "w", encoding="utf-8").close()
-        logger.info("Log file truncated successfully")
+        log_with_user("info", "Log file truncated successfully", username)
         return jsonify({"success": True})
     except Exception as e:
-        logger.error(f"Failed to clear logs: {e}")
+        log_with_user("error", f"Failed to clear logs: {e}", username)
         return jsonify({"error": "Error occurred while clearing logs."}), 500
 
 # ========== COMMAND ROUTES ==========
 @internal_blueprint.route("/api/execute-command", methods=["POST"])
 @permission_required(Permission.SYSTEM_ROOT)
-def execute_command() -> Response:
+def execute_command() -> ResponseReturnValue:
     IS_WINDOWS = platform.system() == "Windows"
 
     COMMANDS_CONFIG = {
@@ -672,22 +699,24 @@ def execute_command() -> Response:
 # ========== BLOGS ROUTES ==========
 @internal_blueprint.route("/api/add-blog", methods=["POST"])
 @permission_required(Permission.BLOGS_CREATE)
-def api_add_blog() -> Response:
+def api_add_blog() -> ResponseReturnValue:
+    username: Optional[str] = session.get("username")
     data = request.get_json()
     if not data or not data.get("title") or not data.get("content_raw"):
         return jsonify({"error": "Title and content are required."}), 400
 
     try:
         new_post = add_blog(data)
-        logger.info(f"New blog created: {new_post['id']}")
+        log_with_user("info", f"New blog created: {new_post['id']}", username)
         return jsonify({"success": True, "id": new_post["id"]})
     except Exception as e:
-        logger.error(f"Failed to add blog: {e}")
+        log_with_user("error", f"Failed to add blog: {e}", username)
         return jsonify({"error": "Internal server error while adding blog."}), 500
 
 @internal_blueprint.route("/api/update-blog", methods=["POST"])
 @permission_required(Permission.BLOGS_UPDATE)
-def api_update_blog() -> Response:
+def api_update_blog() -> ResponseReturnValue:
+    username: Optional[str] = session.get("username")
     data = request.get_json()
     blog_id = data.get("id")
 
@@ -697,16 +726,17 @@ def api_update_blog() -> Response:
     try:
         success = update_blog(blog_id, data)
         if success:
-            logger.info(f"Blog {blog_id} updated successfully")
+            log_with_user("info", f"Blog {blog_id} updated successfully", username)
             return jsonify({"success": True})
         return jsonify({"error": "Blog post not found."}), 404
     except Exception as e:
-        logger.error(f"Failed to update blog {blog_id}: {e}")
+        log_with_user("error", f"Failed to update blog {blog_id}: {e}", username)
         return jsonify({"error": "Error occurred during update."}), 500
 
 @internal_blueprint.route("/api/delete-blog", methods=["DELETE"])
 @permission_required(Permission.BLOGS_DELETE)
-def api_delete_blog() -> Response:
+def api_delete_blog() -> ResponseReturnValue:
+    username: Optional[str] = session.get("username")
     data = request.get_json(silent=True)
     blog_id = data.get("id") if data else request.args.get("id")
 
@@ -715,17 +745,17 @@ def api_delete_blog() -> Response:
 
     try:
         if delete_blog(blog_id):
-            logger.info(f"Blog {blog_id} deleted successfully")
+            log_with_user("info", f"Blog {blog_id} deleted successfully", username)
             return jsonify({"success": True})
         return jsonify({"error": "Blog post not found."}), 404
     except Exception as e:
-        logger.error(f"Failed to delete blog {blog_id}: {e}")
+        log_with_user("error", f"Failed to delete blog {blog_id}: {e}", username)
         return jsonify({"error": "Error occurred while deleting blog."}), 500
 
 # ========== CACHE ROUTES ==========
 @internal_blueprint.route("/api/clear-cache", methods=["POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def api_clear_cache() -> Response:
+def api_clear_cache() -> ResponseReturnValue:
     try:
         # Targeting specific lru_cache decorated functions
         cacheable_functions = [
@@ -759,7 +789,7 @@ def api_clear_cache() -> Response:
 # ========== MARKDOWN ROUTES ==========
 @internal_blueprint.route("/api/markdown-to-html/", methods=["POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def api_markdown_to_html() -> Response:
+def api_markdown_to_html() -> ResponseReturnValue:
     data = request.get_json()
     if not data or "data" not in data:
         return jsonify({"error": "No markdown data provided."}), 400
@@ -774,7 +804,7 @@ def api_markdown_to_html() -> Response:
 # ========== BLOG SETTINGS ROUTES ==========
 @internal_blueprint.route("/api/settings/topics/add", methods=["POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def add_topic() -> Response:
+def add_topic() -> ResponseReturnValue:
     new_topic = request.form.get("new_topic", "").strip()
 
     try:
@@ -792,7 +822,7 @@ def add_topic() -> Response:
 
 @internal_blueprint.route("/api/settings/types/add", methods=["POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def add_type() -> Response:
+def add_type() -> ResponseReturnValue:
     type_name = request.form.get("type_name", "").strip()
     type_icon = request.form.get("type_icon", "").strip()
 
@@ -811,7 +841,7 @@ def add_type() -> Response:
 
 @internal_blueprint.route("/api/settings/topics", methods=["PUT", "DELETE"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def api_manage_topics() -> Response:
+def api_manage_topics() -> ResponseReturnValue:
     data = request.get_json()
     if not data:
         return jsonify({"error": "No data provided."}), 400
@@ -843,14 +873,19 @@ def api_manage_topics() -> Response:
                 return jsonify({"success": True})
 
             return jsonify({"error": "Topic not found."}), 404
-
+        
+        logger.warning(f"Invalid method {request.method} used for managing types")
+        return jsonify({"error": "Method not allowed."}), 405
+    
     except Exception as e:
         logger.error(f"API Error managing topics: {e}")
         return jsonify({"error": "Internal server error."}), 500
+    
+
 
 @internal_blueprint.route("/api/settings/types", methods=["PUT", "DELETE"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def api_manage_types() -> Response:
+def api_manage_types() -> ResponseReturnValue:
     data = request.get_json()
     if not data:
         return jsonify({"error": "No data provided."}), 400
@@ -887,6 +922,10 @@ def api_manage_types() -> Response:
                 return jsonify({"success": True})
 
             return jsonify({"error": "Type not found."}), 404
+        
+        logger.warning(f"Invalid method {request.method} used for managing types")
+        return jsonify({"error": "Method not allowed."}), 405
+
 
     except Exception as e:
         logger.error(f"API Error managing types: {e}")
@@ -896,17 +935,17 @@ def api_manage_types() -> Response:
 
 @internal_blueprint.route("/api/quotes/add", methods=["POST"])
 @permission_required(Permission.QUOTES_CREATE)
-def add_quote() -> Response:
-    text = request.form.get("quote_text", "").strip()
-    author = request.form.get("quote_author", "").strip()
-    original = request.form.get("quote_original", "").strip() or None
+def add_quote() -> ResponseReturnValue:
+    text: str = request.form.get("quote_text", "").strip()
+    author: str = request.form.get("quote_author", "").strip()
+    original: Optional[str] = request.form.get("quote_original", "").strip() or None
 
     if not author:
         return jsonify({"error": "Author is required."}), 400
 
     try:
-        quotes = load_quotes()
-        new_quote = {
+        quotes: List[Quote] = load_quotes()
+        new_quote: Quote = {
             "text": text,
             "author": author,
             "original": original
@@ -922,7 +961,7 @@ def add_quote() -> Response:
 
 @internal_blueprint.route("/api/quotes", methods=["PUT", "DELETE"])
 @permission_required(Permission.QUOTES_UPDATE)
-def api_manage_quotes() -> Response:
+def api_manage_quotes() -> ResponseReturnValue:
     from utility.quotes import load_quotes, save_quotes
     
     data = request.get_json()
@@ -969,6 +1008,9 @@ def api_manage_quotes() -> Response:
             save_quotes(quotes)
             logger.info(f"Quote deleted: {removed_quote.get('author')}")
             return jsonify({"success": True})
+            
+        logger.warning(f"Invalid method {request.method} used for managing quotes")
+        return jsonify({"error": "Method not allowed."}), 405
 
     except Exception as e:
         logger.error(f"API Error managing quotes: {e}")
@@ -979,7 +1021,7 @@ def api_manage_quotes() -> Response:
 @internal_blueprint.route("/api/analytics/track", methods=["POST"])
 @csrf.exempt 
 @limiter.limit("6 per minute")
-def api_track_analytics() -> Response:
+def api_track_analytics() -> ResponseReturnValue:
     if session.get("username"):
         return jsonify({"status": "ignored", "reason": "Admins/Editors are invisible."})
         
@@ -988,7 +1030,7 @@ def api_track_analytics() -> Response:
         return jsonify({"error": "No data provided"}), 400
         
     url = data.get("url")
-    visitor_id = data.get("visitor_id") or request.remote_addr 
+    visitor_id = data.get("visitor_id") or request.remote_addr or "unknown"
     time_spent = data.get("time_spent", 0)
     is_heartbeat = data.get("is_heartbeat", False)
 
@@ -1007,7 +1049,7 @@ def api_track_analytics() -> Response:
 
 @internal_blueprint.route("/api/analytics/adjust", methods=["POST"])
 @permission_required(Permission.ANALYTICS_UPDATE)
-def api_adjust_analytics():
+def api_adjust_analytics() -> ResponseReturnValue:
     data = request.get_json()
     url = data.get("url", "").strip()
     visits_change = data.get("visits_change", 0)
@@ -1039,7 +1081,7 @@ def api_adjust_analytics():
 
 @internal_blueprint.route("/api/analytics/ignore", methods=["GET", "POST", "DELETE"])
 @permission_required(Permission.ANALYTICS_UPDATE)
-def api_manage_ignored_urls() -> Response:
+def api_manage_ignored_urls() -> ResponseReturnValue:
     analytics_config = get_settings("analytics_config") or {"ignored_urls": []}
     ignored_urls = analytics_config.get("ignored_urls", [])
 
@@ -1063,10 +1105,13 @@ def api_manage_ignored_urls() -> Response:
             ignored_urls.remove(url)
             update_settings({"analytics_config": {"ignored_urls": ignored_urls}})
         return jsonify({"success": True})
+    
+    logger.warning(f"Invalid method {request.method} used for managing types")
+    return jsonify({"error": "Method not allowed."}), 405
 
 @internal_blueprint.route("/api/analytics/clear", methods=["POST"])
 @permission_required(Permission.ANALYTICS_UPDATE)
-def api_clear_analytics() -> Response:
+def api_clear_analytics() ->    ResponseReturnValue:
     data = request.get_json()
     url = data.get("url") if data else None
     
@@ -1079,7 +1124,7 @@ def api_clear_analytics() -> Response:
 
 @internal_blueprint.route("/admin/settings/general/file/read/<file_name>", methods=["GET"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def read_data_file(file_name: str) -> Response:
+def read_data_file(file_name: str) -> ResponseReturnValue:
     try:
         valid_files = ["analytics", "blogs", "contacts", "events", "projects", "quotes", "settings"]
         if file_name not in valid_files:
@@ -1100,7 +1145,7 @@ def read_data_file(file_name: str) -> Response:
 
 @internal_blueprint.route("/admin/settings/general/file/save/<file_name>", methods=["POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def save_data_file(file_name: str) -> Response:
+def save_data_file(file_name: str) -> ResponseReturnValue:
     try:
         valid_files = ["analytics", "blogs", "contacts", "events", "projects", "quotes", "settings"]
         if file_name not in valid_files:
@@ -1134,7 +1179,7 @@ def save_data_file(file_name: str) -> Response:
 
 @internal_blueprint.route("/admin/settings/general/file/upload/<file_name>", methods=["POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
-def upload_data_file(file_name: str) -> Response:
+def upload_data_file(file_name: str) -> ResponseReturnValue:
     try:
         valid_files = ["analytics", "blogs", "contacts", "events", "projects", "quotes", "settings"]
         if file_name not in valid_files:
@@ -1144,10 +1189,10 @@ def upload_data_file(file_name: str) -> Response:
             return jsonify({"success": False, "message": "No file provided"}), 400
 
         file = request.files["file"]
-        
-        if file.filename == "":
+        if not file:
+            return jsonify({"success": False, "message": "No file provided"}), 400
+        if not file.filename or file.filename== "":
             return jsonify({"success": False, "message": "No file selected"}), 400
-
         if not file.filename.endswith(".json"):
             return jsonify({"success": False, "message": "Only JSON files are allowed"}), 400
 

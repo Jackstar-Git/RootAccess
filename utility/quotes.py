@@ -2,10 +2,13 @@ import json
 import random
 from datetime import date as dt_date
 from functools import lru_cache
-from typing import List, Dict, Optional, Final, Union
+from typing import List, Dict, Optional, Final, TypedDict, Union, NotRequired
 from utility.logging_utility import logger
 
-Quote = Dict[str, str]
+class Quote(TypedDict):
+    text: str
+    author: str
+    original: NotRequired[Optional[str]]
 
 DEFAULT_QUOTE: Final[Quote] = {
     "text": "Developer failed his job. Quotes are broken :(",

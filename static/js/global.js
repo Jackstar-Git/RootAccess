@@ -145,7 +145,13 @@ if (document.readyState === "loading") {
                 const closeBtn = document.getElementById('global-toast-close');
                 if (!container || !msg) return;
 
-                msg.textContent = message || (type === 'error' ? 'An error occurred' : 'Notice');
+                // Extract and improve error messages
+                let displayMessage = message;
+                if (type === 'error' && message) {
+                    displayMessage = window.improveErrorMessage(message);
+                }
+                
+                msg.textContent = displayMessage || (type === 'error' ? 'An error occurred' : 'Notice');
                 container.classList.remove('error');
                 if (type === 'error') container.classList.add('error');
                 container.hidden = false;
@@ -164,6 +170,41 @@ if (document.readyState === "loading") {
             } catch (e) {
                 console.error(e);
             }
+        };
+        
+        // Helper function to improve error messages
+        window.improveErrorMessage = function(error) {
+            if (typeof error !== 'string') {
+                error = String(error);
+            }
+            
+            // Map of common errors to user-friendly messages
+            const errorMap = {
+                'Network error': 'Failed to connect to server. Please check your internet connection and try again.',
+                'Failed to communicate with the server': 'Unable to reach the server. Please try again later.',
+                'Unauthorized': 'You do not have permission to perform this action. Please contact an administrator if you believe this is an error.',
+                'Forbidden': 'Access denied. You do not have the required permissions for this action.',
+                'Not found': 'The requested resource was not found. It may have been deleted.',
+                'Internal server error': 'An unexpected error occurred on the server. Please try again later.',
+                'Too many requests': 'Too many requests. Please wait a moment before trying again.',
+                'Bad request': 'Invalid request. Please check your input and try again.',
+                'CSRF': 'Security validation failed. Please refresh the page and try again.',
+                'timeout': 'Request took too long. Please check your connection and try again.',
+                'duplicate': 'This item already exists. Please use a different name.',
+                'required': 'Required fields are missing. Please fill in all fields.',
+                'invalid': 'Invalid input. Please check your data and try again.',
+                'file too large': 'The file is too large. Please upload a smaller file.'
+            };
+            
+            // Check if error matches any known pattern (case-insensitive)
+            for (const [key, value] of Object.entries(errorMap)) {
+                if (error.toLowerCase().includes(key.toLowerCase())) {
+                    return value;
+                }
+            }
+            
+            // Default: return original error if no match
+            return error || 'An unexpected error occurred. Please try again.';
         };
 
         document.querySelectorAll('[data-toast]').forEach(function(el){

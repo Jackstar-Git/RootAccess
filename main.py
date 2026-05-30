@@ -9,10 +9,12 @@ import requests
 from dotenv import load_dotenv
 from waitress import serve
 
-from CustomFlaskClass import app
+from flask import current_app
 from utility.logging_utility import logger
 from utility.scheduler import start_scheduler
 from routes import blueprints
+from CustomFlaskClass import app
+
 
 # ========== INITIALIZATION ==========
 load_dotenv()

@@ -2,15 +2,20 @@ import json
 import os
 import time
 from flask import current_app
+from CustomFlaskClass import CustomFlask
 from utility.logging_utility import logger
 from utility.settings import get_settings
+from typing import cast
 
 
 ANALYTICS_FILE = "data/analytics.json"
 FLUSH_INTERVAL = get_settings("analytics_config").get("update_interval", 600) #seconds = 10 minutes by default
 
+def _get_app():
+    return cast(CustomFlask, current_app)
+
 def track_visit(url: str, visitor_id: str, time_spent: float, is_heartbeat: bool) -> None:
-    app = current_app
+    app = _get_app()
     with app.analytics_lock:
         cache = app.analytics_cache
         
@@ -46,10 +51,10 @@ def _save_analytics(app) -> None:
         logger.error(f"Failed to save analytics to disk: {e}")
 
 def get_all_analytics() -> dict:
-    return current_app.analytics_cache
+    return _get_app().analytics_cache
 
-def clear_analytics(url: str = None) -> None:
-    app = current_app
+def clear_analytics(url: str | None = None) -> None:
+    app = _get_app()
     with app.analytics_lock:
         if url and url in app.analytics_cache:
             del app.analytics_cache[url]
@@ -59,7 +64,7 @@ def clear_analytics(url: str = None) -> None:
 
 
 def adjust_analytics(url: str, visits_change: int, unique_visits_change: int = 0) -> bool:
-    app = current_app
+    app = _get_app()
     with app.analytics_lock:
         if url not in app.analytics_cache:
             logger.warning(f"Attempted to adjust analytics for non-existent URL: {url}")

@@ -5,10 +5,10 @@ import secrets
 import threading
 import time
 from datetime import datetime
-from typing import Any, Dict, Union, Optional, List
+from typing import Any, Dict, Union, Optional, List, cast
 
 from flask import Flask, request, session, render_template, Response
-from flask_wtf.csrf import CSRFProtect, generate_csrf
+from flask_wtf.csrf import CSRFProtect, current_app, generate_csrf
 
 from utility.auth import AuthManager, Permission
 from utility.logging_utility import logger
@@ -67,15 +67,13 @@ class CustomFlask(Flask):
                 with open(analytics_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     if isinstance(data, list):
-                        app.analytics_cache = {} 
+                        self.analytics_cache = {} 
                     else:
                         self.analytics_cache = data
             except Exception as e:
                 logger.error(f"Failed to load initial analytics cache: {e}")
 
     def request_handler(self) -> Union[None, Response]:
-        request.query_params = dict(request.args)
-
         if self.config.get("maintenance") and not request.path.startswith("/admin") and not request.path.startswith("/static") and not request.path.startswith("/uploads") and not session.get("username"):
             logger.warning("Maintenance mode is enabled.")
             response = Response(render_template("maintenance.jinja"), status=503)
@@ -99,23 +97,22 @@ class CustomFlask(Flask):
 
         # Get current user info from session
         current_username: Optional[str] = session.get("username")
-        current_user_permissions: List[str] = session.get("permissions", [])
+        current_user_permissions: int = session.get("permissions", [])
 
         if current_username and not current_user_permissions:
-            current_user_permissions = AuthManager.get_user_bitmask(app, current_username)
+            current_user_permissions = AuthManager.get_user_bitmask(current_app, current_username)
             session["permissions"] = current_user_permissions
-        # Try to include current user's profile picture URL if available
         current_user_profile: Optional[str] = None
         try:
             from utility.auth import get_users as _get_users
-            users = _get_users(app)
+            users = _get_users(current_app)
             if current_username and isinstance(users, dict) and current_username in users:
                 current_user_profile = users.get(current_username, {}).get("profile_picture_url")
         except Exception:
             current_user_profile = None
 
         return {
-            "query_params": request.query_params,
+            "query_params": request.args,
             "session": session,
             "generate_token": generate_csrf,
             "current_user": current_username,
@@ -126,5 +123,6 @@ class CustomFlask(Flask):
         }
 
 # ========== APPLICATION INITIALIZATION ==========
-app = CustomFlask(__name__, template_folder="templates", static_folder="static")
+app: CustomFlask = CustomFlask(__name__, template_folder="templates", static_folder="static")
 csrf = CSRFProtect(app)
+

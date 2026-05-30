@@ -4,7 +4,7 @@ from enum import IntFlag
 from functools import wraps
 from typing import Any, Callable, Dict, Optional, TypeVar, cast
 from flask import abort, redirect, url_for, request, session
-from utility.logging_utility import logger
+from utility.logging_utility import logger, log_with_user
 from werkzeug.security import check_password_hash
 import json
 import os
@@ -226,7 +226,7 @@ def permission_required(required_perm: Permission) -> Callable[[F], F]:
                     return f(*args, **kwargs)
 
             # Deny if they lack global rights and either lack scoped rights or failed ownership check
-            logger.warning(f"Permission denied for user '{username}' (requires '{required_perm.name}')")
+            log_with_user("warning", f"Permission denied (requires '{required_perm.name}')", username)
             abort(403)
             
         return cast(F, decorated_function)

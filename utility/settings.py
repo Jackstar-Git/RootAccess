@@ -25,7 +25,7 @@ def _save_settings(settings: Dict[str, Any]) -> None:
 def _load_settings_cached() -> Dict[str, Any]:
     return _load_settings()
 
-def get_settings(key: str = None) -> Any:
+def get_settings(key: str | None = None) -> Any:
     data: Dict[str, Any] = _load_settings_cached()
 
     if key is None:
@@ -48,12 +48,13 @@ def update_settings(new_settings: Dict[str, Any]) -> None:
 
     current_settings = _load_settings()
     updated = _deep_update(current_settings, new_settings)
+    updated_settings: Dict[str, Any] = updated.get("server_config", {})
 
     _save_settings(updated)
     _load_settings_cached.cache_clear()
     _load_settings.cache_clear()
 
-    app.update_config(updated.get("server_config"))
+    app.update_config(updated_settings)
 
 def _deep_update(original: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, Any]:
     for key, value in new.items():

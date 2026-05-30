@@ -2,9 +2,10 @@
 import datetime
 
 from flask import Blueprint, render_template, abort, request
+from flask.typing import ResponseReturnValue
 
 from utility.projects import sort_projects, load_projects, get_project_by_id, query_projects, search_projects
-from utility.logging_utility import logger
+from utility.logging_utility import logger, log_with_user
 from utility.settings import get_settings
 
 # ========== BLUEPRINT INITIALIZATION ==========
@@ -12,7 +13,7 @@ projects_blueprint = Blueprint("projects", __name__)
 
 # ========== ROUTES ==========
 @projects_blueprint.route("/projects", methods=["GET"])
-def projects_page() -> render_template:
+def projects_page() -> ResponseReturnValue:
     query = request.args.to_dict()
     search: str = query.get("search", "").strip()
     sort_by: str = query.get("sort", "newest").strip()
@@ -62,7 +63,7 @@ def projects_page() -> render_template:
     )
 
 @projects_blueprint.route("/projects/<project_id>", methods=["GET"])
-def project(project_id: str) -> render_template:
+def project(project_id: str) -> ResponseReturnValue:
     logger.info(f"Accessing project: {project_id}")
 
     project_data = get_project_by_id(project_id)
