@@ -2,9 +2,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
- 
-
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
@@ -23,7 +20,7 @@
     </div>
 
     <div class="nav-links">
-        {% if 'system:admin' in current_user_permissions or 'system:admin' in current_user_permissions %}
+        {% if has_permission(current_user_permissions, Permission.SYSTEM_DASHBOARD) %}
         <div class="nav-item">
             <a href="/admin/dashboard" title="Dashboard">
                 <i class="fas fa-home-alt"></i> 
@@ -32,7 +29,7 @@
         </div>
         {% endif %}
 
-        {% if 'analytics:read' in current_user_permissions or 'analytics:update' in current_user_permissions or 'system:admin' in current_user_permissions %}
+        {% if has_permission(current_user_permissions, Permission.ANALYTICS_READ) or has_permission(current_user_permissions, Permission.ANALYTICS_UPDATE) %}
         <div class="nav-item">
             <a href="/admin/analytics" title="Analytics">
                 <i class="fa-solid fa-chart-line"></i> 
@@ -41,7 +38,7 @@
         </div>
         {% endif %}
 
-        {% if 'blogs:read' in current_user_permissions or 'blogs:create' in current_user_permissions or 'blogs:update' in current_user_permissions or 'blogs:update:own' in current_user_permissions or 'blogs:delete' in current_user_permissions or 'system:admin' in current_user_permissions %}
+        {% if has_permission(current_user_permissions, Permission.BLOGS_READ) or has_permission(current_user_permissions, Permission.BLOGS_CREATE) or has_permission(current_user_permissions, Permission.BLOGS_UPDATE) or has_permission(current_user_permissions, Permission.BLOGS_UPDATE_OWN) or has_permission(current_user_permissions, Permission.BLOGS_DELETE) or has_permission(current_user_permissions, Permission.SYSTEM_ADMIN) %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Blogs">
                 <i class="fa-solid fa-blog"></i> 
@@ -55,7 +52,7 @@
         </div>
         {% endif %}
 
-        {% if 'projects:read' in current_user_permissions or 'projects:create' in current_user_permissions or 'projects:update' in current_user_permissions or 'system:admin' in current_user_permissions %}
+        {% if has_permission(current_user_permissions, Permission.PROJECTS_READ) or has_permission(current_user_permissions, Permission.PROJECTS_CREATE) or has_permission(current_user_permissions, Permission.PROJECTS_UPDATE) or has_permission(current_user_permissions, Permission.SYSTEM_ADMIN) %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Projects">
                 <i class="fa-solid fa-briefcase"></i> 
@@ -69,7 +66,7 @@
         </div>
         {% endif %}
 
-        {% if 'quotes:read' in current_user_permissions or 'quotes:create' in current_user_permissions or 'quotes:update' in current_user_permissions or 'system:admin' in current_user_permissions %}
+        {% if has_permission(current_user_permissions, Permission.QUOTES_READ) or has_permission(current_user_permissions, Permission.QUOTES_CREATE) or has_permission(current_user_permissions, Permission.QUOTES_UPDATE) or has_permission(current_user_permissions, Permission.SYSTEM_ADMIN) %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Content">
                 <i class="fa-solid fa-pen-nib"></i> 
@@ -81,7 +78,7 @@
         </div>
         {% endif %}
 
-        {% if 'media:read' in current_user_permissions or 'media:create' in current_user_permissions or 'media:update' in current_user_permissions or 'media:delete' in current_user_permissions or 'system:admin' in current_user_permissions %}
+        {% if has_permission(current_user_permissions, Permission.MEDIA_READ) or has_permission(current_user_permissions, Permission.MEDIA_CREATE) or has_permission(current_user_permissions, Permission.MEDIA_UPDATE) or has_permission(current_user_permissions, Permission.MEDIA_DELETE) or has_permission(current_user_permissions, Permission.SYSTEM_ADMIN) %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Media">
                 <i class="fa-solid fa-images"></i> 
@@ -93,7 +90,7 @@
         </div>
         {% endif %}
 
-        {% if 'contacts:read' in current_user_permissions or 'contacts:update' in current_user_permissions or 'system:admin' in current_user_permissions %}
+        {% if has_permission(current_user_permissions, Permission.CONTACTS_READ) or has_permission(current_user_permissions, Permission.CONTACTS_UPDATE) or has_permission(current_user_permissions, Permission.SYSTEM_ADMIN) %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Requests">
                 <i class="fa-solid fa-envelope-open-text"></i> 
@@ -105,7 +102,20 @@
         </div>
         {% endif %}
 
-        {% if 'system:admin' in current_user_permissions %}
+        {% if has_permission(current_user_permissions, Permission.USERS_READ) or has_permission(current_user_permissions, Permission.USERS_CREATE) or has_permission(current_user_permissions, Permission.USERS_UPDATE) or has_permission(current_user_permissions, Permission.USERS_DELETE) or has_permission(current_user_permissions, Permission.SYSTEM_ADMIN) %}
+        <div class="nav-item">
+            <a href="#" class="menu-toggle" title="Users">
+                <i class="fa-solid fa-users"></i> 
+                <span>Users</span>
+            </a>
+            <div class="submenu">
+                <a href="/admin/users/all"><i class="fa-solid fa-user-gear"></i> Manage Users</a>
+                <a href="/admin/users/create"><i class="fa-solid fa-user-plus"></i> Create User</a>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if has_permission(current_user_permissions, Permission.SYSTEM_ADMIN) %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Appearance">
                 <i class="fa-solid fa-paint-brush"></i> 
@@ -119,7 +129,7 @@
         </div>
         {% endif %}
 
-            {% if 'system:admin' in current_user_permissions %}
+        {% if has_permission(current_user_permissions, Permission.SYSTEM_ADMIN) %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Settings">
                 <i class="fa-solid fa-gear"></i> 

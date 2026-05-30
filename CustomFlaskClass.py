@@ -10,7 +10,7 @@ from typing import Any, Dict, Union, Optional, List
 from flask import Flask, request, session, render_template, Response
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 
-from utility.auth import get_user_permissions
+from utility.auth import AuthManager, Permission
 from utility.logging_utility import logger
 
 # ========== CUSTOM FLASK CLASS ==========
@@ -102,7 +102,7 @@ class CustomFlask(Flask):
         current_user_permissions: List[str] = session.get("permissions", [])
 
         if current_username and not current_user_permissions:
-            current_user_permissions = get_user_permissions(app, current_username)
+            current_user_permissions = AuthManager.get_user_bitmask(app, current_username)
             session["permissions"] = current_user_permissions
         # Try to include current user's profile picture URL if available
         current_user_profile: Optional[str] = None
@@ -121,6 +121,8 @@ class CustomFlask(Flask):
             "current_user": current_username,
             "current_user_permissions": current_user_permissions,
             "current_user_profile": current_user_profile,
+            "has_permission": AuthManager.has_permission_frontend,
+            "Permission": Permission
         }
 
 # ========== APPLICATION INITIALIZATION ==========
