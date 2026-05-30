@@ -42,7 +42,7 @@ export async function clearData(url = null) {
         if (response.ok) {
             window.location.reload();
         } else {
-            alert("Failed to clear data. Check console for details.");
+                notify("Failed to clear data. Check console for details.", 'error');
         }
     } catch (error) {
         console.error("Analytics Error:", error);
@@ -99,7 +99,7 @@ export async function addIgnoredUrl() {
             input.value = "";
             await loadIgnoredUrls();
         } else {
-            alert("Failed to banish URL to the void. Check console for details.");
+                notify("Failed to banish URL to the void. Check console for details.", 'error');
         }
     } catch (error) {
         console.error("Error adding ignored URL:", error);
@@ -124,7 +124,7 @@ export async function removeIgnoredUrl(url) {
         if (response.ok) {
             await loadIgnoredUrls();
         } else {
-            alert("Failed to remove ignored URL. Check console for details.");
+                notify("Failed to remove ignored URL. Check console for details.", 'error');
         }
     } catch (error) {
         console.error("Error removing ignored URL:", error);

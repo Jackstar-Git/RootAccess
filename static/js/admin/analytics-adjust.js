@@ -79,16 +79,17 @@ export async function applyAnalyticsAdjustment() {
 
         if (response.ok) {
             const data = await response.json();
-            alert(`Analytics updated successfully!\nVisits: ${data.data.visits}\nUnique: ${data.data.unique_visits}`);
+            const msg = `Analytics updated successfully!\nVisits: ${data.data.visits}\nUnique: ${data.data.unique_visits}`;
+            notify(msg, 'info');
             closeAdjustModal();
             location.reload();
         } else {
             const error = await response.json();
-            alert("Failed to adjust analytics: " + (error.error || "Unknown error"));
+            notify("Failed to adjust analytics: " + (error.error || "Unknown error"), 'error');
         }
     } catch (error) {
         console.error("Error:", error);
-        alert("An error occurred while adjusting analytics.");
+        notify("An error occurred while adjusting analytics.", 'error');
     }
 }
 

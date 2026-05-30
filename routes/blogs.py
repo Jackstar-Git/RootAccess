@@ -2,7 +2,7 @@
 from math import ceil
 from urllib.parse import urlencode
 
-from flask import Blueprint, render_template, abort, request
+from flask import Blueprint, render_template, abort, request, session
 
 from utility import blogs, get_settings
 from utility.logging_utility import logger
@@ -79,10 +79,33 @@ def blog(blog_id: str) -> render_template:
     if not blog_data:
         logger.warning(f"Blog with ID {blog_id} not found, aborting with 404")
         abort(404, description="Blog not found")
+    # Protect draft/hidden posts: require authentication + blogs:read permission
+    status = (blog_data.get("status") or "").lower()
+    if status in ("draft", "hidden"):
+        from CustomFlaskClass import app
+        from utility.auth import has_permission, get_users
+
+        username = session.get("username")
+        if not username or not has_permission(app, username, "blogs:read"):
+            logger.warning(f"Unauthorized access to {blog_id} - requires blogs:read")
+            abort(403, description="Forbidden")
+
+    # Build author profile mapping for avatars
+    try:
+        from CustomFlaskClass import app as _app
+        from utility.auth import get_users as _get_users
+        _users = _get_users(_app)
+    except Exception:
+        _users = {}
+    author_profiles = {}
+    for name in blog_data.get("author", []):
+        u = _users.get(name) if isinstance(_users, dict) else None
+        author_profiles[name] = (u.get("profile_picture_url") if u else None) if u else None
     return render_template(
         "blog.jinja",
         blog=blog_data,
         id=blog_id,
+        author_profiles=author_profiles,
         suggestions=blogs.query_blogs(
             categories=blog_data.get("categories", []),
             status="visible",

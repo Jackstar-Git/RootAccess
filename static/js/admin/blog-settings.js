@@ -15,7 +15,7 @@ async function editTopic(oldName) {
                     body: JSON.stringify({ old_name: oldName, new_name: newName.trim() })
                 });
             if(res.ok) window.location.reload();
-            else alert("Failed to update topic.");
+            else notify("Failed to update topic.", 'error');
         } catch(e) { console.error(e); }
     }
 }
@@ -30,7 +30,7 @@ async function deleteTopic(topicName) {
                     body: JSON.stringify({ topic_name: topicName })
                 });
             if(res.ok) window.location.reload();
-            else alert("Failed to delete topic.");
+            else notify("Failed to delete topic.", 'error');
         } catch(e) { console.error(e); }
     }
 }
@@ -50,7 +50,7 @@ async function editType(oldName, oldIcon) {
                     body: JSON.stringify({ old_name: oldName, new_name: newName.trim(), new_icon: newIcon.trim() })
                 });
             if(res.ok) window.location.reload();
-            else alert("Failed to update type.");
+            else notify("Failed to update type.", 'error');
         } catch(e) { console.error(e); }
     }
 }
@@ -65,7 +65,7 @@ async function deleteType(typeName) {
                     body: JSON.stringify({ type_name: typeName })
                 });
             if(res.ok) window.location.reload();
-            else alert("Failed to delete type.");
+            else notify("Failed to delete type.", 'error');
         } catch(e) { console.error(e); }
     }
 }

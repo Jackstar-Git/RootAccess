@@ -134,3 +134,55 @@ if (document.readyState === "loading") {
         }
     });
 })();
+
+// --- Global toast/snackbar utility (site-wide) ---
+(function(){
+    function initToasts(){
+        window.showToast = function(message = "", type = "info", timeout = 4000) {
+            try {
+                const container = document.getElementById('global-toast');
+                const msg = document.getElementById('global-toast-message');
+                const closeBtn = document.getElementById('global-toast-close');
+                if (!container || !msg) return;
+
+                msg.textContent = message || (type === 'error' ? 'An error occurred' : 'Notice');
+                container.classList.remove('error');
+                if (type === 'error') container.classList.add('error');
+                container.hidden = false;
+                container.classList.add('toast-show');
+
+                let timer = setTimeout(()=>{
+                    container.classList.remove('toast-show');
+                    container.hidden = true;
+                }, timeout);
+
+                closeBtn.onclick = function(){
+                    clearTimeout(timer);
+                    container.classList.remove('toast-show');
+                    container.hidden = true;
+                };
+            } catch (e) {
+                console.error(e);
+            }
+        };
+
+        document.querySelectorAll('[data-toast]').forEach(function(el){
+            el.addEventListener('click', function(){
+                const msg = el.getAttribute('data-toast') || '';
+                const type = el.getAttribute('data-toast-type') || 'info';
+                window.showToast(msg, type);
+            });
+        });
+
+        window.notify = function(message, type='info'){
+            if (window.showToast) return window.showToast(message, type);
+            try { alert(message); } catch(e){}
+        };
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initToasts);
+    } else {
+        initToasts();
+    }
+})();

@@ -104,13 +104,23 @@ class CustomFlask(Flask):
         if current_username and not current_user_permissions:
             current_user_permissions = get_user_permissions(app, current_username)
             session["permissions"] = current_user_permissions
-        
+        # Try to include current user's profile picture URL if available
+        current_user_profile: Optional[str] = None
+        try:
+            from utility.auth import get_users as _get_users
+            users = _get_users(app)
+            if current_username and isinstance(users, dict) and current_username in users:
+                current_user_profile = users.get(current_username, {}).get("profile_picture_url")
+        except Exception:
+            current_user_profile = None
+
         return {
             "query_params": request.query_params,
             "session": session,
             "generate_token": generate_csrf,
             "current_user": current_username,
             "current_user_permissions": current_user_permissions,
+            "current_user_profile": current_user_profile,
         }
 
 # ========== APPLICATION INITIALIZATION ==========

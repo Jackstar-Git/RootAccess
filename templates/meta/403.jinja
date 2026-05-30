@@ -1,8 +1,28 @@
-{% extends "base.jinja" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>403 – Access Denied</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/error.css') }}">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+	</head>
+<body>
+	{% include "snippets/navbar.jinja" %}
+	{% include "snippets/notification.jinja" %}
 
-{% block title %}403 – Access Denied{% endblock %}
+	<main class="error-page" style="padding: 60px; text-align: center;">
+		<h1>403 - Access Denied</h1>
+		<p>You do not have permission to view this page.</p>
+	</main>
 
-{% block content %}
-<h1>403 - Access Denied</h1>
-<p>You do not have permission to view this page.</p>
-{% endblock %}
+	{% include "snippets/footer.jinja" %}
+	<script>
+		window.errorMessage = '{{ error_message | default('Access denied') }}';
+	</script>
+	<script src="{{ url_for('static', filename='js/global.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/error-403.js') }}"></script>
+</body>
+</html>

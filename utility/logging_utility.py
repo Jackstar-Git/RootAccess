@@ -1,7 +1,7 @@
 import logging
 import os
 from logging.handlers import RotatingFileHandler
-from typing import Final
+from typing import Final, Optional
 
 LOG_DIR: Final[str] = "logs"
 LOG_FILE: Final[str] = os.path.join(LOG_DIR, "app.log")
@@ -33,3 +33,13 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 logger.debug("Logging setup completed successfully.")
+
+
+def log_with_user(level: str, message: str, username: Optional[str] = None) -> None:
+    if username:
+        formatted_message = f"[User: {username}] {message}"
+    else:
+        formatted_message = message
+    
+    log_method = getattr(logger, level.lower(), logger.info)
+    log_method(formatted_message)

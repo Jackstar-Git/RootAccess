@@ -1,0 +1,8 @@
+<!-- Global toast/snackbar markup -->
+<div id="global-toast" aria-live="polite" aria-atomic="true" class="toast-container" hidden>
+    <div id="global-toast-message" class="toast-message"></div>
+    <button id="global-toast-close" class="toast-close" aria-label="Close notification">×</button>
+</div>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/snippets/notification.css') }}">
+<!-- Notification JS moved to admin global JS -->

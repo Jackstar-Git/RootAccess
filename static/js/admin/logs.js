@@ -79,7 +79,7 @@ async function clearLogs() {
         fetchLogs();
     } catch (error) {
         console.error(error);
-        alert(`Fehler: ${error.message}`);
+        notify(`Fehler: ${error.message}`, 'error');
     }
 }
 

@@ -39,9 +39,9 @@ function createSharePopup() {
 
     popup.querySelector("#copyLinkBtn").addEventListener("click", () => {
         navigator.clipboard.writeText(window.location.href).then(() => {
-            alert("Link copied to clipboard");
+            notify("Link copied to clipboard", 'info');
         }).catch(() => {
-            prompt("Copy the link below:", window.location.href);
+            try { prompt("Copy the link below:", window.location.href); } catch(e) { notify(window.location.href, 'info'); }
         });
     });
 
@@ -58,10 +58,10 @@ function requestBookmark() {
             } else if (window.sidebar && window.sidebar.addPanel) {
                 window.sidebar.addPanel(document.title, window.location.href, "");
             } else {
-                alert("Press " + (navigator.userAgent.toLowerCase().indexOf("mac") != -1 ? "Cmd" : "Ctrl") + "+D to bookmark this page.");
+                notify("Press " + (navigator.userAgent.toLowerCase().indexOf("mac") != -1 ? "Cmd" : "Ctrl") + "+D to bookmark this page.", 'info');
             }
         } catch (e) {
-            alert("Unable to automatically bookmark; please use your browser's bookmarking feature.");
+            notify("Unable to automatically bookmark; please use your browser's bookmarking feature.", 'info');
         }
     }
 }

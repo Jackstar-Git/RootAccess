@@ -135,7 +135,11 @@
     </div>
     
     <div class="profile-section">
-        <img src="{{ url_for('static', filename='assets/images/logos/Logo.png') }}" alt="Admin Profile">
+        {% if current_user_profile %}
+            <img src="{{ current_user_profile }}" alt="{{ current_user or 'Admin' }}" class="admin-profile-img">
+        {% else %}
+            <img src="{{ url_for('static', filename='assets/images/logos/Logo.png') }}" alt="Admin Profile">
+        {% endif %}
         <div class="profile-name">
             <span>{{ current_user or 'Admin' }}</span>
         </div>
@@ -147,5 +151,7 @@
         </div>
     </div>
 </nav>
+{% include "snippets/notification.jinja" %}
 
+<script src="{{ url_for('static', filename='js/admin/admin-global.js') }}"></script>
 <script src="{{ url_for('static', filename='js/admin/sidebar.js') }}"></script>

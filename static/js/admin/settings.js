@@ -85,7 +85,7 @@ async function clearCache() {
         }
 
         window.location.reload();
-        window.alert("Cache erfolgreich gelöscht!");
+        notify("Cache erfolgreich gelöscht!", 'info');
 
     } catch (error) {
         console.error("Error clearing cache:", error);

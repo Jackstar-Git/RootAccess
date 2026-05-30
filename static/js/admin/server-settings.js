@@ -16,14 +16,14 @@ async function submitServerSettings() {
         const data = await response.json();
 
         if (data.success) {
-            alert(data.message);
+            notify(data.message, 'info');
             window.location.reload();
         } else {
-            alert("Error: " + data.message);
+            notify("Error: " + data.message, 'error');
         }
     } catch (error) {
         console.error("Failed to update settings:", error);
-        alert("A server error occurred while updating settings.");
+        notify("A server error occurred while updating settings.", 'error');
     }
 }
 
@@ -47,12 +47,12 @@ async function clearGlobalCache() {
         const data = await response.json();
 
         if (data.success) {
-            alert(data.message);
+            notify(data.message, 'info');
         } else {
-            alert("Error clearing cache: " + data.message);
+            notify("Error clearing cache: " + data.message, 'error');
         }
     } catch (error) {
         console.error("Failed to clear cache:", error);
-        alert("A server error occurred while clearing the cache.");
+        notify("A server error occurred while clearing the cache.", 'error');
     }
 }

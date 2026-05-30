@@ -117,9 +117,17 @@ def search_blogs(search_query: str) -> List[BlogPost]:
         return blogs
     
     query: str = search_query.lower()
+    # Exclude posts that are explicitly set as draft/hidden from search results
+    def is_visible_for_search(b: BlogPost) -> bool:
+        status = b.get("status") or ""
+        try:
+            return status.lower() not in ("draft", "hidden")
+        except Exception:
+            return True
+
     return [
         b for b in blogs 
-        if query in b.get("title", "").lower() or query in b.get("content_raw", "").lower()
+        if is_visible_for_search(b) and (query in b.get("title", "").lower() or query in b.get("content_raw", "").lower())
     ]
 
 from typing import List, Optional, Any, Literal

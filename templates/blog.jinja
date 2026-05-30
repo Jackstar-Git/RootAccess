@@ -50,9 +50,10 @@
                     <div class="author-group">
                         <div class="avatar-ring" aria-hidden="true">
                             {% for name in blog.author %}
-                                <img src="https://ui-avatars.com/api/?name={{ name }}&background=25a1a7&color=fff"
+                                {% set pfp = author_profiles.get(name) if author_profiles else None %}
+                                <img src="{{ pfp if pfp else ('https://ui-avatars.com/api/?name=' ~ name ~ '&background=25a1a7&color=fff') }}"
                                      alt="{{ name }}" class="avatar-img">
-                            {% endfor %}
+                                {% endfor %}
                         </div>
                         <div class="author-meta">
                             <span class="names" aria-label="Authors">{{ blog.author | join(', ') }}</span>

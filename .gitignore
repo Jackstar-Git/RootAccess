@@ -7,3 +7,5 @@ tests
 project/*
 !project/requirements.txt
 .vscode
+data/*
+!data/users.json

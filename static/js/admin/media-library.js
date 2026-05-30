@@ -34,7 +34,7 @@ async function apiCall(endpoint, method, body = null, isRawBody = false) {
 }
 
 async function deleteFiles() {
-    if (selectedItems.length === 0) return alert("Please select items to delete.");
+    if (selectedItems.length === 0) { notify("Please select items to delete.", 'error'); return; }
 
     if (confirm("Are you sure you want to delete the selected paths?\nTHIS ACTION CAN'T BE UNDONE!")) {
         try {
@@ -47,7 +47,7 @@ async function deleteFiles() {
 }
 
 async function renamePath() {
-    if (selectedItems.length === 0) return alert("Select an item to rename.");
+    if (selectedItems.length === 0) { notify("Select an item to rename.", 'error'); return; }
 
     const newName = prompt("Please enter a new name:");
     if (newName) {
@@ -60,30 +60,30 @@ async function renamePath() {
             });
             location.reload();
         } catch (error) {
-            alert(`Rename operation failed: ${error.message}`);
+            notify(`Rename operation failed: ${error.message}`, 'error');
         }
     }
 }
 
 function copyPath() {
-    if (selectedItems.length === 0) return alert("Please select a file to copy.");
+    if (selectedItems.length === 0) { notify("Please select a file to copy.", 'error'); return; }
 
     const copiedData = { path, file_name: selectedItems[0], root, action: "copy" };
     sessionStorage.setItem("copiedFile", JSON.stringify(copiedData));
-    alert(`Copied ${selectedItems[0]}.`);
+    notify(`Copied ${selectedItems[0]}.`, 'info');
 }
 
 function cutPath() {
-    if (selectedItems.length === 0) return alert("Please select a file to cut.");
+    if (selectedItems.length === 0) { notify("Please select a file to cut.", 'error'); return; }
 
     const cutData = { path, file_name: selectedItems[0], root, action: "cut" };
     sessionStorage.setItem("copiedFile", JSON.stringify(cutData));
-    alert(`Cut ${selectedItems[0]}. Ready to paste.`);
+    notify(`Cut ${selectedItems[0]}. Ready to paste.`, 'info');
 }
 
 async function pastePath() {
     const clipboardFile = JSON.parse(sessionStorage.getItem("copiedFile"));
-    if (!clipboardFile) return alert("No file in clipboard.");
+    if (!clipboardFile) { notify("No file in clipboard.", 'error'); return; }
 
     const endpoint = clipboardFile.action === "cut" ? "/api/files/move" : "/api/files/copy";
 
@@ -101,7 +101,7 @@ async function pastePath() {
         
         location.reload();
     } catch (error) {
-        alert(`Paste operation failed: ${error.message}`);
+        notify(`Paste operation failed: ${error.message}`, 'error');
     }
 }
 
@@ -204,7 +204,7 @@ async function createLocation() {
             await apiCall("/api/files/create_folder", "POST", { path, folder_name: folderName, root });
             location.reload();
         } catch (error) {
-            alert(error.message);
+            notify(error.message, 'error');
         }
     }
 }

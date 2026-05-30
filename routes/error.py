@@ -28,7 +28,8 @@ def page_not_found(error) -> render_template:
 @app.errorhandler(403)
 def access_denied(error) -> render_template:
     logger.warning(f"403 Access Denied: {request.path}; {error}")
-    return render_template("meta/403.jinja")
+    # Render 403 page and instruct frontend to show an error toast
+    return render_template("meta/403.jinja", trigger_error_toast=True, error_message=str(error))
 
 @app.errorhandler(CSRFError)
 def handle_csrf_error(e) -> jsonify:

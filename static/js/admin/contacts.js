@@ -14,7 +14,7 @@ async function markAsRead(id) {
             body: JSON.stringify({ id: id })
         });
         if(res.ok) window.location.reload();
-        else alert("Failed to mark request as read.");
+        else notify("Failed to mark request as read.", 'error');
     } catch(e) { console.error(e); }
 }
 
@@ -28,7 +28,7 @@ async function deleteContact(id) {
                 body: JSON.stringify({ id: id })
             });
             if(res.ok) window.location.reload();
-            else alert("Failed to delete contact request.");
+            else notify("Failed to delete contact request.", 'error');
         } catch(e) { console.error(e); }
     }
 }

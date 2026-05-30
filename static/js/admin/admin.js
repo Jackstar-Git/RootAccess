@@ -116,7 +116,7 @@ async function saveNote() {
         toggleEditNote();
         
     } catch (error) {
-        alert("Error saving note: " + error.message);
+        notify("Error saving note: " + error.message, 'error');
     }
 }
 
@@ -224,7 +224,7 @@ async function submitEvent(event) {
     };
 
     if (!eventData.year || !eventData.month || !eventData.day || !eventData.name || !eventData.description) {
-        alert("All fields are required.");
+        notify("All fields are required.", 'error');
         return;
     }
 
@@ -242,16 +242,16 @@ async function submitEvent(event) {
 
         if (!response.ok) {
             const errorData = await response.json();
-            alert(`Error: ${errorData.error || "Failed to add the event."}`);
+            notify(`Error: ${errorData.error || "Failed to add the event."}`, 'error');
             return;
         }
 
-        alert("Event successfully added!");
+        notify("Event successfully added!", 'info');
         window.location.reload();
 
     } catch (error) {
         console.error("Error submitting event:", error);
-        alert("An error occurred while adding the event.");
+        notify("An error occurred while adding the event.", 'error');
     }
 }
 

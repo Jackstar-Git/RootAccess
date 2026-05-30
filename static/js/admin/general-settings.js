@@ -33,11 +33,11 @@ async function submitGeneralSettings() {
 
     if (adminPassword || adminPasswordConfirm) {
         if (adminPassword !== adminPasswordConfirm) {
-            alert("Passwords do not match!");
+            notify("Passwords do not match!", 'error');
             return;
         }
         if (adminPassword.length < 6) {
-            alert("Password must be at least 6 characters long!");
+            notify("Password must be at least 6 characters long!", 'error');
             return;
         }
     }
@@ -48,7 +48,7 @@ async function submitGeneralSettings() {
     if (timezone === "custom") {
         timezone = document.getElementById("timezone_custom").value;
         if (!timezone) {
-            alert("Please enter a custom timezone value!");
+            notify("Please enter a custom timezone value!", 'error');
             return;
         }
     }
@@ -76,18 +76,18 @@ async function submitGeneralSettings() {
         const data = await response.json();
 
         if (data.success) {
-            alert(data.message);
+            notify(data.message, 'info');
             if (adminPassword) {
                 document.getElementById("admin_password").value = "";
                 document.getElementById("admin_password_confirm").value = "";
             }
             window.location.reload();
         } else {
-            alert("Error: " + data.message);
+            notify("Error: " + data.message, 'error');
         }
     } catch (error) {
         console.error("Failed to update settings:", error);
-        alert("A server error occurred while updating settings.");
+        notify("A server error occurred while updating settings.", 'error');
     }
 }
 
@@ -147,14 +147,14 @@ async function saveFileContent(fileName) {
         const data = await response.json();
 
         if (data.success) {
-            alert(data.message);
+            notify(data.message, 'info');
             toggleFileEditor(fileName);
         } else {
-            alert("Error: " + data.message);
+            notify("Error: " + data.message, 'error');
         }
     } catch (error) {
         console.error("Failed to save file:", error);
-        alert("A server error occurred while saving the file.");
+        notify("A server error occurred while saving the file.", 'error');
     }
 }
 
@@ -166,7 +166,7 @@ async function downloadDataFile(fileName) {
         });
 
         if (!response.ok) {
-            alert("Error downloading file");
+            notify("Error downloading file", 'error');
             return;
         }
 
@@ -181,7 +181,7 @@ async function downloadDataFile(fileName) {
         window.URL.revokeObjectURL(url);
     } catch (error) {
         console.error("Failed to download file:", error);
-        alert("A server error occurred while downloading the file.");
+        notify("A server error occurred while downloading the file.", 'error');
     }
 }
 
@@ -199,7 +199,7 @@ async function handleFileUpload(event) {
     if (!file) return;
 
     if (file.type !== "application/json") {
-        alert("Please upload a valid JSON file");
+        notify("Please upload a valid JSON file", 'error');
         event.target.value = "";
         return;
     }
@@ -220,13 +220,13 @@ async function handleFileUpload(event) {
         const data = await response.json();
 
         if (data.success) {
-            alert(data.message);
+            notify(data.message, 'info');
             event.target.value = "";
         } else {
-            alert("Error: " + data.message);
+            notify("Error: " + data.message, 'error');
         }
     } catch (error) {
         console.error("Failed to upload file:", error);
-        alert("A server error occurred while uploading the file.");
+        notify("A server error occurred while uploading the file.", 'error');
     }
 }

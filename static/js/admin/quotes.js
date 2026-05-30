@@ -26,7 +26,7 @@ async function submitEditForm(event) {
     event.preventDefault();
     
     if (currentEditIndex === null) {
-        alert("Invalid operation.");
+        notify("Invalid operation.", 'error');
         return;
     }
 
@@ -35,7 +35,7 @@ async function submitEditForm(event) {
     const original = document.getElementById('editOriginal').value.trim() || null;
 
     if (!author) {
-        alert("Author is required.");
+        notify("Author is required.", 'error');
         return;
     }
 
@@ -56,11 +56,11 @@ async function submitEditForm(event) {
             window.location.reload();
         } else {
             const errorData = await res.json();
-            alert(`Error: ${errorData.error || 'Failed to update quote.'}`);
+            notify(`Error: ${errorData.error || 'Failed to update quote.'}`, 'error');
         }
     } catch (e) {
         console.error(e);
-        alert("An error occurred while updating the quote.");
+        notify("An error occurred while updating the quote.", 'error');
     }
 }
 
@@ -83,11 +83,11 @@ async function deleteQuote(index) {
                 window.location.reload();
             } else {
                 const errorData = await res.json();
-                alert(`Error: ${errorData.error || 'Failed to delete quote.'}`);
+                notify(`Error: ${errorData.error || 'Failed to delete quote.'}`, 'error');
             }
         } catch (e) {
             console.error(e);
-            alert("An error occurred while deleting the quote.");
+            notify("An error occurred while deleting the quote.", 'error');
         }
     }
 }

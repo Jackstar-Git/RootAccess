@@ -2,6 +2,7 @@
   "users": {
     "Jackstar": {
       "password_hash": "scrypt:32768:8:1$Jq3zQ5hzXxA8S3IT$c823ab0be3fc91a3161008a2d62bcdd3b5b304f7e8f13cece02697e7b6dad34357adf355811826cbf6b49dc80da4a93bd997a2d511a2d3bd7eb5cc5e31608fcb",
+      "profile_picture_url": "/static/assets/images/logos/Logo.png",
       "permissions": [
         "system:dashboard",
         "blogs:read",
@@ -38,6 +39,7 @@
     },
     "Redshift": {
       "password_hash": "scrypt:32768:8:1$4jDD09NkNMShs5JJ$bce218b61587f4b0f137397a6e25741f5624317a8c699e0d3958f9063fb344c23dfde079e6b30a96954b562ed323f056d703b898ba38dba96808f1c0c8ad6401",
+      "profile_picture_url": "/static/assets/images/logos/Redshift.png",
       "permissions": [
         "system:dashboard",
         "blogs:read",
