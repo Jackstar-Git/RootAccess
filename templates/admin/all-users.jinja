@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/all-users.css') }}">
+    <title>Admin Panel - All Users</title>
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja" %}
+
+        <div class="main-content">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" title="Toggle Menu" aria-label="Toggle navigation menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="header-actions">
+                <h2>Users Overview</h2>
+                <a href="/admin/users/create" class="btn btn-primary"><i class="fas fa-plus"></i> Add User</a>
+            </div>
+
+            <div class="user-filters">
+                <form class="search-bar" method="GET" action="/admin/users/all">
+                    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ generate_token() }}">
+                    <input type="hidden" name="hierarchy" value="{{ query_params.get('hierarchy', '') }}">
+                    <input type="text" name="search" id="search-input" placeholder="Search by username..." value="{{ query_params.get('search', '') }}">
+                    <button type="submit" style="display: none;">Search</button>
+                </form>
+
+                <div class="sort-options">
+                    <select id="sort-options" onchange="updateSort()">
+                        <option value="">Sort by</option>
+                        <option value="name-asc" {% if query_params.get('sort') == 'name-asc' %}selected{% endif %}>Username: A-Z</option>
+                        <option value="name-desc" {% if query_params.get('sort') == 'name-desc' %}selected{% endif %}>Username: Z-A</option>
+                        <option value="hierarchy-asc" {% if query_params.get('sort') == 'hierarchy-asc' %}selected{% endif %}>Hierarchy: Low to High</option>
+                        <option value="hierarchy-desc" {% if query_params.get('sort') == 'hierarchy-desc' %}selected{% endif %}>Hierarchy: High to Low</option>
+                        <option value="created-asc" {% if query_params.get('sort') == 'created-asc' %}selected{% endif %}>Created: Oldest First</option>
+                        <option value="created-desc" {% if query_params.get('sort') == 'created-desc' %}selected{% endif %}>Created: Newest First</option>
+                    </select>
+                </div>
+
+                <div class="filter-menu">
+                    <input type="text" id="hierarchy-filter" placeholder="Filter by level (e.g., 1, 0-2)..."
+                           value="{{ query_params.get('hierarchy', '') }}" onchange="updateHierarchyFilter()">
+                </div>
+            </div>
+
+            <div class="users-list">
+                {% if users|length == 0 %}
+                    <div class="empty-state">
+                        <h3>No matching users found!</h3>
+                        <a href="/admin/users/all" class="btn view-btn">Clear Filters</a>
+                    </div>
+                {% endif %}
+
+                {% for user in users %}
+                    <div class="user-item">
+                        <div class="user-id-avatar">
+                            <span class="user-id" title="User ID: {{ user.id }}">{{ user.id[:12] }}</span>
+                            <img src="{{ user.profile_picture_url or url_for('static', filename='assets/images/default/default-avatar.png') }}" alt="Avatar for {{ user.username }}" class="user-avatar">
+                        </div>
+
+                        <div class="user-info">
+                            <h3><a href="/admin/users/edit/{{ user.id }}">{{ user.username }}</a></h3>
+                            <p class="user-permissions-text">
+                                <i class="fas fa-key"></i> Permissions: <span class="hash-truncate" title="{{ user.permissions }}">{{ user.permissions }}</span>
+                            </p>
+                        </div>
+
+                        <div class="user-meta">
+                            <div class="badge-row" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 5px;">
+                                {% if user.hierarchy_level == 0 %}
+                                    <span class="status-badge hierarchy-badge"><i class="fas fa-crown"></i> Root (Level 0)</span>
+                                {% elif user.hierarchy_level == 1 %}
+                                    <span class="status-badge hierarchy-badge"><i class="fas fa-shield-alt"></i> Admin (Level 1)</span>
+                                {% elif user.hierarchy_level == 2 %}
+                                    <span class="status-badge hierarchy-badge"><i class="fas fa-user-edit"></i> Editor (Level 2)</span>
+                                {% elif user.hierarchy_level == 3 %}
+                                    <span class="status-badge hierarchy-badge"><i class="fas fa-user-tag"></i> Guest (Level 3)</span>
+                                {% elif user.hierarchy_level == 10 %}
+                                    <span class="status-badge hierarchy-badge"><i class="fas fa-ghost"></i> Deleted (Level 10)</span>
+                                {% else %}
+                                    <span class="status-badge hierarchy-badge"><i class="fas fa-user"></i> User (Level {{ user.hierarchy_level }})</span>
+                                {% endif %}
+
+                                {% if user.status == 'active' %}
+                                    <span class="status-badge status-active"><i class="fas fa-check-circle"></i> Active</span>
+                                {% elif user.status == 'banned' %}
+                                    <span class="status-badge status-banned"><i class="fas fa-ban"></i> Banned</span>
+                                {% elif user.status == 'inactive' %}
+                                    <span class="status-badge status-inactive"><i class="fas fa-user-times"></i> Inactive</span>
+                                {% elif user.status == 'test' %}
+                                    <span class="status-badge status-test"><i class="fas fa-vial"></i> Test</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="user-timestamps">
+                                <span title="{{ user.time_created|datetimeformat }}"><i class="fas fa-clock"></i> Created: {{ user.time_created|datetimeformat }}</span>
+                                <span title="{{ user.last_modified|datetimeformat }}"><i class="fas fa-sync-alt"></i> Modified: {{ user.last_modified|datetimeformat }}</span>
+                            </div>
+                        </div>
+
+                        <div class="user-actions">
+                            <a href="/admin/users/edit/{{ user.id }}" class="btn edit-btn" title="Edit User"><i class="fas fa-edit"></i></a>
+                            <button class="btn delete-btn" onclick="deleteUser('{{ user.id }}')" title="Delete User"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin/admin-global.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/admin/all-users.js')}}"></script>
+</body>
+</html>

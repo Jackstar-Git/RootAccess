@@ -87,7 +87,7 @@
                                 <span class="status-badge status-draft"><i class="fas fa-pencil-alt"></i> Draft</span>
                             {% endif %}
                             <br>
-                            <span class="author"><i class="fas fa-user-edit"></i> {{ blog.author | join(', ') }}</span>
+                            <span class="author"><i class="fas fa-user-edit"></i> {{ blog.authors | join(', ') }}</span>
                             <br>    
                             <span class="date"><i class="fas fa-calendar-alt"></i> {{ blog.time_created | datetimeformat }}</span>
                         </div>
@@ -103,5 +103,6 @@
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/admin/admin-global.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/admin/all-blogs.js')}}"></script>
 </body>
 </html>

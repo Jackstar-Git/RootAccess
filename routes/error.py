@@ -1,5 +1,5 @@
 # ========== IMPORTS ==========
-from flask import request, render_template, jsonify, Blueprint
+from flask import request, render_template, jsonify, Blueprint, session
 from flask.typing import ResponseReturnValue
 from flask_wtf.csrf import CSRFError
 
@@ -32,8 +32,8 @@ def page_not_found(error) -> ResponseReturnValue:
 
 @app.errorhandler(403)
 def access_denied(error) -> ResponseReturnValue:
-    username = request.environ.get('REMOTE_USER', 'unknown')
-    log_with_user("warning", f"Access denied to {request.path}", username)
+    user_id = session.get("user_id")
+    log_with_user("warning", f"Access denied to {request.path}", user_id)
     return render_template("meta/403.jinja", trigger_error_toast=True, error_message="You do not have permission to access this resource.")
 
 @app.errorhandler(CSRFError)

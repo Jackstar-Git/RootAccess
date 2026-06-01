@@ -1,36 +1,72 @@
 {
-    "/blog": {
-        "url": "/blog",
-        "visits": 0,
-        "unique_visits": 0,
-        "visitors": [],
-        "total_time_spent": 548.5,
-        "average_time_spent": 0.0
-    },
-    "/about": {
-        "url": "/about",
+    "/admin/users/all": {
+        "url": "/admin/users/all",
         "visits": 1,
         "unique_visits": 1,
         "visitors": [
             "TW96aWxsYS81LjAg"
         ],
-        "total_time_spent": 1.674,
-        "average_time_spent": 1.67
+        "total_time_spent": 0.0,
+        "average_time_spent": 0.0
     },
     "/admin/dashboard": {
         "url": "/admin/dashboard",
-        "visits": 0,
-        "unique_visits": 0,
-        "visitors": [],
-        "total_time_spent": 4.718,
+        "visits": 1,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 39.897,
+        "average_time_spent": 39.9
+    },
+    "/admin/users/edit/d58437a51c4f": {
+        "url": "/admin/users/edit/d58437a51c4f",
+        "visits": 1,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 19.899,
+        "average_time_spent": 19.9
+    },
+    "/admin/users/edit/ID_0000000001": {
+        "url": "/admin/users/edit/ID_0000000001",
+        "visits": 1,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 1.253,
+        "average_time_spent": 1.25
+    },
+    "/admin/users/edit/qR3vB8nC1zW9": {
+        "url": "/admin/users/edit/qR3vB8nC1zW9",
+        "visits": 1,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 0.0,
         "average_time_spent": 0.0
     },
-    "/": {
-        "url": "/",
-        "visits": 0,
-        "unique_visits": 0,
-        "visitors": [],
-        "total_time_spent": 187.972,
+    "/blog/bc431f3b": {
+        "url": "/blog/bc431f3b",
+        "visits": 3,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 390.637,
+        "average_time_spent": 130.21
+    },
+    "/projects": {
+        "url": "/projects",
+        "visits": 1,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 0.0,
         "average_time_spent": 0.0
     }
 }

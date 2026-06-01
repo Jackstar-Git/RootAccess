@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/edit-user.css') }}">
+    <title>Admin - Edit User</title>
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja" %}
+
+        <main class="main-content">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" title="Toggle Menu" aria-label="Toggle navigation menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <header class="editor-header">
+                <h2>Edit User: {{ user.username }}</h2>
+                <div class="header-actions">
+                    <a href="/admin/users/all" class="btn-discard">Discard</a>
+                </div>
+            </header>
+
+            <form method="POST" action="{{ url_for('admin.edit_user', user_id=user.id) }}" enctype="multipart/form-data" class="modern-form" id="user-form">
+                <input type="hidden" name="csrf_token" id="csrf_token" value="{{ generate_token() }}">
+
+                <div class="editor-layout">
+                    <section class="content-area">
+                        <div class="settings-group">
+                            <label>Username</label>
+                            <input type="text" name="username" class="modern-input" value="{{ user.username }}" required {% if user.status == 'disabled' %}disabled{% endif %}>
+                        </div>
+
+                        <div class="settings-group">
+                            <label>Account Status</label>
+                            <select name="status" class="modern-select">
+                                <option value="active" {% if user.status == 'active' %}selected{% endif %}>Active</option>
+                                <option value="banned" {% if user.status == 'banned' %}selected{% endif %}>Banned (Login not possible)</option>
+                                <option value="disabled" {% if user.status == 'disabled' %}selected{% endif %}>Disabled (Will be neutralized)</option>
+                                <option value="test" {% if user.status == 'test' %}selected{% endif %}>Test Account</option>
+                            </select>
+                        </div>
+
+                        <div class="settings-group">
+                            <label>Admin-Note (e.g. Ban-Reason)</label>
+                            <textarea name="notes" class="modern-textarea" rows="4" placeholder="Internal User note...">{{ user.notes }}</textarea>
+                        </div>
+
+                        <div class="settings-group">
+                            <label>Profile Picture</label>
+                            <div class="upload-container" id="drop-zone">
+                                <input type="file" id="profile-pic-upload" name="profile_picture" accept="image/*" hidden>
+                                <div id="profile-pic-preview" class="preview-box">
+                                    {% if user.profile_picture_url %}
+                                        <img src="{{ user.profile_picture_url }}" class="preview-image">
+                                    {% else %}
+                                        <i class="fas fa-user-circle fa-3x" style="color: var(--main-color-400); margin-bottom: 10px;"></i>
+                                        <p>Click to upload profile picture</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <aside class="settings-sidebar">
+                        <div class="settings-group">
+                            <label>Hierarchy Level</label>
+                            <select name="hierarchy_level" class="modern-select" style="min-height: auto;">
+                                {% for level in range(0, 11) %}
+                                    {% if level <= 5 or level == 10 %}
+                                    <option value="{{ level }}" {% if user.hierarchy_level == level %}selected{% endif %} {% if current_user.hierarchy_level and not has_permission(user_permissions, Permission.SYSTEM_ROOT) and current_user.hierarchy_level >= level %}disabled{% endif %}>
+                                        {% if level == 0 %}
+                                            👑 Root (Level 0)
+                                        {% elif level == 1 %}
+                                            🛡️ Admin (Level 1)
+                                        {% elif level == 2 %}
+                                            ✏️ Editor (Level 2)
+                                        {% elif level == 3 %}
+                                            🏷️ Guest (Level 3)
+                                        {% elif level == 10 %}
+                                            👻 Deleted (Level 10)
+                                        {% else %}
+                                            👤 User (Level {{ level }})
+                                        {% endif %}
+                                    </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            {% if not has_permission(user_permissions, Permission.SYSTEM_ROOT) %}
+                                <p class="help-text">You can only set hierarchy to levels higher than your own (Level {{ current_user.hierarchy_level }}).</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="settings-group">
+                            <label>Permissions</label>
+                            <div class="permissions-grid">
+                                {% for perm_name, perm_value in permissions_list %}
+                                    {% if has_permission(user_permissions, Permission.SYSTEM_ROOT) or has_permission(user_permissions, perm_value) %}
+                                        <label class="permission-checkbox">
+                                            <input type="checkbox" name="perm_{{ perm_value }}" value="{{ perm_value }}"
+                                                {% if has_permission(user.permissions, perm_value) %}checked{% endif %}>
+                                            <span>{{ perm_name }}</span>
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            {% if not has_permission(user_permissions, Permission.SYSTEM_ROOT) %}
+                                <p class="help-text">You can only grant permissions you have.</p>
+                            {% endif %}
+                        </div>
+
+                        {% if not has_permission(user_permissions, Permission.SYSTEM_ROOT) %}
+                            <div class="settings-group">
+                                <label>Your Permissions</label>
+                                <div class="user-info-box">
+                                    <p><strong>Hierarchy:</strong> Level {{ current_user.hierarchy_level }}</p>
+                                    <p><strong>Permissions:</strong> {{ current_user.permissions }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <button type="submit" class="btn-primary btn-publish">Update User</button>
+
+                        {% if has_permission(user_permissions, Permission.SYSTEM_ROOT) or
+                              (has_permission(user_permissions, Permission.USERS_DELETE) and current_user.hierarchy_level < user.hierarchy_level) %}
+                            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--main-color-100);">
+                                <button type="button" class="btn-discard" onclick="deleteUser('{{ user.id }}')">
+                                    <i class="fas fa-trash-alt"></i> Delete User
+                                </button>
+                            </div>
+                        {% endif %}
+                    </aside>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script>
+        // Profile picture upload preview
+        document.addEventListener("DOMContentLoaded", () => {
+            const uploadInput = document.getElementById("profile-pic-upload");
+            const dropZone = document.getElementById("drop-zone");
+            const previewBox = document.getElementById("profile-pic-preview");
+
+            if (uploadInput && dropZone) {
+                dropZone.addEventListener("click", () => uploadInput.click());
+                uploadInput.addEventListener("change", (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (ev) => {
+                            previewBox.innerHTML = `<img src="${ev.target.result}" class="preview-image">`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+
+        // Delete user function
+        function deleteUser(userId) {
+            if (confirm("Are you sure you want to delete this user? This action cannot be undone.")) {
+                fetch(`/admin/users/delete/${userId}`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ generate_token() }}",
+                        "Content-Type": "application/json"
+                    }
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.success) {
+                          window.location.href = "/admin/users/all";
+                      } else {
+                          alert(data.message || "Failed to delete user.");
+                      }
+                  })
+                  .catch(error => {
+                      alert("Error: " + error.message);
+                  });
+            }
+        }
+    </script>
+
+    <script src="{{ url_for('static', filename='js/admin/admin-global.js')}}"></script>
+</body>
+</html>

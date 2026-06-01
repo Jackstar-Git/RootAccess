@@ -1,71 +1,46 @@
-import json
-import os
+import random
+import string
 from enum import IntFlag
 from functools import wraps
 from typing import Any, Callable, Dict, Optional, TypeVar, cast
 from flask import abort, redirect, url_for, request, session
-from utility.logging_utility import logger, log_with_user
 from werkzeug.security import check_password_hash
-import json
-import os
-import random
-import string
+from utility.logging_utility import logger, log_with_user
+from utility.users import get_user_by_username, get_user_by_id
 
 F = TypeVar("F", bound=Callable[..., Any])
 
-# ========== PERMISSION DEFINITIONS ==========
 class Permission(IntFlag):
-    # Blogs
     BLOGS_READ = 1 << 0
     BLOGS_CREATE = 1 << 1
     BLOGS_UPDATE_OWN = 1 << 2
     BLOGS_UPDATE = 1 << 3
     BLOGS_DELETE_OWN = 1 << 4
     BLOGS_DELETE = 1 << 5
-
-    # Projects
     PROJECTS_READ = 1 << 6
     PROJECTS_CREATE = 1 << 7
     PROJECTS_UPDATE = 1 << 8
-
-    # Media
     MEDIA_READ = 1 << 9
     MEDIA_CREATE = 1 << 10
     MEDIA_UPDATE = 1 << 11
     MEDIA_DELETE = 1 << 12
-
-    # Interactions
     INTERACTIONS_MANAGE = 1 << 13
-
-    # Contacts
     CONTACTS_READ = 1 << 14
     CONTACTS_UPDATE = 1 << 15
-
-    # Quotes
     QUOTES_READ = 1 << 16
     QUOTES_CREATE = 1 << 17
     QUOTES_UPDATE = 1 << 18
-
-    # Notes
     NOTES_UPDATE = 1 << 19
-
-    # Events
     EVENTS_READ = 1 << 20
     EVENTS_CREATE = 1 << 21
     EVENTS_UPDATE = 1 << 22
     EVENTS_DELETE = 1 << 23
-
-    # Analytics
     ANALYTICS_READ = 1 << 24
     ANALYTICS_UPDATE = 1 << 25
-
-    # Users
     USERS_READ = 1 << 26
     USERS_CREATE = 1 << 27
     USERS_UPDATE = 1 << 28
     USERS_DELETE = 1 << 29
-
-    # System Infrastructure
     SYSTEM_DASHBOARD = 1 << 30
     SYSTEM_SETTINGS = 1 << 31
     SYSTEM_ADMIN = 1 << 62
@@ -76,80 +51,24 @@ OWNERSHIP_FALLBACKS = {
     Permission.BLOGS_DELETE: Permission.BLOGS_DELETE_OWN
 }
 
-# ========== DATA ACCESS HELPERS ==========
-
-def _load_users_from_file() -> Dict[str, Any]:
-    users_path: str = "data/users.json"
-    if not os.path.exists(users_path):
-        logger.warning(f"Users file not found at {users_path}")
-        return {}
-    
-    try:
-        with open(users_path, "r", encoding="utf-8") as f:
-            data: Dict[str, Any] = json.load(f)
-            return data.get("users", {})
-    except json.JSONDecodeError as e:
-        logger.error(f"Invalid JSON in {users_path}: {e}")
-        return {}
-    except Exception as e:
-        logger.error(f"Failed to load users from {users_path}: {e}")
-        return {}
-
-def get_users(app: Any) -> Dict[str, Any]:
-    users_path: str = "data/users.json"
-    if not os.path.exists(users_path):
-        return {}
-    
-    try:
-        current_mtime: float = os.path.getmtime(users_path)
-        if app.users_cache is None or app.users_cache_mtime != current_mtime:
-            app.users_cache = _load_users_from_file()
-            app.users_cache_mtime = current_mtime
-            logger.debug(f"Users cache refreshed from {users_path}")
-    except Exception as e:
-        logger.error(f"Error checking users.json mtime: {e}")
-        return {}
-    
-    return app.users_cache or {}
-
-def get_user(app: Any, username: str) -> Optional[Dict[str, Any]]:
-    users: Dict[str, Any] = get_users(app)
-    user_data: Optional[Dict[str, Any]] = users.get(username)
-    
-    if user_data is None:
-        return None
-        
-    if not isinstance(user_data.get("password_hash"), str):
-        return None
-        
-    # Corrected: We now expect an integer directly from the JSON
-    if not isinstance(user_data.get("permissions"), int):
-        logger.warning(f"User '{username}' missing valid integer permissions")
-        return None
-        
-    return user_data
-
-# ========== AUTH MANAGER CLASS ==========
-
 class AuthManager:
     @staticmethod
-    def get_user_bitmask(app: Any, username: str) -> int:
-        user = get_user(app, username)
+    def get_user_bitmask(id: str) -> int:
+        user = get_user_by_id(id)
         if not user:
             return 0
         return user.get("permissions", 0)
 
     @staticmethod
-    def has_permission(app: Any, username: str, required_perm: Permission) -> bool:
-        user_bits = AuthManager.get_user_bitmask(app, username)
+    def has_permission(id: str, required_perm: Permission) -> bool:
+        user = get_user_by_id(id)
+        if not user: return False
         
-        # 1. Super User Check
+        user_bits = user.get("permissions", 0)
         if (user_bits & Permission.SYSTEM_ROOT) == Permission.SYSTEM_ROOT:
             return True
-            
-        # 2. Standard Check
         return (user_bits & required_perm) == required_perm
-
+    
     @staticmethod
     def has_permission_frontend(user_permissions: int, required_perm: Permission) -> bool:
         if (user_permissions & Permission.SYSTEM_ROOT) == Permission.SYSTEM_ROOT:
@@ -157,27 +76,15 @@ class AuthManager:
         return (user_permissions & required_perm) == required_perm
 
     @staticmethod
-    def verify_ownership(username: str, blog_id: str) -> bool:
+    def verify_ownership(id: str, blog_id: str) -> bool:
         from utility.blogs import get_item_by_id
-        if not blog_id:
-            return False
+        blog = get_item_by_id(blog_id)
+        if not blog: return False
+        user = get_user_by_id(id)
+        if not user: return False
 
-        try:
-            blog = get_item_by_id(blog_id)
-            if not blog:
-                return False
+        return user.get("username", "").strip() in [a.strip() for a in blog.get("authors", [])]
 
-            authors = blog.get("author", [])
-            if isinstance(authors, str):
-                authors = [authors]
-
-            return any(
-                isinstance(author, str) and username.strip() == author.strip()
-                for author in authors
-            )
-        except Exception as exc:
-            logger.error(f"Error loading blog for ownership check: {exc}")
-            return False
 
 def _resolve_blog_id(kwargs: Dict[str, Any]) -> Optional[str]:
     blog_id = None
@@ -200,35 +107,26 @@ def _resolve_blog_id(kwargs: Dict[str, Any]) -> Optional[str]:
 
     return str(blog_id) if blog_id else None
 
-# ========== DECORATOR ==========
 
 def permission_required(required_perm: Permission) -> Callable[[F], F]:
     def decorator(f: F) -> F:
         @wraps(f)
         def decorated_function(*args: Any, **kwargs: Any) -> Any:
-            from CustomFlaskClass import app
-            username: Optional[str] = session.get("username")
-            
-            if not username or not get_user(app, username):
-                logger.warning(f"Unauthorized access attempt to {request.path} from {request.remote_addr}")
+            user_id = session.get("user_id")
+            if not user_id:
                 return redirect(url_for("admin.login", next=request.path))
-            
-            # 1. Primary Global Check (e.g., BLOGS_UPDATE)
-            if AuthManager.has_permission(app, username, required_perm):
+
+            if AuthManager.has_permission(user_id, required_perm):
                 return f(*args, **kwargs)
 
-            # 2. Automatic Fallback Check (e.g., lacks global update, check for BLOGS_UPDATE_OWN)
             fallback_perm = OWNERSHIP_FALLBACKS.get(required_perm)
-            if fallback_perm and AuthManager.has_permission(app, username, fallback_perm):
+            if fallback_perm and AuthManager.has_permission(user_id, fallback_perm):
                 blog_id = _resolve_blog_id(kwargs)
-                if blog_id and AuthManager.verify_ownership(username, blog_id):
-                    # They have the scoped permission AND own the specific asset
+                if blog_id and AuthManager.verify_ownership(user_id, blog_id):
                     return f(*args, **kwargs)
 
-            # Deny if they lack global rights and either lack scoped rights or failed ownership check
-            log_with_user("warning", f"Permission denied (requires '{required_perm.name}')", username)
+
             abort(403)
-            
         return cast(F, decorated_function)
     return decorator
 

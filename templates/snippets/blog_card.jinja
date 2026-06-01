@@ -35,7 +35,7 @@
             <div class="author-avatar"><i class="fa-solid fa-user"></i></div>
             <div class="author-details">
                 <span class="author-label">By</span>
-                <span class="author-name">{% if blog.author is string %}{{ blog.author }}{% else %}{{ blog.author | join(', ') }}{% endif %}</span>
+                <span class="author-name">{% if blog.authors %}{{ blog.authors | join(', ') }}{% endif %}</span>
             </div>
         </div>
     </div>

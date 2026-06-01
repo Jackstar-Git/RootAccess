@@ -35,9 +35,9 @@ logger.addHandler(handler)
 logger.debug("Logging setup completed successfully.")
 
 
-def log_with_user(level: str, message: str, username: Optional[str] = None) -> None:
-    if username:
-        formatted_message = f"[User: {username}] {message}"
+def log_with_user(level: str, message: str, user_identifier: Optional[str] = None) -> None:
+    if user_identifier:
+        formatted_message = f"[User: {user_identifier}] {message}"
     else:
         formatted_message = message
     

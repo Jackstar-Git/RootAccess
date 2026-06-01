@@ -12,6 +12,7 @@ from flask_wtf.csrf import CSRFProtect, current_app, generate_csrf
 
 from utility.auth import AuthManager, Permission
 from utility.logging_utility import logger
+from utility.users import get_user_by_id, User
 
 # ========== CUSTOM FLASK CLASS ==========
 class CustomFlask(Flask):
@@ -74,7 +75,7 @@ class CustomFlask(Flask):
                 logger.error(f"Failed to load initial analytics cache: {e}")
 
     def request_handler(self) -> Union[None, Response]:
-        if self.config.get("maintenance") and not request.path.startswith("/admin") and not request.path.startswith("/static") and not request.path.startswith("/uploads") and not session.get("username"):
+        if self.config.get("maintenance") and not request.path.startswith("/admin") and not request.path.startswith("/static") and not request.path.startswith("/uploads") and not session.get("user_id"):
             logger.warning("Maintenance mode is enabled.")
             response = Response(render_template("maintenance.jinja"), status=503)
             response.headers["Retry-After"] = "3600"
@@ -96,28 +97,29 @@ class CustomFlask(Flask):
     def utility_processor() -> Dict[str, Any]:
 
         # Get current user info from session
-        current_username: Optional[str] = session.get("username")
-        current_user_permissions: int = session.get("permissions", [])
+        current_user_id: Optional[str] = session.get("user_id")
 
-        if current_username and not current_user_permissions:
-            current_user_permissions = AuthManager.get_user_bitmask(current_app, current_username)
-            session["permissions"] = current_user_permissions
-        current_user_profile: Optional[str] = None
-        try:
-            from utility.auth import get_users as _get_users
-            users = _get_users(current_app)
-            if current_username and isinstance(users, dict) and current_username in users:
-                current_user_profile = users.get(current_username, {}).get("profile_picture_url")
-        except Exception:
-            current_user_profile = None
+        current_username = None
+        current_user_permissions = 0
+        current_user_profile = None
+
+        if current_user_id:
+            current_user = get_user_by_id(current_user_id)
+
+            if current_user:
+                current_username: Optional[str] = current_user.get("username")
+                current_user_permissions = AuthManager.get_user_bitmask(current_user_id)
+                current_user_profile: Optional[str] = current_user.get("profile_picture_url")
+
 
         return {
             "query_params": request.args,
             "session": session,
             "generate_token": generate_csrf,
-            "current_user": current_username,
-            "current_user_permissions": current_user_permissions,
-            "current_user_profile": current_user_profile,
+            "user_id": current_user_id,
+            "username": current_username,
+            "user_permissions": current_user_permissions,
+            "user_profile": current_user_profile,
             "has_permission": AuthManager.has_permission_frontend,
             "Permission": Permission
         }

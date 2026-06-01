@@ -1,14 +1,74 @@
-{
-  "users": {
-    "Jackstar": {
-      "password_hash": "scrypt:32768:8:1$Jq3zQ5hzXxA8S3IT$c823ab0be3fc91a3161008a2d62bcdd3b5b304f7e8f13cece02697e7b6dad34357adf355811826cbf6b49dc80da4a93bd997a2d511a2d3bd7eb5cc5e31608fcb",
-      "profile_picture_url": "/static/assets/images/logos/Logo.png",
-      "permissions": 18446744073709551615
+[
+    {
+        "id": "ID_0000000001",
+        "username": "Jackstar",
+        "password_hash": "scrypt:32768:8:1$Jq3zQ5hzXxA8S3IT$c823ab0be3fc91a3161008a2d62bcdd3b5b304f7e8f13cece02697e7b6dad34357adf355811826cbf6b49dc80da4a93bd997a2d511a2d3bd7eb5cc5e31608fcb",
+        "profile_picture_url": "/static/assets/images/logos/Logo.png",
+        "hierarchy_level": 0,
+        "permissions": 13835058059577128959,
+        "time_created": 1773949620,
+        "last_modified": 1780237562,
+        "status": "active",
+        "notes": ""
     },
-    "Redshift": {
-      "password_hash": "scrypt:32768:8:1$4jDD09NkNMShs5JJ$bce218b61587f4b0f137397a6e25741f5624317a8c699e0d3958f9063fb344c23dfde079e6b30a96954b562ed323f056d703b898ba38dba96808f1c0c8ad6401",
-      "profile_picture_url": "/static/assets/images/logos/Redshift.png",
-      "permissions": 1075315735
+    {
+        "id": "qR3vB8nC1zW9",
+        "username": "Redshift",
+        "password_hash": "scrypt:32768:8:1$4jDD09NkNMShs5JJ$bce218b61587f4b0f137397a6e25741f5624317a8c699e0d3958f9063fb344c23dfde079e6b30a96954b562ed323f056d703b898ba38dba96808f1c0c8ad6401",
+        "profile_picture_url": "/static/assets/images/logos/Redshift.png",
+        "hierarchy_level": 3,
+        "permissions": 1089995799,
+        "time_created": 1780088160,
+        "last_modified": 1780325505,
+        "status": "active",
+        "notes": ""
+    },
+    {
+        "id": "d58437a51c4f",
+        "username": "Test-#1",
+        "password_hash": "scrypt:32768:8:1$KrDOWxNhJORa3biu$8ca32df279944573c0da651134e56da346bb4b73befda62753ac35670e6a1e410358a3eeb400ac775a6848240ce923c11d6e7f7902aeba9f089294a5a5a796a3",
+        "profile_picture_url": null,
+        "hierarchy_level": 1,
+        "permissions": 0,
+        "time_created": 1780088160,
+        "last_modified": 1780328866,
+        "status": "banned",
+        "notes": ""
+    },
+    {
+        "id": "3ba48180f3c0",
+        "username": "Test-#2",
+        "password_hash": "scrypt:32768:8:1$y95VoJdHkqoLkj87$ddbcb127a31820eb65b945c493f14207fe0ad321fca47caf2376d481a5b93620a8b532c98f03bec101cac190b19bc06da2fb02967cd1853efaac98d080ffc607",
+        "profile_picture_url": null,
+        "hierarchy_level": 2,
+        "permissions": 0,
+        "time_created": 0,
+        "last_modified": 1780328873,
+        "status": "banned",
+        "notes": ""
+    },
+    {
+        "id": "c7d446e1984b",
+        "username": "Test-#3",
+        "password_hash": "scrypt:32768:8:1$mX5rLEejpn3BfYCZ$caf98e067654c741ce8a30c8f3d999ece854c36dfd4e0f326e195f4069baed0de9bf465431a42ade13f967240d104d78e3702c9a935de4820c8334d6b0f01b7d",
+        "profile_picture_url": null,
+        "hierarchy_level": 3,
+        "permissions": 0,
+        "time_created": 0,
+        "last_modified": 1780328881,
+        "status": "banned",
+        "notes": ""
+    },
+    {
+        "id": "6e31368a0612",
+        "username": "Test-#4",
+        "password_hash": "scrypt:32768:8:1$a2uFwwpAaPwGWFb7$60c8049946c47115630d231ed1205353a98c921febd8e01438b9cd8f167aa4be8b7ad0ce1f72fc5a0e16dd45def6b891ba4b6e1516133300f4f3fa0480bea63f",
+        "profile_picture_url": null,
+        "hierarchy_level": 4,
+        "permissions": 0,
+        "time_created": 0,
+        "last_modified": 1780324235,
+        "status": "test",
+        "notes": ""
     }
-  }
-}
+]

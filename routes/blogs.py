@@ -10,7 +10,7 @@ from flask.typing import ResponseReturnValue
 from utility.blogs import BlogPost, search_blogs, sort_blogs, query_blogs, get_item_by_id, filter_by_date_range
 from utility.settings import get_settings
 from utility.logging_utility import logger, log_with_user
-
+from utility.users import get_user_by_username, load_users
 from utility.auth import AuthManager, Permission
 
 # ========== BLUEPRINT INITIALIZATION ==========
@@ -81,23 +81,17 @@ def blog(blog_id: str) -> ResponseReturnValue:
     if not blog_data:
         logger.warning(f"Blog with ID {blog_id} not found, aborting with 404")
         abort(404, description="Blog not found")
-    # Protect draft/hidden posts: require authentication + blogs:read 
+
     status = (blog_data.get("status") or "").lower()
     if status in ("draft", "hidden"):
-        username = session.get("username")
-        if not username or not AuthManager.has_permission(current_app, username, Permission.BLOGS_READ):
+        user_id = session.get("user_id")
+        if not user_id or not AuthManager.has_permission(user_id, Permission.BLOGS_READ):
             logger.warning(f"Unauthorized access to {blog_id} - requires blogs:read")
             abort(403, description="Forbidden")
 
-    try:
-        from utility.auth import get_users as _get_users
-        _users = _get_users(current_app)
-    except Exception:
-        _users = {}
-    author_profiles = {}
-    for name in blog_data.get("author", []):
-        u = _users.get(name) if isinstance(_users, dict) else None
-        author_profiles[name] = (u.get("profile_picture_url") if u else None) if u else None
+    author_profiles: Dict[str, str | None] = {}
+    for name in blog_data.get("authors", []):
+        author_profiles[name] = get_user_by_username(name).get("profile_picture_url") if name else None #type: ignore
     return render_template(
         "blog.jinja",
         blog=blog_data,
