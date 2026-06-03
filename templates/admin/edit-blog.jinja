@@ -64,12 +64,12 @@
                                 <div>
                                     <label>Date</label>
                                     <input type="date" name="scheduled_date" id="scheduled-date" class="modern-input scheduling-input"
-                                        {% if blog.scheduled_date %}value="{{ blog.scheduled_date | strftime('%Y-%m-%d') }}"{% endif %}>
+                                        {% if blog.scheduled_date %}value="{{ blog.scheduled_date | datetimeformat('%Y-%m-%d') }}"{% endif %}>
                                 </div>
                                 <div>
                                     <label>Time</label>
                                     <input type="time" name="scheduled_time" id="scheduled-time" class="modern-input scheduling-input"
-                                        value="{% if blog.scheduled_date %}{{ blog.scheduled_date | strftime('%H:%M') }}{% else %}00:00{% endif %}">
+                                        value="{% if blog.scheduled_date %}{{ blog.scheduled_date | datetimeformat('%H:%M') }}{% else %}00:00{% endif %}">
                                 </div>
                             </div>
                         </div>

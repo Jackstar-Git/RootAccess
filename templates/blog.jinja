@@ -62,7 +62,7 @@
                             <span class="names" aria-label="Authors">{{ blog.authors | join(', ') }}</span>
                             <span class="timestamp">
                                 <time datetime="{{ blog.time_created }}">{{ blog.time_created | datetimeformat }}</time>
-                                • {{blog.calc_read_time|default("5")}} min read
+                                • {{ blog.reading_time }} min read
                             </span>
                         </div>
                     </div>

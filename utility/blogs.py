@@ -1,3 +1,4 @@
+import math
 import json
 import os
 import time
@@ -5,6 +6,7 @@ from typing import List, Union, Optional, TypedDict, Any, Dict, Literal, Tuple
 from functools import lru_cache
 import uuid
 from .converter import MarkdownConverter
+from .users import get_user_by_id
 
 class BlogPost(TypedDict):
     id: str
@@ -18,7 +20,8 @@ class BlogPost(TypedDict):
     content_html: str
     categories: List[str]
     tags: List[str]
-    reading_time: Literal["short", "medium", "deep"]
+    reading_time: int
+    reading_time_tag: Literal["short", "medium", "deep"]
     time_created: int
     last_modified: int
     scheduled_time: Optional[int]
@@ -43,7 +46,8 @@ def _build_default_blog_payload(blog: Dict[str, Any] | BlogPost) -> BlogPost:
         "content_html": blog.get("content_html", ""),
         "categories": blog.get("categories", []),
         "tags": blog.get("tags", []),
-        "reading_time": blog.get("reading_time", "short"),
+        "reading_time": blog.get("reading_time", 5),
+        "reading_time_tag": blog.get("reading_time_tag", "short"),
         "time_created": blog.get("time_created", 0),
         "last_modified": blog.get("last_modified", 0),
         "scheduled_time": blog.get("scheduled_time", None)
@@ -57,17 +61,17 @@ def _save_and_refresh_cache(blogs: List[BlogPost]) -> None:
     load_blogs.cache_clear()
     get_item_by_id.cache_clear()
 
-def calculate_reading_time(content: str) -> Literal["short", "medium", "deep"]:
+def calculate_reading_time(content: str) -> Tuple[int, Literal['short', 'medium', 'deep']]:
     words_per_minute: int = 150
     word_count: int = len(content.split())
-    estimated_minutes = word_count / words_per_minute
-    
-    if estimated_minutes < 3:
-        return "short"
-    elif estimated_minutes <= 7:
-        return "medium"
+    reading_time = int(max(1, math.ceil(word_count / words_per_minute)))
+    if reading_time <= 5:
+        reading_time_tag = 'short'
+    elif reading_time <= 10:
+        reading_time_tag = 'medium'
     else:
-        return "deep"
+        reading_time_tag = 'deep'
+    return reading_time, reading_time_tag
 
 
 # ==========================================
@@ -106,17 +110,19 @@ def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
     else:
         new_blog["id"] = str(new_blog["id"])
 
-    authors_input = new_blog.get("authors", new_blog.get("author", []))
+    authors_input = new_blog.get("authors", [])
+    
     if isinstance(authors_input, str):
-        new_blog["authors"] = [authors_input]
+        new_blog["authors"] = [str(authors_input)] 
     elif isinstance(authors_input, list):
-        new_blog["authors"] = [str(a) for a in authors_input]
-    else:
+        new_blog["authors"] = [str(a) for a in authors_input] 
         new_blog["authors"] = []
     
     raw_content = new_blog.get("content_raw", "")
     new_blog["content_html"] = MarkdownConverter.quick_convert(raw_content)
-    new_blog["reading_time"] = calculate_reading_time(raw_content)
+    reading_time, reading_time_tag = calculate_reading_time(new_blog.get("content_raw", ""))
+    new_blog["reading_time"] = reading_time
+    new_blog["reading_time_tag"] = reading_time_tag
     
     full_blog_payload: Dict[str, Any] = {
         "id": new_blog["id"],
@@ -130,7 +136,8 @@ def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
         "content_html": new_blog["content_html"],
         "categories": new_blog.get("categories", []),
         "tags": new_blog.get("tags", []),
-        "reading_time": new_blog["reading_time"],
+        "reading_time": new_blog.get("reading_time", 5),
+        "reading_time_tag": new_blog.get("reading_time_tag", "short"),
         "time_created": new_blog.get("time_created", now),
         "last_modified": now,
         "scheduled_time": new_blog.get("scheduled_time", None)
@@ -151,11 +158,13 @@ def update_blog(blog_id: Union[int, str], updated_data: Dict[str, Any]) -> bool:
             updated_data.pop("time_created", None)
             
             if "authors" in updated_data and isinstance(updated_data["authors"], str):
-                updated_data["authors"] = [updated_data["authors"]]
+                updated_data["authors"] = [str(updated_data["authors"])]  # Store as author ID
 
             if "content_raw" in updated_data:
                 updated_data["content_html"] = MarkdownConverter.quick_convert(updated_data["content_raw"])
-                updated_data["reading_time"] = calculate_reading_time(updated_data["content_raw"])
+                reading_time, reading_time_tag = calculate_reading_time(updated_data["content_raw"])
+                updated_data["reading_time"] = reading_time
+                updated_data["reading_time_tag"] = reading_time_tag
 
             merged_payload = dict(post)
             merged_payload.update(updated_data)
@@ -248,3 +257,14 @@ def paginate_blogs(blog_list: List[BlogPost], offset: int, per_page: int) -> Tup
 
 def filter_by_date_range(*args) -> Any:
     pass
+
+def get_author_usernames(author_ids: List[str]) -> Dict[str, Optional[str]]:
+    result = {}
+    for author_id in author_ids:
+        user_data = get_user_by_id(author_id)
+        if user_data and "username" in user_data:
+            result[author_id] = user_data["username"]
+        else:
+            result[author_id] = None
+    
+    return result

@@ -47,12 +47,12 @@ def stay_alive() -> None:
 
 # ========== MAIN ==========
 if __name__ == "__main__":
-    print(__file__)
     os.chdir(os.path.dirname(__file__))
     logger.info("*" * 50)
     logger.info("Application Server started!")
     #start_scheduler()
     if len(sys.argv) > 1 and sys.argv[1] == "--development":
+        app.secret_key = "dev_key" # Use a fixed secret key for development
         logger.info("Running in development mode.")
         app.run(host="localhost", port=8080, debug=True)
     else:

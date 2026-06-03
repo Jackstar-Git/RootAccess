@@ -61,6 +61,46 @@
     },
     "/projects": {
         "url": "/projects",
+        "visits": 2,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 0.0,
+        "average_time_spent": 0.0
+    },
+    "/blog": {
+        "url": "/blog",
+        "visits": 2,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 28.968,
+        "average_time_spent": 14.48
+    },
+    "/blog/03be5f48": {
+        "url": "/blog/03be5f48",
+        "visits": 2,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 34.337999999999994,
+        "average_time_spent": 17.17
+    },
+    "/about": {
+        "url": "/about",
+        "visits": 1,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 0.0,
+        "average_time_spent": 0.0
+    },
+    "/": {
+        "url": "/",
         "visits": 1,
         "unique_visits": 1,
         "visitors": [
