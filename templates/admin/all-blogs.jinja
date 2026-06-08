@@ -87,7 +87,7 @@
                                 <span class="status-badge status-draft"><i class="fas fa-pencil-alt"></i> Draft</span>
                             {% endif %}
                             <br>
-                            <span class="author"><i class="fas fa-user-edit"></i> {{ blog.authors | join(', ') }}</span>
+                            <span class="author"><i class="fas fa-user-edit"></i> {{ blog.author_names | join(', ') }}</span>
                             <br>    
                             <span class="date"><i class="fas fa-calendar-alt"></i> {{ blog.time_created | datetimeformat }}</span>
                         </div>

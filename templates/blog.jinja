@@ -6,7 +6,7 @@
 
     <title>{{ blog.title }} // RootAccess</title>
     <meta name="description" content="{{ blog.description if blog.description else 'Another deep dive into the digital abyss by Jackstar.' }}">
-    <meta name="author" content="{{ blog.authors | join(', ') if blog.authors else 'Jackstar' }}">
+    <meta name="author" content="{{ blog.author_names | join(', ') if blog.author_names else 'Jackstar' }}">
     <meta name="keywords" content="{% for cat in blog.categories %}{{ cat }}{{ ', ' if not loop.last }}{% endfor %}, blog, RootAccess, tech, dev">
     <meta name="robots" content="index, follow">
     <meta name="copyright" content="© 2026 RootAccess. Read at your own risk.">
@@ -52,14 +52,14 @@
                 <div class="article-author-bar">
                     <div class="author-group">
                         <div class="avatar-ring" aria-hidden="true">
-                            {% for name in blog.authors %}
-                                {% set pfp = author_profiles.get(name) if author_profiles else None %}
-                                <img src="{{ pfp if pfp else ('https://ui-avatars.com/api/?name=' ~ name ~ '&background=25a1a7&color=fff') }}"
-                                     alt="{{ name }}" class="avatar-img">
+                            {% for author_id in blog.authors %}
+                                {% set pfp = blog.get("author_profiles").get(author_id) if blog.get("author_profiles") else None %}
+                                <img src="{{ pfp if pfp else ('https://ui-avatars.com/api/?name=' ~ author_id ~ '&background=25a1a7&color=fff') }}"
+                                     alt="{{ author_id }}" class="avatar-img">
                                 {% endfor %}
                         </div>
                         <div class="author-meta">
-                            <span class="names" aria-label="Authors">{{ blog.authors | join(', ') }}</span>
+                            <span class="names" aria-label="Authors">{{ blog.author_names | join(', ') }}</span>
                             <span class="timestamp">
                                 <time datetime="{{ blog.time_created }}">{{ blog.time_created | datetimeformat }}</time>
                                 • {{ blog.reading_time }} min read

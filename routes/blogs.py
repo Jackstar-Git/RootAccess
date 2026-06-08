@@ -10,7 +10,7 @@ from flask.typing import ResponseReturnValue
 from utility.blogs import BlogPost, search_blogs, sort_blogs, query_blogs, get_item_by_id, filter_by_date_range
 from utility.settings import get_settings
 from utility.logging_utility import logger, log_with_user
-from utility.users import get_user_by_username, load_users, get_user_by_id
+from utility.users import get_user_by_id
 from utility.auth import AuthManager, Permission
 
 # ========== BLUEPRINT INITIALIZATION ==========
@@ -55,14 +55,12 @@ def blogs_page() -> ResponseReturnValue:
     end: int = start + BLOGS_PER_PAGE
     paginated = list(map(lambda blog_data: {
         **blog_data,
-        "authors": [
+        "author_names": [
             user.get("username", "")
             for author_id in blog_data.get("authors", [])
             if author_id and (user := get_user_by_id(author_id))
         ]
     }, blog_list[start:end]))
-
-
 
     base_query = {k: v for k, v in request.args.items() if k != "page"}
     base_query_string = urlencode(base_query)
@@ -86,12 +84,15 @@ def blog(blog_id: str) -> ResponseReturnValue:
     if not blog_id:
         logger.warning("No blog ID provided, aborting with 400")
         abort(400, description="Blog ID is required")
-    blog_data: Optional[BlogPost] = get_item_by_id(blog_id)
-    if not blog_data:
+    blog: Optional[BlogPost] = get_item_by_id(blog_id)
+
+    if not blog:
         logger.warning(f"Blog with ID {blog_id} not found, aborting with 404")
         abort(404, description="Blog not found")
+    
+    blog_data: Dict[str, Any] = dict(blog)
 
-    blog_data["authors"] = [
+    blog_data["author_names"] = [
         user.get("username", "")
         for author_id in blog_data.get("authors", [])
         if author_id and (user := get_user_by_id(author_id))
@@ -106,14 +107,13 @@ def blog(blog_id: str) -> ResponseReturnValue:
             logger.warning(f"Unauthorized access to {blog_id} - requires blogs:read")
             abort(403, description="Forbidden")
 
-    author_profiles: Dict[str, str | None] = {}
+    blog_data["author_profiles"] = {}
     for author_id in blog_data.get("authors", []):
-        author_profiles[author_id] = get_user_by_username(author_id).get("profile_picture_url") if author_id else None #type: ignore
+        blog_data["author_profiles"][author_id] = get_user_by_id(author_id).get("profile_picture_url") if author_id else None #type: ignore
     return render_template(
         "blog.jinja",
         blog=blog_data,
         id=blog_id,
-        author_profiles=author_profiles,
         suggestions=query_blogs(
             categories=blog_data.get("categories", []),
             status="visible",
