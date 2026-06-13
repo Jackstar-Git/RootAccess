@@ -45,7 +45,7 @@ def sitemap() -> ResponseReturnValue:
 
     default_lastmod = datetime.now()
 
-    excluded_paths = ["/admin", "/static", "/upload", "/download", "/google7825769118bcd42a.html", "/api"]
+    excluded_paths = ["/admin", "/static", "/upload", "/download", "/google7825769118bcd42a.html", "/api", "/.well-known/discord"]
 
     for blog in blogs.query_blogs():
         blog_id = blog.get("id", 0)
@@ -103,7 +103,7 @@ def robots() -> ResponseReturnValue:
 def google_verification() -> ResponseReturnValue:
     return send_from_directory("./","google7825769118bcd42a.html")
 
- @app.route("/.well-known/discord")
+@app.route("/.well-known/discord")
 def discord_verification() -> ResponseReturnValue:
     return send_from_directory("./", "discord-verification.txt")
 

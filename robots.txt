@@ -4,6 +4,8 @@ Disallow: /plugins/                     # Disallow access to plugins directory
 Disallow: /404                          # Disallow access to the 404 error page
 Disallow: /403                          # Disallow access to the 403 error page
 #Disallow: /google7825769118bdc2a.html   # Disallow access to the google search engine verification page
+Disallow: /.well-know/discord  
+
 
 # Allow access to all product pages
 Allow: /projects/                # Allow access to projects pages
