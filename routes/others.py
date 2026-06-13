@@ -103,3 +103,7 @@ def robots() -> ResponseReturnValue:
 def google_verification() -> ResponseReturnValue:
     return send_from_directory("./","google7825769118bcd42a.html")
 
+ @app.route("/.well-known/discord")
+def discord_verification() -> ResponseReturnValue:
+    return send_from_directory("./", "discord-verification.txt")
+
