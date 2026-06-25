@@ -47,6 +47,7 @@ def home() -> ResponseReturnValue:
             ]
         }, preview_projects))
 
+
     return render_template(
         "index.jinja",
         preview_blogs=preview_blogs_data,

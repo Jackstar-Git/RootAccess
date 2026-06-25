@@ -52,7 +52,7 @@ if __name__ == "__main__":
     logger.info("Application Server started!")
     #start_scheduler()
     if len(sys.argv) > 1 and sys.argv[1] == "--development":
-        app.secret_key = "dev_key" # Use a fixed secret key for development
+        app.secret_key = "dev_key"
         logger.info("Running in development mode.")
         app.run(host="localhost", port=8080, debug=True)
     else:

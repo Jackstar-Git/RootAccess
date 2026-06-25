@@ -120,6 +120,11 @@
     font-size: 0.8rem;
 }
 
+.quote-box span {
+    font-weight: 600;
+    color: var(--main-color-600);
+}
+
 .quote-box p {
     margin: 5px 0;
     color: var(--third-font-color);

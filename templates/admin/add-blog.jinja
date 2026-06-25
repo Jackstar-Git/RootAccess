@@ -86,6 +86,9 @@
                             <div id="author-list">
                                 <div class="dynamic-input">
                                     <input name="authors[]" type="text" placeholder="Author Name" required>
+                                    <button type="button" class="btn-remove-author" onclick="this.parentElement.remove()" title="Remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 </div>
                             </div>
                             <button type="button" class="btn-add" onclick="addAuthor()">+ Add Author</button>

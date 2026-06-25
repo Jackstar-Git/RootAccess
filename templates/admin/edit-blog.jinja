@@ -91,6 +91,9 @@
                                 {% for name in blog.authors %}
                                 <div class="dynamic-input">
                                     <input name="authors[]" type="text" value="{{ name }}" required>
+                                    <button type="button" class="btn-remove-author" onclick="this.parentElement.remove()" title="Remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 </div>
                                 {% endfor %}
                             </div>
