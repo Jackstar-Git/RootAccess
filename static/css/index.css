@@ -1,4 +1,3 @@
-/* Hero Section */
 .hero-section {
     background: var(--background-1);
     padding: clamp(3rem, 8vw, var(--spacing-6xl)) 0;
@@ -10,7 +9,7 @@
     align-items: center;
     justify-content: space-between;
     gap: clamp(2rem, 5vw, var(--spacing-4xl));
-    flex-wrap: wrap; /* Allows natural stacking without a media query */
+    flex-wrap: wrap;
 }
 
 .hero-text {
@@ -48,27 +47,100 @@
 
 .hero-3d-card {
     width: 100%;
-    max-width: var(--hero-card-width);
-    height: var(--hero-card-height);
-    background: var(--background-2);
+    max-width: 480px;
+    height: 300px;
+    background: #0f111a;
     border-radius: var(--radius-xl);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.2);
     border: 1px solid var(--main-color-100);
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start;
+    justify-content: flex-start;
     transform: translateZ(60px);
+    overflow: hidden;
+    font-family: 'Courier New', Courier, monospace;
 }
 
-.line {
-    height: 8px;
-    width: 120px;
-    background: var(--main-color-50);
-    border-radius: var(--radius-sm);
-    margin: 10px auto;
+.card-content.terminal-content {
+    width: 100%;
+    height: 100%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Buttons & Links */
+.terminal-header {
+    color: var(--third-font-color);
+    font-size: 0.85rem;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.terminal-body {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-bottom: 0.5rem;
+}
+
+.terminal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.terminal-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.log-line {
+    opacity: 0;
+    animation: fadeIn 0.1s forwards;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.terminal-input-line {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.prompt-arrow {
+    color: #50fa7b;
+}
+
+.prompt-dir {
+    color: #8be9fd;
+}
+
+#terminal-input {
+    background: transparent;
+    border: none;
+    color: #f8f8f2;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+    flex-grow: 1;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
 .hero-actions {
     display: flex;
     gap: var(--spacing-xl);
@@ -80,7 +152,6 @@
     transform: translateY(-3px);
 }
 
-/* About Section */
 .about-section {
     padding: clamp(3rem, 8vw, var(--spacing-5xl)) 0;
     background: var(--background-2);
@@ -88,7 +159,6 @@
 
 .about-grid {
     display: grid;
-    /* This rule completely removes the need for a grid media query */
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
     gap: clamp(2rem, 5vw, var(--spacing-4xl));
     align-items: center;
@@ -101,14 +171,19 @@
 }
 
 .about-stats {
-    display: flex;
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(2, minmax(min(100%, 200px), 0.5fr));
     gap: clamp(1.5rem, 4vw, var(--spacing-3xl));
     flex-wrap: wrap;
 }
 
+.stat-box {
+    text-align: center;
+}
+
 .stat-box .number {
     display: block;
-    /* Fixes the bugged numbers: fluid sizing based on viewport width */
     font-size: clamp(2.5rem, 6vw, 3.5rem);
     font-weight: var(--font-weight-black);
     color: var(--main-color-500);
@@ -119,7 +194,6 @@
     font-weight: var(--font-weight-medium);
 }
 
-/* Projects Grid */
 .projects-preview {
     padding: clamp(3rem, 8vw, var(--spacing-5xl)) 0;
     background: var(--background-1);
@@ -140,11 +214,6 @@
     gap: clamp(1.5rem, 4vw, var(--spacing-3xl));
 }
 
-
-
-
-/* --- The ONE necessary Media Query --- */
-/* Kept strictly for layout behaviors that flex/grid auto-fit cannot accurately guess */
 @media (max-width: 768px) {
     .hero-text {
         text-align: center;
@@ -159,7 +228,6 @@
         justify-content: center;
     }
 
-    /* Force buttons to be full-width on mobile to avoid awkward tapping */
     .hero-actions a, 
     .section-header .btn-secondary {
         width: 100%;
@@ -171,6 +239,58 @@
     }
     
     .blog-item:hover {
-        transform: translateY(-5px); /* Switch hover effect from X to Y axis on mobile */
+        transform: translateY(-5px);
     }
+}
+
+/* Easter Egg*/
+body.barrel-roll {
+    animation: barrelRoll 5s ease-in-out !important;
+    overflow-x: hidden !important;
+    max-height: 100vh !important;
+}
+
+@keyframes barrelRoll {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(720deg); }
+}
+
+body.matrix-mode {
+    background-color: #000000 !important;
+    color: #00ff00 !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    transition: all 0.3s ease-in-out;
+}
+
+body.matrix-mode *:not(i) {
+    background-color: transparent !important;
+    color: #00ff00 !important;
+    border-color: #00ff00 !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    box-shadow: none !important;
+    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
+}
+
+body.matrix-mode .text-gradient {
+    background: none !important;
+    -webkit-text-fill-color: #00ff00 !important;
+}
+
+body.matrix-mode .btn-primary,
+body.matrix-mode .btn-secondary,
+body.matrix-mode .btn-outline {
+    border: 1px solid #00ff00 !important;
+    background: #000000 !important;
+    text-transform: uppercase;
+}
+
+body.matrix-mode::before {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    z-index: 99999;
+    background-size: 100% 4px, 6px 100%;
+    pointer-events: none;
 }

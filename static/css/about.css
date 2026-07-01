@@ -82,17 +82,30 @@
 
 /* Inline Greeting & Quote */
 .greeting-inline {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
     margin-bottom: var(--spacing-sm);
     margin-top: 0;
     font-size: var(--font-size-xl);
 }
 
-.greeting-inline img {
-    width: 35px;
-    height: auto;
+.greeting-inline #waving-hand {
+    display: inline-block;
+    transform-origin: 75% 100%;
+    margin-left: -5px;
+    animation: wave .8s linear 2;
+}
+ 
+@keyframes wave {
+    0% {
+        rotate: 0deg;
+    }
+
+    50% {
+        rotate: 55deg;
+    }
+    100%{
+        rotate: 0deg;
+    }
+    
 }
 
 .tagline {

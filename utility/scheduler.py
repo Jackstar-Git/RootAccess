@@ -3,18 +3,17 @@ import threading
 from typing import List, Dict, Any
 from datetime import datetime
 from utility.logging_utility import logger
-from utility.blogs import load_blogs, update_blog
-
+from utility.blogs import load_blogs, update_blog, BlogPost
 
 def check_scheduled_blogs() -> None:
     try:
-        blogs: List[Dict[str, Any]] = load_blogs()
+        blogs: List[BlogPost] = load_blogs()
         current_time: int = int(time.time())
         
         for blog in blogs:
             if blog.get("status") == "draft" and blog.get("scheduled_date"):
                 try:
-                    scheduled_time: int = int(blog.get("scheduled_date"))
+                    scheduled_time: int = int(blog.get("scheduled_date", 0))
                     
                     if scheduled_time <= current_time:
                         blog_id = blog.get("id")

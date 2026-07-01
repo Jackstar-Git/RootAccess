@@ -18,8 +18,6 @@ function initHeroTilt() {
     });
 }
 
-initHeroTilt();
-
 function calculateDaysSinceStart() {
     const startDate = new Date("2021-07-25");
     const currentDate = new Date();
@@ -33,38 +31,146 @@ function roundDownToHalfYear(days) {
     return Math.floor(days / daysInHalfYear) * 0.5;
 }
 
-const daysPassed = calculateDaysSinceStart();
-const halfYears = roundDownToHalfYear(daysPassed);
+function initTerminalLogs() {
+    const terminalBody = document.getElementById("terminal-logs");
+    const promptLine = document.getElementById("terminal-prompt");
+    const terminalInput = document.getElementById("terminal-input");
+    const heroCard = document.querySelector(".hero-3d-card");
+    if (!terminalBody) return;
 
-document.getElementById("years-of-experience").textContent = `${halfYears}+`;
+    const logs = [
+        "[INFO] Booting sequence initiated...",
+        "[OK] Python backend established.",
+        "[WARN] Frontend styling is experimental.",
+        "[INFO] Fetching Austrian coffee reserves...",
+        "[OK] Caffeine levels at 100%.",
+        "[ERROR] Off-by-one error encountered.",
+        "[INFO] Ignoring error and continuing...",
+        "[SUCCESS] Root.Access granted."
+    ];
 
+    let logIndex = 0;
 
-function startAccidentalRecursion(count = 0) {
-    const element = document.getElementById("accidental-recursions");
-    if (!element) return;
+    function typeLog() {
+        if (logIndex < logs.length) {
+            const line = document.createElement("div");
+            line.className = "log-line";
+            
+            const text = logs[logIndex];
+            
+            if (text.includes("[ERROR]")) {
+                 line.style.color = "#ff5555";
+            } else if (text.includes("[WARN]")) {
+                 line.style.color = "#ffb86c";
+            } else if (text.includes("[OK]") || text.includes("[SUCCESS]")) {
+                 line.style.color = "#50fa7b";
+            } else {
+                 line.style.color = "#f8f8f2";
+            }
 
-    element.textContent = count.toLocaleString();
-    const jitter = Math.floor(Math.random() * 100) + 500;
-    
-    setTimeout(() => {
-        startAccidentalRecursion(count + 1);
-    }, jitter);
+            line.textContent = text;
+            terminalBody.insertBefore(line, promptLine);
+            
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+            
+            logIndex++;
+
+            const nextDelay = Math.random() * 500 + 150; 
+            setTimeout(typeLog, nextDelay);
+        } else {
+            if (promptLine) {
+                promptLine.style.display = "flex";
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+            }
+        }
+    }
+
+    setTimeout(typeLog, 500);
+
+    if (terminalInput) {
+        terminalInput.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                const val = this.value.trim();
+                
+                if (val.toLowerCase() === "sudo barrelroll") {
+                    document.body.classList.add("barrel-roll");
+                    setTimeout(() => {
+                        document.body.classList.remove("barrel-roll");
+                    }, 2000);
+                }
+                if (val.toLowerCase() === "sudo matrix") {
+                    document.body.classList.toggle("matrix-mode");
+                    
+                    const isMatrix = document.body.classList.contains("matrix-mode");
+                    const responseLine = document.createElement("div");
+                    responseLine.className = "log-line";
+                    
+                    if (isMatrix) {
+                        responseLine.style.color = "#00ff00";
+                        responseLine.textContent = "[CRITICAL] Wake up, Jackstar... The Matrix has you.";
+                        
+                        let glitchCount = 0;
+                        const interval = setInterval(() => {
+                            const glitchLine = document.createElement("div");
+                            glitchLine.className = "log-line";
+                            glitchLine.style.color = "#00ff00";
+                            glitchLine.textContent = (Math.random() > 0.5 ? "01001110 01001111" : "[SYS_ERR] OVERRIDE_LOG_STREAM");
+                            terminalBody.insertBefore(glitchLine, promptLine);
+                            terminalBody.scrollTop = terminalBody.scrollHeight;
+                            
+                            glitchCount++;
+                            if (glitchCount > 5) clearInterval(interval);
+                        }, 150);
+                    } else {
+                        responseLine.style.color = "#8be9fd";
+                        responseLine.textContent = "[INFO] Connection to Zion closed. Reality restored.";
+                    }
+                    
+                    terminalBody.insertBefore(responseLine, promptLine);
+                }
+
+                if (val !== "") {
+                    const inputRecord = document.createElement("div");
+                    inputRecord.className = "log-line";
+                    inputRecord.style.color = "#f8f8f2";
+                    inputRecord.textContent = "➜ ~ " + val;
+                    terminalBody.insertBefore(inputRecord, promptLine);
+                    
+                    const responseLine = document.createElement("div");
+                    responseLine.className = "log-line";
+                    responseLine.style.color = "#8be9fd";
+                    
+                    if (val.toLowerCase() !== "sudo barrelroll") {
+                        responseLine.textContent = `bash: ${val}: command not found`;
+                    } else {
+                        responseLine.textContent = "Executing barrel roll...";
+                    }
+                    
+                    terminalBody.insertBefore(responseLine, promptLine);
+                }
+
+                this.value = "";
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+            }
+        });
+
+        if (heroCard) {
+            heroCard.addEventListener("click", () => {
+                terminalInput.focus();
+            });
+        }
+    }
 }
 
-startAccidentalRecursion();
-
-
-function triggerTypeErrorGlitch() {
-    const errorEl = document.getElementById("type-error-stat");
-    const errors = ["null", "undefined", "NaN", "[object Object]", "404", "Error", "TypeError", "AttributeError", "ReferenceError"];
+document.addEventListener("DOMContentLoaded", () => {
+    initHeroTilt();
+    initTerminalLogs();
     
-    setInterval(() => {
-        const randomError = errors[Math.floor(Math.random() * errors.length)];
-        errorEl.textContent = randomError;
-        
-        setTimeout(() => {
-            errorEl.style.color = ""; 
-        }, 150);
-    }, 3000); 
-}
-triggerTypeErrorGlitch();
+    const daysPassed = calculateDaysSinceStart();
+    const halfYears = roundDownToHalfYear(daysPassed);
+    const yearsExpElement = document.getElementById("years-of-experience");
+    
+    if (yearsExpElement) {
+        yearsExpElement.textContent = `${halfYears}+`;
+    }
+});

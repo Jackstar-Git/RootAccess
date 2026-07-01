@@ -5,18 +5,18 @@
     function initToasts(){
         window.showToast = function(message = "", type = "info", timeout = 4000) {
             try {
-                const container = document.getElementById('global-toast');
-                const msg = document.getElementById('global-toast-message');
-                const closeBtn = document.getElementById('global-toast-close');
+                const container = document.getElementById("global-toast");
+                const msg = document.getElementById("global-toast-message");
+                const closeBtn = document.getElementById("global-toast-close");
                 if (!container || !msg) return;
 
                 // Extract and improve error messages
                 let displayMessage = message;
-                if (type === 'error' && message) {
+                if (type === "error" && message) {
                     displayMessage = window.improveErrorMessage(message);
                 }
                 
-                msg.textContent = displayMessage || (type === 'error' ? 'An error occurred' : 'Notice');
+                msg.textContent = displayMessage || (type === "error" ? "An error occurred" : "Notice");
                 container.classList.remove('error');
                 if (type === 'error') container.classList.add('error');
                 container.removeAttribute('hidden');

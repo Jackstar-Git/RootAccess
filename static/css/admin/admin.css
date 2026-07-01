@@ -242,7 +242,7 @@ progress::-moz-progress-bar {
 }
 
 .calendar td.past-day {
-    background: rgba(200, 200, 200, 0.3);
+    background: var(--background-2);
     opacity: 0.7;
     color: var(--third-font-color);
 }
@@ -251,7 +251,7 @@ progress::-moz-progress-bar {
 #today {
     background: rgba(37, 161, 167, 0.4);
     border: 2px solid var(--main-color-500);
-    color: white;
+    color: var(--font-color);
     font-weight: var(--font-weight-bold);
 }
 
@@ -494,7 +494,7 @@ progress::-moz-progress-bar {
 }
 
 [data-theme="dark"] .calendar td.past-day {
-    background: rgba(50, 50, 50, 0.2);
+    background: var(--background-2);
 }
 
 [data-theme="dark"] #today {

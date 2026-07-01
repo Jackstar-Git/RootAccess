@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener("DOMContentLoaded", function(){
     const msg = window.errorMessage || 'Access denied';
     if (window.notify) {
         notify(msg, 'error');

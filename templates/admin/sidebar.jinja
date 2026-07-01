@@ -6,6 +6,7 @@
 
 <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/theme-switch.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/sidebar.css') }}">
 
 <nav class="sidebar" id="adminSidebar">
@@ -154,6 +155,7 @@
             <span>{{ username or 'Admin' }}</span>
         </div>
         <div class="profile-info">
+            {% include "snippets/switcher.jinja" %}
             <a href="/admin/logout" class="logout-link" title="Logout">
                 <i class="fa-solid fa-power-off"></i> 
                 <span>Logout</span>

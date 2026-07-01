@@ -11,12 +11,10 @@
     <meta name="robots" content="index, follow">
     <meta name="copyright" content="© 2026 RootAccess. Developed with equal parts logic and luck.">
 
-
     <link rel="preconnect" href="https://cdnjs.cloudflare.com"> 
      
     <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
 
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
@@ -44,10 +42,16 @@
                 </div>
                 <div class="hero-3d-wrapper" aria-hidden="true">
                     <div class="hero-3d-card" id="tilt-card">
-                        <div class="card-content">
-                            <i class="fa-solid fa-terminal"></i>
-                            <div class="line"></div>
-                            <div class="line short"></div>
+                        <div class="card-content terminal-content">
+                            <div class="terminal-header">
+                                <i class="fa-solid fa-terminal"></i> root@jackstar:~
+                            </div>
+                            <div id="terminal-logs" class="terminal-body">
+                                <div class="terminal-input-line" id="terminal-prompt" style="display: none;">
+                                    <span class="prompt-arrow">➜</span> <span class="prompt-dir">~</span>
+                                    <input type="text" id="terminal-input" autocomplete="off" spellcheck="false">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -79,12 +83,12 @@
                             <span class="label">Years of Experience</span>
                         </div>
                         <div class="stat-box">
-                            <span class="number" id="accidental-recursions">0</span>
-                            <span class="label">Accidental <br> Recursions</span>
+                            <span class="number" id="lines-of-code">35k+</span>
+                            <span class="label">Public Lines of Code</span>
                         </div>
                         <div class="stat-box">
-                            <span class="number" id="type-error-stat" style="font-family: monospace;">null</span>
-                            <span class="label">Uncaught TypeErrors</span>
+                            <span class="number" id="type-error-stat">-1</span>
+                            <span class="label">Off-by-one errors</span>
                         </div>
                     </div>
                 </div>

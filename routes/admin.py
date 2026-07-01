@@ -801,11 +801,6 @@ def general_settings() -> ResponseReturnValue:
             settings["site_description"] = form_data.get("site_description", "")
             settings["timezone"] = form_data.get("timezone", "UTC")
 
-            admin_password = form_data.get("admin_password")
-            if admin_password:
-                settings["admin-password-hash"] = generate_password_hash(admin_password)
-                log_with_user("warning", "Admin password has been changed", user_id)
-
             update_settings(settings)
             log_with_user("info", "General settings updated successfully", user_id)
             return jsonify({"success": True, "message": "Settings updated successfully"})

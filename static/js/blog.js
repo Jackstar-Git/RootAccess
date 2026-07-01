@@ -44,9 +44,9 @@ function createSharePopup() {
 
     popup.querySelector("#copyLinkBtn").addEventListener("click", () => {
         navigator.clipboard.writeText(window.location.href).then(() => {
-            notify("Link copied to clipboard", 'info');
+            notify("Link copied to clipboard", "info");
         }).catch(() => {
-            try { prompt("Copy the link below:", window.location.href); } catch(e) { notify(window.location.href, 'info'); }
+            try { prompt("Copy the link below:", window.location.href); } catch(e) { notify(window.location.href, "info"); }
         });
     });
 

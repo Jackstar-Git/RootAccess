@@ -61,16 +61,16 @@ def _save_and_refresh_cache(blogs: List[BlogPost]) -> None:
     load_blogs.cache_clear()
     get_item_by_id.cache_clear()
 
-def calculate_reading_time(content: str) -> Tuple[int, Literal['short', 'medium', 'deep']]:
+def calculate_reading_time(content: str) -> Tuple[int, Literal["short", "medium", "deep"]]:
     words_per_minute: int = 150
     word_count: int = len(content.split())
     reading_time = int(max(1, math.ceil(word_count / words_per_minute)))
     if reading_time <= 5:
-        reading_time_tag = 'short'
+        reading_time_tag = "short"
     elif reading_time <= 10:
-        reading_time_tag = 'medium'
+        reading_time_tag = "medium"
     else:
-        reading_time_tag = 'deep'
+        reading_time_tag = "deep"
     return reading_time, reading_time_tag
 
 

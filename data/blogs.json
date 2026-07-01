@@ -205,7 +205,7 @@
     },
     {
         "id": "d0a30507",
-        "status": "draft",
+        "status": "visible",
         "type": "Analysis",
         "title": " The Illusion of Authenticity: Why We Can’t Win the Fight Against AI Fakes",
         "description": "This article takes a critical exploration of digital forensics and provenance systems (like C2PA and SynthID) in combating AI-generated fakes. The article argues that as AI models (e.g., Midjourney, DALL-E 3, GPT Image 2) rapidly perfect their output, and even regulatory efforts (e.g., EU AI Act) fail to keep up. Structural flaws erode societal trust, making everything, real or fake, suspect. ",
@@ -229,7 +229,7 @@
         "reading_time": 18,
         "reading_time_tag": "deep",
         "time_created": 1782415116,
-        "last_modified": 1782473132,
+        "last_modified": 1782476629,
         "scheduled_time": null
     }
 ]
