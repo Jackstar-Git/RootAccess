@@ -136,6 +136,7 @@ def api_contact_submit() -> ResponseReturnValue:
         return redirect(request.referrer or "/")
 
     attachments = []
+    upload_errors = []
     if "attachments" in request.files:
         files = request.files.getlist("attachments")
         upload_dir = os.path.join(app.root_path, "uploads", "contacts")
@@ -143,10 +144,14 @@ def api_contact_submit() -> ResponseReturnValue:
 
         for file in files:
             if file and file.filename:
-                filename = sanitize_filename(f"{int(time.time())}_{file.filename}")
-                file_path = os.path.join(upload_dir, filename)
-                file.save(file_path)
-                attachments.append(f"/uploads/contacts/{filename}")
+                try:
+                    filename = sanitize_filename(f"{int(time.time())}_{file.filename}")
+                    file_path = os.path.join(upload_dir, filename)
+                    file.save(file_path)
+                    attachments.append(f"/uploads/contacts/{filename}")
+                except Exception as exc:
+                    upload_errors.append(file.filename)
+                    logger.error(f"Failed to save contact attachment | File: {file.filename} | Error: {str(exc)}")
 
     contact_data = {
         "name": name,
@@ -160,12 +165,17 @@ def api_contact_submit() -> ResponseReturnValue:
     try:
         added = add_contact(contact_data)
         log_with_user("info", f"Contact form submitted | From: {name} ({email}) | Topic: {topic} | IP: {request.remote_addr}", None)
-        flash("Your message has been sent successfully!", "success")
+        if upload_errors:
+            flash("Your message was sent, but some attachments could not be uploaded.", "error")
+        if attachments:
+            flash(f"Your message was sent successfully with {len(attachments)} attachment(s).", "success")
+        else:
+            flash("Your message has been sent successfully!", "success")
     except Exception as e:
         log_with_user("error", f"Failed to save contact request | Error: {e}", None)
         flash("Failed to send message. Please try again later.", "error")
 
-    return redirect(request.referrer or "/")
+    return redirect(url_for("others.contact"))
 
 @internal_blueprint.route("/api/admin/contacts/<action>", methods=["POST"])
 @permission_required(Permission.CONTACTS_UPDATE)

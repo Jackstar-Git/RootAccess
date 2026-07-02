@@ -3,26 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Blogs // RootAccess</title>
     <meta name="description" content="Browse through a catalog of articles, guides, and opinions from mostly me. Mostly tech and topics I want to rant about">
     <meta name="author" content="Jackstar">
     <meta name="keywords" content="{% for topic in settings.topics %}{{ topic }}{{ ', ' if not loop.last }}{% endfor %}, tech blog, programming, development archive">
     <meta name="robots" content="index, follow">
     <meta name="copyright" content="© 2026 RootAccess. Thoughts are free;">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+    <title>Blogs // RootAccess</title>
 
-
-    
-     
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
 
+    <script src="{{ url_for('static', filename='js/global_preloader.js')}}"></script>
     
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/font-awesome/reduced.all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/blogs.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/´blogs.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/snippets/multiselect.css') }}">
 
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
     {% include "snippets/navbar.jinja" %}

@@ -23,13 +23,6 @@
     margin-bottom: var(--spacing-xl);
 }
 
-.text-gradient {
-    background: linear-gradient(135deg, var(--main-color-600), var(--main-color-400));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
 .hero-text p {
     font-size: clamp(1rem, 2.5vw, var(--font-size-lg));
     color: var(--third-font-color);
@@ -241,56 +234,4 @@
     .blog-item:hover, .blog-item:focus-within {
         transform: translateY(-5px);
     }
-}
-
-/* Easter Egg*/
-body.barrel-roll {
-    animation: barrelRoll 5s ease-in-out !important;
-    overflow-x: hidden !important;
-    max-height: 100vh !important;
-}
-
-@keyframes barrelRoll {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(720deg); }
-}
-
-body.matrix-mode {
-    background-color: #000000 !important;
-    color: #00ff00 !important;
-    font-family: 'Courier New', Courier, monospace !important;
-    transition: all 0.3s ease-in-out;
-}
-
-body.matrix-mode *:not(i) {
-    background-color: transparent !important;
-    color: #00ff00 !important;
-    border-color: #00ff00 !important;
-    font-family: 'Courier New', Courier, monospace !important;
-    box-shadow: none !important;
-    text-shadow: 0 0 5px #00ff00, 0 0 10px #00ff00;
-}
-
-body.matrix-mode .text-gradient {
-    background: none !important;
-    -webkit-text-fill-color: #00ff00 !important;
-}
-
-body.matrix-mode .btn-primary,
-body.matrix-mode .btn-secondary,
-body.matrix-mode .btn-outline {
-    border: 1px solid #00ff00 !important;
-    background: #000000 !important;
-    text-transform: uppercase;
-}
-
-body.matrix-mode::before {
-    content: " ";
-    display: block;
-    position: fixed;
-    top: 0; left: 0; bottom: 0; right: 0;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-    z-index: 99999;
-    background-size: 100% 4px, 6px 100%;
-    pointer-events: none;
 }

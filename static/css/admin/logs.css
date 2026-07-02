@@ -76,18 +76,24 @@
     font-family: 'Consolas', 'Courier New', Courier, monospace;
     font-size: 13px;
     line-height: 1.5;
-    background-color: #1e293b; 
-    color: #e2e8f0; 
+    background-color: var(--background-3); 
+    color: var(--secondary-font-color); 
     padding: 20px;
     height: 70vh;
     overflow-y: auto;
-    border: 1px solid #0f172a;
+    border: 1px solid var(--background-2);
 }
 
 #logsOutput::-webkit-scrollbar { width: 10px; }
+<<<<<<< HEAD
 #logsOutput::-webkit-scrollbar-track { background: #0f172a; }
 #logsOutput::-webkit-scrollbar-thumb { background: #475569; border-radius: 5px; }
 #logsOutput::-webkit-scrollbar-thumb:hover, #logsOutput::-webkit-scrollbar-thumb:focus-within { background: #64748b; }
+=======
+#logsOutput::-webkit-scrollbar-track { background: var(--background-3); }
+#logsOutput::-webkit-scrollbar-thumb { background: var(--background-2); border-radius: 5px; }
+#logsOutput::-webkit-scrollbar-thumb:hover { background: var(--main-color-500); }
+>>>>>>> 49be0c6 (Added more themes)
 
 .log-line {
     padding: 2px 0;
@@ -95,11 +101,11 @@
     border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 .log-line:last-child { border-bottom: none; }
-.log-info { color: #38bdf8; }      
-.log-warning { color: #fbbf24; }  
-.log-error { color: #f87171; font-weight: bold; }
-.log-debug { color: #94a3b8; }  
-.log-empty { color: #94a3b8; font-style: italic; }
+.log-info { color: var(--main-color-400); }      
+.log-warning { color: var(--main-color-600); }  
+.log-error { color: var(--warning-color); font-weight: bold; }
+.log-debug { color: var(--third-font-color); }  
+.log-empty { color: var(--third-font-color); font-style: italic; }
 
 /* ... [Keep all existing CSS from the previous response here] ... */
 
@@ -108,8 +114,8 @@
     display: flex;
     gap: 10px;
     padding: 12px;
-    background-color: #0f172a; /* Darker than the terminal background */
-    border-top: 1px solid #334155;
+    background-color: var(--background-3); 
+    border-top: 1px solid var(--background-2);
 }
 
 .console-bar input[type="text"],
@@ -117,9 +123,9 @@
     padding: 10px;
     font-family: 'Consolas', 'Courier New', Courier, monospace;
     font-size: 14px;
-    color: #e2e8f0;
-    background-color: #1e293b;
-    border: 1px solid #475569;
+    color: var(--secondary-font-color);
+    background-color: var(--background-3);
+    border: 1px solid var(--background-2);
     border-radius: 4px;
     outline: none;
     transition: border-color 0.2s;
@@ -133,12 +139,17 @@
     width: 150px;
 }
 
+<<<<<<< HEAD
 .console-bar input:focus-within {
     border-color: #38bdf8;
+=======
+.console-bar input:focus {
+    border-color: var(--main-color-400);
+>>>>>>> 49be0c6 (Added more themes)
 }
 
 .btn-console {
-    background-color: #10b981;
+    background-color: var(--main-color-500);
     color: #ffffff;
     padding: 10px 16px;
     font-size: 14px;
@@ -149,8 +160,13 @@
     font-family: 'Consolas', 'Courier New', Courier, monospace;
 }
 
+<<<<<<< HEAD
 .btn-console:hover, .btn-console:focus-within {
     background-color: #059669;
+=======
+.btn-console:hover {
+    background-color: var(--main-color-600);
+>>>>>>> 49be0c6 (Added more themes)
 }
 
 /* ===== MOBILE RESPONSIVE ===== */

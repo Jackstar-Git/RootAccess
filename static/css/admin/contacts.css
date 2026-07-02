@@ -59,7 +59,7 @@
     border: 1px solid var(--background-2);
     border-radius: 8px;
     padding: 12px 20px;
-    background-color: white;
+    background-color: var(--background-1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 

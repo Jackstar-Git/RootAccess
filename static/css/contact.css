@@ -71,7 +71,7 @@ label {
     color: var(--third-font-color);
 }
 
-input, select, textarea {
+.contact-form-card :is(input, select, textarea) {
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
     border: 1px solid var(--background-2);
@@ -91,6 +91,53 @@ textarea:focus-within {
 /* ===== CUSTOM FILE UPLOAD ===== */
 .file-upload-wrapper {
     position: relative;
+}
+
+.file-upload-meta {
+    margin-top: var(--spacing-sm);
+}
+
+.file-upload-hint {
+    font-size: var(--font-size-sm);
+    color: var(--third-font-color);
+    margin-bottom: var(--spacing-xs);
+}
+
+.selected-files-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.selected-file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    background: var(--background-2);
+    color: var(--font-color);
+}
+
+.selected-file-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.selected-file-size {
+    flex-shrink: 0;
+    color: var(--third-font-color);
+    font-size: var(--font-size-sm);
+}
+
+.selected-file-empty {
+    color: var(--third-font-color);
+    font-size: var(--font-size-sm);
 }
 
 #attachments {
@@ -220,7 +267,7 @@ textarea:focus-within {
 }
 
 .captcha-feedback.success {
-    color: var(--success-color);
+    color: var(--main-color-600);
 }
 
 .captcha-feedback.error {

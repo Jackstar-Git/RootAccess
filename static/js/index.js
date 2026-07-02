@@ -38,6 +38,8 @@ function initTerminalLogs() {
     const heroCard = document.querySelector(".hero-3d-card");
     if (!terminalBody) return;
 
+    const availableThemes = ["light", "dark", "barrel-roll", "matrix", "high-contrast", "midnight-neo", "wild-west", "brutalism", "abstract", "pride"];
+
     const logs = [
         "[INFO] Booting sequence initiated...",
         "[OK] Python backend established.",
@@ -55,33 +57,21 @@ function initTerminalLogs() {
         if (logIndex < logs.length) {
             const line = document.createElement("div");
             line.className = "log-line";
-            
             const text = logs[logIndex];
             
-            if (text.includes("[ERROR]")) {
-                 line.style.color = "#ff5555";
-            } else if (text.includes("[WARN]")) {
-                 line.style.color = "#ffb86c";
-            } else if (text.includes("[OK]") || text.includes("[SUCCESS]")) {
-                 line.style.color = "#50fa7b";
-            } else {
-                 line.style.color = "#f8f8f2";
-            }
+            if (text.includes("[ERROR]")) line.style.color = "#ff5555";
+            else if (text.includes("[WARN]")) line.style.color = "#ffb86c";
+            else if (text.includes("[OK]") || text.includes("[SUCCESS]")) line.style.color = "#50fa7b";
+            else line.style.color = "#f8f8f2";
 
             line.textContent = text;
             terminalBody.insertBefore(line, promptLine);
-            
             terminalBody.scrollTop = terminalBody.scrollHeight;
-            
             logIndex++;
-
-            const nextDelay = Math.random() * 500 + 150; 
-            setTimeout(typeLog, nextDelay);
-        } else {
-            if (promptLine) {
-                promptLine.style.display = "flex";
-                terminalBody.scrollTop = terminalBody.scrollHeight;
-            }
+            setTimeout(typeLog, Math.random() * 500 + 150);
+        } else if (promptLine) {
+            promptLine.style.display = "flex";
+            terminalBody.scrollTop = terminalBody.scrollHeight;
         }
     }
 
@@ -91,86 +81,61 @@ function initTerminalLogs() {
         terminalInput.addEventListener("keydown", function(e) {
             if (e.key === "Enter") {
                 const val = this.value.trim();
-                
-                if (val.toLowerCase() === "sudo barrelroll") {
+                const cmd = val.toLowerCase();
+                if (val === "") return;
+
+                const inputRecord = document.createElement("div");
+                inputRecord.className = "log-line";
+                inputRecord.style.color = "#f8f8f2";
+                inputRecord.textContent = "➜ ~ " + val;
+                terminalBody.insertBefore(inputRecord, promptLine);
+
+                const responseLine = document.createElement("div");
+                responseLine.className = "log-line";
+                responseLine.style.color = "#8be9fd";
+
+                if (cmd.startsWith("sudo theme")) {
+                    const themeName = cmd.split(" ")[2];
+                    if (themeName === "--list") {
+                        responseLine.textContent = `Themes: ${availableThemes.join(", ")}`;
+                    } else if (themeName === "reset") {
+                        document.documentElement.setAttribute("data-theme", "light");
+                        localStorage.removeItem("active-theme");
+                        responseLine.textContent = "Theme reset to default.";
+                    } else if (availableThemes.includes(themeName)) {
+                        document.documentElement.setAttribute("data-theme", themeName);
+                        localStorage.setItem("active-theme", themeName);
+                        responseLine.textContent = `Theme switched to: ${themeName}`;
+                    } else {
+                        responseLine.textContent = "Usage: sudo theme [name] | --list | reset";
+                    }
+                } else if (cmd === "sudo barrelroll") {
                     document.body.classList.add("barrel-roll");
-                    setTimeout(() => {
-                        document.body.classList.remove("barrel-roll");
-                    }, 2000);
-                }
-                if (val.toLowerCase() === "sudo matrix") {
+                    setTimeout(() => document.body.classList.remove("barrel-roll"), 2000);
+                    responseLine.textContent = "Executing barrel roll...";
+                } else if (cmd === "sudo matrix") {
                     document.body.classList.toggle("matrix-mode");
-                    
                     const isMatrix = document.body.classList.contains("matrix-mode");
-                    const responseLine = document.createElement("div");
-                    responseLine.className = "log-line";
-                    
-                    if (isMatrix) {
-                        responseLine.style.color = "#00ff00";
-                        responseLine.textContent = "[CRITICAL] Wake up, Jackstar... The Matrix has you.";
-                        
-                        let glitchCount = 0;
-                        const interval = setInterval(() => {
-                            const glitchLine = document.createElement("div");
-                            glitchLine.className = "log-line";
-                            glitchLine.style.color = "#00ff00";
-                            glitchLine.textContent = (Math.random() > 0.5 ? "01001110 01001111" : "[SYS_ERR] OVERRIDE_LOG_STREAM");
-                            terminalBody.insertBefore(glitchLine, promptLine);
-                            terminalBody.scrollTop = terminalBody.scrollHeight;
-                            
-                            glitchCount++;
-                            if (glitchCount > 5) clearInterval(interval);
-                        }, 150);
-                    } else {
-                        responseLine.style.color = "#8be9fd";
-                        responseLine.textContent = "[INFO] Connection to Zion closed. Reality restored.";
-                    }
-                    
-                    terminalBody.insertBefore(responseLine, promptLine);
+                    responseLine.style.color = "#00ff00";
+                    responseLine.textContent = isMatrix ? "[CRITICAL] Matrix active." : "[INFO] Reality restored.";
+                } else {
+                    responseLine.textContent = `bash: ${val}: command not found`;
                 }
 
-                if (val !== "") {
-                    const inputRecord = document.createElement("div");
-                    inputRecord.className = "log-line";
-                    inputRecord.style.color = "#f8f8f2";
-                    inputRecord.textContent = "➜ ~ " + val;
-                    terminalBody.insertBefore(inputRecord, promptLine);
-                    
-                    const responseLine = document.createElement("div");
-                    responseLine.className = "log-line";
-                    responseLine.style.color = "#8be9fd";
-                    
-                    if (val.toLowerCase() !== "sudo barrelroll") {
-                        responseLine.textContent = `bash: ${val}: command not found`;
-                    } else {
-                        responseLine.textContent = "Executing barrel roll...";
-                    }
-                    
-                    terminalBody.insertBefore(responseLine, promptLine);
-                }
-
+                terminalBody.insertBefore(responseLine, promptLine);
                 this.value = "";
                 terminalBody.scrollTop = terminalBody.scrollHeight;
             }
         });
 
-        if (heroCard) {
-            heroCard.addEventListener("click", () => {
-                terminalInput.focus();
-            });
-        }
+        if (heroCard) heroCard.addEventListener("click", () => terminalInput.focus());
     }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     initHeroTilt();
     initTerminalLogs();
-    
     const daysPassed = calculateDaysSinceStart();
-    const halfYears = roundDownToHalfYear(daysPassed);
     const yearsExpElement = document.getElementById("years-of-experience");
-    
-    if (yearsExpElement) {
-        yearsExpElement.textContent = `${halfYears}+`;
-    }
+    if (yearsExpElement) yearsExpElement.textContent = `${roundDownToHalfYear(daysPassed)}+`;
 });

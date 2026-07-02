@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>RootAccess // Digital Playground — Serious Code, Less serious person</title>
     <meta name="description" content="The official portfolio and blog of Jackstar (me). Mostly Python, some accidental front-end, and a whole lot of projects that (mostly) work.">
     <meta name="author" content="Jackstar">
     <meta name="keywords" content="Jackstar, RootAccess, Full-stack Developer, Python Backend, Portfolio, Austrian Tech Blog">
     <meta name="robots" content="index, follow">
     <meta name="copyright" content="© 2026 RootAccess. Developed with equal parts logic and luck.">
-
-     
-     
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+    <title>RootAccess // Digital Playground — Serious Code, Less serious person</title>
+    
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
 
+    <script src="{{ url_for('static', filename='js/global_preloader.js')}}"></script>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/font-awesome/reduced.all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
     {% include "snippets/navbar.jinja" %}

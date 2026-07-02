@@ -4,6 +4,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const captchaFeedback = document.getElementById("captcha-feedback");
     const refreshBtn = document.getElementById("refresh-captcha-btn");
     const form = document.querySelector("form");
+    const fileInput = document.getElementById("attachments");
+    const fileStatus = document.getElementById("file-status");
+    const selectedFilesList = document.getElementById("selected-files-list");
 
     let selectedIcon = null;
 
@@ -64,6 +67,40 @@ document.addEventListener("DOMContentLoaded", function() {
                 captchaFeedback.classList.add("error");
             }
         });
+    }
+
+    if (fileInput && fileStatus && selectedFilesList) {
+        const formatFileSize = function(bytes) {
+            if (!bytes) return "0 B";
+            const units = ["B", "KB", "MB", "GB"];
+            let size = bytes;
+            let index = 0;
+            while (size >= 1024 && index < units.length - 1) {
+                size /= 1024;
+                index += 1;
+            }
+            return `${size.toFixed(size >= 10 || index === 0 ? 0 : 1)} ${units[index]}`;
+        };
+
+        const renderSelectedFiles = function() {
+            const files = Array.from(fileInput.files || []);
+            if (!files.length) {
+                fileStatus.textContent = "Choose files...";
+                selectedFilesList.innerHTML = '<li class="selected-file-empty">No files selected yet.</li>';
+                return;
+            }
+
+            fileStatus.textContent = `${files.length} file${files.length > 1 ? "s" : ""} selected`;
+            selectedFilesList.innerHTML = files.map(file => `
+                <li class="selected-file-item">
+                    <span class="selected-file-name">${file.name}</span>
+                    <span class="selected-file-size">${formatFileSize(file.size)}</span>
+                </li>
+            `).join("");
+        };
+
+        fileInput.addEventListener("change", renderSelectedFiles);
+        renderSelectedFiles();
     }
 
     if (form) {

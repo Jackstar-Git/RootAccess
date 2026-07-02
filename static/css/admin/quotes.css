@@ -209,7 +209,7 @@
     font-family: inherit;
     font-size: 0.9rem;
     color: var(--font-color);
-    background-color: white;
+    background-color: var(--background-1);
     transition: border-color 0.2s ease;
 }
 
@@ -331,7 +331,7 @@
     font-family: inherit;
     font-size: 0.9rem;
     color: var(--font-color);
-    background-color: white;
+    background-color: var(--background-1);
 }
 
 #editForm .form-group input:focus-within,

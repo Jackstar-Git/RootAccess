@@ -3,20 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>About me // RootAccess — Jackstar's digital footprint</title>
     <meta name="description" content="A brief overview of how I spend my time trying to convince computers to work. Based in Austria, fueled by curiosity and caffeine.">
     <meta name="author" content="Jackstar">
-    <meta name="keywords" content="Jackstar, RootAccess, Austrian Developer, Python, Flask, Bento Grid Portfolio">
+    <meta name="keywords" content="Jackstar, RootAccess, Austrian Developer, Python, Flask, Portfolio">
     <meta name="robots" content="index, follow">
     <meta name="copyright" content="© 2026 RootAccess. All rights and wrongs reserved.">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+    <title>About me // RootAccess — Jackstar's digital footprint</title>
     
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+
+    <script src="{{ url_for('static', filename='js/global_preloader.js')}}"></script>
+    
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/font-awesome/reduced.all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
 
-    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
 </head>
 <body>
     {% include "snippets/navbar.jinja" %}
