@@ -91,23 +91,23 @@
     },
     "/about": {
         "url": "/about",
-        "visits": 31,
+        "visits": 74,
         "unique_visits": 1,
         "visitors": [
             "TW96aWxsYS81LjAg"
         ],
-        "total_time_spent": 9779.244,
-        "average_time_spent": 315.46
+        "total_time_spent": 14556.022999999997,
+        "average_time_spent": 196.7
     },
     "/": {
         "url": "/",
-        "visits": 39,
+        "visits": 71,
         "unique_visits": 1,
         "visitors": [
             "TW96aWxsYS81LjAg"
         ],
-        "total_time_spent": 7981.675999999998,
-        "average_time_spent": 204.66
+        "total_time_spent": 19785.41899999999,
+        "average_time_spent": 278.67
     },
     "/blog/f63e1c40": {
         "url": "/blog/f63e1c40",

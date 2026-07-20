@@ -45,11 +45,16 @@
                             <p>I tell computers what to do since <strong>July 2021</strong>. Sometimes they listen, mostly they don't. 🤷‍♂️</p>
                         </div>
 
-                        <div class="quote-box" aria-label="Quote of the day">
-                            <i class="fas fa-quote-left" aria-hidden="true"></i> <span>Quote of the day:</span>
-                            <p id="daily-quote">"{{ quote.text }}"</p>
-                            <cite>– {{ quote.author or "A wise person" }}</cite>
+                        <div class="quote-box" aria-label="Quote of the day" aria-describedby="tooltip">
+                            <span id="tooltip" role="tooltip" aria-hidden="true">
+                                <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                                {{ quote.note }}
+                            </span>
                             <i class="fas fa-quote-left" aria-hidden="true"></i>
+                            <span>Quote of the day:</span>
+                            <p id="daily-quote">"{{ quote.text }}"</p>
+                            <cite>– {{ quote.author or "A wise person" }}, {{ quote.year or "Unknown year" }}</cite>
+                            <i class="fas fa-quote-right" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
