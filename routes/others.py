@@ -42,32 +42,57 @@ def privacy() -> ResponseReturnValue:
 def sitemap() -> ResponseReturnValue:
     logger.info("Sitemap requested.")
     pages: List[Dict[str, Any]] = []
+    
+    now = datetime.now()
+    default_lastmod_str = now.date().isoformat()
+    
+    def parse_lastmod(val: Any) -> str:
+        if isinstance(val, (int, float)):
+            return datetime.fromtimestamp(val).date().isoformat()
+        if isinstance(val, datetime):
+            return val.date().isoformat()
+        return default_lastmod_str
 
-    default_lastmod = datetime.now()
-
-    excluded_paths = ["/admin", "/static", "/upload", "/download", "/google7825769118bcd42a.html", "/api", "/.well-known/discord"]
-
+    latest_blog_date = None
     for blog in blogs.query_blogs():
         blog_id = blog.get("id", 0)
         url = urllib.parse.urljoin(request.url_root, f"blog/{blog_id}")
+        
+        mod_date = parse_lastmod(blog.get("last_modified"))
+        if not latest_blog_date or mod_date > latest_blog_date:
+            latest_blog_date = mod_date
 
         pages.append({
             "loc": url,
-            "lastmod": datetime.fromtimestamp(blog.get("last_modified", default_lastmod)).date().isoformat(),
-            "changefreq": "yearly",
-            "priority": "0.5"
+            "lastmod": mod_date,
+            "changefreq": "monthly",  
+            "priority": "0.7"
         })
 
+    latest_project_date = None
     for project in projects.query_projects():
         project_id = project.get("id", 0)
         url = urllib.parse.urljoin(request.url_root, f"projects/{project_id}")
 
+        mod_date = parse_lastmod(project.get("last_updated"))
+        if not latest_project_date or mod_date > latest_project_date:
+            latest_project_date = mod_date
+
         pages.append({
             "loc": url,
-            "lastmod": datetime.fromtimestamp(project.get("last_updated", default_lastmod)).date().isoformat(),
-            "changefreq": "monthly",
-            "priority": "0.5"
+            "lastmod": mod_date,
+            "changefreq": "monthly",  
+            "priority": "0.8"
         })
+
+    excluded_paths = [
+        "/admin", 
+        "/static", 
+        "/upload", 
+        "/download", 
+        "/google7825769118bcd42a.html", 
+        "/.well-known"
+    ]
 
     for rule in current_app.url_map.iter_rules():
         if rule.methods and "GET" in rule.methods:
@@ -79,11 +104,39 @@ def sitemap() -> ResponseReturnValue:
 
             try:
                 url = url_for(rule.endpoint, _external=True)
+                
+                priority = "0.5"
+                changefreq = "monthly"
+                lastmod = default_lastmod_str
+
+                if rule.rule == "/":
+                    priority = "1.0"
+                    changefreq = "weekly"
+                    lastmod = max(filter(None, [latest_blog_date, latest_project_date, default_lastmod_str]))
+
+                elif rule.rule == "/blog":
+                    priority = "0.9"
+                    changefreq = "weekly"
+                    lastmod = latest_blog_date or default_lastmod_str
+
+                elif rule.rule == "/projects":
+                    priority = "0.9"
+                    changefreq = "monthly"
+                    lastmod = latest_project_date or default_lastmod_str
+
+                elif rule.rule == "/about":
+                    priority = "0.6"
+                    changefreq = "daily"
+                    lastmod = now.date().isoformat()
+                elif rule.rule.startswith("/api"):
+                    priority = "0.6"
+                    changefreq = "weekly"
+
                 pages.append({
                     "loc": url,
-                    "lastmod": default_lastmod.date().isoformat(),
-                    "changefreq": "monthly",
-                    "priority": "0.8" if rule.rule == "/" else "0.5"
+                    "lastmod": lastmod,
+                    "changefreq": changefreq,
+                    "priority": priority
                 })
             except Exception as e:
                 logger.warning(f"Could not generate URL for endpoint {rule.endpoint}: {e}")

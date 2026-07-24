@@ -171,6 +171,13 @@ a {
     color: inherit;
 }
 
+ul {
+    list-style-position: inside;
+    margin-bottom: var(--spacing-sm);
+    list-style-type: "\25CF\2004";
+}
+
+
 /* ===== TYPOGRAPHY ===== */
 h1 {
     font-size: var(--font-size-xxl);

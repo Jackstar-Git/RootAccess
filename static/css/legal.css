@@ -53,6 +53,10 @@
     color: var(--main-color-900);
 }
 
+.legal-container ul {
+    font-size: var(--font-size-md);
+}
+
 @media (max-width: 768px) {
     .legal-container {
         padding: var(--spacing-md);

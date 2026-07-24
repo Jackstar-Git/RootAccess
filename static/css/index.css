@@ -173,13 +173,13 @@
 .about-stats {
     display: grid;
     align-items: center;
-    grid-template-columns: repeat(2, minmax(min(100%, 200px), 0.5fr));
+    grid-template-columns: repeat(auto-fit, minmax(max(200px, 34%), 1fr));
     gap: clamp(1.5rem, 4vw, var(--spacing-3xl));
-    flex-wrap: wrap;
 }
 
 .stat-box {
     text-align: center;
+    width: 100%;
 }
 
 .stat-box .number {

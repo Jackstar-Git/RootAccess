@@ -3,7 +3,6 @@ import os
 import sys
 import threading
 import time
-from typing import Any, List
 
 import requests
 from dotenv import load_dotenv

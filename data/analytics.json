@@ -71,13 +71,13 @@
     },
     "/blog": {
         "url": "/blog",
-        "visits": 8,
+        "visits": 12,
         "unique_visits": 1,
         "visitors": [
             "TW96aWxsYS81LjAg"
         ],
-        "total_time_spent": 170.98100000000002,
-        "average_time_spent": 21.37
+        "total_time_spent": 4757.072,
+        "average_time_spent": 396.42
     },
     "/blog/03be5f48": {
         "url": "/blog/03be5f48",
@@ -91,23 +91,23 @@
     },
     "/about": {
         "url": "/about",
-        "visits": 74,
+        "visits": 75,
         "unique_visits": 1,
         "visitors": [
             "TW96aWxsYS81LjAg"
         ],
         "total_time_spent": 14556.022999999997,
-        "average_time_spent": 196.7
+        "average_time_spent": 194.08
     },
     "/": {
         "url": "/",
-        "visits": 71,
+        "visits": 84,
         "unique_visits": 1,
         "visitors": [
             "TW96aWxsYS81LjAg"
         ],
-        "total_time_spent": 19785.41899999999,
-        "average_time_spent": 278.67
+        "total_time_spent": 21833.923999999988,
+        "average_time_spent": 259.93
     },
     "/blog/f63e1c40": {
         "url": "/blog/f63e1c40",
@@ -131,13 +131,13 @@
     },
     "/blog/d0a30507": {
         "url": "/blog/d0a30507",
-        "visits": 3,
+        "visits": 4,
         "unique_visits": 1,
         "visitors": [
             "TW96aWxsYS81LjAg"
         ],
-        "total_time_spent": 395.76,
-        "average_time_spent": 131.92
+        "total_time_spent": 400.836,
+        "average_time_spent": 100.21
     },
     "/admin/projects/categories": {
         "url": "/admin/projects/categories",
@@ -168,5 +168,55 @@
         ],
         "total_time_spent": 7.661,
         "average_time_spent": 7.66
+    },
+    "/contact": {
+        "url": "/contact",
+        "visits": 6,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 4294.139999999999,
+        "average_time_spent": 715.69
+    },
+    "/imprint": {
+        "url": "/imprint",
+        "visits": 12,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 13125.751000000007,
+        "average_time_spent": 1093.81
+    },
+    "/privacy": {
+        "url": "/privacy",
+        "visits": 24,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 3653.9149999999995,
+        "average_time_spent": 152.25
+    },
+    "/blog/818fe5bb": {
+        "url": "/blog/818fe5bb",
+        "visits": 1,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 0.0,
+        "average_time_spent": 0.0
+    },
+    "/blog/63262d61": {
+        "url": "/blog/63262d61",
+        "visits": 2,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 1.528,
+        "average_time_spent": 0.76
     }
 }

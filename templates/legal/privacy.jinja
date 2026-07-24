@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
 <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
@@ -26,7 +25,7 @@
         <section class="legal-container">
             <header class="legal-header">
                 <h1>Privacy Policy</h1>
-                <p class="legal-subtitle">Last Updated: 15th of March, 2026</p>
+                <p class="legal-subtitle">Last Updated: 24th of July, 2026</p>
             </header>
 
             <div class="legal-content-card">
@@ -35,33 +34,70 @@
                     The protection of your personal data is of particular concern to me. I process your data exclusively on the basis of the legal provisions (GDPR/DSGVO, TKG 2021). In this privacy policy, I inform you about the most important aspects of data processing within the framework of my website.
                 </p>
 
+                <hr>
+                
                 <h3>2. Contacting Me</h3>
                 <p>
-                    If you contact me via the contact form at <a href="/contact" class="legal-link">/contact</a> or by e-mail, the data you provide (such as your name, e-mail address, and message content) will be stored for a period of six months for the purpose of processing the inquiry and in the event of follow-up questions. I do not pass on this data without your consent.
+                    If you contact me via the contact form at <a href="/contact" class="legal-link">/contact</a> or by e-mail, the following data provided by you may be stored for the purpose of processing your inquiry:
+                </p>
+                <ul>
+                    <li>Full Name</li>
+                    <li>Email address</li>
+                    <li>Subject and text of the message</li>
+                    <li>Uploaded File(s)</li>
+                </ul>
+                <p>
+                    Once the processing of your inquiry is complete, this data is deleted. Data may be shared with selected partners if necessary to process your specific request. I do not pass on this data for any other purpose without your consent.
                 </p>
 
-                <h3>3. Web Hosting & Infrastructure</h3>
+                <hr>
+
+                <h3>3. Access Permissions & Administration</h3>
+                <p>
+                    Internal access to stored personal data is strictly limited based on the principle of least privilege:
+                </p>
+                <ul>
+                    <li><strong>Co-Editors:</strong> Co-editors may receive access only to specific data required to perform their designated tasks, based on individual role-based permissions.</li>
+                    <li><strong>Server Administrators:</strong> System administrators technically have full access to storage files to maintain server integrity, stability, and security.</li>
+                </ul>
+
+                <hr>
+
+                <h3>4. Web Hosting & Infrastructure</h3>
                 <p>
                     My website is hosted on <strong>Render.com</strong> (Render Services, Inc.). When you visit this website, Render may process technical data (Log Files) such as your IP address, browser type, and time of access to ensure the security and stability of the service. This represents a legitimate interest according to Art. 6 Para. 1 lit. f GDPR. I have concluded a Data Processing Agreement (DPA) with the provider where necessary.
                 </p>
 
-                <h3>4. Cookies & Analytics</h3>
+                <hr>
+
+                <h3>5. Cookies & Local Storage</h3>
                 <p>
-                    <strong>Session Cookies:</strong> This website uses strictly necessary session cookies. These are required for technical functions like login management and are deleted when your browser session ends.
+                    <strong>Cookies:</strong> This website uses only essential cookies required for basic web functionality and preference management:
+                </p>
+                <ul>
+                    <li><code>session</code>: A Flask session cookie used to maintain your active browser session state and secure interactions.</li>
+                    <li><code>hasAcceptedCookies</code>: A cookie used to store your preference regarding cookie consent selection.</li>
+                </ul>
+                <p>
+                    <strong>Local Storage (Browser Storage):</strong> In addition to cookies, this website uses browser <code>localStorage</code> to store your UI theme settings (such as light or dark mode preferences). This data is stored locally on your device and is not transmitted to external servers.
                 </p>
                 <p>
                     <strong>First-Party Analytics:</strong> I use a self-developed, privacy-friendly analytics tool. This tool tracks page views and duration of stay. All data is <strong>fully anonymized</strong> before storage; no unique identifiers or full IP addresses are saved, meaning no personal reference can be established.
                 </p>
 
-                <h3>5. External Services & Web Fonts</h3>
+                <hr>
+
+                <h3>6. External Services & Web Fonts</h3>
                 <p>
-                    For the consistent and appealing display of content, this website uses <strong>Google Fonts</strong> and <strong>FontAwesome</strong>. 
+                    For the consistent and appealing display of icons, this website uses <strong>FontAwesome</strong>. 
                 </p>
                 <p>
-                    <em>Important Note:</em> When you access a page, your browser connects to the servers of Google (USA) and FontAwesome (USA) to load the fonts. In this process, your IP address is technically transferred to these providers. This processing is based on my legitimate interest in a professional online presentation (Art. 6 Para. 1 lit. f GDPR).
+                    <em>Important Note:</em> When you access a page, your browser connects to the servers of FontAwesome (USA) to load icons. In this process, your IP address is technically transferred to this provider. This processing is based on my legitimate interest in a professional online presentation (Art. 6 Para. 1 lit. f GDPR). Local fonts are loaded directly from this server without external tracking.
                 </p>
 
-                <h3>6. Your Rights</h3>
+                <hr>
+
+                <h3>7. Your Rights</h3>
                 <p>
                     You generally have the rights to information, correction, deletion, restriction, data portability, revocation, and objection. If you believe that the processing of your data violates data protection law or your data protection claims have been violated in any way, you can complain to the supervisory authority. In Austria, this is the <strong>Österreichische Datenschutzbehörde (DSB)</strong>.
                 </p>
