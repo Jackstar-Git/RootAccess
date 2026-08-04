@@ -19,7 +19,7 @@
     min-height: 200px; /* Give enough space for vertical bars */
 }
 
-.status-card:hover {
+.status-card:hover, .status-card:focus-within {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     background: rgba(255, 255, 255, 0.6);
@@ -89,7 +89,7 @@
     color: var(--font-color);
 }
 
-.quicklink-card:hover {
+.quicklink-card:hover, .quicklink-card:focus-within {
     transform: translateY(-5px);
     background: rgba(255, 255, 255, 0.5);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
@@ -180,7 +180,7 @@ progress::-moz-progress-bar {
     resize: vertical;
 }
 
-#noteTextarea:focus {
+#noteTextarea:focus-within {
     outline: none;
     border-color: var(--main-color-500);
     background: rgba(255, 255, 255, 0.3);
@@ -254,9 +254,7 @@ progress::-moz-progress-bar {
     color: var(--font-color);
     font-weight: var(--font-weight-bold);
 }
-
-/* Hover effect for future days */
-.calendar td:not(.empty-day):not(.past-day):not(#today):hover {
+.calendar td:not(.empty-day):not(.past-day):not(#today):hover, .calendar td:not(.empty-day):not(.past-day):not(#today):focus-within {
     background: rgba(255, 255, 255, 0.3);
     z-index: 1;
 }
@@ -284,7 +282,7 @@ progress::-moz-progress-bar {
     transition: all var(--transition-medium);
 }
 
-.nav-cell button:hover {
+.nav-cell button:hover, .nav-cell button:focus-within {
     background: rgba(255, 255, 255, 0.3);
     transform: scale(1.1);
 }
@@ -377,7 +375,7 @@ progress::-moz-progress-bar {
     transition: all var(--transition-medium);
 }
 
-.close-icon:hover {
+.close-icon:hover, .close-icon:focus-within {
     background: rgba(255, 0, 0, 0.1);
     color: var(--warning-color);
 }
@@ -413,8 +411,8 @@ progress::-moz-progress-bar {
     resize: vertical;
 }
 
-.input-group input:focus,
-.input-group textarea:focus {
+.input-group input:focus-within,
+.input-group textarea:focus-within {
     outline: none;
     border-color: var(--main-color-500);
     background: rgba(255, 255, 255, 0.3);
@@ -471,7 +469,7 @@ progress::-moz-progress-bar {
     border: none;
 }
 
-.delete-btn:hover {
+.delete-btn:hover, .delete-btn:focus-within {
     background: rgba(255, 0, 0, 0.2);
 }
 

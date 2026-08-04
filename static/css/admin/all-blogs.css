@@ -36,8 +36,8 @@
     transition: border-color 0.2s;
 }
 
-.blog-filters input:focus, 
-.blog-filters select:focus {
+.blog-filters input:focus-within, 
+.blog-filters select:focus-within {
     border-color: var(--main-color-500);
 }
 
@@ -65,7 +65,7 @@
     width: 100%;
 }
 
-.blog-item:hover {
+.blog-item:hover, .blog-item:focus-within {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transform: translateY(-2px);
 }
@@ -109,7 +109,7 @@
     color: inherit;
 }
 
-.blog-info a:hover {
+.blog-info a:hover, .blog-info a:focus-within {
     color: var(--main-color-500);
 }
 
@@ -155,7 +155,7 @@
     transition: opacity 0.2s;
 }
 
-.btn:hover {
+.btn:hover, .btn:focus-within {
     opacity: 0.85;
 }
 

@@ -162,7 +162,7 @@ input, textarea, button, select {
     border: 1px solid var(--background-3);
 }
 
-a, button:hover {
+a, button:hover, button:focus-within {
     cursor: pointer;
 }
 
@@ -291,7 +291,7 @@ h3 {
     transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover, .btn-secondary:focus-within {
     transform: translateY(-3px);
     box-shadow: 0 14px 30px rgba(37,161,167,0.14);
 }
@@ -318,7 +318,7 @@ h3 {
     transition: var(--transition-medium);
 }
 
-.filter-toggle-btn:hover {
+.filter-toggle-btn:hover, .filter-toggle-btn:focus-within {
     background: rgba(255, 255, 255, 1);
 }
 
@@ -375,12 +375,12 @@ h3 {
     transition: var(--transition-medium);
 }
 
-.filter-select-wrapper select:hover {
+.filter-select-wrapper select:hover, .filter-select-wrapper select:focus-within {
     background: var(--main-color-50);
     border-color: var(--main-color-200);
 }
 
-.filter-select-wrapper select:focus {
+.filter-select-wrapper select:focus-within {
     outline: none;
     border-color: var(--main-color-600);
     box-shadow: 0 0 0 2px rgba(37, 161, 167, 0.1);
@@ -430,7 +430,9 @@ h3 {
     color: var(--main-color-950);
 }
 
-.opt-btn:hover, .tag-link:hover {
+.opt-btn:hover, .opt-btn:focus-within,
+
+.opt-btn:hover, .opt-btn:focus-within {
     background: rgba(255, 255, 255, 0.9);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -467,12 +469,14 @@ h3 {
     transition: var(--transition-medium);
 }
 
-.filter-select:hover, .filter-input:hover {
+.filter-select:hover, .filter-select:focus-within,
+
+.filter-select:hover, .filter-select:focus-within {
     background: var(--main-color-50);
     border-color: var(--main-color-200);
 }
 
-.filter-select:focus, .filter-input:focus {
+.filter-select:focus-within, .filter-input:focus-within {
     outline: none;
     border-color: var(--main-color-600);
     box-shadow: 0 0 0 2px rgba(37, 161, 167, 0.1);
@@ -494,12 +498,12 @@ h3 {
     transition: var(--transition-medium);
 }
 
-.filter-date-range input[type="date"]:hover {
+.filter-date-range input[type="date"]:hover, .filter-date-range input[type="date"]:focus-within {
     background: var(--main-color-50);
     border-color: var(--main-color-200);
 }
 
-.filter-date-range input[type="date"]:focus {
+.filter-date-range input[type="date"]:focus-within {
     outline: none;
     border-color: var(--main-color-600);
     box-shadow: 0 0 0 2px rgba(37, 161, 167, 0.1);
@@ -564,7 +568,7 @@ h3 {
     user-select: none;
 }
 
-.filter-list-item:hover {
+.filter-list-item:hover, .filter-list-item:focus-within {
     background: rgba(37, 161, 167, 0.08);
 }
 
@@ -603,7 +607,7 @@ h3 {
     transition: background var(--transition-medium);
 }
 
-.filter-label-collapsible:hover {
+.filter-label-collapsible:hover, .filter-label-collapsible:focus-within {
     background: rgba(37, 161, 167, 0.05);
 }
 
@@ -647,7 +651,7 @@ h3 {
     margin-top: var(--spacing-md);
 }
 
-.clear-filters-btn:hover {
+.clear-filters-btn:hover, .clear-filters-btn:focus-within {
     background: var(--background-1);
     border-color: var(--main-color-600);
     color: var(--main-color-600);
@@ -677,7 +681,7 @@ h3 {
     font-size: var(--font-size-md);
 }
 
-.search-wrapper input:focus {
+.search-wrapper input:focus-within {
     border-color: var(--main-color-400);
     box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.05);
 }

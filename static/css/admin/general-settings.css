@@ -115,7 +115,7 @@ textarea {
     font-size: 0.9rem;
 }
 
-.toggle-password-btn:hover {
+.toggle-password-btn:hover, .toggle-password-btn:focus-within {
     background-color: var(--main-color-200);
     border-color: var(--main-color-500);
     color: var(--main-color-500);
@@ -169,7 +169,7 @@ textarea {
     color: white;
 }
 
-.btn-primary:hover {
+.btn-primary:hover, .btn-primary:focus-within {
     opacity: 0.85;
 }
 
@@ -179,7 +179,7 @@ textarea {
     border: 1px solid var(--background-2);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover, .btn-secondary:focus-within {
     background-color: var(--main-color-200);
     border-color: var(--main-color-500);
     color: var(--main-color-500);
@@ -190,7 +190,7 @@ textarea {
     color: white;
 }
 
-.btn-danger:hover {
+.btn-danger:hover, .btn-danger:focus-within {
     opacity: 0.85;
 }
 

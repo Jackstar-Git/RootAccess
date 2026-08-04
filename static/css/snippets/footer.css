@@ -38,7 +38,7 @@
   transition: var(--transition-medium);
 }
 
-.social-links a:hover {
+.social-links a:hover, .social-links a:focus-within {
   color: var(--main-color-500);
   transform: translateY(-3px);
 }
@@ -73,7 +73,7 @@
   transition: var(--transition-medium);
 }
 
-.footer-group a:hover {
+.footer-group a:hover, .footer-group a:focus-within {
   color: var(--main-color-600);
   padding-left: 5px;
 }
@@ -132,7 +132,7 @@
   transition: var(--transition-medium);
 }
 
-.btn-accept:hover {
+.btn-accept:hover, .btn-accept:focus-within {
   background: var(--main-color-700);
 }
 

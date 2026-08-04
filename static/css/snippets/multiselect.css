@@ -19,12 +19,12 @@
     transition: var(--transition-medium);
 }
 
-.multiselect-header:hover {
+.multiselect-header:hover, .multiselect-header:focus-within {
     background: var(--main-color-50);
     border-color: var(--main-color-200);
 }
 
-.multiselect-header:focus-within {
+.multiselect-header:focus-within-within {
     outline: none;
     border-color: var(--main-color-600);
     box-shadow: 0 0 0 2px rgba(37, 161, 167, 0.1);
@@ -54,7 +54,7 @@
     transition: opacity var(--transition-fast);
 }
 
-.multiselect-pill i:hover {
+.multiselect-pill i:hover, .multiselect-pill i:focus-within {
     opacity: 1;
     color: var(--warning-color);
 }
@@ -166,12 +166,12 @@
     transition: var(--transition-medium);
 }
 
-.native-multiselect:hover {
+.native-multiselect:hover, .native-multiselect:focus-within {
     background: var(--main-color-50);
     border-color: var(--main-color-200);
 }
 
-.native-multiselect:focus {
+.native-multiselect:focus-within {
     outline: none;
     border-color: var(--main-color-600);
     box-shadow: 0 0 0 2px rgba(37, 161, 167, 0.1);

@@ -67,7 +67,7 @@
     color: inherit;
 }
 
-.nav-links a:hover,
+.nav-links a:hover, .nav-links a:focus-within,
 .nav-links a.active {
     background: var(--main-color-50);
     color: var(--main-color-600);
@@ -130,7 +130,7 @@
     transition: var(--transition-medium);
 }
 
-.auth-icon:hover {
+.auth-icon:hover, .auth-icon:focus-within {
     color: var(--main-color-500);
 }
 
@@ -214,7 +214,7 @@
     transition: all var(--transition-medium);
 }
 
-.mobile-nav-links a:hover,
+.mobile-nav-links a:hover, .mobile-nav-links a:focus-within,
 .mobile-nav-links a.active {
     color: var(--main-color-500);
     background: var(--main-color-50);

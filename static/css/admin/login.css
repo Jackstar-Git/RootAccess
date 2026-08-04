@@ -64,7 +64,7 @@
     transition: 0.3s;
 }
 
-.input-wrapper input:focus {
+.input-wrapper input:focus-within {
     outline: none;
     border-color: var(--main-color-500);
     box-shadow: 0 0 0 4px var(--main-color-50);
@@ -97,7 +97,7 @@
     transition: 0.3s;
 }
 
-.login-btn:hover {
+.login-btn:hover, .login-btn:focus-within {
     background: var(--main-color-600);
     transform: translateY(-2px);
 }

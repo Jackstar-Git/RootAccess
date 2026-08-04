@@ -1,0 +1,14 @@
+# Security Contact
+Contact: mailto:jackstarhimself@gmail.com
+Contact: https://rootaccess.onrender.com/contact
+
+# Expiration date (RFC 9116 requires a future date, max 1 year out)
+Expires: 2027-08-01T00:00:00.000Z
+
+# Canonical location of this file
+Canonical: https://rootaccess.onrender.com/.well-known/security.txt
+
+# Supported Languages
+Preferred-Languages: en, de
+
+# Policy / Disclosure terms (coming soon)

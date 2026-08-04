@@ -36,7 +36,7 @@
     transition: transform var(--transition-medium), background var(--transition-medium);
 }
 
-.kpi-card:hover {
+.kpi-card:hover, .kpi-card:focus-within {
     transform: translateY(-5px);
     background: rgba(255, 255, 255, 0.5);
 }
@@ -127,7 +127,7 @@
     justify-content: center;
 }
 
-.btn-delete-row:hover {
+.btn-delete-row:hover, .btn-delete-row:focus-within {
     background: var(--warning-color);
     color: white;
     border-color: var(--warning-color);
@@ -168,7 +168,7 @@
     transition: border-color var(--transition-medium);
 }
 
-.ignore-input-group input:focus {
+.ignore-input-group input:focus-within {
     border-color: var(--main-color-500);
 }
 
@@ -186,7 +186,7 @@
     font-weight: var(--font-weight-medium);
 }
 
-.btn-add:hover {
+.btn-add:hover, .btn-add:focus-within {
     background: var(--main-color-500);
     color: white;
 }
@@ -206,7 +206,7 @@
     justify-content: center;
 }
 
-.btn-adjust-row:hover {
+.btn-adjust-row:hover, .btn-adjust-row:focus-within {
     background: var(--main-color-100);
     color: var(--main-color-700);
     border-color: var(--main-color-500);
@@ -280,7 +280,7 @@
     padding: var(--spacing-sm);
 }
 
-.modal-close-btn:hover {
+.modal-close-btn:hover, .modal-close-btn:focus-within {
     color: var(--font-color);
 }
 
@@ -325,7 +325,7 @@
     transition: border-color var(--transition-fast);
 }
 
-.input-with-buttons input:focus {
+.input-with-buttons input:focus-within {
     border-color: var(--main-color-500);
     background: rgba(0, 0, 0, 0.1);
 }
@@ -347,8 +347,9 @@
     justify-content: center;
 }
 
-.btn-decrease:hover,
-.btn-increase:hover {
+.btn-decrease:hover, .btn-decrease:focus-within,
+
+.btn-decrease:hover, .btn-decrease:focus-within {
     background: var(--main-color-500);
     color: white;
     border-color: var(--main-color-600);
@@ -404,7 +405,7 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.btn-cancel:hover {
+.btn-cancel:hover, .btn-cancel:focus-within {
     background: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.3);
 }
@@ -414,7 +415,7 @@
     color: white;
 }
 
-.btn-apply:hover {
+.btn-apply:hover, .btn-apply:focus-within {
     background: var(--main-color-600);
     box-shadow: 0 4px 12px rgba(37, 161, 167, 0.3);
 }

@@ -68,7 +68,7 @@ button.reset-value {
     cursor: pointer;
 }
 
-button:hover {
+button:hover, button:focus-within {
     background-color: var(--secondary-color);
 }
 

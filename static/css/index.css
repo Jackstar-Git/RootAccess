@@ -147,7 +147,7 @@
     flex-wrap: wrap;
 }
 
-.btn-primary:hover {
+.btn-primary:hover, .btn-primary:focus-within {
     background: var(--main-color-700);
     transform: translateY(-3px);
 }
@@ -238,7 +238,7 @@
         text-align: center;
     }
     
-    .blog-item:hover {
+    .blog-item:hover, .blog-item:focus-within {
         transform: translateY(-5px);
     }
 }

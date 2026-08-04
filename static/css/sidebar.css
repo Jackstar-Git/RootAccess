@@ -78,7 +78,7 @@
     transition: color 0.2s;
 }
 
-.collapse-btn:hover {
+.collapse-btn:hover, .collapse-btn:focus-within {
     color: var(--main-color-500);
 }
 
@@ -115,7 +115,7 @@
     font-size: 1.1rem;
 }
 
-.nav-item a:hover {
+.nav-item a:hover, .nav-item a:focus-within {
     background: var(--background-2);
     border-left-color: var(--main-color-500);
     color: var(--main-color-100);
@@ -136,7 +136,7 @@
     transition: color 0.2s;
 }
 
-.submenu a:hover {
+.submenu a:hover, .submenu a:focus-within {
     color: var(--main-color-300);
     background: rgba(255, 255, 255, 0.02);
 }
@@ -220,7 +220,7 @@
     flex-shrink: 0;
 }
 
-.mobile-menu-btn:hover {
+.mobile-menu-btn:hover, .mobile-menu-btn:focus-within {
     color: var(--main-color-500);
     opacity: 0.8;
 }

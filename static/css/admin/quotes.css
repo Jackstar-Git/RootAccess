@@ -52,7 +52,7 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.config-item:not(.add-new-item):hover {
+.config-item:not(.add-new-item):hover, .config-item:not(.add-new-item):focus-within {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transform: translateY(-2px);
 }
@@ -131,7 +131,7 @@
     color: var(--main-color-600);
 }
 
-.btn.edit-btn:hover {
+.btn.edit-btn:hover, .btn.edit-btn:focus-within {
     background-color: var(--main-color-200);
     color: var(--main-color-700);
 }
@@ -141,7 +141,7 @@
     color: #d32f2f;
 }
 
-.btn.delete-btn:hover {
+.btn.delete-btn:hover, .btn.delete-btn:focus-within {
     background-color: #fdd;
     color: #c62828;
 }
@@ -151,7 +151,7 @@
     color: white;
 }
 
-.btn-primary:hover {
+.btn-primary:hover, .btn-primary:focus-within {
     background-color: var(--main-color-600);
 }
 
@@ -160,7 +160,7 @@
     color: var(--font-color);
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover, .btn-secondary:focus-within {
     background-color: #ddd;
 }
 
@@ -213,8 +213,8 @@
     transition: border-color 0.2s ease;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.form-group input:focus-within,
+.form-group textarea:focus-within {
     outline: none;
     border-color: var(--main-color-400);
     box-shadow: 0 0 0 2px rgba(69, 170, 255, 0.1);
@@ -303,7 +303,7 @@
     transition: color 0.2s ease;
 }
 
-.modal-close:hover {
+.modal-close:hover, .modal-close:focus-within {
     color: var(--font-color);
 }
 
@@ -334,8 +334,8 @@
     background-color: white;
 }
 
-#editForm .form-group input:focus,
-#editForm .form-group textarea:focus {
+#editForm .form-group input:focus-within,
+#editForm .form-group textarea:focus-within {
     outline: none;
     border-color: var(--main-color-400);
     box-shadow: 0 0 0 2px rgba(69, 170, 255, 0.1);

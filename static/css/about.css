@@ -157,7 +157,7 @@
     pointer-events: none;
 }
 
-.quote-box:has(p:hover) span#tooltip {
+.quote-box:has(p:hover) span#tooltip, .quote-box:has(p:focus-within) span#tooltip {
     display: block;
 }
 
@@ -175,7 +175,7 @@
     text-decoration-thickness: 1px;
 }
 
-.quote-box p:hover {
+.quote-box p:hover, .quote-box p:focus-within {
     text-decoration-color: var(--main-color-600);
     text-decoration-thickness: 2px;
 }
@@ -314,7 +314,7 @@
     transition: var(--transition-fast);
 }
 
-.tool-item:hover img {
+.tool-item:hover img, .tool-item:focus-within img {
     filter: grayscale(0%);
     transform: translateY(-3px);
 }
@@ -369,7 +369,7 @@
     transition: box-shadow var(--transition-fast);
 }
 
-.discord-pill:hover {
+.discord-pill:hover, .discord-pill:focus-within {
     box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
 }
 

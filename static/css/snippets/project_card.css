@@ -12,7 +12,7 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.project-item-card:hover {
+.project-item-card:hover, .project-item-card:focus-within {
     position: relative;
     z-index: 10;
     background: rgba(37, 161, 167, 0.02);
@@ -35,7 +35,7 @@
     transition: transform 0.6s ease;
 }
 
-.project-item-card:hover .project-card-visual img {
+.project-item-card:hover .project-card-visual img, .project-item-card:focus-within .project-card-visual img {
     transform: scale(1.08);
 }
 
@@ -133,7 +133,7 @@
     cursor: pointer;
 }
 
-.project-item-card:hover .project-card-header h3 {
+.project-item-card:hover .project-card-header h3, .project-item-card:focus-within .project-card-header h3 {
     color: var(--main-color-600);
 }
 
@@ -146,7 +146,7 @@
     transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.project-item-card:hover .title-divider {
+.project-item-card:hover .title-divider, .project-item-card:focus-within .title-divider {
     width: 100%;
 }
 
@@ -163,7 +163,7 @@
     transition: all 0.3s ease;
 }
 
-.project-item-card:hover .tech-tag {
+.project-item-card:hover .tech-tag, .project-item-card:focus-within .tech-tag {
     background: var(--main-color-600);
     color: white;
 }

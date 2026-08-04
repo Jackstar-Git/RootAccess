@@ -4,15 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
 
-<link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/font-awesome/reduced.all.css') }}">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/legal.css') }}">
     <title>Privacy Policy</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
@@ -25,7 +23,7 @@
         <section class="legal-container">
             <header class="legal-header">
                 <h1>Privacy Policy</h1>
-                <p class="legal-subtitle">Last Updated: 24th of July, 2026</p>
+                <p class="legal-subtitle">Last Updated: 4th of August, 2026</p>
             </header>
 
             <div class="legal-content-card">
@@ -87,12 +85,12 @@
 
                 <hr>
 
-                <h3>6. External Services & Web Fonts</h3>
+                <h3>6. Local Web Fonts & Icons</h3>
                 <p>
-                    For the consistent and appealing display of icons, this website uses <strong>FontAwesome</strong>. 
+                    For the consistent and appealing display of typography and icons, this website uses <strong>FontAwesome</strong> alongside local web fonts (such as Montserrat). 
                 </p>
                 <p>
-                    <em>Important Note:</em> When you access a page, your browser connects to the servers of FontAwesome (USA) to load icons. In this process, your IP address is technically transferred to this provider. This processing is based on my legitimate interest in a professional online presentation (Art. 6 Para. 1 lit. f GDPR). Local fonts are loaded directly from this server without external tracking.
+                    All icon assets and web fonts are <strong>hosted locally</strong> on our own web server infrastructure. When you access a page, your browser loads these assets directly from our server. No connection is established to external third-party servers, and no personal data (such as your IP address) is transmitted to external font or icon providers.
                 </p>
 
                 <hr>

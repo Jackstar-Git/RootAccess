@@ -82,9 +82,9 @@ input, select, textarea {
     transition: border var(--transition-fast);
 }
 
-input:focus,
-select:focus,
-textarea:focus {
+input:focus-within,
+select:focus-within,
+textarea:focus-within {
     border-color: var(--main-color-500);
 }
 
@@ -111,7 +111,7 @@ textarea:focus {
     transition: var(--transition-fast);
 }
 
-.file-label:hover {
+.file-label:hover, .file-label:focus-within {
     background: var(--main-color-50);
     border-color: var(--main-color-400);
 }
@@ -129,7 +129,7 @@ textarea:focus {
     transition: var(--transition-medium);
 }
 
-.btn-submit:hover {
+.btn-submit:hover, .btn-submit:focus-within {
     background: var(--main-color-600);
     transform: translateY(-2px);
 }
@@ -189,7 +189,7 @@ textarea:focus {
     transition: all var(--transition-medium);
 }
 
-.captcha-icon-btn:hover {
+.captcha-icon-btn:hover, .captcha-icon-btn:focus-within {
     border-color: var(--main-color-400);
     background: var(--main-color-50);
     transform: translateY(-4px);
@@ -243,7 +243,7 @@ textarea:focus {
     transition: all var(--transition-fast);
 }
 
-.btn-refresh-captcha:hover {
+.btn-refresh-captcha:hover, .btn-refresh-captcha:focus-within {
     background: var(--main-color-50);
     border-color: var(--main-color-500);
     color: var(--main-color-700);

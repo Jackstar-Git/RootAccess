@@ -64,7 +64,7 @@
     margin-bottom: 15px;
 }
 
-.modern-input:focus {
+.modern-input:focus-within {
     outline: none;
     border-color: var(--main-color-400);
     box-shadow: 0 0 0 3px rgba(37, 161, 167, 0.1);
@@ -93,7 +93,7 @@
     font-family: inherit;
 }
 
-.modern-textarea:focus {
+.modern-textarea:focus-within {
     outline: none;
     border-color: var(--main-color-400);
     box-shadow: 0 0 0 3px rgba(37, 161, 167, 0.1);
@@ -111,7 +111,7 @@
     margin-bottom: 15px;
 }
 
-.upload-container:hover {
+.upload-container:hover, .upload-container:focus-within {
     border-color: var(--main-color-500);
     background: rgba(37, 161, 167, 0.05);
 }
@@ -168,7 +168,7 @@
     transition: background var(--transition-fast);
 }
 
-.permission-checkbox:hover {
+.permission-checkbox:hover, .permission-checkbox:focus-within {
     background: var(--background-1);
 }
 
@@ -211,7 +211,7 @@
     cursor: pointer;
 }
 
-.btn-discard:hover {
+.btn-discard:hover, .btn-discard:focus-within {
     background: rgba(255, 0, 0, 0.05);
 }
 
@@ -227,7 +227,7 @@
     width: 100%;
 }
 
-.btn-primary:hover {
+.btn-primary:hover, .btn-primary:focus-within {
     background-color: var(--main-color-600);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(37, 161, 167, 0.2);

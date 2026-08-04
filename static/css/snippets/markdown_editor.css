@@ -40,14 +40,16 @@
     transition: all var(--transition-fast);
 }
 
-.markdown-editor .toolbar button:hover,
-.markdown-editor .toolbar select:hover {
+.markdown-editor .toolbar button:hover, .markdown-editor .toolbar button:focus-within,
+
+.markdown-editor .toolbar button:hover, .markdown-editor .toolbar button:focus-within {
     background: var(--main-color-50);
     color: var(--main-color-600);
 }
 
-[data-theme="dark"] .markdown-editor .toolbar button:hover,
-[data-theme="dark"] .markdown-editor .toolbar select:hover {
+[data-theme="dark"] .markdown-editor .toolbar button:hover, [data-theme="dark"] .markdown-editor .toolbar button:focus-within,
+
+[data-theme="dark"] .markdown-editor .toolbar button:hover, [data-theme="dark"] .markdown-editor .toolbar button:focus-within {
     background: var(--main-color-900);
 }
 
@@ -76,7 +78,7 @@
     resize: vertical;
 }
 
-.markdown-editor textarea:focus {
+.markdown-editor textarea:focus-within {
     outline: none;
     border-color: var(--main-color-400);
     box-shadow: 0 0 0 3px rgba(37, 161, 167, 0.1);

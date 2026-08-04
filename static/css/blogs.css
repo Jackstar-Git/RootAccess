@@ -59,7 +59,7 @@
     transition: all var(--transition-medium);
 }
 
-.btn-load-more:hover {
+.btn-load-more:hover, .btn-load-more:focus-within {
     background: var(--main-color-600);
     color: white;
     transform: translateY(-2px);
@@ -70,7 +70,7 @@
     transition: transform var(--transition-medium);
 }
 
-.btn-load-more:hover i {
+.btn-load-more:hover i, .btn-load-more:focus-within i {
     transform: translateY(2px);
 }
 
@@ -116,7 +116,7 @@
     border: 1px solid var(--main-color-600);
 }
 
-.clear-filters-btn:hover {
+.clear-filters-btn:hover, .clear-filters-btn:focus-within {
     background: var(--main-color-50);
 }
 
@@ -125,7 +125,7 @@
     color: white;
 }
 
-.apply-filters-btn:hover {
+.apply-filters-btn:hover, .apply-filters-btn:focus-within {
     background: var(--main-color-700);
 }
 

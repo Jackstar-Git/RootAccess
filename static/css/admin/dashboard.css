@@ -37,7 +37,7 @@
     border-bottom: 1px solid var(--background-2);
     transition: background 0.2s;
 }
-.list-item:hover { background: var(--main-color-50); }
+.list-item:hover, .list-item:focus-within { background: var(--main-color-50); }
 
 .item-icon { margin-right: 15px; color: var(--main-color-400); font-size: 1.2rem; }
 .item-details { flex-grow: 1; }

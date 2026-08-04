@@ -79,8 +79,9 @@
     transition: 0.3s;
 }
 
-.error-primary-btn:hover,
-.error-secondary-btn:hover {
+.error-primary-btn:hover, .error-primary-btn:focus-within,
+
+.error-primary-btn:hover, .error-primary-btn:focus-within {
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }

@@ -96,6 +96,6 @@ hr {
     transition: border-color 0.3s;
 }
 
-.legal-link:hover {
+.legal-link:hover, .legal-link:focus-within {
     border-bottom-color: var(--main-color-600);
 }

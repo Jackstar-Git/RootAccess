@@ -62,7 +62,7 @@
     border: 1px solid var(--main-color-600);
 }
 
-.clear-filters-btn:hover {
+.clear-filters-btn:hover, .clear-filters-btn:focus-within {
     background: var(--main-color-50);
 }
 
@@ -71,7 +71,7 @@
     color: white;
 }
 
-.apply-filters-btn:hover {
+.apply-filters-btn:hover, .apply-filters-btn:focus-within {
     background: var(--main-color-700);
 }
 

@@ -49,12 +49,16 @@
     transition: all var(--transition-fast);
 }
 
-.toolbar button:hover, .toolbar select:hover {
+.toolbar button:hover, .toolbar button:focus-within,
+
+.toolbar button:hover, .toolbar button:focus-within {
     background: var(--main-color-50);
     color: var(--main-color-600);
 }
 
-[data-theme="dark"] .toolbar button:hover, [data-theme="dark"] .toolbar select:hover {
+[data-theme="dark"] .toolbar button:hover, [data-theme="dark"] .toolbar button:focus-within,
+
+[data-theme="dark"] .toolbar button:hover, [data-theme="dark"] .toolbar button:focus-within {
     background: var(--main-color-900);
 }
 
@@ -108,7 +112,7 @@
     transition: var(--transition-medium);
 }
 
-.modern-input:focus, .dynamic-input input:focus {
+.modern-input:focus-within, .dynamic-input input:focus-within {
     outline: none;
     border-color: var(--main-color-400);
     box-shadow: 0 0 0 3px rgba(37, 161, 167, 0.1);
@@ -133,7 +137,7 @@
     transition: all var(--transition-medium);
 }
 
-.upload-container:hover {
+.upload-container:hover, .upload-container:focus-within {
     border-color: var(--main-color-500);
     background: rgba(37, 161, 167, 0.05);
 }
@@ -162,7 +166,7 @@
     box-shadow: 0 4px 15px rgba(37, 161, 167, 0.2);
 }
 
-.btn-publish:hover {
+.btn-publish:hover, .btn-publish:focus-within {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(37, 161, 167, 0.3);
 }
@@ -179,7 +183,7 @@
     transition: var(--transition-fast);
 }
 
-.btn-add:hover {
+.btn-add:hover, .btn-add:focus-within {
     color: var(--main-color-700);
 }
 
@@ -197,7 +201,7 @@
     transition: var(--transition-fast);
 }
 
-.btn-remove-author:hover {
+.btn-remove-author:hover, .btn-remove-author:focus-within {
     background: var(--warning-color);
     color: white;
 }
@@ -260,7 +264,7 @@
     transition: var(--transition-medium);
 }
 
-.btn-discard:hover {
+.btn-discard:hover, .btn-discard:focus-within {
     background: rgba(255, 0, 0, 0.05);
 }
 
@@ -288,7 +292,7 @@
     transition: var(--transition-medium);
 }
 
-.title-input:focus {
+.title-input:focus-within {
     border-bottom: 2px solid var(--main-color-400);
 }
 

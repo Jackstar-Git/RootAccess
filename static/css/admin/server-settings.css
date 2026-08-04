@@ -84,7 +84,7 @@ textarea {
     transition: opacity 0.2s;
 }
 
-.btn-primary:hover {
+.btn-primary:hover, .btn-primary:focus-within {
     opacity: 0.85;
 }
 
@@ -99,7 +99,7 @@ textarea {
     transition: opacity 0.2s;
 }
 
-.btn-danger:hover {
+.btn-danger:hover, .btn-danger:focus-within {
     opacity: 0.85;
 }
 

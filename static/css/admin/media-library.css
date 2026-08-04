@@ -39,7 +39,7 @@
     transition: all var(--transition-medium);
 }
 
-.toolbar-btn:hover:not(.danger-btn) {
+.toolbar-btn:hover:not(.danger-btn), .toolbar-btn:focus-within:not(.danger-btn) {
     background-color: var(--main-color-500);
     color: var(--secondary-font-color);
 }
@@ -54,7 +54,7 @@
     color: var(--secondary-font-color);
 }
 
-.danger-btn:hover {
+.danger-btn:hover, .danger-btn:focus-within {
     background-color: color-mix(in srgb, var(--warning-color) 80%, black);
 }
 
@@ -66,7 +66,7 @@
     background-color: var(--main-color-100);
 }
 
-.icon-btn:hover {
+.icon-btn:hover, .icon-btn:focus-within {
     background-color: var(--main-color-300);
 }
 
@@ -96,7 +96,7 @@
     transition: all var(--transition-medium);
 }
 
-.address-bar:focus {
+.address-bar:focus-within {
     border-color: var(--main-color-500);
     box-shadow: 0 0 0 2px rgba(var(--main-color-rgb), 0.2);
 }
@@ -113,7 +113,7 @@
     transition: all var(--transition-medium);
 }
 
-.toolbar-select:focus {
+.toolbar-select:focus-within {
     border-color: var(--main-color-500);
     box-shadow: 0 0 0 2px rgba(var(--main-color-rgb), 0.2);
 }
@@ -156,7 +156,7 @@
     border-bottom: none;
 }
 
-.file-item:hover {
+.file-item:hover, .file-item:focus-within {
     background-color: var(--main-color-50);
     transform: translateX(4px);
 }
@@ -195,11 +195,11 @@
     transition: color var(--transition-medium);
 }
 
-.file-name-link:hover {
+.file-name-link:hover, .file-name-link:focus-within {
     color: var(--main-color-500);
 }
 
-.file-name:hover {
+.file-name:hover, .file-name:focus-within {
     color: var(--main-color-600);
 }
 
@@ -321,7 +321,7 @@
     color: var(--secondary-font-color);
 }
 
-[data-theme="dark"] .file-item:hover {
+[data-theme="dark"] .file-item:hover, [data-theme="dark"] .file-item:focus-within {
     background-color: rgba(255, 255, 255, 0.05);
 }
 
@@ -363,7 +363,7 @@
     border-radius: var(--radius-sm);
 }
 
-.file-list::-webkit-scrollbar-thumb:hover {
+.file-list::-webkit-scrollbar-thumb:hover, .file-list::-webkit-scrollbar-thumb:focus-within {
     background: var(--main-color-500);
 }
 

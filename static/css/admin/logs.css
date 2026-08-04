@@ -33,7 +33,7 @@
     transition: border-color 0.2s;
 }
 
-.filter-bar select:focus {
+.filter-bar select:focus-within {
     border-color: var(--main-color-500);
 }
 
@@ -52,7 +52,7 @@
     color: white;
 }
 
-.btn-primary:hover {
+.btn-primary:hover, .btn-primary:focus-within {
     opacity: 0.9;
 }
 
@@ -61,7 +61,7 @@
     color: white;
 }
 
-.btn-danger:hover {
+.btn-danger:hover, .btn-danger:focus-within {
     opacity: 0.85;
 }
 
@@ -87,7 +87,7 @@
 #logsOutput::-webkit-scrollbar { width: 10px; }
 #logsOutput::-webkit-scrollbar-track { background: #0f172a; }
 #logsOutput::-webkit-scrollbar-thumb { background: #475569; border-radius: 5px; }
-#logsOutput::-webkit-scrollbar-thumb:hover { background: #64748b; }
+#logsOutput::-webkit-scrollbar-thumb:hover, #logsOutput::-webkit-scrollbar-thumb:focus-within { background: #64748b; }
 
 .log-line {
     padding: 2px 0;
@@ -133,7 +133,7 @@
     width: 150px;
 }
 
-.console-bar input:focus {
+.console-bar input:focus-within {
     border-color: #38bdf8;
 }
 
@@ -149,7 +149,7 @@
     font-family: 'Consolas', 'Courier New', Courier, monospace;
 }
 
-.btn-console:hover {
+.btn-console:hover, .btn-console:focus-within {
     background-color: #059669;
 }
 

@@ -10,9 +10,9 @@
     <meta name="keywords" content="Jackstar, RootAccess, Austrian Developer, Python, Flask, Bento Grid Portfolio">
     <meta name="robots" content="index, follow">
     <meta name="copyright" content="© 2026 RootAccess. All rights and wrongs reserved.">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
     <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/font-awesome/reduced.all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
 
@@ -52,7 +52,7 @@
                             </span>
                             <i class="fas fa-quote-left" aria-hidden="true"></i>
                             <span>Quote of the day:</span>
-                            <p id="daily-quote">"{{ quote.text }}"</p>
+                            <p id="daily-quote" tabindex="0">"{{ quote.text }}"</p>
                             <cite>– {{ quote.author or "Unknown author" }}, {{ quote.year or "Unknown year" }}</cite>
                             <i class="fas fa-quote-right" aria-hidden="true"></i>
                         </div>

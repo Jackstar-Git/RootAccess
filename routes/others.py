@@ -151,12 +151,17 @@ def sitemap() -> ResponseReturnValue:
 def robots() -> ResponseReturnValue:
     return send_from_directory("./", "robots.txt")
 
-# ========== GOOGLE VERIFICATION ROUTE ==========
+# ========== .WELL-KNOWN / VERIFICATION ROUTES ==========
 @app.route("/google7825769118bcd42a.html")
 def google_verification() -> ResponseReturnValue:
-    return send_from_directory("./","google7825769118bcd42a.html")
+    return send_from_directory("./.well-known","google7825769118bcd42a.html")
 
 @app.route("/.well-known/discord")
 def discord_verification() -> ResponseReturnValue:
-    return send_from_directory("./", "discord-verification.txt")
+    return send_from_directory("./.well-known", "discord-verification.txt", mimetype="text/plain")
+
+@app.route("/.well-known/security.txt")
+@app.route("/security.txt")
+def security_txt():
+    return send_from_directory("./.well-known", "security.txt", mimetype='text/plain')
 

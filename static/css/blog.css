@@ -100,7 +100,7 @@
     margin-right: 0;
 }
 
-.avatar-img:hover {
+.avatar-img:hover, .avatar-img:focus-within {
     transform: translateY(-3px);
     z-index: 10;
 }
@@ -129,7 +129,7 @@
     cursor: pointer;
 }
 
-.action-icons i:hover {
+.action-icons i:hover, .action-icons i:focus-within {
     color: var(--main-color-600);
 }
 
@@ -252,7 +252,7 @@
     margin-right: 2px;
 }
 
-.modern-tag:hover {
+.modern-tag:hover, .modern-tag:focus-within {
     background: var(--main-color-600);
     color: white;
     border-color: var(--main-color-600);
@@ -260,7 +260,7 @@
     box-shadow: 0 8px 20px rgba(30, 140, 148, 0.2);
 }
 
-.modern-tag:hover .tag-hash {
+.modern-tag:hover .tag-hash, .modern-tag:focus-within .tag-hash {
     color: var(--background-1);
 }
 
@@ -293,7 +293,7 @@
     display: block;
 }
 
-.related-card-glass:hover {
+.related-card-glass:hover, .related-card-glass:focus-within {
     transform: translateY(-8px);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
 }

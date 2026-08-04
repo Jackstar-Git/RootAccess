@@ -52,7 +52,7 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.config-item:not(.add-new-item):hover {
+.config-item:not(.add-new-item):hover, .config-item:not(.add-new-item):focus-within {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transform: translateY(-2px);
 }
@@ -110,7 +110,7 @@
     transition: opacity 0.2s;
 }
 
-.btn:hover {
+.btn:hover, .btn:focus-within {
     opacity: 0.85;
 }
 
@@ -155,7 +155,7 @@
     transition: border-color 0.2s;
 }
 
-.inline-form input:focus {
+.inline-form input:focus-within {
     border-color: var(--main-color-500);
 }
 

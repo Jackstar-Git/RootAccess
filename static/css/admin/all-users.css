@@ -38,8 +38,8 @@
 }
 
 /* Focus state for all filter inputs and selects */
-.user-filters input:focus,
-.user-filters select:focus {
+.user-filters input:focus-within,
+.user-filters select:focus-within {
     border-color: var(--main-color-500);
 }
 
@@ -73,7 +73,7 @@
     gap: 15px;
 }
 
-.user-item:hover {
+.user-item:hover, .user-item:focus-within {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transform: translateY(-2px);
 }
@@ -125,7 +125,7 @@
     color: inherit;
 }
 
-.user-info a:hover {
+.user-info a:hover, .user-info a:focus-within {
     color: var(--main-color-500);
 }
 
@@ -195,7 +195,7 @@
     transition: opacity 0.2s;
 }
 
-.btn:hover {
+.btn:hover, .btn:focus-within {
     opacity: 0.85;
 }
 
