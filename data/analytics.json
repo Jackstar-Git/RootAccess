@@ -101,13 +101,13 @@
     },
     "/": {
         "url": "/",
-        "visits": 92,
+        "visits": 96,
         "unique_visits": 1,
         "visitors": [
             "TW96aWxsYS81LjAg"
         ],
-        "total_time_spent": 23553.24999999999,
-        "average_time_spent": 256.01
+        "total_time_spent": 23703.55799999999,
+        "average_time_spent": 246.91
     },
     "/blog/f63e1c40": {
         "url": "/blog/f63e1c40",
