@@ -126,7 +126,9 @@ if (document.readyState === "loading") {
         }
     };
 
-    sendData(false);
+    window.addEventListener("load", () => {
+        sendData(false);
+    });
 
     document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "hidden") {
