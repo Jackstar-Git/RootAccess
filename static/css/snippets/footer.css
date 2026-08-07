@@ -110,15 +110,10 @@
   padding: var(--spacing-md) var(--spacing-2xl);
   position: fixed;
   transform: translateX(-50%);
-  transition: transform var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1);
+  /*transition: transform var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1);*/
   width: 90%;
   z-index: 9999;
   -webkit-backdrop-filter: blur(20px);
-}
-
-[data-theme="dark"] .privacy-banner {
-  background: rgba(30, 30, 30, 0.7);
-  border: 1px solid rgba(80, 80, 80, 0.4);
 }
 
 .btn-accept {

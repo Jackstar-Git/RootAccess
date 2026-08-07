@@ -32,8 +32,8 @@
             <div class="blog-filters">
                 <form class="search-bar" method="GET" action="/admin/blogs/all">
                     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ generate_token() }}">
-                    <input type="hidden" name="category" value="{{ query_params.get('category', 'all') }}">
-                    <input type="text" name="search" id="search-input" placeholder="Search by title or author..." value="{{ query_params.get('search', '') }}">
+                    <input type="hidden" name="category" value="{{ request.args.get('category', 'all') }}">
+                    <input type="text" name="search" id="search-input" placeholder="Search by title or author..." value="{{ request.args.get('search', '') }}">
                     <button type="submit" style="display: none;">Search</button>
                 </form>
 
@@ -51,7 +51,7 @@
                     <select id="category-filter" onchange="window.location.href='?topic=' + this.value">
                         <option value="all">All Topics</option>
                         {% for topic in settings.topics %}
-                            <option {% if query_params.get('topic') == topic %}selected{% endif %} value="{{ topic }}">{{ topic }}</option>
+                            <option {% if request.args.get('topic') == topic %}selected{% endif %} value="{{ topic }}">{{ topic }}</option>
                         {% endfor %}
                     </select>
                 </div>

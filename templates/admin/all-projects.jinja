@@ -33,8 +33,8 @@
             <div class="project-filters">
                 <form class="search-bar" method="GET" action="/admin/projects/all">
                     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ generate_token() }}">
-                    <input type="hidden" name="topic" value="{{ query_params.get('topic', 'all') }}">
-                    <input type="text" name="search" id="search-input" placeholder="Search by title or tech..." value="{{ query_params.get('search', '') }}">
+                    <input type="hidden" name="topic" value="{{ request.args.get('topic', 'all') }}">
+                    <input type="text" name="search" id="search-input" placeholder="Search by title or tech..." value="{{ request.args.get('search', '') }}">
                     <button type="submit" style="display: none;">Search</button>
                 </form>
 
@@ -51,13 +51,13 @@
                 <div class="filter-menu">
                     <select id="topic-filter" onchange="window.location.href='?topic=' + this.value">
                         <option value="all">All Topics</option>
-                        <option {% if query_params.get('topic') == 'Personal' %}selected{% endif %} value="Personal">Personal</option>
-                        <option {% if query_params.get('topic') == 'Productivity' %}selected{% endif %} value="Productivity">Productivity</option>
-                        <option {% if query_params.get('topic') == 'E-commerce' %}selected{% endif %} value="E-commerce">E-commerce</option>
-                        <option {% if query_params.get('topic') == 'UI/UX' %}selected{% endif %} value="UI/UX">UI/UX</option>
-                        <option {% if query_params.get('topic') == 'Game Development' %}selected{% endif %} value="Game Development">Game Development</option>
-                        <option {% if query_params.get('topic') == 'Utility' %}selected{% endif %} value="Utility">Utility</option>
-                        <option {% if query_params.get('topic') == 'Desktop App' %}selected{% endif %} value="Desktop App">Desktop App</option>
+                        <option {% if request.args.get('topic') == 'Personal' %}selected{% endif %} value="Personal">Personal</option>
+                        <option {% if request.args.get('topic') == 'Productivity' %}selected{% endif %} value="Productivity">Productivity</option>
+                        <option {% if request.args.get('topic') == 'E-commerce' %}selected{% endif %} value="E-commerce">E-commerce</option>
+                        <option {% if request.args.get('topic') == 'UI/UX' %}selected{% endif %} value="UI/UX">UI/UX</option>
+                        <option {% if request.args.get('topic') == 'Game Development' %}selected{% endif %} value="Game Development">Game Development</option>
+                        <option {% if request.args.get('topic') == 'Utility' %}selected{% endif %} value="Utility">Utility</option>
+                        <option {% if request.args.get('topic') == 'Desktop App' %}selected{% endif %} value="Desktop App">Desktop App</option>
                     </select>
                 </div>
             </div>

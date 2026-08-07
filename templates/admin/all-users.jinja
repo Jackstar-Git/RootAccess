@@ -32,26 +32,26 @@
             <div class="user-filters">
                 <form class="search-bar" method="GET" action="/admin/users/all">
                     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ generate_token() }}">
-                    <input type="hidden" name="hierarchy" value="{{ query_params.get('hierarchy', '') }}">
-                    <input type="text" name="search" id="search-input" placeholder="Search by username..." value="{{ query_params.get('search', '') }}">
+                    <input type="hidden" name="hierarchy" value="{{ request.args.get('hierarchy', '') }}">
+                    <input type="text" name="search" id="search-input" placeholder="Search by username..." value="{{ request.args.get('search', '') }}">
                     <button type="submit" style="display: none;">Search</button>
                 </form>
 
                 <div class="sort-options">
                     <select id="sort-options" onchange="updateSort()">
                         <option value="">Sort by</option>
-                        <option value="name-asc" {% if query_params.get('sort') == 'name-asc' %}selected{% endif %}>Username: A-Z</option>
-                        <option value="name-desc" {% if query_params.get('sort') == 'name-desc' %}selected{% endif %}>Username: Z-A</option>
-                        <option value="hierarchy-asc" {% if query_params.get('sort') == 'hierarchy-asc' %}selected{% endif %}>Hierarchy: Low to High</option>
-                        <option value="hierarchy-desc" {% if query_params.get('sort') == 'hierarchy-desc' %}selected{% endif %}>Hierarchy: High to Low</option>
-                        <option value="created-asc" {% if query_params.get('sort') == 'created-asc' %}selected{% endif %}>Created: Oldest First</option>
-                        <option value="created-desc" {% if query_params.get('sort') == 'created-desc' %}selected{% endif %}>Created: Newest First</option>
+                        <option value="name-asc" {% if request.args.get('sort') == 'name-asc' %}selected{% endif %}>Username: A-Z</option>
+                        <option value="name-desc" {% if request.args.get('sort') == 'name-desc' %}selected{% endif %}>Username: Z-A</option>
+                        <option value="hierarchy-asc" {% if request.args.get('sort') == 'hierarchy-asc' %}selected{% endif %}>Hierarchy: Low to High</option>
+                        <option value="hierarchy-desc" {% if request.args.get('sort') == 'hierarchy-desc' %}selected{% endif %}>Hierarchy: High to Low</option>
+                        <option value="created-asc" {% if request.args.get('sort') == 'created-asc' %}selected{% endif %}>Created: Oldest First</option>
+                        <option value="created-desc" {% if request.args.get('sort') == 'created-desc' %}selected{% endif %}>Created: Newest First</option>
                     </select>
                 </div>
 
                 <div class="filter-menu">
                     <input type="text" id="hierarchy-filter" placeholder="Filter by level (e.g., 1, 0-2)..."
-                           value="{{ query_params.get('hierarchy', '') }}" onchange="updateHierarchyFilter()">
+                           value="{{ request.args.get('hierarchy', '') }}" onchange="updateHierarchyFilter()">
                 </div>
             </div>
 

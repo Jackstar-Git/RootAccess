@@ -10,11 +10,21 @@
     text-align: left;
 }
 
+.section-label {
+    color: var(--main-color-500);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+    letter-spacing: 0.1em;
+}
+
 /* Toolbar */
 .blog-toolbar {
     display: flex;
     gap: var(--spacing-xl);
     margin-bottom: var(--spacing-md);
+    align-items: stretch;
 }
 
 /* Search Wrapper specific positioning */

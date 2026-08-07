@@ -146,8 +146,8 @@
 }
 
 .menu-toggle::after {
-    content: "\f107";
-    font-family: "Font Awesome 6 Free";
+    content: "\f078";
+    font-family: "Font Awesome 7 Free";
     font-weight: 900;
     position: absolute;
     right: 20px;

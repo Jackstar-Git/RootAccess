@@ -200,7 +200,6 @@ def all_users() -> ResponseReturnValue:
     return render_template(
         "admin/all-users.jinja",
         users=display_users,
-        query_params=request.args
     )
 
 @admin_blueprint.route("/users/edit/<user_id>", methods=["GET", "POST"])
@@ -451,7 +450,6 @@ def all_blogs() -> ResponseReturnValue:
         "admin/all-blogs.jinja",
         blogs=display_blogs,
         settings=get_settings("blog_config"),
-        query_params=request.args
     )
 
 @admin_blueprint.route("/blogs/categories", methods=["GET"])
@@ -644,7 +642,6 @@ def all_projects() -> ResponseReturnValue:
     return render_template(
         "admin/all-projects.jinja",
         projects=display_projects,
-        query_params=request.args
     )
 
 @admin_blueprint.route("/projects/create/", methods=["GET", "POST"])

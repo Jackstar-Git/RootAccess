@@ -19,38 +19,48 @@
     
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/font-awesome/reduced.all.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/´blogs.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/blogs.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/snippets/multiselect.css') }}">
 
 </head>
 <body>
     {% include "snippets/navbar.jinja" %}
 
-    <main class="blog-container container" role="main">
-        <header class="blog-minimal-header">
-            <div class="section-label" aria-hidden="true">Journal</div>
+    <main class="blog-container container project-page-wrapper" role="main">
+        <header class="blog-minimal-header project-header">
+            <div class="section-label project-label" aria-hidden="true">Journal</div>
             <h1>Articles & Perspectives</h1>
         </header>
 
-        <section class="blog-toolbar" aria-label="Search and filter tools">
+        <!-- Override align-items directly to replicate the project page's stretching behavior -->
+        <section class="blog-toolbar project-toolbar" style="align-items: stretch;" aria-label="Article filtering and search">
             <div class="search-wrapper">
-                <label for="search-input" class="sr-only">Search articles</label>
-                <input type="text" placeholder="Search articles..." id="search-input" aria-controls="blog-list-results">
+                <input type="text"
+                       placeholder="Search articles..."
+                       id="search-input"
+                       aria-label="Search through articles"
+                       aria-controls="blog-list-results"
+                       role="searchbox">
                 <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
             </div>
             
-            <button class="filter-toggle-btn" id="filter-btn" aria-expanded="false" aria-controls="filter-drawer">
+            <button type="button"
+                    class="filter-toggle-btn"
+                    id="filter-btn"
+                    aria-expanded="false"
+                    aria-controls="filter-drawer"
+                    aria-label="Toggle article filters">
                 <i class="fa-solid fa-sliders" aria-hidden="true"></i>
                 <span>Filters</span>
             </button>
         </section>
 
-        <section class="filter-drawer" id="filter-drawer" aria-label="Filter articles">
+        <section class="filter-drawer" id="filter-drawer" aria-label="Filter options">
             <div class="drawer-inner">
                 <div class="filter-col filter-group">
                     <label for="sort-select"><i class="fa-solid fa-sort" aria-hidden="true"></i> Sort</label>
                     <div class="filter-select-wrapper">
-                        <select id="sort-select">
+                        <select id="sort-select" aria-label="Sort articles by date">
                             <option value="newest">🔽 Newest</option>
                             <option value="oldest">🔼 Oldest</option>
                         </select>
@@ -61,7 +71,7 @@
                 <div class="filter-col filter-group">
                     <label for="category-select"><i class="fa-solid fa-folder-open" aria-hidden="true"></i> Topics</label>
                     <div class="filter-select-wrapper">
-                        <select id="category-select">
+                        <select id="category-select" aria-label="Filter by article category">
                             <option value="">All</option>
                             {% for topic in settings.topics %}
                                 <option>{{ topic }}</option>
@@ -74,7 +84,10 @@
                 <div class="filter-col filter-group">
                     <label for="tags-input"><i class="fa-solid fa-tags" aria-hidden="true"></i> Tags</label>
                     <div class="tag-input">
-                        <input type="text" placeholder="e.g. Python, UI Design" id="tags-input">
+                        <input type="text" 
+                               placeholder="e.g. Python, UI Design" 
+                               id="tags-input" 
+                               aria-label="Filter by tags">
                         <div class="tag-suggestions" role="list" aria-label="Suggested tags">
                             <span role="listitem">#Python</span>
                             <span role="listitem">#AI</span>
@@ -87,14 +100,14 @@
                     <label><i class="fa-solid fa-calendar-days" aria-hidden="true"></i> Date Range</label>
                     <div class="filter-date-range">
                         <input type="date" id="start-date" aria-label="Start date">
-                        <span>to</span>
+                        <span aria-hidden="true">to</span>
                         <input type="date" id="end-date" aria-label="End date">
                     </div>
                 </div>
                 
                 <div class="filter-col filter-group">
                     <label><i class="fa-solid fa-clock" aria-hidden="true"></i> Reading Time</label>
-                    <select name="reading_time" class="native-multiselect" multiple aria-label="Select reading times">
+                    <select name="reading_time" class="native-multiselect" multiple aria-label="Filter by reading time">
                         <option value="short">Short (&lt;5 min)</option>
                         <option value="medium">Medium (5‑10 min)</option>
                         <option value="deep">Deep Dive (&gt;10 min)</option>
@@ -121,7 +134,7 @@
 
                 <div class="filter-col filter-group">
                     <label><i class="fa-solid fa-list" aria-hidden="true"></i> Content Type</label>
-                    <select name="type" class="native-multiselect" multiple aria-label="Select content types">
+                    <select name="type" class="native-multiselect" multiple aria-label="Filter by content type">
                         {% for type in settings.types %}
                             <option value="{{ type.name }}">{{ type.name }}</option>
                         {% endfor %}
@@ -152,8 +165,12 @@
             </div>
 
             <div class="filter-actions">
-                <button class="clear-filters-btn" type="button"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Clear All</button>
-                <button class="apply-filters-btn" type="button"><i class="fa-solid fa-check" aria-hidden="true"></i> Apply Filters</button>
+                <button type="button" class="clear-filters-btn" aria-label="Reset all filters">
+                    <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Clear All
+                </button>
+                <button type="button" class="apply-filters-btn" aria-label="Apply selected filters">
+                    <i class="fa-solid fa-check" aria-hidden="true"></i> Apply Filters
+                </button>
             </div>
         </section>
 

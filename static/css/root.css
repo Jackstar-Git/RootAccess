@@ -696,7 +696,8 @@ h3 {
 }
 
 /* ===== MEDIA QUERIES ===== */
-@media (prefers-reduced-motion: reduce) {
+@media 
+(prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
@@ -745,7 +746,7 @@ h3 {
     --main-color-900: #00ff66;
     --main-color-950: #00ff99;
 
-    --font-family: 'Courier New', Courier, monospace;
+    --font-family: "Courier New", Courier, monospace;
 }
 
 /* Matrix: Green tint + scanlines for images */
@@ -864,7 +865,7 @@ h3 {
     --main-color-900: #a00030;
     --main-color-950: #ffffff;
 
-    --font-family: 'Inter', 'Montserrat', sans-serif;
+    --font-family: "Inter", "Montserrat", sans-serif;
 }
 
 /* --- WILD-WEST --- */
@@ -994,7 +995,7 @@ h3 {
     --main-color-900: #bf360c;
     --main-color-950: #ff9800;
 
-    --font-family: 'Montserrat', 'Inter', sans-serif;
+    --font-family: "Montserrat", "Inter", sans-serif;
     --radius-sm: 0px;
     --radius-md: 0px;
     --radius-lg: 0px;
@@ -1049,7 +1050,7 @@ h3 {
     --main-color-900: #750787;
     --main-color-950: #ff8a80;
 
-    --font-family: 'Montserrat', 'Inter', sans-serif;
+    --font-family: "Montserrat", "Inter", sans-serif;
 }
 
 [data-theme="pride"] .btn-primary {

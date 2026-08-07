@@ -12,7 +12,7 @@ from flask_wtf.csrf import CSRFProtect, current_app, generate_csrf
 
 from utility.auth import AuthManager, Permission
 from utility.logging_utility import logger
-from utility.users import get_user_by_id, User
+from utility.users import get_user_by_id, get_profile_info
 
 # ========== CUSTOM FLASK CLASS ==========
 class CustomFlask(Flask):
@@ -21,21 +21,30 @@ class CustomFlask(Flask):
         self.load_server_config()
         self.logger.disabled = True
         self.secret_key = secrets.token_hex(64)
-
         
-        # User Cache Setup
         self.users_cache: Optional[Dict[str, Any]] = None
         self.users_cache_mtime: Optional[float] = None
         
-        # Analytics Cache Setup
         self.analytics_cache = {}
         self.analytics_lock = threading.Lock()
         self.last_analytics_flush = time.time()
         self._load_initial_analytics()
 
         self.add_template_filter(self.datetime_filter, name="datetimeformat")
+        
+        self.register_globals({
+            "generate_token": generate_csrf,
+            "has_permission": AuthManager.has_permission_frontend,
+            "Permission": Permission,
+            "get_profile_info": get_profile_info
+        })
+
         self.before_request(self.request_handler)
         self.context_processor(self.utility_processor)
+
+    def register_globals(self, globals_map: Dict[str, Any]) -> None:
+        for name, func in globals_map.items():
+            self.add_template_global(func, name=name)
 
     def __getitem__(self, key: str) -> Any:
         return self.config[key]
@@ -89,8 +98,6 @@ class CustomFlask(Flask):
 
     @staticmethod
     def utility_processor() -> Dict[str, Any]:
-
-        # Get current user info from session
         current_user_id: Optional[str] = session.get("user_id")
 
         current_username = None
@@ -105,20 +112,13 @@ class CustomFlask(Flask):
                 current_user_permissions = AuthManager.get_user_bitmask(current_user_id)
                 current_user_profile: Optional[str] = current_user.get("profile_picture_url")
 
-
         return {
-            "query_params": request.args,
-            "session": session,
-            "generate_token": generate_csrf,
             "user_id": current_user_id,
             "username": current_username,
             "user_permissions": current_user_permissions,
             "user_profile": current_user_profile,
-            "has_permission": AuthManager.has_permission_frontend,
-            "Permission": Permission
         }
 
 # ========== APPLICATION INITIALIZATION ==========
 app: CustomFlask = CustomFlask(__name__, template_folder="templates", static_folder="static")
 csrf = CSRFProtect(app)
-

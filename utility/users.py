@@ -204,3 +204,14 @@ def sort_users(user_list: List[User], sort_by: str) -> List[User]:
 def is_active(user_id: Union[int, str]) -> bool:
     user = get_user_by_id(user_id)
     return user is not None and user.get("status") not in ["disabled", "banned"]
+
+
+def get_profile_info(user_id: Union[int, str]) -> dict:
+    user: User | None= get_user_by_id(user_id)
+
+    if user:
+        return {
+            "username": user.get("username", ""),
+            "profile_picture_url": user.get("profile_picture_url", "")
+        }
+    return {}
