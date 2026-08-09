@@ -1,8 +1,7 @@
 /* --- Layout & Container --- */
 .glass-page-container {
     background-color: var(--background-1);
-    background-image: radial-gradient(circle at 0% 0%, rgba(37,161,167,0.08) 0%, transparent 40%);
-    padding: var(--spacing-4xl) var(--spacing-md);
+    padding: var(--spacing-2xl) var(--spacing-md);
     min-height: 100vh;
     font-family: var(--font-family);
     color: var(--font-color);
@@ -19,7 +18,7 @@
 
 /* --- Glass Elements --- */
 .glass-element {
-    background: var(--background-1);
+    background: oklch(from var(--background-1) calc(l * 1.05) c h);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--background-1);
@@ -53,7 +52,7 @@
     width: 90px;
     height: 90px;
     border-radius: 50%;
-    border: var(--spacing-xxs) solid white;
+    border: var(--spacing-xxs) solid var(--main-color-100);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -364,8 +363,8 @@
     text-decoration: none;
     padding: var(--spacing-md) var(--spacing-lg);
     border-radius: 30px;
-    color: white;
     font-weight: var(--font-weight-medium);
+    color: var(--font-color);
     transition: box-shadow var(--transition-fast);
 }
 

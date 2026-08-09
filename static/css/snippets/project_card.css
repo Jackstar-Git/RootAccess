@@ -50,7 +50,7 @@
     background: rgba(255, 255, 255, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 20px;
-    color: #fff;
+    color: var(-secondary-font-color);
     font-size: 0.7rem;
     font-weight: 600;
     backdrop-filter: blur(8px);
@@ -165,7 +165,7 @@
 
 .project-item-card:hover .tech-tag, .project-item-card:focus-within .tech-tag {
     background: var(--main-color-600);
-    color: white;
+    color: var(-secondary-font-color);
 }
 
 /* ===== DESCRIPTION ===== */

@@ -2,7 +2,7 @@
 .article-wrapper {
     background-color: var(--background-1);
     min-height: 100vh;
-    padding: var(--spacing-5xl) 0;
+    padding: var(--spacing-2xl) 0;
     transition: background-color var(--transition-medium);
 }
 
@@ -48,7 +48,7 @@
     font-size: 0.75rem;
     font-weight: 800;
     text-transform: uppercase;
-    color: white;
+    color: var(-secondary-font-color);
 }
 
 /* Maturity Colors */
@@ -113,7 +113,7 @@
 
 .btn-demo {
     background: var(--main-color-600);
-    color: white;
+    color: var(-secondary-font-color);
 }
 
 .btn-demo:hover, .btn-demo:focus-within {
@@ -304,7 +304,7 @@
 }
 .modern-tag .tag-hash { color: var(--main-color-300); margin-right: 2px; }
 .modern-tag:hover, .modern-tag:focus-within {
-    background: var(--main-color-600); color: white; border-color: var(--main-color-600);
+    background: var(--main-color-600); color: var(-secondary-font-color); border-color: var(--main-color-600);
     transform: translateY(-2px); box-shadow: 0 8px 20px rgba(30, 140, 148, 0.2);
 }
 .modern-tag:hover .tag-hash, .modern-tag:focus-within .tag-hash { color: var(--background-1); }
@@ -368,7 +368,7 @@
     font-weight: 700; cursor: pointer; border: none;
 }
 
-#copyLinkBtn { background: var(--main-color-600); color: white; margin-right: 8px; }
+#copyLinkBtn { background: var(--main-color-600); color: var(-secondary-font-color); margin-right: 8px; }
 #closeSharePopup { background: transparent; border: 1px solid var(--background-2); color: var(--font-color); }
 
 /* --- Responsive Layouts --- */

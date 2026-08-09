@@ -215,24 +215,6 @@
     background: rgba(255, 0, 0, 0.05);
 }
 
-.btn-primary {
-    background-color: var(--main-color);
-    color: white;
-    padding: 12px 24px;
-    border-radius: var(--radius-md);
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    transition: var(--transition-medium);
-    width: 100%;
-}
-
-.btn-primary:hover, .btn-primary:focus-within {
-    background-color: var(--main-color-600);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(37, 161, 167, 0.2);
-}
-
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .editor-header {

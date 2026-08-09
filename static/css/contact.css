@@ -4,7 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: var(--spacing-4xl) 0;
+    padding: var(--spacing-2xl) 0;
     background-color: var(--background-1);
 }
 
@@ -37,7 +37,7 @@
 .section-title {
     margin-bottom: var(--spacing-md);
     font-size: var(--font-size-xxl);
-    color: white;
+    color: var(--secondary-font-color);
 }
 
 .contact-details {
@@ -170,7 +170,7 @@ textarea:focus-within {
     border: none;
     border-radius: var(--radius-md);
     background: var(--main-color-500);
-    color: white;
+    color: var(-secondary-font-color);
     font-weight: var(--font-weight-semibold);
     cursor: pointer;
     transition: var(--transition-medium);

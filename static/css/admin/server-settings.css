@@ -73,24 +73,11 @@ textarea {
     background-color: var(--background-1);
 }
 
-.btn-primary {
-    background-color: var(--main-color-500);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: opacity 0.2s;
-}
 
-.btn-primary:hover, .btn-primary:focus-within {
-    opacity: 0.85;
-}
 
 .btn-danger {
     background-color: var(--warning-color);
-    color: white;
+    color: var(-secondary-font-color);
     border: none;
     padding: 10px 20px;
     border-radius: 8px;
@@ -171,12 +158,5 @@ textarea {
         font-family: monospace;
         max-height: 10rem;
         overflow-y: auto;
-    }
-
-    .btn-primary,
-    .btn-danger {
-        width: 100%;
-        padding: 10px;
-        font-size: 0.95rem;
     }
 }

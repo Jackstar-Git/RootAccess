@@ -297,7 +297,7 @@ progress::-moz-progress-bar {
     display: inline-block;
     font-size: var(--font-size-xs);
     background: var(--main-color-600);
-    color: white;
+    color: var(-secondary-font-color);
     padding: var(--spacing-xxs) var(--spacing-xs);
     border-radius: 12px;
     margin-top: var(--spacing-xs);

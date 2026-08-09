@@ -10,8 +10,8 @@ function createSharePopup() {
                 <li><a href="#" data-platform="linkedin">LinkedIn</a></li>
                 <li><a href="#" data-platform="reddit">Reddit</a></li>
             </ul>
-            <button id="copyLinkBtn">Copy link</button>
-            <button id="closeSharePopup">Close</button>
+            <a class="btn-primary btn" id="copyLinkBtn">Copy link</a>
+            <a class="btn-outline btn" id="closeSharePopup">Close</a>
         </div>
     `;
     document.body.appendChild(popup);

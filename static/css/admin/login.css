@@ -85,7 +85,7 @@
     width: 100%;
     padding: 1rem;
     background: var(--main-color-500);
-    color: white;
+    color: var(-secondary-font-color);
     border: none;
     border-radius: var(--radius-md);
     font-weight: 700;

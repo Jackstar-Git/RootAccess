@@ -161,7 +161,7 @@
 .btn {
     padding: 10px 14px;
     font-size: var(--font-size-md);
-    color: white;
+    color: var(-secondary-font-color);
     border-radius: 6px;
     text-decoration: none;
     text-align: center;
@@ -171,7 +171,6 @@
 }
 
 .btn:hover, .btn:focus-within { opacity: 0.85; }
-.btn-primary { background-color: var(--main-color); }
 .edit-btn { background-color: var(--secondary-color, #4CAF50); }
 .delete-btn { background-color: var(--warning-color, #F44336); }
 .view-btn { background-color: var(--main-color-500); }

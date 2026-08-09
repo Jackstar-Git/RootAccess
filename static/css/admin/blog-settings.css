@@ -101,7 +101,7 @@
 .btn {
     padding: 8px 12px;
     font-size: 0.95rem;
-    color: white;
+    color: var(-secondary-font-color);
     border-radius: 6px;
     text-decoration: none;
     text-align: center;
@@ -114,8 +114,7 @@
     opacity: 0.85;
 }
 
-.btn-primary { background-color: var(--main-color-500); }
-.edit-btn { background-color: var(--main-color-400); color: white; }
+.edit-btn { background-color: var(--main-color-400); color: var(-secondary-font-color); }
 .delete-btn { background-color: var(--warning-color); }
 
 /* Inline Form for Adding New Items */

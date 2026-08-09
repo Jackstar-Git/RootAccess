@@ -1,6 +1,6 @@
 .hero-section {
     background: var(--background-1);
-    padding: clamp(3rem, 8vw, var(--spacing-6xl)) 0;
+    padding: var(--spacing-2xl) 0;
     perspective: 1200px;
 }
 
@@ -140,9 +140,16 @@
     flex-wrap: wrap;
 }
 
-.btn-primary:hover, .btn-primary:focus-within {
-    background: var(--main-color-700);
-    transform: translateY(-3px);
+.text-link {
+    color: var(--main-color-600);
+    text-decoration: underline;
+    font-weight: var(--font-weight-medium);
+    display: inline-block;
+    margin-top: var(--spacing-xl);
+}
+
+.text-link:is(:hover, :focus-within) {
+    color: var(--main-color-300);
 }
 
 .about-section {

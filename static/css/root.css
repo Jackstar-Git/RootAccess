@@ -165,13 +165,16 @@ input, textarea, button, select {
     border: 1px solid var(--background-3);
 }
 
-a, button:hover, button:focus-within {
+button:hover, button:focus-within {
     cursor: pointer;
 }
 
 a {
     text-decoration: none;
     color: inherit;
+}
+a:hover, a:focus-within{
+    cursor: pointer;
 }
 
 ul {
@@ -220,7 +223,7 @@ h3 {
     color: var(--main-color-500);
     font-weight: var(--font-weight-semibold);
     text-transform: uppercase;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-md);
     margin-bottom: var(--spacing-md);
     letter-spacing: 1.5px;
 }
@@ -264,18 +267,10 @@ h3 {
 
 /* ===== BUTTONS ===== */
 .btn-primary {
-    background: var(--main-color-600);
-    color: white;
-    padding: var(--spacing-md) var(--spacing-2xl);
-    border-radius: var(--radius-lg);
-    text-decoration: none;
-    font-weight: var(--font-weight-semibold);
-    transition: var(--transition-medium);
-}
-
-.btn-outline {
-    border: 1px solid var(--background-2);
-    color: var(--font-color);
+    --btn-bg: var(--main-color-300);
+    --btn-clr: var(--secondary-font-color);
+    background: var(--btn-bg);
+    color: var(--btn-clr);
     padding: var(--spacing-md) var(--spacing-2xl);
     border-radius: var(--radius-lg);
     text-decoration: none;
@@ -283,26 +278,36 @@ h3 {
 }
 
 .btn-secondary {
-    background: linear-gradient(90deg, var(--main-color-500), var(--main-color-400));
-    color: #fff;
+    --btn-clr: var(--secondary-font-color);
+    --btn-bg: var(--main-color-600);
+    background: var(--btn-bg);
+    color: var(--btn-clr);
     padding: var(--spacing-sm) var(--spacing-xl);
     border-radius: calc(var(--radius-lg) - 2px);
     text-decoration: none;
     font-weight: var(--font-weight-semibold);
-    box-shadow: 0 6px 18px rgba(37,161,167,0.12);
     border: 1px solid rgba(0,0,0,0.04);
-    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.btn-secondary:hover, .btn-secondary:focus-within {
-    transform: translateY(-3px);
-    box-shadow: 0 14px 30px rgba(37,161,167,0.14);
+.btn-outline {
+    --btn-clr: var(--font-color);
+    border: 1px solid var(--main-color-400);
+    color: var(--btn-clr);
+    padding: var(--spacing-md) var(--spacing-2xl);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+}
+:is(.btn-primary, .btn-secondary, .btn-outline) {
+    transition: background var(--transition-medium),
+                border-radius var(--transition-medium),
+                box-shadow var(--transition-medium);
 }
 
-.text-link {
-    color: var(--main-color-600);
-    text-decoration: underline;
-    font-weight: var(--font-weight-medium);
+:is(.btn-primary, .btn-secondary, .btn-outline):hover, :is(.btn-primary, .btn-secondary, .btn-outline):focus-within{
+    background: oklch(from var(--btn-bg) calc(l * 1.10) c h);
+    border-radius: var(--radius-sm);
+    box-shadow: 5px 5px 10px var(--btn-bg);
 }
 
 /* ===== FILTER COMPONENTS ===== */
@@ -327,7 +332,7 @@ h3 {
 
 .filter-toggle-btn.active {
     background: var(--main-color-600);
-    color: white;
+    color: var(-secondary-font-color);
     border-color: var(--main-color-600);
 }
 
@@ -443,22 +448,8 @@ h3 {
 
 .opt-btn.active {
     background: var(--main-color-600);
-    color: white;
+    color: var(-secondary-font-color);
     border-color: var(--main-color-600);
-}
-
-/* color variants for options (glass tinted) */
-.btn-color-teal {
-    background: rgba(37,161,167,0.3);
-    color: var(--main-color-600);
-}
-.btn-color-blue {
-    background: rgba(62,191,195,0.3);
-    color: var(--main-color-400);
-}
-.btn-color-purple {
-    background: rgba(25,81,86,0.3);
-    color: var(--main-color-800);
 }
 
 /* additional filter input styles */

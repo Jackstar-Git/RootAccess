@@ -129,7 +129,7 @@
 
 .btn-delete-row:hover, .btn-delete-row:focus-within {
     background: var(--warning-color);
-    color: white;
+    color: var(-secondary-font-color);
     border-color: var(--warning-color);
     box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
 }
@@ -188,7 +188,7 @@
 
 .btn-add:hover, .btn-add:focus-within {
     background: var(--main-color-500);
-    color: white;
+    color: var(-secondary-font-color);
 }
 
 /* Adjust Analytics Button */
@@ -351,7 +351,7 @@
 
 .btn-decrease:hover, .btn-decrease:focus-within {
     background: var(--main-color-500);
-    color: white;
+    color: var(-secondary-font-color);
     border-color: var(--main-color-600);
 }
 
@@ -412,7 +412,7 @@
 
 .btn-apply {
     background: var(--main-color-500);
-    color: white;
+    color: var(-secondary-font-color);
 }
 
 .btn-apply:hover, .btn-apply:focus-within {

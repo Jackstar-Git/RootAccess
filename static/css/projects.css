@@ -1,7 +1,7 @@
 .project-page-wrapper {
     max-width: var(--container-max-width);
     margin: 0 auto;
-    padding: var(--spacing-6xl) var(--spacing-xl) var(--spacing-5xl);
+    padding: var(--spacing-2xl) var(--spacing-xl) var(--spacing-3xl);
 }
 
 .project-header {
@@ -68,7 +68,7 @@
 
 .apply-filters-btn {
     background: var(--main-color-600);
-    color: white;
+    color: var(-secondary-font-color);
 }
 
 .apply-filters-btn:hover, .apply-filters-btn:focus-within {

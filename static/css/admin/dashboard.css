@@ -15,7 +15,7 @@
 }
 .brand-icon {
     background: var(--main-color-500);
-    color: white;
+    color: var(-secondary-font-color);
     width: 32px;
     height: 32px;
     display: flex;

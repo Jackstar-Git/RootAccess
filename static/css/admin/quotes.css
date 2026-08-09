@@ -48,7 +48,7 @@
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     padding: 12px 20px;
-    background-color: #fff;
+    background-color: var(-secondary-font-color);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -144,24 +144,6 @@
 .btn.delete-btn:hover, .btn.delete-btn:focus-within {
     background-color: #fdd;
     color: #c62828;
-}
-
-.btn-primary {
-    background-color: var(--main-color-500);
-    color: white;
-}
-
-.btn-primary:hover, .btn-primary:focus-within {
-    background-color: var(--main-color-600);
-}
-
-.btn-secondary {
-    background-color: var(--background-2);
-    color: var(--font-color);
-}
-
-.btn-secondary:hover, .btn-secondary:focus-within {
-    background-color: #ddd;
 }
 
 /* Add New Item */

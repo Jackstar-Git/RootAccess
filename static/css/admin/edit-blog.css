@@ -203,7 +203,7 @@
 
 .btn-remove-author:hover, .btn-remove-author:focus-within {
     background: var(--warning-color);
-    color: white;
+    color: var(-secondary-font-color);
 }
 
 /* ===== SCHEDULING STYLES ===== */

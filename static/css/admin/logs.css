@@ -37,28 +37,10 @@
     border-color: var(--main-color-500);
 }
 
-.btn-primary, .btn-danger {
-    padding: 10px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s, opacity 0.2s;
-}
-
-.btn-primary {
-    background-color: var(--main-color-500);
-    color: white;
-}
-
-.btn-primary:hover, .btn-primary:focus-within {
-    opacity: 0.9;
-}
 
 .btn-danger {
     background-color: var(--warning-color);
-    color: white;
+    color: var(-secondary-font-color);
 }
 
 .btn-danger:hover, .btn-danger:focus-within {
@@ -85,15 +67,10 @@
 }
 
 #logsOutput::-webkit-scrollbar { width: 10px; }
-<<<<<<< HEAD
 #logsOutput::-webkit-scrollbar-track { background: #0f172a; }
 #logsOutput::-webkit-scrollbar-thumb { background: #475569; border-radius: 5px; }
 #logsOutput::-webkit-scrollbar-thumb:hover, #logsOutput::-webkit-scrollbar-thumb:focus-within { background: #64748b; }
-=======
-#logsOutput::-webkit-scrollbar-track { background: var(--background-3); }
-#logsOutput::-webkit-scrollbar-thumb { background: var(--background-2); border-radius: 5px; }
-#logsOutput::-webkit-scrollbar-thumb:hover { background: var(--main-color-500); }
->>>>>>> 49be0c6 (Added more themes)
+
 
 .log-line {
     padding: 2px 0;
@@ -139,18 +116,13 @@
     width: 150px;
 }
 
-<<<<<<< HEAD
 .console-bar input:focus-within {
     border-color: #38bdf8;
-=======
-.console-bar input:focus {
-    border-color: var(--main-color-400);
->>>>>>> 49be0c6 (Added more themes)
-}
+
 
 .btn-console {
     background-color: var(--main-color-500);
-    color: #ffffff;
+    color: var(-secondary-font-color)fff;
     padding: 10px 16px;
     font-size: 14px;
     font-weight: bold;
@@ -160,13 +132,8 @@
     font-family: 'Consolas', 'Courier New', Courier, monospace;
 }
 
-<<<<<<< HEAD
-.btn-console:hover, .btn-console:focus-within {
-    background-color: #059669;
-=======
 .btn-console:hover {
     background-color: var(--main-color-600);
->>>>>>> 49be0c6 (Added more themes)
 }
 
 /* ===== MOBILE RESPONSIVE ===== */
@@ -233,4 +200,4 @@
         top: 0;
         z-index: 5;
     }
-}
+}}
