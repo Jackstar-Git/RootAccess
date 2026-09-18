@@ -159,8 +159,9 @@ async function saveFileContent(fileName) {
 }
 
 async function downloadDataFile(fileName) {
+    const extension = fileName === "notes" ? "md" : "json";
     try {
-        const response = await fetch(`/download/data/${fileName}.json`, {
+        const response = await fetch(`/download/data/${fileName}.${extension}`, {
             credentials: "same-origin",
             method: "GET"
         });
@@ -174,7 +175,7 @@ async function downloadDataFile(fileName) {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = `${fileName}.json`;
+        link.download = `${fileName}.${extension}`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -182,6 +183,111 @@ async function downloadDataFile(fileName) {
     } catch (error) {
         console.error("Failed to download file:", error);
         notify("A server error occurred while downloading the file.", 'error');
+    }
+}
+
+async function backupData() {
+    const csrfToken = document.getElementById("csrf_token").value;
+
+    try {
+        const response = await fetch("/admin/settings/general/data/backup", {
+            credentials: "same-origin",
+            method: "GET",
+            headers: { "X-CSRF-Token": csrfToken }
+        });
+
+        if (!response.ok) {
+            notify("Failed to create backup.", 'error');
+            return;
+        }
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `rootaccess-data-backup-${Date.now()}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        notify("Backup downloaded successfully.", 'info');
+    } catch (error) {
+        console.error("Failed to back up data:", error);
+        notify("A server error occurred while creating the backup.", 'error');
+    }
+}
+
+function openRestoreDialog() {
+    const fileInput = document.getElementById("backupRestoreInput");
+    if (fileInput) fileInput.click();
+}
+
+async function inspectBackupFile(file) {
+    const csrfToken = document.getElementById("csrf_token").value;
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("/admin/settings/general/data/preview", {
+        credentials: "same-origin",
+        method: "POST",
+        headers: { "X-CSRF-Token": csrfToken },
+        body: formData
+    });
+
+    const data = await response.json();
+    if (!data.success) {
+        throw new Error(data.message || "Unable to inspect backup file.");
+    }
+
+    return data.files || [];
+}
+
+async function restoreData(event) {
+    const file = event.target.files[0];
+    const csrfToken = document.getElementById("csrf_token").value;
+
+    if (!file) return;
+
+    if (!file.name.toLowerCase().endsWith(".zip")) {
+        notify("Please upload a valid ZIP backup file.", 'error');
+        event.target.value = "";
+        return;
+    }
+
+    try {
+        const fileNames = await inspectBackupFile(file);
+        const displayNames = fileNames.length ? fileNames.join(", ") : "the archived data files";
+        const confirmed = window.confirm(
+            `Are you sure you want to load this backup containing: ${displayNames}? This cannot be undone.`
+        );
+
+        if (!confirmed) {
+            event.target.value = "";
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await fetch("/admin/settings/general/data/restore", {
+            credentials: "same-origin",
+            method: "POST",
+            headers: { "X-CSRF-Token": csrfToken },
+            body: formData
+        });
+
+        const data = await response.json();
+        if (data.success) {
+            notify(data.message, 'info');
+            window.location.reload();
+        } else {
+            notify("Error: " + data.message, 'error');
+        }
+    } catch (error) {
+        console.error("Failed to restore backup:", error);
+        notify("A server error occurred while restoring the backup.", 'error');
+    } finally {
+        event.target.value = "";
     }
 }
 

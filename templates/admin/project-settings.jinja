@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+    <title>Admin Panel - Project Configuration</title>
+
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+
+    <script src="{{ url_for('static', filename='js/global_preloader.js')}}"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/font-awesome/reduced.all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/blog-settings.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja" %}
+
+        <div class="main-content">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" title="Toggle Menu" aria-label="Toggle navigation menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="header-actions">
+                <h2>Project Configuration</h2>
+            </div>
+
+            <p class="settings-description">Manage the project's topic structure. These changes will reflect in the project creation filters and public project listings.</p>
+
+            <div class="config-section">
+                <div class="section-header">
+                    <h3>Topics</h3>
+                </div>
+
+                <div class="config-list">
+                    {% if settings.topics|length == 0 %}
+                        <div class="empty-state">
+                            <h3>No topics configured yet!</h3>
+                        </div>
+                    {% endif %}
+
+                    {% for topic in settings.topics %}
+                        <div class="config-item">
+                            <div class="item-info">
+                                <span class="item-icon"><i class="fas fa-hashtag"></i></span>
+                                <h3>{{ topic }}</h3>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn edit-btn" onclick="editTopic('{{ topic }}')" title="Edit Topic"><i class="fas fa-edit"></i></button>
+                                <button class="btn delete-btn" onclick="deleteTopic('{{ topic }}')" title="Delete Topic"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="config-item add-new-item">
+                        <form method="POST" action="/api/settings/project-topics/add" class="inline-form">
+                            <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
+                            <div class="input-group">
+                                <i class="fas fa-plus input-icon"></i>
+                                <input type="text" name="new_topic" placeholder="Enter new topic name..." required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Topic</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/admin/admin-global.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/admin/project-settings.js') }}"></script>
+</body>
+</html>

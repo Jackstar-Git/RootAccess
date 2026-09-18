@@ -1,18 +1,22 @@
 import json
 import os
 import time
+from typing import TYPE_CHECKING, cast
+
 from flask import current_app
-from CustomFlaskClass import CustomFlask
+
 from utility.logging_utility import logger
 from utility.settings import get_settings
-from typing import cast
+
+if TYPE_CHECKING:
+    from CustomFlaskClass import CustomFlask
 
 
 ANALYTICS_FILE = "data/analytics.json"
 FLUSH_INTERVAL = get_settings("analytics_config").get("update_interval", 600) #seconds = 10 minutes by default
 
 def _get_app():
-    return cast(CustomFlask, current_app)
+    return cast("CustomFlask", current_app)
 
 def track_visit(url: str, visitor_id: str, time_spent: float, is_heartbeat: bool) -> None:
     app = _get_app()

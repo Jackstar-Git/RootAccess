@@ -111,6 +111,111 @@ def download(filepath: str) -> ResponseReturnValue:
     logger.error(f"Invalid path provided | Path: {filepath}")
     abort(400, description="Invalid path provided.")
 
+@internal_blueprint.route("/admin/settings/general/data/backup", methods=["GET"])
+@permission_required(Permission.SYSTEM_ADMIN)
+def backup_all_data() -> ResponseReturnValue:
+    user_id: Optional[str] = session.get("user_id")
+    data_dir = os.path.join(app.root_path, "data")
+
+    if not os.path.isdir(data_dir):
+        return jsonify({"success": False, "message": "Data folder not found."}), 404
+
+    memory_file = io.BytesIO()
+    with zipfile.ZipFile(memory_file, "w", zipfile.ZIP_DEFLATED) as archive:
+        for root, _, files in os.walk(data_dir):
+            for filename in files:
+                file_path = os.path.join(root, filename)
+                arcname = os.path.relpath(file_path, app.root_path)
+                archive.write(file_path, arcname)
+
+    memory_file.seek(0)
+    log_with_user("info", "Data backup created", user_id)
+    return send_file(
+        memory_file,
+        mimetype="application/zip",
+        as_attachment=True,
+        download_name=f"rootaccess-data-backup-{int(time.time())}.zip"
+    )
+
+@internal_blueprint.route("/admin/settings/general/data/preview", methods=["POST"])
+@permission_required(Permission.SYSTEM_ADMIN)
+def preview_backup_contents() -> ResponseReturnValue:
+    if "file" not in request.files:
+        return jsonify({"success": False, "message": "No backup file provided."}), 400
+
+    uploaded_file = request.files["file"]
+    if not uploaded_file or not uploaded_file.filename:
+        return jsonify({"success": False, "message": "No backup file selected."}), 400
+
+    if not uploaded_file.filename.lower().endswith(".zip"):
+        return jsonify({"success": False, "message": "Only ZIP backups are allowed."}), 400
+
+    try:
+        with zipfile.ZipFile(uploaded_file.stream, "r") as archive:
+            names = []
+            for member in archive.infolist():
+                if member.is_dir():
+                    continue
+                normalized_name = member.filename.replace("\\", "/")
+                if normalized_name.startswith("../") or normalized_name.startswith("/"):
+                    continue
+                cleaned_name = normalized_name.split("data/", 1)[-1] if "data/" in normalized_name else normalized_name
+                cleaned_name = cleaned_name.lstrip("/")
+                if cleaned_name:
+                    names.append(cleaned_name)
+
+        unique_names = sorted(set(names))
+        return jsonify({"success": True, "files": unique_names})
+    except Exception as exc:
+        return jsonify({"success": False, "message": str(exc)}), 400
+
+@internal_blueprint.route("/admin/settings/general/data/restore", methods=["POST"])
+@permission_required(Permission.SYSTEM_ADMIN)
+def restore_all_data() -> ResponseReturnValue:
+    user_id: Optional[str] = session.get("user_id")
+
+    if "file" not in request.files:
+        return jsonify({"success": False, "message": "No backup file provided."}), 400
+
+    uploaded_file = request.files["file"]
+    if not uploaded_file or not uploaded_file.filename:
+        return jsonify({"success": False, "message": "No backup file selected."}), 400
+
+    if not uploaded_file.filename.lower().endswith(".zip"):
+        return jsonify({"success": False, "message": "Only ZIP backups are allowed."}), 400
+
+    try:
+        target_dir = os.path.join(app.root_path, "data")
+        os.makedirs(target_dir, exist_ok=True)
+
+        with zipfile.ZipFile(uploaded_file.stream, "r") as archive:
+            for member in archive.infolist():
+                if member.is_dir():
+                    continue
+
+                normalized_name = member.filename.replace("\\", "/")
+                if normalized_name.startswith("../") or normalized_name.startswith("/"):
+                    continue
+
+                relative_name = normalized_name.split("data/", 1)[-1] if "data/" in normalized_name else normalized_name
+                relative_name = relative_name.lstrip("/")
+                if not relative_name:
+                    continue
+
+                target_path = os.path.normpath(os.path.join(target_dir, relative_name))
+                if os.path.commonpath([target_dir, target_path]) != target_dir:
+                    continue
+
+                os.makedirs(os.path.dirname(target_path), exist_ok=True)
+                with archive.open(member, "r") as src, open(target_path, "wb") as dst:
+                    dst.write(src.read())
+
+        log_with_user("info", "Data backup restored successfully", user_id)
+        return jsonify({"success": True, "message": "Backup restored successfully."})
+    except Exception as exc:
+        log_with_user("error", f"Failed to restore backup | Error: {str(exc)}", user_id)
+        return jsonify({"success": False, "message": str(exc)}), 400
+
 # ========== CONTACT ROUTES ==========
 @internal_blueprint.route("/api/contact", methods=["POST"])
 @limiter.limit("5 per minute")
@@ -868,6 +973,28 @@ def add_topic() -> ResponseReturnValue:
 
     return redirect(request.referrer or "/")
 
+@internal_blueprint.route("/api/settings/project-topics/add", methods=["POST"])
+@permission_required(Permission.SYSTEM_ADMIN)
+def add_project_topic() -> ResponseReturnValue:
+    user_id: Optional[str] = session.get("user_id")
+    new_topic = request.form.get("new_topic", "").strip()
+
+    try:
+        current_config = get_settings("project_config") or {"topics": []}
+        topics = current_config.get("topics", [])
+
+        if new_topic and new_topic not in topics:
+            topics.append(new_topic)
+            update_settings({"project_config": {"topics": topics}})
+            log_with_user("info", f"Project topic added | Topic: {new_topic}", user_id)
+        else:
+            log_with_user("warning", f"Failed to add project topic or topic already exists | Topic: {new_topic}", user_id)
+
+    except Exception as e:
+        log_with_user("error", f"Failed to add new project topic | Error: {e}", user_id)
+
+    return redirect(request.referrer or "/")
+
 @internal_blueprint.route("/api/settings/types/add", methods=["POST"])
 @permission_required(Permission.SYSTEM_ADMIN)
 def add_type() -> ResponseReturnValue:
@@ -935,6 +1062,52 @@ def api_manage_topics() -> ResponseReturnValue:
 
     except Exception as e:
         log_with_user("error", f"API Error managing topics | Error: {e}", user_id)
+        return jsonify({"error": "Internal server error."}), 500
+
+@internal_blueprint.route("/api/settings/project-topics", methods=["PUT", "DELETE"])
+@permission_required(Permission.SYSTEM_ADMIN)
+def api_manage_project_topics() -> ResponseReturnValue:
+    user_id: Optional[str] = session.get("user_id")
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "No data provided."}), 400
+
+    try:
+        current_config = get_settings("project_config") or {"topics": []}
+        topics = current_config.get("topics", [])
+
+        if request.method == "PUT":
+            old_name = data.get("old_name")
+            new_name = data.get("new_name")
+
+            if not old_name or not new_name:
+                return jsonify({"error": "Missing parameters."}), 400
+
+            if old_name in topics:
+                topics = [new_name if t == old_name else t for t in topics]
+                update_settings({"project_config": {"topics": topics}})
+                log_with_user("info", f"Project topic updated | Old: {old_name} | New: {new_name}", user_id)
+                return jsonify({"success": True})
+
+            log_with_user("warning", f"Attempted to update non-existent project topic | Topic: {old_name}", user_id)
+            return jsonify({"error": "Topic not found."}), 404
+
+        elif request.method == "DELETE":
+            topic_name = data.get("topic_name")
+
+            if topic_name in topics:
+                topics.remove(topic_name)
+                update_settings({"project_config": {"topics": topics}})
+                log_with_user("info", f"Project topic deleted | Topic: {topic_name}", user_id)
+                return jsonify({"success": True})
+
+            log_with_user("warning", f"Attempted to delete non-existent project topic | Topic: {topic_name}", user_id)
+            return jsonify({"error": "Topic not found."}), 404
+
+        return jsonify({"error": "Invalid request method."}), 400
+
+    except Exception as e:
+        log_with_user("error", f"API Error managing project topics | Error: {e}", user_id)
         return jsonify({"error": "Internal server error."}), 500
 
 @internal_blueprint.route("/api/settings/types", methods=["PUT", "DELETE"])
@@ -1193,19 +1366,20 @@ def api_clear_analytics() -> ResponseReturnValue:
 def read_data_file(file_name: str) -> ResponseReturnValue:
     user_id: Optional[str] = session.get("user_id")
     try:
-        valid_files = ["analytics", "blogs", "contacts", "events", "projects", "quotes", "settings"]
+        valid_files = ["analytics", "blogs", "contacts", "events", "projects", "quotes", "settings", "users", "notes"]
         if file_name not in valid_files:
             return jsonify({"success": False, "message": "Invalid file name"}), 400
 
-        file_path = f"data/{file_name}.json"
-        
+        extension = ".md" if file_name == "notes" else ".json"
+        file_path = os.path.join(app.root_path, "data", f"{file_name}{extension}")
+
         if not os.path.exists(file_path):
             return jsonify({"success": False, "message": "File not found"}), 404
 
         with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
 
-        log_with_user("info", f"Data file read | File: {file_name}.json", user_id)
+        log_with_user("info", f"Data file read | File: {file_path}", user_id)
         return jsonify({"success": True, "content": content})
     except Exception as e:
         log_with_user("error", f"Failed to read file | File: {file_name} | Error: {str(e)}", user_id)
@@ -1216,32 +1390,34 @@ def read_data_file(file_name: str) -> ResponseReturnValue:
 def save_data_file(file_name: str) -> ResponseReturnValue:
     user_id: Optional[str] = session.get("user_id")
     try:
-        valid_files = ["analytics", "blogs", "contacts", "events", "projects", "quotes", "settings"]
+        valid_files = ["analytics", "blogs", "contacts", "events", "projects", "quotes", "settings", "users", "notes"]
         if file_name not in valid_files:
             return jsonify({"success": False, "message": "Invalid file name"}), 400
 
         data = request.get_json()
-        content = data.get("content", "")
+        content = data.get("content", "") if data else ""
 
-        try:
-            json.loads(content)
-        except json.JSONDecodeError as e:
-            return jsonify({"success": False, "message": f"Invalid JSON: {str(e)}"}), 400
+        if file_name != "notes":
+            try:
+                json.loads(content)
+            except json.JSONDecodeError as e:
+                return jsonify({"success": False, "message": f"Invalid JSON: {str(e)}"}), 400
 
-        file_path = f"data/{file_name}.json"
-        
+        extension = ".md" if file_name == "notes" else ".json"
+        file_path = os.path.join(app.root_path, "data", f"{file_name}{extension}")
+
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
 
-        log_with_user("info", f"Data file saved | File: {file_name}.json", user_id)
-        
+        log_with_user("info", f"Data file saved | File: {file_path}", user_id)
+
         if file_name in ["blogs", "projects", "events", "analytics"]:
             cacheable = [get_item_by_id, load_blogs, load_projects, query_projects, search_projects, get_project_by_id, get_events]
             for func in cacheable:
                 if hasattr(func, "cache_clear"):
                     func.cache_clear()
 
-        return jsonify({"success": True, "message": f"{file_name}.json has been saved successfully"})
+        return jsonify({"success": True, "message": f"{file_name}{extension} has been saved successfully"})
     except Exception as e:
         log_with_user("error", f"Failed to save file | File: {file_name} | Error: {str(e)}", user_id)
         return jsonify({"success": False, "message": str(e)}), 400
@@ -1251,7 +1427,7 @@ def save_data_file(file_name: str) -> ResponseReturnValue:
 def upload_data_file(file_name: str) -> ResponseReturnValue:
     user_id: Optional[str] = session.get("user_id")
     try:
-        valid_files = ["analytics", "blogs", "contacts", "events", "projects", "quotes", "settings"]
+        valid_files = ["analytics", "blogs", "contacts", "events", "projects", "quotes", "settings", "users", "notes"]
         if file_name not in valid_files:
             return jsonify({"success": False, "message": "Invalid file name"}), 400
 
@@ -1259,33 +1435,35 @@ def upload_data_file(file_name: str) -> ResponseReturnValue:
             return jsonify({"success": False, "message": "No file provided"}), 400
 
         file = request.files["file"]
-        
+
         if not file.filename:
             return jsonify({"success": False, "message": "No file selected"}), 400
 
-        if not file.filename.endswith(".json"):
-            return jsonify({"success": False, "message": "Only JSON files are allowed"}), 400
+        is_markdown = file_name == "notes"
+        expected_extension = ".md" if is_markdown else ".json"
+        if not file.filename.lower().endswith(expected_extension):
+            return jsonify({"success": False, "message": f"Only {expected_extension.upper()} files are allowed"}), 400
 
         try:
             content = file.read().decode("utf-8")
-            json.loads(content)
+            if not is_markdown:
+                json.loads(content)
         except (json.JSONDecodeError, UnicodeDecodeError) as e:
-            return jsonify({"success": False, "message": f"Invalid JSON file: {str(e)}"}), 400
+            return jsonify({"success": False, "message": f"Invalid file content: {str(e)}"}), 400
 
-        file_path = f"data/{file_name}.json"
-        
+        file_path = os.path.join(app.root_path, "data", f"{file_name}{expected_extension}")
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
 
-        log_with_user("info", f"Data file uploaded | File: {file_name}.json | Filename: {file.filename}", user_id)
-        
+        log_with_user("info", f"Data file uploaded | File: {file_name}{expected_extension} | Filename: {file.filename}", user_id)
+
         if file_name in ["blogs", "projects", "events", "analytics"]:
             cacheable = [get_item_by_id, load_blogs, load_projects, query_projects, search_projects, get_project_by_id, get_events]
             for func in cacheable:
                 if hasattr(func, "cache_clear"):
                     func.cache_clear()
 
-        return jsonify({"success": True, "message": f"{file_name}.json has been uploaded successfully"})
+        return jsonify({"success": True, "message": f"{file_name}{expected_extension} has been uploaded successfully"})
     except Exception as e:
         log_with_user("error", f"Failed to upload file | File: {file_name} | Error: {str(e)}", user_id)
         return jsonify({"success": False, "message": str(e)}), 400

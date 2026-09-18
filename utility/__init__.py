@@ -8,7 +8,6 @@ from . import events
 from . import path_files as path_utils
 from . import auth
 from . import contact
-from . import analytics
 from . import converter
 
 # convenience imports
@@ -34,6 +33,7 @@ def __getattr__(name):
     if name == "contact":
         return contact
     if name == "analytics":
+        from . import analytics
         return analytics
     if name == "converter":
         return converter

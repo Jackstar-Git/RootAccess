@@ -51,13 +51,19 @@
                 <div class="filter-menu">
                     <select id="topic-filter" onchange="window.location.href='?topic=' + this.value">
                         <option value="all">All Topics</option>
-                        <option {% if request.args.get('topic') == 'Personal' %}selected{% endif %} value="Personal">Personal</option>
-                        <option {% if request.args.get('topic') == 'Productivity' %}selected{% endif %} value="Productivity">Productivity</option>
-                        <option {% if request.args.get('topic') == 'E-commerce' %}selected{% endif %} value="E-commerce">E-commerce</option>
-                        <option {% if request.args.get('topic') == 'UI/UX' %}selected{% endif %} value="UI/UX">UI/UX</option>
-                        <option {% if request.args.get('topic') == 'Game Development' %}selected{% endif %} value="Game Development">Game Development</option>
-                        <option {% if request.args.get('topic') == 'Utility' %}selected{% endif %} value="Utility">Utility</option>
-                        <option {% if request.args.get('topic') == 'Desktop App' %}selected{% endif %} value="Desktop App">Desktop App</option>
+                        {% if settings and settings.topics %}
+                            {% for topic in settings.topics %}
+                                <option {% if request.args.get('topic') == topic %}selected{% endif %} value="{{ topic }}">{{ topic }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option {% if request.args.get('topic') == 'Personal' %}selected{% endif %} value="Personal">Personal</option>
+                            <option {% if request.args.get('topic') == 'Productivity' %}selected{% endif %} value="Productivity">Productivity</option>
+                            <option {% if request.args.get('topic') == 'E-commerce' %}selected{% endif %} value="E-commerce">E-commerce</option>
+                            <option {% if request.args.get('topic') == 'UI/UX' %}selected{% endif %} value="UI/UX">UI/UX</option>
+                            <option {% if request.args.get('topic') == 'Game Development' %}selected{% endif %} value="Game Development">Game Development</option>
+                            <option {% if request.args.get('topic') == 'Utility' %}selected{% endif %} value="Utility">Utility</option>
+                            <option {% if request.args.get('topic') == 'Desktop App' %}selected{% endif %} value="Desktop App">Desktop App</option>
+                        {% endif %}
                     </select>
                 </div>
             </div>

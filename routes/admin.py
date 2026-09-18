@@ -22,7 +22,7 @@ from utility.projects import add_project, get_project_by_id, load_projects, upda
 from utility.settings import get_settings, update_settings
 from utility.analytics import get_all_analytics
 from utility.quotes import load_quotes
-from utility.users import User, get_user_by_username, get_user_by_id, load_users, update_user, delete_user, is_active
+from utility.users import User, get_user_by_username, get_user_by_id, load_users, update_user, delete_user, is_active, add_user
 
 # ========== BLUEPRINT INITIALIZATION ==========
 admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
@@ -200,6 +200,118 @@ def all_users() -> ResponseReturnValue:
     return render_template(
         "admin/all-users.jinja",
         users=display_users,
+    )
+
+@admin_blueprint.route("/users/create", methods=["GET", "POST"])
+@permission_required(Permission.USERS_CREATE)
+def create_user() -> ResponseReturnValue:
+    current_user_id: Optional[str] = session.get("user_id")
+    current_user: User | None = get_user_by_id(current_user_id) if current_user_id else None
+    if not current_user:
+        return redirect(url_for("admin.login"))
+
+    permissions_list = [
+        ("Blogs: Read", Permission.BLOGS_READ),
+        ("Blogs: Create", Permission.BLOGS_CREATE),
+        ("Blogs: Update Own", Permission.BLOGS_UPDATE_OWN),
+        ("Blogs: Update All", Permission.BLOGS_UPDATE),
+        ("Blogs: Delete Own", Permission.BLOGS_DELETE_OWN),
+        ("Blogs: Delete All", Permission.BLOGS_DELETE),
+        ("Projects: Read", Permission.PROJECTS_READ),
+        ("Projects: Create", Permission.PROJECTS_CREATE),
+        ("Projects: Update", Permission.PROJECTS_UPDATE),
+        ("Media: Read", Permission.MEDIA_READ),
+        ("Media: Create", Permission.MEDIA_CREATE),
+        ("Media: Update", Permission.MEDIA_UPDATE),
+        ("Media: Delete", Permission.MEDIA_DELETE),
+        ("Interactions: Manage", Permission.INTERACTIONS_MANAGE),
+        ("Contacts: Read", Permission.CONTACTS_READ),
+        ("Contacts: Update", Permission.CONTACTS_UPDATE),
+        ("Quotes: Read", Permission.QUOTES_READ),
+        ("Quotes: Create", Permission.QUOTES_CREATE),
+        ("Quotes: Update", Permission.QUOTES_UPDATE),
+        ("Notes: Update", Permission.NOTES_UPDATE),
+        ("Events: Read", Permission.EVENTS_READ),
+        ("Events: Create", Permission.EVENTS_CREATE),
+        ("Events: Update", Permission.EVENTS_UPDATE),
+        ("Events: Delete", Permission.EVENTS_DELETE),
+        ("Analytics: Read", Permission.ANALYTICS_READ),
+        ("Analytics: Update", Permission.ANALYTICS_UPDATE),
+        ("Users: Read", Permission.USERS_READ),
+        ("Users: Create", Permission.USERS_CREATE),
+        ("Users: Update", Permission.USERS_UPDATE),
+        ("Users: Delete", Permission.USERS_DELETE),
+        ("System: Dashboard", Permission.SYSTEM_DASHBOARD),
+        ("System: Settings", Permission.SYSTEM_SETTINGS),
+        ("System: Admin", Permission.SYSTEM_ADMIN),
+        ("System: Root", Permission.SYSTEM_ROOT),
+    ]
+
+    current_user_hierarchy = current_user.get("hierarchy_level", 99)
+    current_user_permissions = current_user.get("permissions", 0)
+    is_root = AuthManager.has_permission(current_user["id"], Permission.SYSTEM_ROOT) 
+
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "").strip()
+        hierarchy_level = int(request.form.get("hierarchy_level", 5))
+        status = request.form.get("status", "active")
+        notes = request.form.get("notes", "")
+
+        if not username:
+            flash("Username is required.", "error")
+            return render_template("admin/create-user.jinja", permissions_list=permissions_list, current_user=current_user, max_hierarchy=current_user_hierarchy)
+
+        if get_user_by_username(username):
+            flash("A user with that username already exists.", "error")
+            return render_template("admin/create-user.jinja", permissions_list=permissions_list, current_user=current_user, max_hierarchy=current_user_hierarchy)
+
+        if not password or len(password) < 6:
+            flash("Password must be at least 6 characters long.", "error")
+            return render_template("admin/create-user.jinja", permissions_list=permissions_list, current_user=current_user, max_hierarchy=current_user_hierarchy)
+
+        if not is_root and hierarchy_level <= current_user_hierarchy:
+            flash("You cannot create a user with equal or higher hierarchy than your own.", "error")
+            return render_template("admin/create-user.jinja", permissions_list=permissions_list, current_user=current_user, max_hierarchy=current_user_hierarchy)
+
+        selected_permissions = 0
+        for _, perm_value in permissions_list:
+            if request.form.get(f"perm_{perm_value}"):
+                selected_permissions |= perm_value
+
+        if not is_root and (selected_permissions & ~current_user_permissions) != 0:
+            flash("You cannot grant permissions you do not already have.", "error")
+            return render_template("admin/create-user.jinja", permissions_list=permissions_list, current_user=current_user, max_hierarchy=current_user_hierarchy)
+
+        profile_picture_url = None
+        profile_pic_file = request.files.get("profile_picture")
+        if profile_pic_file and profile_pic_file.filename:
+            upload_folder = "uploads/users"
+            os.makedirs(upload_folder, exist_ok=True)
+            filename = f"{int(time.time())}_{profile_pic_file.filename}"
+            profile_pic_file.save(os.path.join(upload_folder, filename))
+            profile_picture_url = f"/uploads/users/{filename}"
+
+        new_user = {
+            "username": username,
+            "password_hash": generate_password_hash(password),
+            "profile_picture_url": profile_picture_url,
+            "hierarchy_level": hierarchy_level,
+            "permissions": selected_permissions,
+            "status": status,
+            "notes": notes,
+        }
+
+        created_user = add_user(new_user)
+        log_with_user("info", f"User created successfully | User ID: {created_user.get('id')} | Username: {username}", current_user_id)
+        flash("User created successfully!", "success")
+        return redirect(url_for("admin.all_users"))
+
+    return render_template(
+        "admin/create-user.jinja",
+        permissions_list=permissions_list,
+        current_user=current_user,
+        max_hierarchy=current_user_hierarchy
     )
 
 @admin_blueprint.route("/users/edit/<user_id>", methods=["GET", "POST"])
@@ -642,6 +754,15 @@ def all_projects() -> ResponseReturnValue:
     return render_template(
         "admin/all-projects.jinja",
         projects=display_projects,
+        settings=get_settings("project_config")
+    )
+
+@admin_blueprint.route("/projects/categories", methods=["GET"])
+@permission_required(Permission.PROJECTS_READ)
+def projects_categories() -> ResponseReturnValue:
+    return render_template(
+        "admin/project-settings.jinja",
+        settings=get_settings("project_config")
     )
 
 @admin_blueprint.route("/projects/create/", methods=["GET", "POST"])

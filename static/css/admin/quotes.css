@@ -137,7 +137,7 @@
 }
 
 .btn.delete-btn {
-    background-color: #fee;
+    background-color: var(--main-color-900);
     color: #d32f2f;
 }
 

@@ -99,13 +99,11 @@
                 <h3 class="section-heading" id="suggestions-heading">See also</h3>
                 <div class="related-grid" aria-live="polite">
                     {% if suggestions %}
-                        {% for suggestion in suggestions %}
-                            {% with blog=suggestion %}
-                                {% include "snippets/blog_card.jinja" %}
-                            {% endwith %}
+                        {% for blog in suggestions %}
+                            {% include "snippets/blog_card.jinja" %}
                         {% endfor %}
                     {% else %}
-                        <p>No related blogs found.</p>
+                        <p class="no-results">No recent articles available.</p>
                     {% endif %}
                 </div>
             </section>

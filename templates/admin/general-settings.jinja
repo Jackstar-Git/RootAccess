@@ -101,11 +101,24 @@
                 </form>
             </div>
 
+            <div class="settings-card">
+                <h3 class="section-title">Data Backup & Restore</h3>
+                <div class="settings-grid" style="margin-bottom: 12px;">
+                    <button type="button" class="btn-primary" onclick="backupData()">
+                        <i class="fa-solid fa-download"></i> Backup All Data
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="openRestoreDialog()">
+                        <i class="fa-solid fa-upload"></i> Restore From Backup
+                    </button>
+                </div>
+                <input type="file" id="backupRestoreInput" style="display: none;" accept=".zip" onchange="restoreData(event)">
+            </div>
+
             <!-- Data Files Management Section -->
             <div class="settings-card">
                 <h3 class="section-title">Data Files Management</h3>
                 
-                {% set json_files = ['analytics', 'blogs', 'contacts', 'events', 'projects', 'quotes', 'settings'] %}
+                {% set json_files = ['analytics', 'blogs', 'contacts', 'events', 'projects', 'quotes', 'settings', 'users', 'notes'] %}
                 
                 {% for file_name in json_files %}
                 <div class="data-file-group">

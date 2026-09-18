@@ -55,7 +55,7 @@
         "hierarchy_level": 3,
         "permissions": 0,
         "time_created": 0,
-        "last_modified": 1780328881,
+        "last_modified": 1789769645,
         "status": "banned",
         "notes": ""
     },
@@ -65,9 +65,9 @@
         "password_hash": "scrypt:32768:8:1$a2uFwwpAaPwGWFb7$60c8049946c47115630d231ed1205353a98c921febd8e01438b9cd8f167aa4be8b7ad0ce1f72fc5a0e16dd45def6b891ba4b6e1516133300f4f3fa0480bea63f",
         "profile_picture_url": null,
         "hierarchy_level": 4,
-        "permissions": 0,
+        "permissions": 1073741824,
         "time_created": 0,
-        "last_modified": 1780324235,
+        "last_modified": 1789769839,
         "status": "test",
         "notes": ""
     }
