@@ -14,6 +14,7 @@ class User(TypedDict):
     permissions: int
     time_created: int
     last_modified: int
+    last_login: int
     status: Literal["active", "banned", "disabled", "test"]
     notes: str
 
@@ -33,6 +34,7 @@ def _build_default_user_payload(user: Dict[str, Any] | User) -> User:
         "permissions": user.get("permissions", 0),
         "time_created": user.get("time_created", 0),
         "last_modified": user.get("last_modified", 0),
+        "last_login": user.get("last_login", 0),
         "status": user.get("status", "active"),
         "notes": user.get("notes", ""),      
     }
@@ -95,6 +97,7 @@ def add_user(new_user: Dict[str, Any]) -> User:
         "permissions": new_user.get("permissions", 0),
         "time_created": new_user.get("time_created", now),
         "last_modified": now,
+        "last_login": new_user.get("last_login", 0),
         "status": new_user.get("status", "active"),
         "notes": new_user.get("notes", ""),
     }

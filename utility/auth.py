@@ -43,6 +43,7 @@ class Permission(IntFlag):
     USERS_DELETE = 1 << 29
     SYSTEM_DASHBOARD = 1 << 30
     SYSTEM_SETTINGS = 1 << 31
+    DATA_MANAGEMENT = 1 << 32
     SYSTEM_ADMIN = 1 << 62
     SYSTEM_ROOT = 1 << 63
 
@@ -74,6 +75,23 @@ class AuthManager:
         if (user_permissions & Permission.SYSTEM_ROOT) == Permission.SYSTEM_ROOT:
             return True
         return (user_permissions & required_perm) == required_perm
+
+    @staticmethod
+    def has_any_permission(id: str, *required_perms: Permission) -> bool:
+        user = get_user_by_id(id)
+        if not user:
+            return False
+
+        user_bits = user.get("permissions", 0)
+        if (user_bits & Permission.SYSTEM_ROOT) == Permission.SYSTEM_ROOT:
+            return True
+        return any((user_bits & perm) == perm for perm in required_perms)
+
+    @staticmethod
+    def has_any_permission_frontend(user_permissions: int, *required_perms: Permission) -> bool:
+        if (user_permissions & Permission.SYSTEM_ROOT) == Permission.SYSTEM_ROOT:
+            return True
+        return any((user_permissions & perm) == perm for perm in required_perms)
 
     @staticmethod
     def verify_ownership(id: str, blog_id: str) -> bool:
@@ -125,6 +143,22 @@ def permission_required(required_perm: Permission) -> Callable[[F], F]:
                 if blog_id and AuthManager.verify_ownership(user_id, blog_id):
                     return f(*args, **kwargs)
 
+
+            abort(403)
+        return cast(F, decorated_function)
+    return decorator
+
+
+def permission_required_any(*required_perms: Permission) -> Callable[[F], F]:
+    def decorator(f: F) -> F:
+        @wraps(f)
+        def decorated_function(*args: Any, **kwargs: Any) -> Any:
+            user_id = session.get("user_id")
+            if not user_id:
+                return redirect(url_for("admin.login", next=request.path))
+
+            if any(AuthManager.has_permission(user_id, perm) for perm in required_perms):
+                return f(*args, **kwargs)
 
             abort(403)
         return cast(F, decorated_function)

@@ -215,7 +215,7 @@
 }
 
 .btn-remove-author {
-    background: rgba(255, 0, 0, 0.1);
+    background: color-mix(in srgb, var(--warning-color) 10%, transparent);
     color: var(--warning-color);
     border: none;
     border-radius: var(--radius-sm);

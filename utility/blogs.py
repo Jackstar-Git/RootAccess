@@ -240,10 +240,18 @@ def query_blogs(limit: Optional[int] = 10, exclude_id: Optional[Any] = None, mat
     return filtered_results[:limit]
 
 def sort_blogs(blog_list: List[BlogPost], sort_by: str) -> List[BlogPost]:
-    reverse_order: bool = sort_by != "oldest"
+    sort_key: str = (sort_by or "newest").strip().lower()
+
+    if sort_key == "title-asc":
+        return sorted(blog_list, key=lambda x: (x.get("title") or "").lower())
+
+    if sort_key == "title-desc":
+        return sorted(blog_list, key=lambda x: (x.get("title") or "").lower(), reverse=True)
+
+    reverse_order: bool = sort_key != "oldest"
     return sorted(
-        blog_list, 
-        key=lambda x: x.get("time_created", 0), 
+        blog_list,
+        key=lambda x: x.get("time_created", 0),
         reverse=reverse_order
     )
 

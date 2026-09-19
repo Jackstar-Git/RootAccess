@@ -77,7 +77,7 @@ class CustomFlask(Flask):
                 with open(analytics_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     if isinstance(data, list):
-                        self.analytics_cache = {} 
+                        self.analytics_cache = {}
                     else:
                         self.analytics_cache = data
             except Exception as e:

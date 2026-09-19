@@ -72,6 +72,9 @@
 
                         <div class="user-info">
                             <h3><a href="/admin/users/edit/{{ user.id }}">{{ user.username }}</a></h3>
+                            <p class="user-last-login">
+                                <i class="fas fa-sign-in-alt"></i> Last Login: <span title="{{ user.last_login|datetimeformat('%Y-%m-%d %H:%M:%S') if user.last_login else 'Never' }}">{{ user.last_login|datetimeformat if user.last_login else 'Never' }}</span>
+                            </p>
                             <p class="user-permissions-text">
                                 <i class="fas fa-key"></i> Permissions: <span class="hash-truncate" title="{{ user.permissions }}">{{ user.permissions }}</span>
                             </p>

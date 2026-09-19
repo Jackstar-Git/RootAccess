@@ -4,10 +4,11 @@
         "username": "Jackstar",
         "password_hash": "scrypt:32768:8:1$Jq3zQ5hzXxA8S3IT$c823ab0be3fc91a3161008a2d62bcdd3b5b304f7e8f13cece02697e7b6dad34357adf355811826cbf6b49dc80da4a93bd997a2d511a2d3bd7eb5cc5e31608fcb",
         "profile_picture_url": "/static/assets/images/logos/Logo.png",
-        "hierarchy_level": 0,
+        "hierarchy_level": 3,
         "permissions": 13835058059577128959,
         "time_created": 1773949620,
-        "last_modified": 1780237562,
+        "last_modified": 1789824832,
+        "last_login": 1789823933,
         "status": "active",
         "notes": ""
     },
@@ -20,6 +21,7 @@
         "permissions": 1089995799,
         "time_created": 1780088160,
         "last_modified": 1780325505,
+        "last_login": 0,
         "status": "active",
         "notes": ""
     },
@@ -32,6 +34,7 @@
         "permissions": 0,
         "time_created": 1780088160,
         "last_modified": 1780328866,
+        "last_login": 0,
         "status": "banned",
         "notes": ""
     },
@@ -44,6 +47,7 @@
         "permissions": 0,
         "time_created": 0,
         "last_modified": 1780328873,
+        "last_login": 0,
         "status": "banned",
         "notes": ""
     },
@@ -55,7 +59,8 @@
         "hierarchy_level": 3,
         "permissions": 0,
         "time_created": 0,
-        "last_modified": 1789769645,
+        "last_modified": 1780328881,
+        "last_login": 0,
         "status": "banned",
         "notes": ""
     },
@@ -65,9 +70,10 @@
         "password_hash": "scrypt:32768:8:1$a2uFwwpAaPwGWFb7$60c8049946c47115630d231ed1205353a98c921febd8e01438b9cd8f167aa4be8b7ad0ce1f72fc5a0e16dd45def6b891ba4b6e1516133300f4f3fa0480bea63f",
         "profile_picture_url": null,
         "hierarchy_level": 4,
-        "permissions": 1073741824,
+        "permissions": 0,
         "time_created": 0,
-        "last_modified": 1789769839,
+        "last_modified": 1780324235,
+        "last_login": 0,
         "status": "test",
         "notes": ""
     }

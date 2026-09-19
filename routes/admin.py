@@ -11,16 +11,17 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 
 from CustomFlaskClass import app
-from utility.auth import AuthManager, permission_required, Permission, AuthManager
-from utility.blogs import add_blog, get_item_by_id, load_blogs, update_blog, BlogPost
+from utility.auth import AuthManager, permission_required, permission_required_any, Permission, AuthManager
+from utility.blogs import add_blog, get_item_by_id, load_blogs, update_blog, sort_blogs, BlogPost
 from utility.calendar import generate_calendar
 from utility.contact import load_contacts
 from utility.events import get_events
 from utility.logging_utility import logger, log_with_user
 from utility.converter import MarkdownConverter
-from utility.projects import add_project, get_project_by_id, load_projects, update_project, Project
+from utility.projects import add_project, get_project_by_id, load_projects, update_project, sort_projects, Project
 from utility.settings import get_settings, update_settings
 from utility.analytics import get_all_analytics
+from utility.path_files import sort_media_files
 from utility.quotes import load_quotes
 from utility.users import User, get_user_by_username, get_user_by_id, load_users, update_user, delete_user, is_active, add_user
 
@@ -66,6 +67,7 @@ def login() -> ResponseReturnValue:
         user_id = user_data.get("id")
         # Store user info in session
         session["user_id"] = user_id
+        update_user(user_id, {"last_login": int(time.time())})
         logger.info(f"User '{username}' logged in successfully from {request.remote_addr}")
         flash(f"Welcome, {username}!", "success")
         
@@ -243,6 +245,7 @@ def create_user() -> ResponseReturnValue:
         ("Users: Delete", Permission.USERS_DELETE),
         ("System: Dashboard", Permission.SYSTEM_DASHBOARD),
         ("System: Settings", Permission.SYSTEM_SETTINGS),
+        ("Data: Management", Permission.DATA_MANAGEMENT),
         ("System: Admin", Permission.SYSTEM_ADMIN),
         ("System: Root", Permission.SYSTEM_ROOT),
     ]
@@ -369,6 +372,7 @@ def edit_user(user_id: str) -> ResponseReturnValue:
         ("Users: Delete", Permission.USERS_DELETE),
         ("System: Dashboard", Permission.SYSTEM_DASHBOARD),
         ("System: Settings", Permission.SYSTEM_SETTINGS),
+        ("Data: Management", Permission.DATA_MANAGEMENT),
         ("System: Admin", Permission.SYSTEM_ADMIN),
         ("System: Root", Permission.SYSTEM_ROOT),
     ]
@@ -481,6 +485,7 @@ def delete_user_route(user_id: str) -> ResponseReturnValue:
 def library() -> ResponseReturnValue:
     ROOT_DIR: str = "uploads"
     current_path: str = request.args.get("path", "/")
+    sort_by: str = request.args.get("sort", "name-asc").strip()
 
     safe_path: str = current_path.strip("/")
     abs_path: str = os.path.join(ROOT_DIR, safe_path)
@@ -508,16 +513,18 @@ def library() -> ResponseReturnValue:
                 "name": item,
                 "type": file_type,
                 "last_modified": datetime.fromtimestamp(stats.st_mtime).strftime("%Y-%m-%d %H:%M"),
-                "size": stats.st_size if not os.path.isdir(item_path) else 0
+                "modified_at": stats.st_mtime,
+                "size": stats.st_size if not os.path.isdir(item_path) else 0,
             })
 
-    files_data.sort(key=lambda x: (x["type"] != "folder", x["name"].lower()))
+    files_data = sort_media_files(files_data, sort_by)
 
     return render_template(
         "admin/media-library.jinja",
         files=files_data,
         path=current_path,
-        root=ROOT_DIR
+        root=ROOT_DIR,
+        sort_by=sort_by,
     )
 
 # ========== LOGS ROUTES ==========
@@ -539,6 +546,7 @@ def server_logs() -> ResponseReturnValue:
 def all_blogs() -> ResponseReturnValue:
     search_query: str = request.args.get("search", "").lower()
     topic_query: str = request.args.get("topic", "all")
+    sort_by: str = request.args.get("sort", "newest").strip()
 
     raw_blogs = load_blogs()
 
@@ -556,7 +564,7 @@ def all_blogs() -> ResponseReturnValue:
 
         display_blogs.append(blog)
 
-    display_blogs.sort(key=lambda x: x.get("time_created", 0), reverse=True)
+    display_blogs = sort_blogs(display_blogs, sort_by)
 
     return render_template(
         "admin/all-blogs.jinja",
@@ -733,6 +741,7 @@ def edit_blog(blog_id: str) -> ResponseReturnValue:
 def all_projects() -> ResponseReturnValue:
     search_query: str = request.args.get("search", "").lower()
     topic_query: str = request.args.get("topic", "all")
+    sort_by: str = request.args.get("sort", "newest").strip()
 
     raw_projects = load_projects()
     display_projects: List[Project] = []
@@ -749,7 +758,7 @@ def all_projects() -> ResponseReturnValue:
 
         display_projects.append(project)
 
-    display_projects.sort(key=lambda x: x.get("time_created", 0), reverse=True)
+    display_projects = sort_projects(display_projects, sort_by)
 
     return render_template(
         "admin/all-projects.jinja",
@@ -906,7 +915,7 @@ def server_settings() -> ResponseReturnValue:
                            robots_txt=robots)
 
 @admin_blueprint.route("/settings/general", methods=["GET", "POST"])
-@permission_required(Permission.SYSTEM_ADMIN)
+@permission_required_any(Permission.SYSTEM_ADMIN, Permission.DATA_MANAGEMENT)
 def general_settings() -> ResponseReturnValue:
     user_id: Optional[str] = session.get("user_id")
     

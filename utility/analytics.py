@@ -3,7 +3,7 @@ import os
 import time
 from typing import TYPE_CHECKING, cast
 
-from flask import current_app
+from flask import current_app, session
 
 from utility.logging_utility import logger
 from utility.settings import get_settings
@@ -19,6 +19,10 @@ def _get_app():
     return cast("CustomFlask", current_app)
 
 def track_visit(url: str, visitor_id: str, time_spent: float, is_heartbeat: bool) -> None:
+    if session.get("user_id"):
+        print("Test")
+        return
+
     app = _get_app()
     with app.analytics_lock:
         cache = app.analytics_cache
@@ -50,6 +54,7 @@ def _save_analytics(app) -> None:
     try:
         with open(ANALYTICS_FILE, "w", encoding="utf-8") as f:
             json.dump(app.analytics_cache, f, indent=4)
+            print("Test")
         app.last_analytics_flush = time.time()
     except Exception as e:
         logger.error(f"Failed to save analytics to disk: {e}")

@@ -116,7 +116,7 @@
 /* Refined Trash Icon Button */
 .btn-delete-row {
     background: transparent;
-    border: 1px solid rgba(255, 0, 0, 0.2);
+    border: 1px solid color-mix(in srgb, var(--warning-color) 20%, transparent);
     color: var(--warning-color);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: var(--radius-md);
@@ -129,7 +129,7 @@
 
 .btn-delete-row:hover, .btn-delete-row:focus-within {
     background: var(--warning-color);
-    color: var(-secondary-font-color);
+    color: var(--secondary-font-color);
     border-color: var(--warning-color);
     box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
 }
@@ -160,8 +160,8 @@
 .ignore-input-group input {
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--background-2);
+    background: var(--background-3);
     color: var(--font-color);
     font-family: inherit;
     outline: none;
@@ -188,7 +188,7 @@
 
 .btn-add:hover, .btn-add:focus-within {
     background: var(--main-color-500);
-    color: var(-secondary-font-color);
+    color: var(--secondary-font-color);
 }
 
 /* Adjust Analytics Button */

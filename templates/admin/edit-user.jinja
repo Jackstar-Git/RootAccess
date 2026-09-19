@@ -26,7 +26,12 @@
             </button>
 
             <header class="editor-header">
-                <h2>Edit User: {{ user.username }}</h2>
+                <div>
+                    <h2>Edit User: {{ user.username }}</h2>
+                    <p class="user-last-login-inline">
+                        <i class="fas fa-sign-in-alt"></i> Last Login: {{ user.last_login|datetimeformat('%Y-%m-%d %H:%M:%S') if user.last_login else 'Never' }}
+                    </p>
+                </div>
                 <div class="header-actions">
                     <a href="/admin/users/all" class="btn-discard">Discard</a>
                 </div>

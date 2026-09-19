@@ -77,7 +77,7 @@ textarea {
 
 .btn-danger {
     background-color: var(--warning-color);
-    color: var(-secondary-font-color);
+    color: var(--secondary-font-color);
     border: none;
     padding: 10px 20px;
     border-radius: 8px;

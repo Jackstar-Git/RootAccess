@@ -213,10 +213,18 @@ def query_projects(limit: int = 10, exclude_id: Optional[Any] = None, match_mode
     return filtered_results[:limit]
 
 def sort_projects(projects_list: List[Project], sort_by: str) -> List[Project]:
-    reverse_order: bool = sort_by != "oldest"
+    sort_key: str = (sort_by or "newest").strip().lower()
+
+    if sort_key == "title-asc":
+        return sorted(projects_list, key=lambda x: (x.get("title") or "").lower())
+
+    if sort_key == "title-desc":
+        return sorted(projects_list, key=lambda x: (x.get("title") or "").lower(), reverse=True)
+
+    reverse_order: bool = sort_key != "oldest"
     return sorted(
-        projects_list, 
-        key=lambda x: x.get("time_created", 0), 
+        projects_list,
+        key=lambda x: x.get("time_created", 0),
         reverse=reverse_order
     )
 

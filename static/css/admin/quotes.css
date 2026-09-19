@@ -45,10 +45,10 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--background-2);
     border-radius: 8px;
     padding: 12px 20px;
-    background-color: var(-secondary-font-color);
+    background-color: var(--background-1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -137,13 +137,12 @@
 }
 
 .btn.delete-btn {
-    background-color: var(--main-color-900);
-    color: #d32f2f;
+    background-color: var(--warning-color);
+    color: var(--secondary-font-color);
 }
 
 .btn.delete-btn:hover, .btn.delete-btn:focus-within {
-    background-color: #fdd;
-    color: #c62828;
+    opacity: 0.85;
 }
 
 /* Add New Item */
@@ -151,7 +150,7 @@
     flex-direction: column;
     align-items: stretch;
     padding: 20px;
-    background-color: #fafafa;
+    background-color: var(--main-color-50);
     border: 2px dashed var(--main-color-200);
 }
 
@@ -254,7 +253,7 @@
 }
 
 .modal-content {
-    background: white;
+    background: var(--background-1);
     border-radius: 8px;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
     max-width: 600px;

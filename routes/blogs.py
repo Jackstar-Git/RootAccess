@@ -110,14 +110,26 @@ def blog(blog_id: str) -> ResponseReturnValue:
     blog_data["author_profiles"] = {}
     for author_id in blog_data.get("authors", []):
         blog_data["author_profiles"][author_id] = get_user_by_id(author_id).get("profile_picture_url") if author_id else None #type: ignore
-    return render_template(
-        "blog.jinja",
-        blog=blog_data,
-        id=blog_id,
-        suggestions=query_blogs(
+
+    suggestions: list = query_blogs(
             categories=blog_data.get("categories", []),
             status="visible",
             limit=3,
             exclude_id=blog_id
         )
+
+    suggestions_data: list = list(map(lambda blog_data: {
+        **blog_data,
+        "author_names": [
+            user.get("username", "")
+            for author_id in blog_data.get("authors", [])
+            if author_id and (user := get_user_by_id(author_id))
+        ]
+    }, suggestions))
+
+    return render_template(
+        "blog.jinja",
+        blog=blog_data,
+        id=blog_id,
+        suggestions=suggestions_data
     )

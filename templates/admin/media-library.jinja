@@ -39,13 +39,13 @@
                     <div class="toolbar-divider"></div>
                     <div class="sort-controls">
                         <label for="sort-options" class="toolbar-label">Sort by:</label>
-                        <select id="sort-options" class="toolbar-select">
-                            <option value="name-asc">Name (A-Z)</option>
-                            <option value="name-desc">Name (Z-A)</option>
-                            <option value="size-asc">Size (Small-Large)</option>
-                            <option value="size-desc">Size (Large-Small)</option>
-                            <option value="date-asc">Date (Old-New)</option>
-                            <option value="date-desc">Date (New-Old)</option>
+                        <select id="sort-options" class="toolbar-select" onchange="const params = new URLSearchParams(window.location.search); params.set('sort', this.value); const query = params.toString(); window.location.href = window.location.pathname + (query ? '?' + query : '');">
+                            <option value="name-asc" {% if sort_by == 'name-asc' %}selected{% endif %}>Name (A-Z)</option>
+                            <option value="name-desc" {% if sort_by == 'name-desc' %}selected{% endif %}>Name (Z-A)</option>
+                            <option value="size-asc" {% if sort_by == 'size-asc' %}selected{% endif %}>Size (Small-Large)</option>
+                            <option value="size-desc" {% if sort_by == 'size-desc' %}selected{% endif %}>Size (Large-Small)</option>
+                            <option value="date-asc" {% if sort_by == 'date-asc' %}selected{% endif %}>Date (Old-New)</option>
+                            <option value="date-desc" {% if sort_by == 'date-desc' %}selected{% endif %}>Date (New-Old)</option>
                         </select>
                     </div>
                 </div>

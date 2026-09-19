@@ -1,5 +1,5 @@
 import os
-from typing import Dict, List, Final
+from typing import Any, Dict, List, Final
 from werkzeug.utils import secure_filename
 
 ALLOWED_FILE_TYPES: Final[Dict[str, List[str]]] = {
@@ -27,3 +27,35 @@ def get_file_type(filename: str) -> str:
 
 def sanitize_filename(filename: str) -> str:
     return secure_filename(filename)
+
+def sort_media_files(file_list: List[Dict[str, Any]], sort_by: str = "name-asc") -> List[Dict[str, Any]]:
+    items: List[Dict[str, Any]] = list(file_list or [])
+    if not items:
+        return items
+
+    sort_value: str = (sort_by or "name-asc").strip().lower()
+    reverse: bool = sort_value.endswith("-desc")
+    field: str = sort_value[:-5] if reverse else sort_value
+
+    if field not in {"name", "size", "date"}:
+        field = "name"
+        reverse = False
+
+    def item_sort_key(item: Dict[str, Any]) -> Any:
+        if field == "name":
+            return item.get("name", "").lower()
+        if field == "size":
+            return item.get("size", 0)
+        return item.get("modified_at", 0)
+
+    folders: List[Dict[str, Any]] = sorted(
+        [item for item in items if item.get("type") == "folder"],
+        key=item_sort_key,
+        reverse=reverse,
+    )
+    files: List[Dict[str, Any]] = sorted(
+        [item for item in items if item.get("type") != "folder"],
+        key=item_sort_key,
+        reverse=reverse,
+    )
+    return folders + files

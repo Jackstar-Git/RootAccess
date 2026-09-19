@@ -96,7 +96,7 @@
 }
 
 .blog-info h3 {
-    color: var(--main-color);
+    color: var(--main-color-600);
     font-size: 1.15rem;
     margin: 0 0 8px 0;
     white-space: nowrap;
@@ -146,7 +146,7 @@
 .btn {
     padding: 10px 14px;
     font-size: var(--font-size-md);
-    color: var(-secondary-font-color);
+    color: var(--secondary-font-color);
     border-radius: 6px;
     text-decoration: none;
     text-align: center;
@@ -159,14 +159,14 @@
     opacity: 0.85;
 }
 
-.edit-btn { background-color: var(--secondary-color, #4CAF50); }
-.delete-btn { background-color: var(--warning-color, #F44336); }
+.edit-btn { background-color: var(--main-color-400); color: var(--secondary-font-color); }
+.delete-btn { background-color: var(--warning-color); }
 .view-btn { background-color: var(--main-color-500); }
 
 .empty-state {
     text-align: center;
     padding: 50px 20px;
-    background: var(--secondary-bg, var(--background-1));
+    background: var(--background-1);
     border-radius: 8px;
     border: 1px dashed var(--background-2);
 }

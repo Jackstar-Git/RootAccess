@@ -19,7 +19,7 @@ import psutil
 
 from CustomFlaskClass import app, csrf
 from utility.analytics import track_visit, clear_analytics, get_all_analytics, adjust_analytics
-from utility.auth import AuthManager, permission_required, verify_captcha, refresh_captcha, Permission
+from utility.auth import AuthManager, permission_required, permission_required_any, verify_captcha, refresh_captcha, Permission
 from utility.blogs import add_blog, delete_blog, update_blog, load_blogs, get_item_by_id
 from utility.calendar import generate_calendar
 from utility.contact import add_contact, delete_contact, mark_contact_read
@@ -112,7 +112,7 @@ def download(filepath: str) -> ResponseReturnValue:
     abort(400, description="Invalid path provided.")
 
 @internal_blueprint.route("/admin/settings/general/data/backup", methods=["GET"])
-@permission_required(Permission.SYSTEM_ADMIN)
+@permission_required_any(Permission.DATA_MANAGEMENT, Permission.SYSTEM_ADMIN)
 def backup_all_data() -> ResponseReturnValue:
     user_id: Optional[str] = session.get("user_id")
     data_dir = os.path.join(app.root_path, "data")
@@ -138,7 +138,7 @@ def backup_all_data() -> ResponseReturnValue:
     )
 
 @internal_blueprint.route("/admin/settings/general/data/preview", methods=["POST"])
-@permission_required(Permission.SYSTEM_ADMIN)
+@permission_required_any(Permission.DATA_MANAGEMENT, Permission.SYSTEM_ADMIN)
 def preview_backup_contents() -> ResponseReturnValue:
     if "file" not in request.files:
         return jsonify({"success": False, "message": "No backup file provided."}), 400
@@ -170,7 +170,7 @@ def preview_backup_contents() -> ResponseReturnValue:
         return jsonify({"success": False, "message": str(exc)}), 400
 
 @internal_blueprint.route("/admin/settings/general/data/restore", methods=["POST"])
-@permission_required(Permission.SYSTEM_ADMIN)
+@permission_required_any(Permission.DATA_MANAGEMENT, Permission.SYSTEM_ADMIN)
 def restore_all_data() -> ResponseReturnValue:
     user_id: Optional[str] = session.get("user_id")
 
@@ -1248,7 +1248,7 @@ def api_manage_quotes() -> ResponseReturnValue:
 
 @internal_blueprint.route("/api/analytics/track", methods=["POST"])
 @csrf.exempt 
-@limiter.limit("6 per minute")
+@limiter.limit("20 per minute")
 def api_track_analytics() -> ResponseReturnValue:
     if session.get("username"):
         return jsonify({"status": "ignored", "reason": "Admins/Editors are invisible."})
@@ -1362,7 +1362,7 @@ def api_clear_analytics() -> ResponseReturnValue:
         return jsonify({"error": "Failed to clear data"}), 500
 
 @internal_blueprint.route("/admin/settings/general/file/read/<file_name>", methods=["GET"])
-@permission_required(Permission.SYSTEM_ADMIN)
+@permission_required_any(Permission.DATA_MANAGEMENT, Permission.SYSTEM_ADMIN)
 def read_data_file(file_name: str) -> ResponseReturnValue:
     user_id: Optional[str] = session.get("user_id")
     try:
@@ -1386,7 +1386,7 @@ def read_data_file(file_name: str) -> ResponseReturnValue:
         return jsonify({"success": False, "message": str(e)}), 400
 
 @internal_blueprint.route("/admin/settings/general/file/save/<file_name>", methods=["POST"])
-@permission_required(Permission.SYSTEM_ADMIN)
+@permission_required_any(Permission.DATA_MANAGEMENT, Permission.SYSTEM_ADMIN)
 def save_data_file(file_name: str) -> ResponseReturnValue:
     user_id: Optional[str] = session.get("user_id")
     try:
@@ -1423,7 +1423,7 @@ def save_data_file(file_name: str) -> ResponseReturnValue:
         return jsonify({"success": False, "message": str(e)}), 400
 
 @internal_blueprint.route("/admin/settings/general/file/upload/<file_name>", methods=["POST"])
-@permission_required(Permission.SYSTEM_ADMIN)
+@permission_required_any(Permission.DATA_MANAGEMENT, Permission.SYSTEM_ADMIN)
 def upload_data_file(file_name: str) -> ResponseReturnValue:
     user_id: Optional[str] = session.get("user_id")
     try:

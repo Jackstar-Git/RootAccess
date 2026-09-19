@@ -39,18 +39,18 @@
                 </form>
 
                 <div class="sort-options">
-                    <select id="sort-options" onchange="window.location.href=this.value">
-                        <option value="">Sort by</option>
-                        <option value="?sort=newest">Newest First</option>
-                        <option value="?sort=oldest">Oldest First</option>
-                        <option value="?sort=title-asc">Title: A-Z</option>
-                        <option value="?sort=title-desc">Title: Z-A</option>
+                    <select id="sort-options" onchange="const params = new URLSearchParams(window.location.search); if (this.value) { params.set('sort', this.value); } else { params.delete('sort'); } const query = params.toString(); window.location.href = window.location.pathname + (query ? '?' + query : '');">
+                        <option value="" {% if not request.args.get('sort') %}selected{% endif %}>Sort by</option>
+                        <option value="newest" {% if request.args.get('sort') == 'newest' %}selected{% endif %}>Newest First</option>
+                        <option value="oldest" {% if request.args.get('sort') == 'oldest' %}selected{% endif %}>Oldest First</option>
+                        <option value="title-asc" {% if request.args.get('sort') == 'title-asc' %}selected{% endif %}>Title: A-Z</option>
+                        <option value="title-desc" {% if request.args.get('sort') == 'title-desc' %}selected{% endif %}>Title: Z-A</option>
                     </select>
                 </div>
 
                 <div class="filter-menu">
-                    <select id="topic-filter" onchange="window.location.href='?topic=' + this.value">
-                        <option value="all">All Topics</option>
+                    <select id="topic-filter" onchange="const params = new URLSearchParams(window.location.search); if (this.value && this.value !== 'all') { params.set('topic', this.value); } else { params.delete('topic'); } const query = params.toString(); window.location.href = window.location.pathname + (query ? '?' + query : '');">
+                        <option value="all" {% if request.args.get('topic', 'all') == 'all' %}selected{% endif %}>All Topics</option>
                         {% if settings and settings.topics %}
                             {% for topic in settings.topics %}
                                 <option {% if request.args.get('topic') == topic %}selected{% endif %} value="{{ topic }}">{{ topic }}</option>
