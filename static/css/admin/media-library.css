@@ -161,8 +161,8 @@
 }
 
 .file-item.selected {
-    background-color: color-mix(in srgb, var(--main-color) 20%, white);
-    box-shadow: inset 3px 0 0 var(--main-color);
+    background-color: color-mix(in srgb, var(--main-color-500) 20%, white);
+    box-shadow: inset 3px 0 0 var(--main-color-500);
 }
 
 .file-checkbox {

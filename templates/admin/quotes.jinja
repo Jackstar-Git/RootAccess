@@ -28,7 +28,7 @@
                 <h2>Quotes Management</h2>
             </div>
             
-            <p class="settings-description">Add, edit, and manage quotes. The "Text" field is required, while "Author" and "Original" (original language version) are optional.</p>
+            <p class="settings-description">Add, edit, and manage quotes. The "Text" field is required, while "Author", "Year", "Note", and "Original" are optional.</p>
 
             <div class="config-section">
                 <div class="section-header">
@@ -51,8 +51,18 @@
                                         <p class="quote-text">"{{ quote.text }}"</p>
                                     {% endif %}
                                     <p class="quote-author">— {{ quote.author }}</p>
-                                    {% if quote.original %}
-                                        <p class="quote-original" title="Original language version">{{ quote.original }}</p>
+                                    {% if quote.year is not none or quote.note or quote.original %}
+                                        <div class="quote-meta">
+                                            {% if quote.year is not none %}
+                                                <span class="quote-pill quote-year" title="Quote year"><i class="fas fa-calendar-alt"></i> {{ quote.year }}</span>
+                                            {% endif %}
+                                            {% if quote.note %}
+                                                <span class="quote-pill quote-note" title="Quote note"><i class="fas fa-sticky-note"></i> {{ quote.note }}</span>
+                                            {% endif %}
+                                            {% if quote.original %}
+                                                <span class="quote-pill quote-original" title="Original language version"><i class="fas fa-language"></i> {{ quote.original }}</span>
+                                            {% endif %}
+                                        </div>
                                     {% endif %}
                                 </div>
                             </div>
@@ -66,17 +76,27 @@
                     <div class="config-item add-new-item">
                         <form method="POST" action="/api/quotes/add" class="quote-form">
                             <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
-                            <div class="form-group">
-                                <i class="fas fa-quote-left form-icon"></i>
-                                <textarea name="quote_text" placeholder="Quote text (required)" rows="2" required></textarea>
-                            </div>
-                            <div class="form-group">
-                                <i class="fas fa-user form-icon"></i>
-                                <input type="text" name="quote_author" placeholder="Author (optional)">
-                            </div>
-                            <div class="form-group">
-                                <i class="fas fa-language form-icon"></i>
-                                <textarea name="quote_original" placeholder="Original language version (optional)" rows="2"></textarea>
+                            <div class="quote-form-grid">
+                                <div class="form-group full-width">
+                                    <i class="fas fa-quote-left form-icon"></i>
+                                    <textarea name="quote_text" placeholder="Quote text (required)" rows="2" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <i class="fas fa-user form-icon"></i>
+                                    <input type="text" name="quote_author" placeholder="Author (optional)">
+                                </div>
+                                <div class="form-group">
+                                    <i class="fas fa-calendar form-icon"></i>
+                                    <input type="number" name="quote_year" placeholder="Year (optional)" min="0" max="9999">
+                                </div>
+                                <div class="form-group full-width">
+                                    <i class="fas fa-sticky-note form-icon"></i>
+                                    <textarea name="quote_note" placeholder="Note (optional)" rows="2"></textarea>
+                                </div>
+                                <div class="form-group full-width">
+                                    <i class="fas fa-language form-icon"></i>
+                                    <textarea name="quote_original" placeholder="Original language version (optional)" rows="2"></textarea>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Add Quote</button>
                         </form>
@@ -95,15 +115,25 @@
             </div>
             <form id="editForm" method="PUT" onsubmit="submitEditForm(event)">
                 <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
-                <div class="form-group">
+                <div class="form-group full-width">
                     <label for="editText">Quote Text (required)</label>
                     <textarea id="editText" name="text" rows="3" required></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="editAuthor">Author</label>
-                    <input type="text" id="editAuthor" name="author">
+                <div class="edit-form-grid">
+                    <div class="form-group">
+                        <label for="editAuthor">Author</label>
+                        <input type="text" id="editAuthor" name="author">
+                    </div>
+                    <div class="form-group">
+                        <label for="editYear">Year</label>
+                        <input type="number" id="editYear" name="year" min="0" max="9999">
+                    </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group full-width">
+                    <label for="editNote">Note</label>
+                    <textarea id="editNote" name="note" rows="3"></textarea>
+                </div>
+                <div class="form-group full-width">
                     <label for="editOriginal">Original Language Version</label>
                     <textarea id="editOriginal" name="original" rows="3"></textarea>
                 </div>

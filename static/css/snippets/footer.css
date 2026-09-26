@@ -106,29 +106,63 @@
   display: none;
   justify-content: space-between;
   left: 50%;
-  max-width: 600px;
+  max-width: 650px;
   padding: var(--spacing-md) var(--spacing-2xl);
   position: fixed;
   transform: translateX(-50%);
-  /*transition: transform var(--transition-slow) cubic-bezier(0.4, 0, 0.2, 1);*/
   width: 90%;
   z-index: 9999;
   -webkit-backdrop-filter: blur(20px);
 }
 
-.btn-accept {
-  background: var(--main-color-950);
+.privacy-content {
+  align-items: center;
+  display: flex;
+  gap: var(--spacing-xl);
+  justify-content: space-between;
+  width: 100%;
+}
+
+.privacy-content p {
+  color: var(--font-color);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.privacy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+}
+
+.btn-accept,
+.btn-reject {
   border: none;
   border-radius: var(--radius-lg);
-  color: var(-secondary-font-color);
   cursor: pointer;
   font-weight: var(--font-weight-semibold);
-  padding: var(--spacing-sm) var(--spacing-2xl);
+  padding: var(--spacing-sm) var(--spacing-xl);
   transition: var(--transition-medium);
+}
+
+.btn-accept {
+  background: var(--main-color-950);
+  color: var(--secondary-font-color);
+}
+
+.btn-reject {
+  background: transparent;
+  border: 1px solid var(--background-2);
+  color: var(--font-color);
 }
 
 .btn-accept:hover, .btn-accept:focus-within {
   background: var(--main-color-700);
+}
+
+.btn-reject:hover, .btn-reject:focus-within {
+  background: var(--background-2);
 }
 
 @media (max-width: 768px) {
@@ -161,5 +195,15 @@
     flex-direction: column;
     gap: var(--spacing-xl);
     text-align: center;
+  }
+
+  .privacy-content {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .privacy-actions {
+    justify-content: center;
+    width: 100%;
   }
 }

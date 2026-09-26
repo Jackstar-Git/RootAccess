@@ -351,7 +351,7 @@
 
 .btn-decrease:hover, .btn-decrease:focus-within {
     background: var(--main-color-500);
-    color: var(-secondary-font-color);
+    color: var(--secondary-font-color);
     border-color: var(--main-color-600);
 }
 
@@ -412,7 +412,7 @@
 
 .btn-apply {
     background: var(--main-color-500);
-    color: var(-secondary-font-color);
+    color: var(--secondary-font-color);
 }
 
 .btn-apply:hover, .btn-apply:focus-within {

@@ -141,6 +141,7 @@
 .blog-actions {
     display: flex;
     gap: 8px;
+    min-width: fit-content;
 }
 
 .btn {

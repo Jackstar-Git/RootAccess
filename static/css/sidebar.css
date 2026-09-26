@@ -32,7 +32,8 @@
 
 .sidebar.collapsed .logo span,
 .sidebar.collapsed .nav-item span,
-.sidebar.collapsed .profile-info span {
+.sidebar.collapsed .profile-info span,
+.sidebar.collapsed .profile-role {
     display: none;
 }
 
@@ -182,6 +183,22 @@
     color: var(--main-color-500);
     font-weight: var(--font-weight-medium);
     white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.profile-section .profile-role {
+    color: var(--secondary-font-color);
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-normal);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.profile-section .profile-role i {
+    font-size: 0.7rem;
 }
 
 .profile-section .profile-info{

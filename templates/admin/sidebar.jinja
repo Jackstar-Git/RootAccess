@@ -39,7 +39,9 @@
             </a>
             <div class="submenu">
                 <a href="/admin/blogs/all"><i class="fa-solid fa-list-ul"></i> All Blogs</a>
+                {% if has_permission(user_permissions, Permission.BLOGS_CREATE) %}
                 <a href="/admin/blogs/create"><i class="fa-solid fa-plus"></i> Create New</a>
+                {% endif %}
                 <a href="/admin/blogs/categories"><i class="fa-solid fa-tags"></i> Categories</a>
             </div>
         </div>
@@ -53,7 +55,9 @@
             </a>
             <div class="submenu">
                 <a href="/admin/projects/all"><i class="fa-solid fa-folder-open"></i> All Projects</a>
+                {% if has_permission(user_permissions, Permission.PROJECTS_CREATE) %}
                 <a href="/admin/projects/create"><i class="fa-solid fa-plus"></i> Create New</a>
+                {% endif %}
                 <a href="/admin/projects/categories"><i class="fa-solid fa-layer-group"></i> Categories</a>
             </div>
         </div>
@@ -103,7 +107,9 @@
             </a>
             <div class="submenu">
                 <a href="/admin/users/all"><i class="fa-solid fa-user-gear"></i> Manage Users</a>
+                {% if has_permission(user_permissions, Permission.USERS_CREATE) %}
                 <a href="/admin/users/create"><i class="fa-solid fa-user-plus"></i> Create User</a>
+                {% endif %}
             </div>
         </div>
         {% endif %}
@@ -145,6 +151,23 @@
         {% endif %}
         <div class="profile-name">
             <span>{{ username or 'Admin' }}</span>
+            {% if user_hierarchy is not none %}
+            <span class="profile-role" title="Hierarchy Level {{ user_hierarchy }}">
+                {% if user_hierarchy == 0 %}
+                    <i class="fas fa-crown"></i> Root (Level 0)
+                {% elif user_hierarchy == 1 %}
+                    <i class="fas fa-shield-alt"></i> Admin (Level 1)
+                {% elif user_hierarchy == 2 %}
+                    <i class="fas fa-user-edit"></i> Editor (Level 2)
+                {% elif user_hierarchy == 3 %}
+                    <i class="fas fa-user-tag"></i> Guest (Level 3)
+                {% elif user_hierarchy == 10 %}
+                    <i class="fas fa-ghost"></i> Deleted (Level 10)
+                {% else %}
+                    <i class="fas fa-user"></i> User (Level {{ user_hierarchy }})
+                {% endif %}
+            </span>
+            {% endif %}
         </div>
         <div class="profile-info">
             {% include "snippets/switcher.jinja" %}

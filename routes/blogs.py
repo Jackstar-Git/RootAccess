@@ -40,6 +40,13 @@ def blogs_page() -> ResponseReturnValue:
     if "category" in query:
         query["categories"] = query.pop("category")
 
+    if "reading_time" in query:
+        query["reading_time_tag"] = [time.strip() for time in query["reading_time"].split(",") if time.strip()]
+        query.pop("reading_time")
+
+    if "type" in query:
+        query["type"] = [type_.strip() for type_ in query["type"].split(",") if type_.strip()]
+
     blog_list: List[BlogPost] = search_blogs(search) if search else query_blogs(limit=None, status="visible", **query)
 
     start_date = query.pop("start_date", None)

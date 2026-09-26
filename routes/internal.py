@@ -1166,16 +1166,27 @@ def add_quote() -> ResponseReturnValue:
     text = request.form.get("quote_text", "").strip()
     author = request.form.get("quote_author", "").strip()
     original = request.form.get("quote_original", "").strip() or None
+    year_raw = request.form.get("quote_year", "").strip()
+    note = request.form.get("quote_note", "").strip() or None
 
     if not author:
         return jsonify({"error": "Author is required."}), 400
+
+    year: Optional[int] = None
+    if year_raw:
+        try:
+            year = int(year_raw)
+        except ValueError:
+            return jsonify({"error": "Quote year must be a valid number."}), 400
 
     try:
         quotes = load_quotes()
         new_quote = cast(Quote, {
             "text": text,
             "author": author,
-            "original": original
+            "original": original,
+            "year": year,
+            "note": note
         })
         quotes.append(new_quote)
         save_quotes(quotes)
@@ -1203,12 +1214,21 @@ def api_manage_quotes() -> ResponseReturnValue:
             text = data.get("text", "").strip()
             author = data.get("author", "").strip()
             original = data.get("original", "").strip() or None
+            year_raw = data.get("year")
+            note = data.get("note", "").strip() or None
 
             if not author:
                 return jsonify({"error": "Author is required."}), 400
 
             if index is None or not isinstance(index, int):
                 return jsonify({"error": "Invalid quote index."}), 400
+
+            year: Optional[int] = None
+            if year_raw not in (None, ""):
+                try:
+                    year = int(year_raw)
+                except (TypeError, ValueError):
+                    return jsonify({"error": "Quote year must be a valid number."}), 400
 
             quotes = load_quotes()
             if index < 0 or index >= len(quotes):
@@ -1217,7 +1237,9 @@ def api_manage_quotes() -> ResponseReturnValue:
             quotes[index] = {
                 "text": text,
                 "author": author,
-                "original": original
+                "original": original,
+                "year": year,
+                "note": note
             }
             save_quotes(quotes)
             log_with_user("info", f"Quote updated | Index: {index} | Author: {author}", user_id)
@@ -1252,7 +1274,10 @@ def api_manage_quotes() -> ResponseReturnValue:
 def api_track_analytics() -> ResponseReturnValue:
     if session.get("username"):
         return jsonify({"status": "ignored", "reason": "Admins/Editors are invisible."})
-        
+
+    if not request.cookies.get("hasAcceptedCookies", "").strip().lower() in {"1", "true", "yes", "accepted"}:
+        return jsonify({"status": "ignored", "reason": "Tracking cookies are disabled."})
+
     data = request.get_json()
     if not data: 
         return jsonify({"error": "No data provided"}), 400

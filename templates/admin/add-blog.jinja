@@ -37,7 +37,12 @@
 
                 <div class="editor-layout">
                     <section class="content-area">
-                        <input type="text" id="title" name="title" class="title-input" placeholder="Post Title" required>
+                        <div class="title-version-group">
+                            <input type="text" id="title" name="title" class="title-input" placeholder="Post Title" required>
+                            <input type="text" id="version" name="version" class="version-input" placeholder="v1.0.0" required>
+                        </div>
+
+                        <textarea id="description_short" name="description_short" class="short-desc-input" placeholder="Write a short summary of the post..."></textarea>
 
                         {% set markdown_editor_textarea_id = 'content' %}
                         {% set markdown_editor_textarea_name = 'content' %}

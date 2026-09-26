@@ -9,10 +9,14 @@ class Quote(TypedDict):
     text: str
     author: str
     original: NotRequired[Optional[str]]
+    year: NotRequired[Optional[int]]
+    note: NotRequired[Optional[str]]
 
 DEFAULT_QUOTE: Final[Quote] = {
     "text": "Developer failed his job. Quotes are broken :(",
-    "author": "System"
+    "author": "System",
+    "year": None,
+    "note": "Fallback quote."
 }
 
 @lru_cache(maxsize=1)

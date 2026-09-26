@@ -226,9 +226,10 @@ def query_blogs(limit: Optional[int] = 10, exclude_id: Optional[Any] = None, mat
                 if isinstance(target, list):
                     item_match = any(item in current for item in target)
                 else:
+                    print(f"Checking if {target} is in {current}")
                     item_match = target in current
             else:
-                item_match = (current == target)
+                item_match = (current == target) or current in (target if isinstance(target, list) else [target])
             
             matches.append(item_match)
 

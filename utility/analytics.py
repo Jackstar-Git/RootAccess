@@ -3,7 +3,7 @@ import os
 import time
 from typing import TYPE_CHECKING, cast
 
-from flask import current_app, session
+from flask import current_app, request, session
 
 from utility.logging_utility import logger
 from utility.settings import get_settings
@@ -18,9 +18,21 @@ FLUSH_INTERVAL = get_settings("analytics_config").get("update_interval", 600) #s
 def _get_app():
     return cast("CustomFlask", current_app)
 
+
+def has_tracking_consent() -> bool:
+    try:
+        cookie_value = request.cookies.get("hasAcceptedCookies")
+    except RuntimeError:
+        return False
+
+    if cookie_value is None:
+        return False
+
+    return cookie_value.strip().lower() in {"1", "true", "yes", "accepted"}
+
+
 def track_visit(url: str, visitor_id: str, time_spent: float, is_heartbeat: bool) -> None:
-    if session.get("user_id"):
-        print("Test")
+    if session.get("user_id") or not has_tracking_consent():
         return
 
     app = _get_app()

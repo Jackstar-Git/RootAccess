@@ -1,1 +1,12 @@
-{}
+{
+    "/blog": {
+        "url": "/blog",
+        "visits": 5,
+        "unique_visits": 1,
+        "visitors": [
+            "TW96aWxsYS81LjAg"
+        ],
+        "total_time_spent": 372.013,
+        "average_time_spent": 74.4
+    }
+}

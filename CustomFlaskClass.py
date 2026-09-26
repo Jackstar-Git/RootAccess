@@ -103,6 +103,7 @@ class CustomFlask(Flask):
         current_username = None
         current_user_permissions = 0
         current_user_profile = None
+        current_user_hierarchy = None
 
         if current_user_id:
             current_user = get_user_by_id(current_user_id)
@@ -111,12 +112,14 @@ class CustomFlask(Flask):
                 current_username: Optional[str] = current_user.get("username")
                 current_user_permissions = AuthManager.get_user_bitmask(current_user_id)
                 current_user_profile: Optional[str] = current_user.get("profile_picture_url")
+                current_user_hierarchy: Optional[int] = current_user.get("hierarchy_level")
 
         return {
             "user_id": current_user_id,
             "username": current_username,
             "user_permissions": current_user_permissions,
             "user_profile": current_user_profile,
+            "user_hierarchy": current_user_hierarchy,
         }
 
 # ========== APPLICATION INITIALIZATION ==========

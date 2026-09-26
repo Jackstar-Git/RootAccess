@@ -46,8 +46,9 @@
     align-items: center;
     justify-content: space-between;
     border: 1px solid var(--background-2);
-    border-radius: 8px;
-    padding: 12px 20px;
+    border-radius: 14px;
+    padding: 14px 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
     background-color: var(--background-1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -88,21 +89,51 @@
     font-size: 0.95rem;
     color: var(--font-color);
     font-style: italic;
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
 .quote-author {
-    margin: 0;
+    margin: 0 0 10px 0;
     font-size: 0.9rem;
     color: var(--main-color-600);
     font-weight: 600;
 }
 
+.quote-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 2px;
+}
+
+.quote-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: var(--main-color-50);
+    color: var(--main-color-700);
+    border: 1px solid rgba(120, 149, 255, 0.18);
+    font-size: 0.74rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.quote-pill i {
+    font-size: 0.68rem;
+}
+
+.quote-note {
+    background: rgba(255, 193, 7, 0.12);
+    color: #9a6d00;
+    border-color: rgba(255, 193, 7, 0.22);
+}
+
 .quote-original {
-    margin: 6px 0 0 0;
-    font-size: 0.8rem;
-    color: var(--third-font-color);
-    font-style: italic;
+    background: rgba(91, 142, 255, 0.08);
+    color: var(--main-color-700);
+    border-color: rgba(91, 142, 255, 0.18);
 }
 
 /* Actions */
@@ -150,20 +181,32 @@
     flex-direction: column;
     align-items: stretch;
     padding: 20px;
+    background: linear-gradient(180deg, rgba(108, 140, 255, 0.04), rgba(108, 140, 255, 0.02));
     background-color: var(--main-color-50);
-    border: 2px dashed var(--main-color-200);
+    border: 1px solid var(--main-color-200);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
 }
 
 .quote-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 18px;
+}
+
+.quote-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
 }
 
 .form-group {
     position: relative;
     display: flex;
     flex-direction: column;
+}
+
+.full-width {
+    grid-column: 1 / -1;
 }
 
 .form-group label {
@@ -184,14 +227,14 @@
 .form-group input,
 .form-group textarea {
     padding-left: 35px;
-    padding: 8px 12px;
+    padding: 10px 12px;
     border: 1px solid var(--background-2);
-    border-radius: 4px;
+    border-radius: 10px;
     font-family: inherit;
     font-size: 0.9rem;
     color: var(--font-color);
-    background-color: var(--background-1);
-    transition: border-color 0.2s ease;
+    background: rgba(255,255,255,0.5);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .form-group input:focus-within,
@@ -300,15 +343,21 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
+}
+
+.edit-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
 }
 
 #editForm .form-group input,
 #editForm .form-group textarea {
     width: 100%;
-    padding: 8px 12px;
+    padding: 10px 12px;
     border: 1px solid var(--background-2);
-    border-radius: 4px;
+    border-radius: 10px;
     font-family: inherit;
     font-size: 0.9rem;
     color: var(--font-color);
@@ -332,6 +381,11 @@
     .config-item {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .quote-form-grid,
+    .edit-form-grid {
+        grid-template-columns: 1fr;
     }
 
     .item-info {

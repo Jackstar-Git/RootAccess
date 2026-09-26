@@ -12,6 +12,13 @@
     width: 100%;
 }
 
+.title-version-group {
+    display: flex;
+    gap: 20px;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+
 .toolbar-sticky {
     position: sticky;
     top: 20px;
@@ -279,14 +286,13 @@
 }
 
 .title-input {
-    width: 100%;
+    flex: 4;
     font-size: 2.8rem;
     font-weight: 800;
     border: none;
     border-bottom: 2px solid transparent;
     outline: none;
     background: transparent;
-    margin-bottom: 20px;
     padding-bottom: 10px;
     color: var(--font-color);
     transition: var(--transition-medium);
@@ -294,6 +300,37 @@
 
 .title-input:focus-within {
     border-bottom: 2px solid var(--main-color-400);
+}
+
+.version-input {
+    flex: 1;
+    font-size: 1.5rem;
+    font-weight: 600;
+    border: none;
+    border-bottom: 2px solid transparent;
+    outline: none;
+    background: transparent;
+    padding-bottom: 10px;
+    color: var(--main-color-400);
+    text-align: right;
+    transition: var(--transition-medium);
+}
+
+.version-input:focus-within {
+    border-bottom: 2px solid var(--main-color-400);
+}
+
+.short-desc-input {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 15px;
+    border: 1px solid var(--background-2);
+    border-radius: var(--radius-md);
+    background: var(--background-1);
+    color: var(--font-color);
+    margin-bottom: 30px;
+    resize: vertical;
+    min-height: 80px;
 }
 
 .title-input::placeholder {

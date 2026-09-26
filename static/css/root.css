@@ -338,29 +338,52 @@ h3 {
 
 .filter-drawer {
     max-height: 0;
-    overflow: scroll;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.25s ease, opacity 0.2s ease, margin 0.25s ease;
     background: var(--background-1);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: var(--radius-xl);
-    margin-bottom: 0rem;
+    margin-bottom: 0;
     opacity: 0;
 }
 
 .filter-drawer.active {
-    max-height: 500px;
+    max-height: min(70vh, 760px);
     padding: var(--spacing-lg);
     margin-bottom: var(--spacing-2xl);
     opacity: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
 }
 
 .drawer-inner {
     display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: var(--spacing-2xl);
+    min-width: 0;
+}
+
+@media (max-width: 768px) {
+    .filter-drawer.active {
+        max-height: min(68vh, 640px);
+        padding: var(--spacing-md);
+    }
+
+    .drawer-inner {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xl);
+    }
+
+    .filter-col,
+    .filter-group,
+    .custom-multiselect {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
 }
 
 .filter-col label i {

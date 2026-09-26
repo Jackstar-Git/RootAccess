@@ -156,7 +156,11 @@
 .status-legacy { background: var(--background-2); color: var(--third-font-color); border: 1px solid var(--background-2); }
 .activity-badge { background: var(--background-2); color: var(--font-color); border: 1px solid var(--background-2); }
 
-.project-actions { display: flex; gap: 8px; }
+.project-actions {
+    display: flex;
+    gap: 8px;
+    min-width: fit-content;
+}
 
 .btn {
     padding: 10px 14px;

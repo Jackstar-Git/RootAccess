@@ -126,7 +126,13 @@
                             <div class="multiselect-options">
                                 {% for activity in settings.activity_statuses %}
                                     <label class="filter-list-item">
-                                        <input type="checkbox" value="{{ activity }}"> 
+                                        <input type="checkbox" value="{{ activity }}">
+                                        {% if activity == 'Active' %}<i class="fa-solid fa-wave-square"></i>
+                                        {% elif activity == 'Maintenance' %}<i class="fa-solid fa-screwdriver-wrench"></i>
+                                        {% elif activity == 'Paused' %}<i class="fa-solid fa-pause"></i>
+                                        {% elif activity == 'Archived' %}<i class="fa-solid fa-box-archive"></i>
+                                        {% else %}<i class="fa-solid fa-ellipsis"></i>
+                                        {% endif %}
                                         <span>{{ activity }}</span>
                                     </label>
                                 {% endfor %}
@@ -157,6 +163,12 @@
                                 {% for maturity in settings.maturity_levels %}
                                     <label class="filter-list-item">
                                         <input type="checkbox" value="{{ maturity }}">
+                                        {% if maturity == 'Prototype' %}<i class="fa-solid fa-flask"></i>
+                                        {% elif maturity == 'Experimental' %}<i class="fa-solid fa-experiment"></i>
+                                        {% elif maturity == 'Stable' %}<i class="fa-solid fa-shield-heart"></i>
+                                        {% elif maturity == 'Production' %}<i class="fa-solid fa-rocket"></i>
+                                        {% else %}<i class="fa-solid fa-circle"></i>
+                                        {% endif %}
                                         <span>{{ maturity }}</span>
                                     </label>
                                 {% endfor %}
@@ -195,6 +207,7 @@
 
     {% include "snippets/footer.jinja" %}
 
+    <script src="{{ url_for('static', filename='js/snippets/filter-utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/global.js') }}"></script>
     <script src="{{ url_for('static', filename='js/projects.js') }}"></script>
 </body>

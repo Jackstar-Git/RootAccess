@@ -12,6 +12,8 @@ function editQuote(index, quote) {
     
     document.getElementById('editText').value = quote.text || '';
     document.getElementById('editAuthor').value = quote.author || '';
+    document.getElementById('editYear').value = quote.year ?? '';
+    document.getElementById('editNote').value = quote.note || '';
     document.getElementById('editOriginal').value = quote.original || '';
     
     document.getElementById('editModal').classList.remove('hidden');
@@ -32,11 +34,23 @@ async function submitEditForm(event) {
 
     const text = document.getElementById('editText').value.trim();
     const author = document.getElementById('editAuthor').value.trim();
+    const yearValue = document.getElementById('editYear').value.trim();
+    const note = document.getElementById('editNote').value.trim() || null;
     const original = document.getElementById('editOriginal').value.trim() || null;
 
     if (!author) {
         notify("Author is required.", 'error');
         return;
+    }
+
+    let year = null;
+    if (yearValue !== '') {
+        const parsedYear = Number.parseInt(yearValue, 10);
+        if (Number.isNaN(parsedYear)) {
+            notify("Year must be a valid number.", 'error');
+            return;
+        }
+        year = parsedYear;
     }
 
     try {
@@ -48,6 +62,8 @@ async function submitEditForm(event) {
                 index: currentEditIndex,
                 text: text,
                 author: author,
+                year: year,
+                note: note,
                 original: original
             })
         });

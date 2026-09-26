@@ -33,7 +33,11 @@ function initThemeSwitch() {
 function initGlobal() {
     initFilterToggle();
     initThemeSwitch();
+    if (typeof window.initCustomMultiselects === "function") {
+        window.initCustomMultiselects();
+    }
     if (typeof initBlogSearch === "function") initBlogSearch();
+    if (typeof initProjectSearch === "function") initProjectSearch();
 }
 
 if (document.readyState === "loading") {
@@ -42,12 +46,65 @@ if (document.readyState === "loading") {
     initGlobal();
 }
 
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    return null;
+}
+
+function setCookie(name, value, days = 365) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+    const secure = window.location.protocol === "https:" ? "; Secure" : "";
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires.toUTCString()}; path=/; SameSite=Lax${secure}`;
+}
+
+function hasTrackingConsent() {
+    const value = getCookie("hasAcceptedCookies");
+    return value === "true" || value === "1" || value === "accepted";
+}
+
+function updateCookieBanner() {
+    const banner = document.getElementById("privacy-notice");
+    if (!banner) return;
+
+    const choice = getCookie("hasAcceptedCookies");
+    const hasChoice = choice === "true" || choice === "false" || choice === "accepted" || choice === "rejected" || choice === "1" || choice === "0";
+    banner.style.display = hasChoice ? "none" : "flex";
+}
+
+window.getCookie = getCookie;
+window.setCookie = setCookie;
+window.hasTrackingConsent = hasTrackingConsent;
+window.updateCookieBanner = updateCookieBanner;
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+        updateCookieBanner();
+
+        const acceptButton = document.getElementById("acceptCookies");
+        const rejectButton = document.getElementById("rejectCookies");
+
+        if (acceptButton) acceptButton.addEventListener("click", () => {
+            setCookie("hasAcceptedCookies", "true");
+            updateCookieBanner();
+        });
+
+        if (rejectButton) rejectButton.addEventListener("click", () => {
+            setCookie("hasAcceptedCookies", "false");
+            updateCookieBanner();
+        });
+    });
+}
+
 // Analytics tracking
 (function() {
     const startTime = Date.now();
     const url = window.location.pathname;
     const visitorId = btoa(navigator.userAgent).substring(0, 16);
     const sendData = (isHeartbeat = false) => {
+        if (!hasTrackingConsent()) return;
         const payload = JSON.stringify({ url, visitor_id: visitorId, time_spent: isHeartbeat ? (Date.now() - startTime) / 1000 : 0, is_heartbeat: isHeartbeat });
         if (isHeartbeat && navigator.sendBeacon) navigator.sendBeacon("/api/analytics/track", new Blob([payload], { type: "application/json" }));
         else fetch("/api/analytics/track", { credentials: "same-origin", method: "POST", headers: { "Content-Type": "application/json" }, body: payload }).catch(() => {});

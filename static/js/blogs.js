@@ -1,104 +1,3 @@
-function initMultiselects() {
-    const multiselects = document.querySelectorAll(".custom-multiselect");
-
-    multiselects.forEach(ms => {
-        const nativeSelect = ms.previousElementSibling;
-        if (nativeSelect && nativeSelect.tagName === "SELECT") {
-            nativeSelect.style.display = "none";
-        }
-        ms.style.display = "block";
-
-        const header = ms.querySelector(".multiselect-header");
-        const searchInput = ms.querySelector(".multiselect-search");
-        const pillsContainer = ms.querySelector(".multiselect-pills");
-        const options = ms.querySelectorAll('.multiselect-options input[type="checkbox"]');
-        const selectAllBtn = ms.querySelector(".select-all");
-        const optionLabels = ms.querySelectorAll(".multiselect-options .filter-list-item");
-
-        header.addEventListener("click", (e) => {
-            if(e.target.closest(".multiselect-pill")) return;
-            
-            if(e.target === searchInput) {
-                ms.classList.add("open");
-                return;
-            }
-            
-            ms.classList.toggle("open");
-            if (ms.classList.contains("open")) searchInput.focus();
-        });
-
-        document.addEventListener("click", (e) => {
-            if (!ms.contains(e.target)) {
-                ms.classList.remove("open");
-            }
-        });
-
-        searchInput.addEventListener("input", (e) => {
-            const term = e.target.value.toLowerCase();
-            ms.classList.add("open");
-            optionLabels.forEach(label => {
-                const text = label.textContent.toLowerCase();
-                label.style.display = text.includes(term) ? "flex" : "none";
-            });
-        });
-
-        const updatePills = () => {
-            pillsContainer.innerHTML = "";
-            let allChecked = true;
-            let anyChecked = false;
-
-            options.forEach(opt => {
-                if (opt.checked) {
-                    anyChecked = true;
-                    const pill = document.createElement("span");
-                    pill.className = "multiselect-pill";
-                    const labelText = opt.closest(".filter-list-item").querySelector("span").textContent;
-                    
-                    pill.innerHTML = `${labelText} <i class="fa-solid fa-xmark"></i>`;
-                    
-                    pill.querySelector("i").addEventListener("click", (e) => {
-                        e.stopPropagation(); 
-                        opt.checked = false;
-                        updatePills();
-                    });
-                    
-                    pillsContainer.appendChild(pill);
-                } else {
-                    allChecked = false;
-                }
-            });
-
-            if (selectAllBtn) {
-                selectAllBtn.checked = allChecked && options.length > 0;
-            }
-            
-            searchInput.placeholder = anyChecked ? "" : "Search...";
-
-            // Sync with native select for accurate form fallback data
-            if (nativeSelect) {
-                Array.from(nativeSelect.options).forEach(nativeOpt => {
-                    const correspondingCheckbox = Array.from(options).find(cb => cb.value === nativeOpt.value);
-                    if (correspondingCheckbox) {
-                        nativeOpt.selected = correspondingCheckbox.checked;
-                    }
-                });
-            }
-        };
-
-        options.forEach(opt => opt.addEventListener("change", updatePills));
-
-        if (selectAllBtn) {
-            selectAllBtn.addEventListener("change", (e) => {
-                const isChecked = e.target.checked;
-                options.forEach(opt => opt.checked = isChecked);
-                updatePills();
-            });
-        }
-
-        updatePills();
-    });
-}
-
 function performBlogSearch() {
 	const searchInput = document.getElementById("search-input");
 	const params = new URLSearchParams();
@@ -235,6 +134,8 @@ function restoreFilterState() {
 }
 
 function initBlogSearch() {
+    if (document.body.dataset.blogSearchInitialized === "true") return;
+    document.body.dataset.blogSearchInitialized = "true";
 	const searchInput = document.getElementById("search-input");
 	const searchIcon = document.querySelector(".search-icon");
 	const clearBtn = document.querySelector(".clear-filters-btn");
@@ -300,7 +201,6 @@ function initBlogSearch() {
 	}
     
 	restoreFilterState();
-    initMultiselects();
 }
 
 if (document.readyState === "loading") {

@@ -39,8 +39,17 @@
 
 
 .btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     background-color: var(--warning-color);
     color: var(--secondary-font-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: opacity 0.2s;
 }
 
 .btn-danger:hover, .btn-danger:focus-within {
