@@ -52,7 +52,7 @@ async function fetchLogs() {
     } catch (error) {
         console.error(error);
         const logsOutput = document.getElementById("logsOutput");
-        logsOutput.innerHTML = `<div class="log-error">Fehler: ${error.message}</div>`;
+        logsOutput.innerHTML = `<div class="log-error">Error: ${error.message}</div>`;
     }
 }
 
@@ -79,7 +79,7 @@ async function clearLogs() {
         fetchLogs();
     } catch (error) {
         console.error(error);
-        notify(`Fehler: ${error.message}`, 'error');
+        notify(`Error: ${error.message}`, 'error');
     }
 }
 
@@ -132,7 +132,7 @@ async function sendCommand() {
         console.error(error);
         const errorLine = document.createElement("div");
         errorLine.className = "log-line log-error";
-        errorLine.textContent = `Systemfehler: ${error.message}`;
+        errorLine.textContent = `System error: ${error.message}`;
         logsOutput.appendChild(errorLine);
     }
 }

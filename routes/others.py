@@ -87,14 +87,20 @@ def sitemap() -> ResponseReturnValue:
 
     excluded_paths = [
         "/admin", 
+        "/api/",
         "/static", 
         "/upload", 
         "/download", 
         "/google7825769118bcd42a.html", 
-        "/.well-known"
+        "/.well-known",
+        "/security.txt",
+        "/robots.txt"
     ]
 
     for rule in current_app.url_map.iter_rules():
+        if rule.rule == "/api" or rule.rule.startswith("/api/"):
+            continue
+
         if rule.methods and "GET" in rule.methods:
             if rule.arguments:
                 continue
@@ -128,10 +134,6 @@ def sitemap() -> ResponseReturnValue:
                     priority = "0.6"
                     changefreq = "daily"
                     lastmod = now.date().isoformat()
-                elif rule.rule.startswith("/api"):
-                    priority = "0.6"
-                    changefreq = "weekly"
-
                 pages.append({
                     "loc": url,
                     "lastmod": lastmod,

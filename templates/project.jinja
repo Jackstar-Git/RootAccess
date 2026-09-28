@@ -8,6 +8,13 @@
     <meta name="keywords" content="source code, documentation, probably-finished, tech, rootaccess">
     <meta name="robots" content="index, follow">
     <meta name="copyright" content="© 2026 RootAccess. All rights and wrongs reserved.">
+    <link rel="canonical" href="/projects/{{ project.id }}">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ project.title }} // RootAccess">
+    <meta property="og:description" content="{{ project.description_short or 'Another digital artifact salvaged from the depths of my hard drive.' }}">
+    <meta property="og:url" content="{{ request.url_root.rstrip('/') }}/projects/{{ project.id }}">
+    <meta property="og:image" content="{{ og_image }}">
+    <meta property="og:image:alt" content="Featured image for {{ project.title }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
     <title>{{ project.title }} // RootAccess — A project that actually runs (mostly)</title>
     

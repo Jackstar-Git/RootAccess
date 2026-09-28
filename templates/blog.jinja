@@ -9,6 +9,13 @@
     <meta name="keywords" content="{% for cat in blog.categories %}{{ cat }}{{ ', ' if not loop.last }}{% endfor %}, blog, RootAccess, tech, dev">
     <meta name="robots" content="index, follow">
     <meta name="copyright" content="© 2026 RootAccess. Read at your own risk.">
+    <link rel="canonical" href="/blog/{{ blog.id }}">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{{ blog.title }} // RootAccess">
+    <meta property="og:description" content="{{ blog.description if blog.description else 'Another deep dive into the digital abyss by Jackstar.' }}">
+    <meta property="og:url" content="{{ request.url_root.rstrip('/') }}/blog/{{ blog.id }}">
+    <meta property="og:image" content="{{ og_image }}">
+    <meta property="og:image:alt" content="Featured image for {{ blog.title }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
     <title>{{ blog.title }} // RootAccess</title>
 

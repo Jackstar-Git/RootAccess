@@ -1,4 +1,5 @@
 from functools import lru_cache
+from copy import deepcopy
 import json
 import os
 from typing import Any, Optional, Dict, Final
@@ -46,7 +47,7 @@ def get_settings(key: str | None = None) -> Any:
 def update_settings(new_settings: Dict[str, Any]) -> None:
     from CustomFlaskClass import app
 
-    current_settings = _load_settings()
+    current_settings = deepcopy(_load_settings())
     updated = _deep_update(current_settings, new_settings)
     updated_settings: Dict[str, Any] = updated.get("server_config", {})
 
@@ -65,7 +66,7 @@ def _deep_update(original: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, Any
     return original
 
 def set_setting(key: str, value: Any) -> None:
-    current = _load_settings()
+    current = deepcopy(_load_settings())
     keys = key.split("-")
     target = current
 

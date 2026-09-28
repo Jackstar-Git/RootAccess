@@ -26,7 +26,9 @@
             </button>
             <div class="header-actions">
                 <h2>Blogs Overview</h2>
+                {% if has_permission(user_permissions, Permission.BLOGS_CREATE) %}
                 <a href="/admin/blogs/create" class="btn btn-primary"><i class="fas fa-plus"></i> New Post</a>
+                {% endif %}
             </div>
             
             <div class="blog-filters">

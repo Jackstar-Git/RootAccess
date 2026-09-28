@@ -10,6 +10,13 @@
     <meta name="robots" content="index, follow">
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
     <meta name="copyright" content="© 2026 RootAccess. All rights and wrongs reserved.">
+    <link rel="canonical" href="/projects">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Projects // RootAccess">
+    <meta property="og:description" content="Jackstar's digital attic. A collection of my projects and work and various things that actually run sometimes.">
+    <meta property="og:url" content="{{ request.url_root.rstrip('/') }}/projects">
+    <meta property="og:image" content="{{ url_for('static', filename='assets/images/logos/LogoBrand.png', _external=True) }}">
+    <meta property="og:image:alt" content="RootAccess logo">
     <title>Projects // RootAccess</title>
 
     <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>

@@ -8,6 +8,13 @@
     <meta name="keywords" content="{% for topic in settings.topics %}{{ topic }}{{ ', ' if not loop.last }}{% endfor %}, tech blog, programming, development archive">
     <meta name="robots" content="index, follow">
     <meta name="copyright" content="© 2026 RootAccess. Thoughts are free;">
+    <link rel="canonical" href="/blog">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Blogs // RootAccess">
+    <meta property="og:description" content="Browse through a catalog of articles, guides, and opinions from mostly me. Mostly tech and topics I want to rant about">
+    <meta property="og:url" content="{{ request.url_root.rstrip('/') }}/blog">
+    <meta property="og:image" content="{{ url_for('static', filename='assets/images/logos/LogoBrand.png', _external=True) }}">
+    <meta property="og:image:alt" content="RootAccess logo">
     <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
     <title>Blogs // RootAccess</title>
 

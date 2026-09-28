@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import time
 import zipfile
+from copy import deepcopy
 from typing import Tuple, Optional, cast    
 
 from flask import Blueprint, jsonify, request, session, abort, send_file, Response, redirect, url_for, flash
@@ -22,8 +23,8 @@ from utility.analytics import track_visit, clear_analytics, get_all_analytics, a
 from utility.auth import AuthManager, permission_required, permission_required_any, verify_captcha, refresh_captcha, Permission
 from utility.blogs import add_blog, delete_blog, update_blog, load_blogs, get_item_by_id
 from utility.calendar import generate_calendar
-from utility.contact import add_contact, delete_contact, mark_contact_read
-from utility.events import get_events, add_event, delete_event
+from utility.contact import add_contact, delete_contact, mark_contact_read, load_contacts, get_contact_by_id
+from utility.events import get_events, add_event, delete_event, load_events, get_event_by_id
 from utility.logging_utility import logger, log_with_user
 from utility.converter import MarkdownConverter
 from utility.path_files import MAX_FILE_SIZE, ROOT_DIR, is_safe_path, sanitize_filename
@@ -40,6 +41,49 @@ limiter = Limiter(
     app=app,
     storage_uri="memory://"
 )
+
+DATA_FILE_CACHES = {
+    "blogs": (load_blogs, get_item_by_id),
+    "contacts": (load_contacts, get_contact_by_id),
+    "events": (load_events, get_event_by_id),
+    "projects": (load_projects, get_project_by_id),
+    "quotes": (load_quotes,),
+    "settings": (_load_settings, _load_settings_cached),
+    "users": (load_users, get_user_by_id, get_user_by_username),
+}
+
+
+def _clear_data_file_caches(file_name: Optional[str] = None) -> int:
+    if file_name is None:
+        cache_functions = {func for functions in DATA_FILE_CACHES.values() for func in functions}
+    else:
+        cache_functions = set(DATA_FILE_CACHES.get(file_name, ()))
+
+    for func in cache_functions:
+        func.cache_clear()
+
+    if file_name is None or file_name == "analytics":
+        _refresh_analytics_cache()
+    if file_name is None or file_name == "settings":
+        app.update_config(get_settings("server_config") or {})
+
+    return len(cache_functions)
+
+
+def _refresh_analytics_cache() -> None:
+    analytics_path = os.path.join(app.root_path, "data", "analytics.json")
+    try:
+        with open(analytics_path, "r", encoding="utf-8") as analytics_file:
+            analytics_data = json.load(analytics_file)
+        if not isinstance(analytics_data, dict):
+            analytics_data = {}
+    except (OSError, json.JSONDecodeError) as error:
+        logger.error(f"Failed to refresh analytics cache: {error}")
+        return
+
+    with app.analytics_lock:
+        app.analytics_cache = analytics_data
+        app.last_analytics_flush = time.time()
 
 # ========== FILE HANDLING ROUTES ==========
 @internal_blueprint.route("/uploads/<path:filename>", methods=["GET"])
@@ -899,29 +943,7 @@ def api_delete_blog() -> ResponseReturnValue:
 def api_clear_cache() -> ResponseReturnValue:
     user_id: Optional[str] = session.get("user_id")
     try:
-        cacheable_functions = [
-            get_settings,
-            _load_settings,
-            _load_settings_cached,
-            load_blogs,
-            get_item_by_id,
-            query_projects,
-            search_projects,
-            load_projects,
-            get_project_by_id,
-            get_events,
-            generate_calendar,
-            get_user_by_id,
-            get_user_by_username,
-            load_users,
-            get_quote_of_the_day
-        ]
-
-        cleared_count = 0
-        for func in cacheable_functions:
-            if hasattr(func, "cache_clear"):
-                func.cache_clear()
-                cleared_count += 1
+        cleared_count = _clear_data_file_caches()
 
         log_with_user("info", f"Global cache cleared | Modules cleared: {cleared_count}", user_id)
         return jsonify({
@@ -1180,7 +1202,7 @@ def add_quote() -> ResponseReturnValue:
             return jsonify({"error": "Quote year must be a valid number."}), 400
 
     try:
-        quotes = load_quotes()
+        quotes = deepcopy(load_quotes())
         new_quote = cast(Quote, {
             "text": text,
             "author": author,
@@ -1230,7 +1252,7 @@ def api_manage_quotes() -> ResponseReturnValue:
                 except (TypeError, ValueError):
                     return jsonify({"error": "Quote year must be a valid number."}), 400
 
-            quotes = load_quotes()
+            quotes = deepcopy(load_quotes())
             if index < 0 or index >= len(quotes):
                 return jsonify({"error": "Quote not found."}), 404
 
@@ -1251,7 +1273,7 @@ def api_manage_quotes() -> ResponseReturnValue:
             if index is None or not isinstance(index, int):
                 return jsonify({"error": "Invalid quote index."}), 400
 
-            quotes = load_quotes()
+            quotes = deepcopy(load_quotes())
             if index < 0 or index >= len(quotes):
                 return jsonify({"error": "Quote not found."}), 404
 
@@ -1436,11 +1458,7 @@ def save_data_file(file_name: str) -> ResponseReturnValue:
 
         log_with_user("info", f"Data file saved | File: {file_path}", user_id)
 
-        if file_name in ["blogs", "projects", "events", "analytics"]:
-            cacheable = [get_item_by_id, load_blogs, load_projects, query_projects, search_projects, get_project_by_id, get_events]
-            for func in cacheable:
-                if hasattr(func, "cache_clear"):
-                    func.cache_clear()
+        _clear_data_file_caches(file_name)
 
         return jsonify({"success": True, "message": f"{file_name}{extension} has been saved successfully"})
     except Exception as e:
@@ -1482,11 +1500,7 @@ def upload_data_file(file_name: str) -> ResponseReturnValue:
 
         log_with_user("info", f"Data file uploaded | File: {file_name}{expected_extension} | Filename: {file.filename}", user_id)
 
-        if file_name in ["blogs", "projects", "events", "analytics"]:
-            cacheable = [get_item_by_id, load_blogs, load_projects, query_projects, search_projects, get_project_by_id, get_events]
-            for func in cacheable:
-                if hasattr(func, "cache_clear"):
-                    func.cache_clear()
+        _clear_data_file_caches(file_name)
 
         return jsonify({"success": True, "message": f"{file_name}{expected_extension} has been uploaded successfully"})
     except Exception as e:

@@ -2,7 +2,7 @@ User-agent: *
 
 # Private / Admin Endpoints
 Disallow: /admin/
-Disallow: /api/admin/                   
+Disallow: /api/
 Disallow: /upload/
 Disallow: /download/
 Disallow: /plugins/

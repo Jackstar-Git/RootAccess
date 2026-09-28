@@ -2,6 +2,7 @@ import json
 import os
 import uuid
 import time
+from copy import deepcopy
 from typing import List, Dict, Any, Optional
 from functools import lru_cache
 
@@ -31,7 +32,7 @@ def get_contact_by_id(contact_id: str) -> Optional[Dict[str, Any]]:
     return next((c for c in contacts if str(c.get("id")) == str(contact_id)), None)
 
 def add_contact(contact_data: Dict[str, Any]) -> Dict[str, Any]:
-    contacts = load_contacts()
+    contacts = deepcopy(load_contacts())
     
     contact_data["id"] = uuid.uuid4().hex[:8]
     contact_data["time_created"] = int(time.time())
@@ -51,7 +52,7 @@ def delete_contact(contact_id: str) -> bool:
     return False
 
 def mark_contact_read(contact_id: str) -> bool:
-    contacts = load_contacts()
+    contacts = deepcopy(load_contacts())
     for c in contacts:
         if str(c.get("id")) == str(contact_id):
             c["is_read"] = True

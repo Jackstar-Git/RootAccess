@@ -1,6 +1,7 @@
 import json
 import os
 import time
+from copy import deepcopy
 from typing import List, Union, Optional, TypedDict, Any, Dict, Literal
 from functools import lru_cache
 import uuid
@@ -77,7 +78,7 @@ def get_user_by_username(username: str) -> Optional[User]:
     return next((user for user in users if user.get("username") == username), None)
 
 def add_user(new_user: Dict[str, Any]) -> User:
-    users: List[User] = load_users()
+    users: List[User] = deepcopy(load_users())
     now = int(time.time())
 
     if not new_user.get("id"):
@@ -108,7 +109,7 @@ def add_user(new_user: Dict[str, Any]) -> User:
     return final_user
 
 def update_user(user_id: Union[int, str], updated_data: Dict[str, Any]) -> bool:
-    users: List[User] = load_users()
+    users: List[User] = deepcopy(load_users())
     str_id: str = str(user_id)
 
     for i, user in enumerate(users):

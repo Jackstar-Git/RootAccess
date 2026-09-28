@@ -1,6 +1,7 @@
 import json
 import os
 import time
+from copy import deepcopy
 from typing import List, Union, Optional, TypedDict, Any, Dict, Tuple, Literal
 from functools import lru_cache
 import uuid
@@ -86,7 +87,7 @@ def get_project_by_id(project_id: Union[int, str]) -> Optional[Project]:
     return next((p for p in projects if str(p.get("id")) == str_id), None)
 
 def add_project(new_project: Dict[str, Any]) -> Project:
-    projects: List[Project] = load_projects()
+    projects: List[Project] = deepcopy(load_projects())
     now = int(time.time())
 
     # Generate unique ID if not provided
@@ -128,7 +129,7 @@ def add_project(new_project: Dict[str, Any]) -> Project:
     return final_project
 
 def update_project(project_id: Union[int, str], updated_data: Dict[str, Any]) -> bool:
-    projects: List[Project] = load_projects()
+    projects: List[Project] = deepcopy(load_projects())
     str_id: str = str(project_id)
     
     for i, project in enumerate(projects):

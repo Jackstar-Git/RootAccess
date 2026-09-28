@@ -2,9 +2,9 @@
 from typing import Any, Dict, List, Optional
 
 from math import ceil
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urljoin
 
-from flask import Blueprint, render_template, abort, request, session, current_app
+from flask import Blueprint, render_template, abort, request, session, current_app, url_for
 from flask.typing import ResponseReturnValue
 
 from utility.blogs import BlogPost, search_blogs, sort_blogs, query_blogs, get_item_by_id, filter_by_date_range
@@ -138,5 +138,9 @@ def blog(blog_id: str) -> ResponseReturnValue:
         "blog.jinja",
         blog=blog_data,
         id=blog_id,
-        suggestions=suggestions_data
+        suggestions=suggestions_data,
+        og_image=urljoin(
+            request.url_root,
+            blog_data.get("image_url") or url_for("static", filename="assets/images/logos/LogoBrand.png")
+        )
     )

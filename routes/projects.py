@@ -1,7 +1,9 @@
 # ========== IMPORTS ==========
 import datetime
 
-from flask import Blueprint, render_template, abort, request
+from urllib.parse import urljoin
+
+from flask import Blueprint, render_template, abort, request, url_for
 from flask.typing import ResponseReturnValue
 
 from utility.projects import sort_projects, load_projects, get_project_by_id, query_projects, search_projects
@@ -81,5 +83,9 @@ def project(project_id: str) -> ResponseReturnValue:
         "project.jinja", 
         project=project_data, 
         suggestions=suggestions,
-        settings=get_settings("project_config")
+        settings=get_settings("project_config"),
+        og_image=urljoin(
+            request.url_root,
+            project_data.get("image_url") or url_for("static", filename="assets/images/default/default-project.png")
+        )
     )

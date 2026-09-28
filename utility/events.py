@@ -1,6 +1,7 @@
 import json
 import os
 import uuid
+from copy import deepcopy
 from typing import List, Dict, Any, Optional, Union
 from functools import lru_cache
 
@@ -31,7 +32,7 @@ def get_event_by_id(event_id: Union[int, str]) -> Optional[Dict[str, Any]]:
     return next((e for e in events if str(e.get("id")) == str_id), None)
 
 def add_event(new_event: Dict[str, Any]) -> Dict[str, Any]:
-    events = load_events()
+    events = deepcopy(load_events())
     
     if not new_event.get("id"):
         existing_ids = {str(e.get("id")) for e in events}
@@ -48,7 +49,7 @@ def add_event(new_event: Dict[str, Any]) -> Dict[str, Any]:
     return new_event
 
 def update_event(event_id: Union[int, str], updated_data: Dict[str, Any]) -> bool:
-    events = load_events()
+    events = deepcopy(load_events())
     str_id = str(event_id)
     
     for i, event in enumerate(events):

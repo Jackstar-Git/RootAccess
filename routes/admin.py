@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
-from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for, abort
+from flask import Blueprint, flash, jsonify, redirect, render_template, request, session, url_for, abort, send_file
 from flask.typing import ResponseReturnValue
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -540,6 +540,12 @@ def server_logs() -> ResponseReturnValue:
     log_with_user("debug", "Rendered server logs page", user_id)
     return render_template("admin/logs.jinja", logs=clean_lines)
 
+@admin_blueprint.route("/settings/logs/export", methods=["GET"])
+@permission_required(Permission.SYSTEM_ADMIN)
+def export_server_logs() -> ResponseReturnValue:
+    log_path = os.path.join(app.root_path, "logs", "app.log")
+    return send_file(log_path, as_attachment=True, download_name="app.log", mimetype="text/plain")
+
 # ========== BLOGS ROUTES ==========
 @admin_blueprint.route("/blogs/all", methods=["GET"])
 @permission_required(Permission.BLOGS_READ)
@@ -595,7 +601,7 @@ def create_blog() -> ResponseReturnValue:
             image_url = f"/{upload_folder}/{filename}"
 
         blog_data = {
-            "author": request.form.getlist("authors[]"),
+            "authors": request.form.getlist("authors[]"),
             "title": request.form.get("title"),
             "content_raw": request.form.get("content"),
             "status": request.form.get("status", "draft"),
@@ -739,15 +745,15 @@ def edit_blog(blog_id: str) -> ResponseReturnValue:
 @admin_blueprint.route("/projects/all", methods=["GET"])
 @permission_required(Permission.PROJECTS_READ)
 def all_projects() -> ResponseReturnValue:
-    search_query: str = request.args.get("search", "").lower()
-    topic_query: str = request.args.get("topic", "all")
+    search_query: str = request.args.get("search", "").strip().lower()
+    topic_query: str = request.args.get("topic", "all").strip()
     sort_by: str = request.args.get("sort", "newest").strip()
 
     raw_projects = load_projects()
     display_projects: List[Project] = []
 
     for project in raw_projects:
-        if topic_query != "all" and topic_query != project.get("topic", ""):
+        if topic_query.lower() != "all" and topic_query != project.get("topic", ""):
             continue
 
         if search_query:

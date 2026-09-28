@@ -2,6 +2,7 @@ import math
 import json
 import os
 import time
+from copy import deepcopy
 from typing import List, Union, Optional, TypedDict, Any, Dict, Literal, Tuple
 from functools import lru_cache
 import uuid
@@ -98,7 +99,8 @@ def get_item_by_id(blog_id: Union[int, str]) -> Optional[BlogPost]:
     return next((post for post in blogs if str(post.get("id")) == str_id), None)
 
 def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
-    blogs: List[BlogPost] = load_blogs()
+    new_blog = dict(new_blog)
+    blogs: List[BlogPost] = deepcopy(load_blogs())
     now = int(time.time())
 
     # ID validation/generation
@@ -110,12 +112,12 @@ def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
     else:
         new_blog["id"] = str(new_blog["id"])
 
-    authors_input = new_blog.get("authors", [])
-    
+    authors_input = new_blog.get("authors", new_blog.get("author", []))
     if isinstance(authors_input, str):
-        new_blog["authors"] = [str(authors_input)] 
+        new_blog["authors"] = [authors_input] if authors_input.strip() else []
     elif isinstance(authors_input, list):
-        new_blog["authors"] = [str(a) for a in authors_input] 
+        new_blog["authors"] = [str(author).strip() for author in authors_input if str(author).strip()]
+    else:
         new_blog["authors"] = []
     
     raw_content = new_blog.get("content_raw", "")
@@ -149,7 +151,8 @@ def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
     return final_blog
 
 def update_blog(blog_id: Union[int, str], updated_data: Dict[str, Any]) -> bool:
-    blogs: List[BlogPost] = load_blogs()
+    updated_data = dict(updated_data)
+    blogs: List[BlogPost] = deepcopy(load_blogs())
     str_id: str = str(blog_id)
     
     for i, post in enumerate(blogs):
@@ -157,8 +160,14 @@ def update_blog(blog_id: Union[int, str], updated_data: Dict[str, Any]) -> bool:
             updated_data.pop("id", None)
             updated_data.pop("time_created", None)
             
-            if "authors" in updated_data and isinstance(updated_data["authors"], str):
-                updated_data["authors"] = [str(updated_data["authors"])]  # Store as author ID
+            if "authors" in updated_data:
+                authors = updated_data["authors"]
+                if isinstance(authors, str):
+                    updated_data["authors"] = [authors] if authors.strip() else []
+                elif isinstance(authors, list):
+                    updated_data["authors"] = [str(author).strip() for author in authors if str(author).strip()]
+                else:
+                    updated_data["authors"] = []
 
             if "content_raw" in updated_data:
                 updated_data["content_html"] = MarkdownConverter.quick_convert(updated_data["content_raw"])
