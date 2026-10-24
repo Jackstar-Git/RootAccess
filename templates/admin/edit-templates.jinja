@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+    <title>Appearance - Templates</title>
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+    <script src="{{ url_for('static', filename='js/global_preloader.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/font-awesome/reduced.all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/appearance.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja" %}
+        <main class="main-content appearance-page">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" title="Toggle Menu" aria-label="Toggle navigation menu"><i class="fa-solid fa-bars"></i></button>
+            <header class="appearance-heading">
+                <div><p class="eyebrow">Appearance</p><h2>Templates</h2></div>
+                <a class="btn-secondary" href="{{ url_for('admin.theme_management') }}"><i class="fa-solid fa-swatchbook"></i> Themes</a>
+            </header>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}<div class="appearance-notice {{ category|e }}">{{ message|e }}</div>{% endfor %}
+            {% endwith %}
+            {% if can_edit %}
+            <section class="appearance-section">
+                <div class="section-heading"><div><h3>Upload template</h3><p>Accepted formats: .jinja and .jinja-html</p></div></div>
+                <form class="upload-form" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
+                    <input type="file" name="file" accept=".jinja,.jinja-html" required>
+                    <button class="btn-primary" type="submit"><i class="fa-solid fa-upload"></i> Upload</button>
+                </form>
+            </section>
+            {% endif %}
+            <section class="appearance-section">
+                <div class="section-heading"><div><h3>Template files</h3><p>{{ files|length }} files</p></div></div>
+                <div class="file-list">
+                    {% for file in files %}
+                    <a class="file-row" href="{{ url_for('admin.template_appearance_edit', template=file) }}">
+                        <span class="file-icon"><i class="fa-solid fa-file-code"></i></span>
+                        <span class="file-name">{{ file|e }}</span>
+                        <span class="file-action">{% if can_edit %}Edit{% else %}View{% endif %}<i class="fa-solid fa-arrow-right"></i></span>
+                    </a>
+                    {% else %}<p class="empty-state">No template files found.</p>{% endfor %}
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+</body>
+</html>

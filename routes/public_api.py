@@ -6,6 +6,8 @@ from flask_limiter.util import get_remote_address
 
 from utility.logging_utility import logger, log_with_user
 from utility.quotes import get_quote_of_the_day, load_quotes
+from utility.themes import available_themes
+from CustomFlaskClass import app
 
 # ========== BLUEPRINT INITIALIZATION ==========
 public_api_blueprint = Blueprint("public_api", __name__, url_prefix="/api")
@@ -41,3 +43,9 @@ def get_all_quotes() -> ResponseReturnValue:
     except Exception as e:
         logger.error(f"Error fetching all quotes: {str(e)}")
         return jsonify({"error": "Could not retrieve quotes list"}), 500
+
+
+@public_api_blueprint.route("/themes", methods=["GET"])
+@limiter.limit("30 per minute")
+def get_available_themes() -> ResponseReturnValue:
+    return jsonify({"themes": available_themes(app.root_path)}), 200

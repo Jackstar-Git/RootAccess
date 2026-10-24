@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Theme - {{ theme.name|e }}</title>
+    <script src="{{ url_for('static', filename='js/global_preloader.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/font-awesome/reduced.all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/appearance.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja" %}
+        <main class="main-content appearance-page">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" title="Toggle Menu" aria-label="Toggle navigation menu"><i class="fa-solid fa-bars"></i></button>
+            <header class="appearance-heading editor-heading">
+                <div><p class="eyebrow">Theme / {{ theme.id|e }}</p><h2>{{ theme.name|e }}</h2></div>
+                <a class="btn-secondary" href="{{ url_for('admin.theme_management') }}"><i class="fa-solid fa-arrow-left"></i> Themes</a>
+            </header>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}<div class="appearance-notice {{ category|e }}">{{ message|e }}</div>{% endfor %}
+            {% endwith %}
+            <section class="appearance-section source-editor-section">
+                <p class="theme-editor-hint">Scope theme-specific rules with <code>:root[data-theme="{{ theme.id|e }}"]</code>. Use the metadata comment at the top for theme details.</p>
+                <form method="post" class="source-editor-form">
+                    <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
+                    <label class="visually-hidden" for="theme-content">CSS for {{ theme.name|e }}</label>
+                    <textarea id="theme-content" name="theme_content" spellcheck="false" {% if not can_edit %}readonly{% endif %}>{{ theme_content|e }}</textarea>
+                    <div class="editor-footer">
+                        <span>{{ theme.filename|e }} · {{ theme.color_schema|e }}</span>
+                        {% if can_edit %}<button class="btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save theme</button>{% endif %}
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+</body>
+</html>

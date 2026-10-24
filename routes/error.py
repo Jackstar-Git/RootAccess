@@ -34,7 +34,7 @@ def page_not_found(error) -> ResponseReturnValue:
 def access_denied(error) -> ResponseReturnValue:
     user_id = session.get("user_id")
     log_with_user("warning", f"Access denied to {request.path}", user_id)
-    return render_template("meta/403.jinja", trigger_error_toast=True, error_message="You do not have permission to access this resource.")
+    return render_template("meta/403.jinja", trigger_error_toast=True, error_message="You do not have permission to access this resource."), 403
 
 @app.errorhandler(CSRFError)
 def handle_csrf_error(e) -> ResponseReturnValue:

@@ -95,5 +95,12 @@
         "update_interval": 120
     },
     "site_name": "",
-    "site_description": ""
+    "site_description": "",
+    "theme_management": {
+        "enabled": {
+            "abstract": true,
+            "barrel-roll": true,
+            "halloween": true
+        }
+    }
 }

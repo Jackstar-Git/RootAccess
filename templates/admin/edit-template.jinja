@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='assets/images/logos/LogoBrand.png') }}" type="image/png">
+    <title>Edit {{ file|e }}</title>
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='/assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.woff2') }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ url_for('static', filename='css/root.css') }}" as="style">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/font-awesome/reduced.all.css') }}">
+    <script src="{{ url_for('static', filename='js/global_preloader.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/appearance.css') }}">
+
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja" %}
+        <main class="main-content appearance-page">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" title="Toggle Menu" aria-label="Toggle navigation menu"><i class="fa-solid fa-bars"></i></button>
+            <header class="appearance-heading editor-heading">
+                <div><p class="eyebrow">Appearance / {{ area|e }}</p><h2>{{ file|e }}</h2></div>
+                <a class="btn-secondary" href="{{ url_for('admin.template_appearance' if area == 'templates' else 'admin.change_static_files') }}"><i class="fa-solid fa-arrow-left"></i> Back to files</a>
+            </header>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}<div class="appearance-notice {{ category|e }}">{{ message|e }}</div>{% endfor %}
+            {% endwith %}
+            <section class="appearance-section source-editor-section">
+                <form method="post" class="source-editor-form">
+                    <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
+                    <label class="visually-hidden" for="template-content">Source code for {{ file }}</label>
+                    <textarea id="template-content" name="template_content" spellcheck="false" {% if not can_edit %}readonly{% endif %}>{{ template_content|e }}</textarea>
+                    <div class="editor-footer">
+                        <span>{{ 'Editable' if can_edit else 'Read only' }}</span>
+                        {% if can_edit %}<button class="btn-primary" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save file</button>{% endif %}
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+</body>
+</html>

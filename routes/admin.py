@@ -1,6 +1,5 @@
 ﻿# ========== IMPORTS ==========
 import os
-import re
 import time
 from datetime import datetime
 from typing import Any, Dict, List, Optional
@@ -24,6 +23,8 @@ from utility.analytics import get_all_analytics
 from utility.path_files import sort_media_files
 from utility.quotes import load_quotes
 from utility.users import User, get_user_by_username, get_user_by_id, load_users, update_user, delete_user, is_active, add_user
+from utility.appearance import list_appearance_files, read_appearance_file, upload_appearance_file, write_appearance_file
+from utility.themes import list_themes, read_theme_css, save_theme_css, set_theme_enabled, upload_theme_css
 
 # ========== BLUEPRINT INITIALIZATION ==========
 admin_blueprint = Blueprint("admin", __name__, url_prefix="/admin")
@@ -246,6 +247,8 @@ def create_user() -> ResponseReturnValue:
         ("System: Dashboard", Permission.SYSTEM_DASHBOARD),
         ("System: Settings", Permission.SYSTEM_SETTINGS),
         ("Data: Management", Permission.DATA_MANAGEMENT),
+        ("Appearance: Read", Permission.APPEARANCE_READ),
+        ("Appearance: Update", Permission.APPEARANCE_UPDATE),
         ("System: Admin", Permission.SYSTEM_ADMIN),
         ("System: Root", Permission.SYSTEM_ROOT),
     ]
@@ -373,6 +376,8 @@ def edit_user(user_id: str) -> ResponseReturnValue:
         ("System: Dashboard", Permission.SYSTEM_DASHBOARD),
         ("System: Settings", Permission.SYSTEM_SETTINGS),
         ("Data: Management", Permission.DATA_MANAGEMENT),
+        ("Appearance: Read", Permission.APPEARANCE_READ),
+        ("Appearance: Update", Permission.APPEARANCE_UPDATE),
         ("System: Admin", Permission.SYSTEM_ADMIN),
         ("System: Root", Permission.SYSTEM_ROOT),
     ]
@@ -953,99 +958,146 @@ def general_settings() -> ResponseReturnValue:
     return render_template("admin/general-settings.jinja", settings=settings)
 
 # ========== APPEARANCE ROUTES ==========
-@admin_blueprint.route("/appearance/colors", methods=["GET", "POST"])
-@permission_required(Permission.SYSTEM_ADMIN)
-def general_appearance() -> ResponseReturnValue:
-    user_id: Optional[str] = session.get("user_id")
-    
+@admin_blueprint.route("/appearance/themes", methods=["GET", "POST"])
+@permission_required_any(Permission.APPEARANCE_READ, Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN)
+def theme_management() -> ResponseReturnValue:
+    user_id = session.get("user_id")
+    can_edit = bool(user_id and AuthManager.has_any_permission(user_id, Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN))
     if request.method == "POST":
-        log_with_user("info", "General appearance settings updated", user_id)
+        if not can_edit:
+            abort(403)
+        uploaded = request.files.get("theme_file")
+        try:
+            if not uploaded or not uploaded.filename:
+                raise ValueError("Choose a theme CSS file to upload.")
+            upload_theme_css(app.root_path, uploaded.filename, uploaded.stream)
+            flash("Theme installed and enabled.", "success")
+        except (FileExistsError, ValueError, OSError, UnicodeError) as error:
+            flash(str(error), "error")
+        return redirect(url_for("admin.theme_management"))
+    return render_template("admin/themes.jinja", themes=list_themes(app.root_path), can_edit=can_edit)
 
-        with open("static/css/root.css", "r") as f:
-            css_content = f.read()
 
-        for key, value in request.form.items():
-            pattern = rf"--{key}:\s*[^;]+;"
+@admin_blueprint.route("/appearance/themes/<theme_id>", methods=["GET", "POST"])
+@permission_required_any(Permission.APPEARANCE_READ, Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN)
+def theme_editor(theme_id: str) -> ResponseReturnValue:
+    user_id = session.get("user_id")
+    can_edit = bool(user_id and AuthManager.has_any_permission(user_id, Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN))
+    if request.method == "POST":
+        if not can_edit:
+            abort(403)
+        try:
+            save_theme_css(app.root_path, theme_id, request.form.get("theme_content", ""))
+        except (FileNotFoundError, ValueError):
+            flash("Theme CSS or required metadata is invalid.", "error")
+            return redirect(url_for("admin.theme_editor", theme_id=theme_id))
+        flash("Theme saved.", "success")
+        return redirect(url_for("admin.theme_editor", theme_id=theme_id))
+    try:
+        content = read_theme_css(app.root_path, theme_id)
+    except (FileNotFoundError, ValueError):
+        abort(404)
+    theme = next((item for item in list_themes(app.root_path) if item["id"] == theme_id), None)
+    if not theme:
+        abort(404)
+    return render_template("admin/theme-editor.jinja", theme=theme, theme_content=content, can_edit=can_edit)
 
-            replacement = f"--{key}: {value};"
-            if re.search(pattern, css_content):
-                css_content = re.sub(pattern, replacement, css_content)
-            else:
-                css_content += f"\n{replacement}"
 
-        with open("static/css/root.css", "w") as f:
-            f.write(css_content)
-
-        return redirect(url_for("admin.general_appearance"))
-
-    log_with_user("info", "General appearance route accessed", user_id)
-    with open("static/css/root.css") as f:
-        content: str = f.read()
-
-    root_styles = {}
-    root_regex = r"--([a-zA-Z0-9-]+)\s*:\s*([^;]+);"
-    matches = re.findall(root_regex, content)
-    for match in matches:
-        root_styles[f"{str(match[0])}"] = str(match[1]).strip()
-
-    log_with_user("debug", "Rendering general appearance settings page", user_id)
-    return render_template("admin/appearance.jinja", styles=root_styles)
+@admin_blueprint.route("/appearance/themes/<theme_id>/enabled", methods=["POST"])
+@permission_required_any(Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN)
+def theme_enabled(theme_id: str) -> ResponseReturnValue:
+    enabled_value = request.form.get("enabled")
+    if enabled_value not in {"true", "false"}:
+        abort(400)
+    try:
+        set_theme_enabled(app.root_path, theme_id, enabled_value == "true")
+    except FileNotFoundError:
+        abort(404)
+    except ValueError:
+        abort(403)
+    flash("Theme status updated.", "success")
+    return redirect(url_for("admin.theme_management"))
 
 @admin_blueprint.route("/appearance/templates", methods=["GET", "POST"])
-@permission_required(Permission.SYSTEM_ADMIN)
+@permission_required_any(Permission.APPEARANCE_READ, Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN)
 def template_appearance() -> ResponseReturnValue:
-    logger.info("Edit Templates route accessed")
-    return render_template("admin/edit-templates.jinja")
+    user_id = session.get("user_id")
+    can_edit = bool(user_id and AuthManager.has_any_permission(user_id, Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN))
+    if request.method == "POST":
+        if not can_edit:
+            abort(403)
+        uploaded = request.files.get("file")
+        try:
+            if not uploaded or not uploaded.filename:
+                raise ValueError("Choose a template file to upload")
+            upload_appearance_file(app.root_path, "templates", uploaded.filename, uploaded.stream)
+            flash("Template uploaded.", "success")
+        except (FileExistsError, ValueError, OSError) as error:
+            flash(str(error), "error")
+        return redirect(url_for("admin.template_appearance"))
+    return render_template("admin/edit-templates.jinja", files=list_appearance_files(app.root_path, "templates"), can_edit=can_edit)
 
 @admin_blueprint.route("/appearance/templates/edit/<path:template>", methods=["GET", "POST"])
-@permission_required(Permission.SYSTEM_ADMIN)
+@permission_required_any(Permission.APPEARANCE_READ, Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN)
 def template_appearance_edit(template: str) -> ResponseReturnValue:
-    user_id: Optional[str] = session.get("user_id")
-    log_with_user("info", f"Edit Template route accessed | Template: {template}", user_id)
-    template_path = os.path.join(app.root_path, "templates", f"{template}")
-
+    user_id = session.get("user_id")
+    can_edit = bool(user_id and AuthManager.has_any_permission(user_id, Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN))
     if request.method == "POST":
-        new_content = request.form.get("template_content", "")
-        with open(template_path, "w", encoding="utf-8") as f:
-            f.write(new_content)
-
-            # Renamed variable to prevent shadowing argument 'template'
-            #jinja_template = app.jinja_env.get_template(sanitize_path(template))
-            #jinja_template.environment.cache.clear()
-        log_with_user("info", f"Template file saved successfully | Template: {template}", user_id)
+        if not can_edit:
+            abort(403)
+        try:
+            write_appearance_file(app.root_path, "templates", template, request.form.get("template_content", ""))
+        except (FileNotFoundError, ValueError):
+            abort(404)
+        if app.jinja_env.cache is not None:
+            app.jinja_env.cache.clear()
+        log_with_user("info", f"Template file saved | Template: {template}", user_id)
+        flash("Template saved.", "success")
         return redirect(url_for("admin.template_appearance_edit", template=template))
-
-    with open(template_path, "r", encoding="utf-8") as f:
-        template_content = str(f.read())
-
-    template_content = template_content.replace("<", "&lt;").replace(">", "&gt;")
-
-    return render_template("admin/edit-template.jinja", template_content=template_content)
+    try:
+        template_content = read_appearance_file(app.root_path, "templates", template)
+    except (FileNotFoundError, ValueError):
+        abort(404)
+    return render_template("admin/edit-template.jinja", file=template, area="templates", template_content=template_content, can_edit=can_edit)
 
 @admin_blueprint.route("/appearance/static", methods=["GET", "POST"])
-@permission_required(Permission.SYSTEM_ADMIN)
+@admin_blueprint.route("/appearance/statics", methods=["GET", "POST"])
+@permission_required_any(Permission.APPEARANCE_READ, Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN)
 def change_static_files() -> ResponseReturnValue:
-    logger.info("Edit Static route accessed")
-    return render_template("admin/edit-static.jinja")
+    user_id = session.get("user_id")
+    can_edit = bool(user_id and AuthManager.has_any_permission(user_id, Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN))
+    if request.method == "POST":
+        if not can_edit:
+            abort(403)
+        uploaded = request.files.get("file")
+        category = request.form.get("category", "")
+        try:
+            if not uploaded or not uploaded.filename:
+                raise ValueError("Choose a CSS or JavaScript file to upload")
+            upload_appearance_file(app.root_path, "static", uploaded.filename, uploaded.stream, category)
+            flash("File uploaded.", "success")
+        except (FileExistsError, ValueError, OSError) as error:
+            flash(str(error), "error")
+        return redirect(url_for("admin.change_static_files"))
+    return render_template("admin/edit-static.jinja", files=list_appearance_files(app.root_path, "static"), can_edit=can_edit)
 
 @admin_blueprint.route("/appearance/static/edit/<path:file>", methods=["GET", "POST"])
-@permission_required(Permission.SYSTEM_ADMIN)
+@permission_required_any(Permission.APPEARANCE_READ, Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN)
 def change_static_files_edit(file: str) -> ResponseReturnValue:
-    user_id: Optional[str] = session.get("user_id")
-    log_with_user("info", f"Edit Static File route accessed | File: {file}", user_id)
-    file_path = os.path.join(app.root_path, "static", f"{file}")
-
+    user_id = session.get("user_id")
+    can_edit = bool(user_id and AuthManager.has_any_permission(user_id, Permission.APPEARANCE_UPDATE, Permission.SYSTEM_ADMIN))
     if request.method == "POST":
-        new_content = request.form.get("template_content", "")
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(new_content)
-
-        log_with_user("info", f"Static file saved successfully | File: {file}", user_id)
-        return redirect(url_for("admin.template_appearance_edit", template=file))
-
-    with open(file_path, "r", encoding="utf-8") as f:
-        file_content = str(f.read())
-
-    file_content = file_content.replace("<", "&lt;").replace(">", "&gt;")
-
-    return render_template("admin/edit-template.jinja", template_content=file_content)
+        if not can_edit:
+            abort(403)
+        try:
+            write_appearance_file(app.root_path, "static", file, request.form.get("template_content", ""))
+        except (FileNotFoundError, ValueError):
+            abort(404)
+        log_with_user("info", f"Static file saved | File: {file}", user_id)
+        flash("File saved.", "success")
+        return redirect(url_for("admin.change_static_files_edit", file=file))
+    try:
+        file_content = read_appearance_file(app.root_path, "static", file)
+    except (FileNotFoundError, ValueError):
+        abort(404)
+    return render_template("admin/edit-template.jinja", file=file, area="static", template_content=file_content, can_edit=can_edit)

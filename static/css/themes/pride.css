@@ -1,0 +1,89 @@
+/*
+ * @theme-name: Pride
+ * @theme-author: RootAccess
+ * @theme-description: A rainbow-accented palette with expressive navigation and buttons.
+ * @theme-color-schema: light
+ * @theme-scope: Colors, Effects
+ */
+:root[data-theme="pride"] {
+  --main-bg: #ffffff;
+  --background-1: #f8f8f8;
+  --background-2: #f0f0f0;
+  --background-3: #e8e8e8;
+  --background-4: #ffffff;
+  --navbar-bg: #ffffff;
+  --font-color: #212121;
+  --secondary-font-color: #424242;
+  --third-font-color: #616161;
+  --warning-color: #ff5722;
+  --main-color-50: #ffebee;
+  --main-color-100: #ffcdd2;
+  --main-color-200: #ef9a9a;
+  --main-color-300: #e57373;
+  --main-color-400: #E40303;
+  --main-color-500: #FF8C00;
+  --main-color-600: #FFED00;
+  --main-color-700: #008026;
+  --main-color-800: #004DFF;
+  --main-color-900: #750787;
+  --main-color-950: #ff8a80;
+  --font-family: "Montserrat", sans-serif;
+}
+
+[data-theme="pride"] .btn-primary {
+  background: linear-gradient(
+    45deg,
+    var(--main-color-400) 0%,
+    var(--main-color-400) 16.66%,
+    var(--main-color-500) 16.66%,
+    var(--main-color-500) 33.33%,
+    var(--main-color-600) 33.33%,
+    var(--main-color-600) 50%,
+    var(--main-color-700) 50%,
+    var(--main-color-700) 66.66%,
+    var(--main-color-800) 66.66%,
+    var(--main-color-800) 83.33%,
+    var(--main-color-900) 83.33%,
+    var(--main-color-900) 100%
+  );
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="pride"] .btn-secondary {
+  background: var(--main-color-900);
+  color: #ffffff;
+  border: 2px solid var(--main-color-900);
+}
+
+[data-theme="pride"] .btn-outline {
+  background: transparent;
+  color: var(--main-color-800);
+  border: 2px solid var(--main-color-800);
+}
+
+[data-theme="pride"] .btn-primary:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+[data-theme="pride"] .navbar-active,
+[data-theme="pride"] .nav-link.active {
+  background: linear-gradient(
+    45deg,
+    var(--main-color-400) 0%,
+    var(--main-color-400) 16.66%,
+    var(--main-color-500) 16.66%,
+    var(--main-color-500) 33.33%,
+    var(--main-color-600) 33.33%,
+    var(--main-color-600) 50%,
+    var(--main-color-700) 50%,
+    var(--main-color-700) 66.66%,
+    var(--main-color-800) 66.66%,
+    var(--main-color-800) 83.33%,
+    var(--main-color-900) 83.33%,
+    var(--main-color-900) 100%
+  );
+    color: #ffffff;
+}

@@ -12,40 +12,42 @@
     const root = document.documentElement;
 
     function applyMode(mode) {
-        if (mode === 'dark') {
-            root.setAttribute('data-theme', 'dark');
+        if (typeof window.setActiveTheme === 'function') {
+            window.setActiveTheme(mode);
         } else {
-            root.removeAttribute('data-theme');
+            root.dataset.theme = mode;
+            document.getElementById('active-custom-theme')?.remove();
+            try {
+                localStorage.setItem('active-theme', mode);
+            } catch (e) {
+                console.warn('Unable to persist theme preference:', e);
+            }
         }
 
+        const isDark = mode === 'dark';
         switches.forEach((switchEl) => {
             const thumb = switchEl.querySelector('.switch-thumb');
-            if (mode === 'dark') {
-                switchEl.classList.add('dark');
-                switchEl.setAttribute('aria-pressed', 'true');
-                if (thumb) thumb.style.transform = 'translateX(26px)';
-            } else {
-                switchEl.classList.remove('dark');
-                switchEl.setAttribute('aria-pressed', 'false');
-                if (thumb) thumb.style.transform = 'translateX(0)';
-            }
+            switchEl.classList.toggle('dark', isDark);
+            switchEl.setAttribute('aria-pressed', String(isDark));
+            if (thumb) thumb.style.transform = isDark ? 'translateX(26px)' : 'translateX(0)';
         });
-
-        try {
-            localStorage.setItem('theme', mode);
-        } catch (e) {
-            console.warn('Unable to persist theme preference:', e);
-        }
     }
 
     function toggleTheme() {
-        const current = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        const activeTheme = window.portfolioThemes?.find((theme) => theme.id === root.dataset.theme);
+        const isDark = activeTheme?.color_schema === 'dark' || root.dataset.theme === 'dark';
+        const current = isDark ? 'light' : 'dark';
         applyMode(current);
     }
 
-    const saved = localStorage.getItem('theme');
-    const initial = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    applyMode(initial);
+    const activeTheme = window.portfolioThemes?.find((theme) => theme.id === root.dataset.theme);
+    const initial = activeTheme?.color_schema === 'dark' || root.dataset.theme === 'dark';
+    switches.forEach((switchEl) => {
+        const thumb = switchEl.querySelector('.switch-thumb');
+        switchEl.classList.toggle('dark', initial);
+        switchEl.setAttribute('aria-pressed', String(initial));
+        if (thumb) thumb.style.transform = initial ? 'translateX(26px)' : 'translateX(0)';
+    });
 
     switches.forEach((switchEl) => switchEl.addEventListener('click', toggleTheme));
 })();

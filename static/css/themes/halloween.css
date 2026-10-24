@@ -1,0 +1,128 @@
+﻿/*
+ * @theme-name: Halloween
+ * @theme-author: RootAccess
+ * @theme-description: A deeper, scarier autumn palette with blood-orange glow and ominous atmosphere.
+ * @theme-color-schema: dark
+ * @theme-scope: Colors, Shapes, Effects
+ */
+:root[data-theme="halloween"] {
+    --main-bg: #090608;
+    --background-1: #120910;
+    --background-2: #1a0d14;
+    --background-3: #2b1218;
+    --background-4: #130b10;
+    --navbar-bg: rgba(19, 10, 12, 0.82);
+    --font-color: #f8efe7;
+    --secondary-font-color: #ffd9b3;
+    --third-font-color: #d39b6b;
+    --warning-color: #ff5a1d;
+    --main-color-50: #2b120b;
+    --main-color-100: #481e11;
+    --main-color-200: #642b11;
+    --main-color-300: #873b14;
+    --main-color-400: #a94918;
+    --main-color-500: #d45b1c;
+    --main-color-600: #eb7330;
+    --main-color-700: #ff8c3d;
+    --main-color-800: #ffaf6a;
+    --main-color-900: #ffd5a0;
+    --main-color-950: #fff0d2;
+}
+
+[data-theme="halloween"] body {
+    background:
+        radial-gradient(circle at top, rgba(255, 119, 34, 0.13), transparent 28%),
+        radial-gradient(circle at bottom, rgba(122, 23, 9, 0.18), transparent 30%),
+        linear-gradient(180deg, #090608 0%, #120910 34%, #090608 100%);
+    color: var(--font-color);
+}
+
+[data-theme="halloween"] body,
+[data-theme="halloween"] .container,
+[data-theme="halloween"] .navbar,
+[data-theme="halloween"] .card,
+[data-theme="halloween"] .project-card,
+[data-theme="halloween"] .blog-card,
+[data-theme="halloween"] .panel,
+[data-theme="halloween"] .content-box {
+    box-shadow: inset 0 1px 0 rgba(255, 188, 130, 0.18), 0 0 20px rgba(197, 82, 15, 0.12);
+}
+
+[data-theme="halloween"] a:hover,
+[data-theme="halloween"] button:hover,
+[data-theme="halloween"] .btn:hover {
+    box-shadow: 0 0 16px rgba(255, 115, 0, 0.28), 0 0 26px rgba(255, 76, 0, 0.12);
+}
+
+[data-theme="halloween"]::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    background:
+        radial-gradient(circle at center, transparent 35%, rgba(18, 10, 12, 0.8) 75%, rgba(4, 2, 4, 0.95) 100%),
+        linear-gradient(180deg, rgba(44, 19, 12, 0.22), transparent 30%, rgba(0, 0, 0, 0.24));
+    box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.88);
+    animation: lantern-flicker 3.6s infinite ease-in-out;
+}
+
+@keyframes lantern-flicker {
+    0%, 100% { opacity: 0.78; }
+    20% { opacity: 0.92; }
+    35% { opacity: 0.7; }
+    52% { opacity: 0.98; }
+    65% { opacity: 0.76; }
+    82% { opacity: 0.9; }
+}
+
+
+[data-theme="halloween"] h1,
+[data-theme="halloween"] h2,
+[data-theme="halloween"] h3,
+[data-theme="halloween"] .spooky-title {
+    color: var(--main-color-950);
+    text-shadow:
+        0 0 10px rgba(255, 145, 69, 0.35),
+        0 0 20px rgba(255, 90, 29, 0.28),
+        0 0 32px rgba(150, 32, 0, 0.24),
+        0.06em 0.06em 0 rgba(35, 0, 0, 0.75);
+    animation: text-pulse 3s infinite alternate;
+}
+
+@keyframes text-pulse {
+    0% {
+        text-shadow:
+            0 0 8px rgba(255, 145, 69, 0.25),
+            0 0 20px rgba(255, 90, 29, 0.2),
+            0.04em 0.04em 0 rgba(35, 0, 0, 0.75);
+    }
+    100% {
+        text-shadow:
+            0 0 12px rgba(255, 145, 69, 0.75),
+            0 0 25px rgba(255, 90, 29, 0.45),
+            0 0 40px rgba(120, 35, 0, 0.32),
+            0.06em 0.06em 0 rgba(35, 0, 0, 0.8);
+    }
+}
+
+[data-theme="halloween"] ::selection {
+    background: rgba(255, 104, 42, 0.7);
+    color: #fff7f1;
+}
+
+[data-theme="halloween"] input,
+[data-theme="halloween"] textarea,
+[data-theme="halloween"] select,
+[data-theme="halloween"] button {
+    border-color: rgba(255, 143, 77, 0.35);
+    background: rgba(28, 15, 17, 0.82);
+    box-shadow: inset 0 0 0 1px rgba(255, 166, 87, 0.08);
+}
+
+[data-theme="halloween"] .warning,
+[data-theme="halloween"] [class*="alert"],
+[data-theme="halloween"] .danger {
+    border-left: 3px solid rgba(255, 90, 29, 0.9);
+    box-shadow: 0 0 18px rgba(255, 90, 29, 0.12);
+}

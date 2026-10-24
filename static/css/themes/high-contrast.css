@@ -1,0 +1,65 @@
+/*
+ * @theme-name: High Contrast
+ * @theme-author: RootAccess
+ * @theme-description: A high-contrast black and white palette.
+ * @theme-color-schema: high-contrast
+ * @theme-scope: Colors, Shapes, Borders, Effects
+ */
+:root[data-theme="high-contrast"] {
+    color-scheme: dark;
+    --main-bg: #000000;
+    --background-1: #000000;
+    --background-2: #000000;
+    --background-3: #ffffff;
+    --background-4: #000000;
+    --navbar-bg: #000000;
+    --font-color: #ffffff;
+    --secondary-font-color: #ffffff;
+    --third-font-color: #ffffff;
+    --warning-color: #ffff00;
+    --main-color-50: #f0f0f0;
+    --main-color-100: #e0e0e0;
+    --main-color-200: #d0d0d0;
+    --main-color-300: #c0c0c0;
+    --main-color-400: #ffff00;
+    --main-color-500: #ffffff;
+    --main-color-600: #e0e0e0;
+    --main-color-700: #d0d0d0;
+    --main-color-800: #c0c0c0;
+    --main-color-900: #b0b0b0;
+    --main-color-950: #a0a0a0;
+    --radius-sm: 0;
+    --radius-md: 0;
+    --radius-lg: 0;
+    --radius-xl: 0;
+}
+
+[data-theme="high-contrast"] img {
+    filter: contrast(150%) brightness(100%);
+}
+
+[data-theme="high-contrast"] * {
+    border-color: #ffffff;
+}
+
+[data-theme="high-contrast"] .btn-primary,
+[data-theme="high-contrast"] .btn-secondary,
+[data-theme="high-contrast"] .btn-outline {
+    background: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+}
+
+[data-theme="high-contrast"] .btn-primary:hover,
+[data-theme="high-contrast"] .btn-secondary:hover,
+[data-theme="high-contrast"] .btn-outline:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+[data-theme="high-contrast"] .navbar-active,
+[data-theme="high-contrast"] .nav-link.active {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #000000;
+}

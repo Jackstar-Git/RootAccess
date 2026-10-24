@@ -114,14 +114,14 @@
         </div>
         {% endif %}
 
-        {% if has_permission(user_permissions, Permission.SYSTEM_ADMIN) %}
+        {% if has_permission(user_permissions, Permission.APPEARANCE_READ) or has_permission(user_permissions, Permission.APPEARANCE_UPDATE) or has_permission(user_permissions, Permission.SYSTEM_ADMIN) %}
         <div class="nav-item">
             <a href="#" class="menu-toggle" title="Appearance">
                 <i class="fa-solid fa-paint-brush"></i> 
                 <span>Appearance</span>
             </a>
             <div class="submenu">
-                <a href="/admin/appearance/colors"><i class="fa-solid fa-palette"></i> Colors</a>
+                <a href="/admin/appearance/themes"><i class="fa-solid fa-swatchbook"></i> Themes</a>
                 <a href="/admin/appearance/templates"><i class="fa-solid fa-file-code"></i> Templates</a>
                 <a href="/admin/appearance/statics"><i class="fa-solid fa-code"></i> CSS & JS</a>
             </div>

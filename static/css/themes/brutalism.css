@@ -1,0 +1,65 @@
+/*
+ * @theme-name: Brutalism
+ * @theme-author: RootAccess
+ * @theme-description: A dramatic red-black palette with hard edges and scanline texture.
+ * @theme-color-schema: dark
+ * @theme-scope: Colors, Typography, Shapes, Effects, Transitions
+ */
+:root[data-theme="brutalism"] {
+    --main-bg: #0a0000;
+    --background-1: #140000;
+    --background-2: #240000;
+    --background-3: #3b0000;
+    --background-4: #1a0505;
+    --navbar-bg: #0a0000;
+    --font-color: #ffc9c9;
+    --secondary-font-color: #ff6600;
+    --third-font-color: #ff3333;
+    --warning-color: #ff0000;
+    --main-color-50: #2e0000;
+    --main-color-100: #4a0000;
+    --main-color-200: #6e0000;
+    --main-color-300: #930000;
+    --main-color-400: #b80000;
+    --main-color-500: #d60000;
+    --main-color-600: #8a0303;
+    --main-color-700: #610202;
+    --main-color-800: #3d0101;
+    --main-color-900: #1f0000;
+    --main-color-950: #ff0000;
+    --font-family: "Creepster", "Courier New", Courier, monospace;
+    --radius-sm: 2px;
+    --radius-md: 4px;
+    --radius-lg: 8px;
+    --radius-xl: 12px;
+}
+
+[data-theme="brutalism"]::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at center, transparent 30%, rgba(138, 3, 3, 0.4) 100%),
+        url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h4v1H0z' fill='%23ff0000' fill-opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 99999;
+}
+
+[data-theme="brutalism"] .btn-primary,
+[data-theme="brutalism"] .btn-secondary,
+[data-theme="brutalism"] .filter-toggle-btn {
+    border: 1px solid var(--main-color-600);
+    box-shadow: 0 0 15px rgba(138, 3, 3, 0.6);
+    background: #140000;
+    color: var(--main-color-950);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+[data-theme="brutalism"] .btn-primary:hover,
+[data-theme="brutalism"] .btn-secondary:hover {
+    background: var(--main-color-600);
+    color: #ffffff;
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+    transform: scale(1.02);
+}

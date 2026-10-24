@@ -38,7 +38,7 @@ function initTerminalLogs() {
     const heroCard = document.querySelector(".hero-3d-card");
     if (!terminalBody) return;
 
-    const availableThemes = ["light", "dark", "barrel-roll", "matrix", "high-contrast", "midnight-neo", "wild-west", "brutalism", "abstract", "pride"];
+    const availableThemes = () => window.portfolioThemeIds || ["light", "dark"];
 
     const logs = [
         "[INFO] Booting sequence initiated...",
@@ -97,14 +97,20 @@ function initTerminalLogs() {
                 if (cmd.startsWith("sudo theme")) {
                     const themeName = cmd.split(" ")[2];
                     if (themeName === "--list") {
-                        responseLine.textContent = `Themes: ${availableThemes.join(", ")}`;
+                        responseLine.textContent = `Themes: ${availableThemes().join(", ")}`;
                     } else if (themeName === "reset") {
-                        document.documentElement.setAttribute("data-theme", "light");
-                        localStorage.removeItem("active-theme");
+                        if (typeof window.setActiveTheme === "function") window.setActiveTheme("light");
+                        else {
+                            document.documentElement.setAttribute("data-theme", "light");
+                            localStorage.removeItem("active-theme");
+                        }
                         responseLine.textContent = "Theme reset to default.";
-                    } else if (availableThemes.includes(themeName)) {
-                        document.documentElement.setAttribute("data-theme", themeName);
-                        localStorage.setItem("active-theme", themeName);
+                    } else if (availableThemes().includes(themeName)) {
+                        if (typeof window.setActiveTheme === "function") window.setActiveTheme(themeName);
+                        else {
+                            document.documentElement.setAttribute("data-theme", themeName);
+                            localStorage.setItem("active-theme", themeName);
+                        }
                         responseLine.textContent = `Theme switched to: ${themeName}`;
                     } else {
                         responseLine.textContent = "Usage: sudo theme [name] | --list | reset";

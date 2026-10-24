@@ -1,3 +1,5 @@
+import("./theme_manager.js");
+
 function initFilterToggle() {
     const filterBtn = document.getElementById("filter-btn");
     const drawer = document.getElementById("filter-drawer");
@@ -14,8 +16,13 @@ function initThemeSwitch() {
     const root = document.documentElement;
 
     function applyMode(mode) {
-        root.setAttribute("data-theme", mode);
-        localStorage.setItem("active-theme", mode);
+        if (typeof window.setActiveTheme === "function") {
+            window.setActiveTheme(mode);
+        } else {
+            root.setAttribute("data-theme", mode);
+            document.getElementById("active-custom-theme")?.remove();
+            localStorage.setItem("active-theme", mode);
+        }
         switches.forEach(s => {
             const thumb = s.querySelector(".switch-thumb");
             const isDark = (mode === "dark");
@@ -25,7 +32,9 @@ function initThemeSwitch() {
     }
 
     switches.forEach(s => s.addEventListener("click", () => {
-        const current = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        const activeTheme = window.portfolioThemes?.find(theme => theme.id === root.dataset.theme);
+        const isDark = activeTheme?.color_schema === "dark" || root.dataset.theme === "dark";
+        const current = isDark ? "light" : "dark";
         applyMode(current);
     }));
 }

@@ -44,6 +44,8 @@ class Permission(IntFlag):
     SYSTEM_DASHBOARD = 1 << 30
     SYSTEM_SETTINGS = 1 << 31
     DATA_MANAGEMENT = 1 << 32
+    APPEARANCE_READ = 1 << 33
+    APPEARANCE_UPDATE = 1 << 34
     SYSTEM_ADMIN = 1 << 62
     SYSTEM_ROOT = 1 << 63
 

@@ -1,0 +1,18 @@
+/*
+ * @theme-name: Magic ink
+ * @theme-author: RootAccess
+ * @theme-description: Reveal text only on hover with a magical ink effect.
+ * @theme-color-schema: auto
+ * @theme-scope: Effects
+
+ */
+
+[data-theme="high-contrast"] * {
+	color: transparent !important;
+	cursor: pointer !important;
+}
+
+[data-theme="high-contrast"] *:hover {
+	color: var(--font-color) !important;
+}
+

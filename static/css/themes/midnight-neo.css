@@ -1,0 +1,30 @@
+/*
+ * @theme-name: Midnight Neo
+ * @theme-author: RootAccess
+ * @theme-description: An electric dark palette with cyan and magenta accents.
+ * @theme-color-schema: dark
+ * @theme-scope: Colors
+ */
+:root[data-theme="midnight-neo"] {
+    --main-bg: #050505;
+    --background-1: #0a0a0a;
+    --background-2: #111111;
+    --background-3: #333333;
+    --navbar-bg: #050505;
+    --font-color: #e0e0e0;
+    --secondary-font-color: #e0e0e0;
+    --third-font-color: #aaaaaa;
+    --warning-color: #ff0055;
+    --main-color-50: #1a1a1a;
+    --main-color-100: #2a2a2a;
+    --main-color-200: #3a3a3a;
+    --main-color-300: #4a4a4a;
+    --main-color-400: #00ffff;
+    --main-color-500: #bc13fe;
+    --main-color-600: #ff0055;
+    --main-color-700: #e0004a;
+    --main-color-800: #c0003d;
+    --main-color-900: #a00030;
+    --main-color-950: #ffffff;
+    --font-family: "Montserrat", sans-serif;
+}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Management</title>
+    <script src="{{ url_for('static', filename='js/global_preloader.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/fonts/font-awesome/reduced.all.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/root.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/appearance.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        {% include "admin/sidebar.jinja" %}
+        <main class="main-content appearance-page">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" type="button" title="Toggle Menu" aria-label="Toggle navigation menu"><i class="fa-solid fa-bars"></i></button>
+            <header class="appearance-heading">
+                <div><p class="eyebrow">Appearance</p><h2>Theme Management</h2></div>
+                <a class="btn-secondary" href="{{ url_for('admin.change_static_files') }}"><i class="fa-solid fa-code"></i> CSS &amp; JS</a>
+            </header>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}<div class="appearance-notice {{ category|e }}">{{ message|e }}</div>{% endfor %}
+            {% endwith %}
+            {% if can_edit %}
+            <section class="appearance-section theme-upload-section">
+                <form class="upload-form" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
+                    <label for="theme-file">Install CSS theme</label>
+                    <input id="theme-file" type="file" name="theme_file" accept=".css,text/css" required>
+                    <button class="btn-primary" type="submit"><i class="fa-solid fa-upload"></i> Install theme</button>
+                </form>
+                <p class="theme-upload-note">Include a comment block with <code>@theme-color-schema</code>; if <code>@theme-name</code> is omitted, the filename becomes the theme name.</p>
+            </section>
+            {% endif %}
+            <section class="theme-list" aria-label="Installed themes">
+                <div class="theme-list-header"><span>Theme</span><span>Schema</span><span>Status</span><span>Actions</span></div>
+                {% for theme in themes %}
+                <article class="theme-row {% if theme.protected %}protected-theme{% endif %}">
+                    <div class="theme-identity">
+                        <h3>{{ theme.name|e }}</h3>
+                        <p class="theme-author">{{ theme.author|default('No author provided', true)|e }}</p>
+                        <p class="theme-description">{{ theme.description|default('No description provided', true)|e }}</p>
+                        {% if theme.scopes %}
+                        <div class="theme-scopes" aria-label="Theme scopes">
+                            {% for scope in theme.scopes %}<span class="scope-label">{{ scope|e }}</span>{% endfor %}
+                        </div>
+                        {% endif %}
+                        {% if not theme.valid %}<p class="theme-validation">Invalid or missing theme-color-schema metadata</p>{% endif %}
+                    </div>
+                    <span class="schema-label">{{ theme.color_schema|default('Not set', true)|e }}</span>
+                    <span class="theme-status {% if theme.enabled %}is-enabled{% else %}is-disabled{% endif %}">
+                        {{ 'Enabled' if theme.enabled else 'Disabled' }}{% if theme.protected %}<small>Protected fallback</small>{% endif %}
+                    </span>
+                    <div class="theme-actions">
+                        {% if theme.protected %}
+                            <span class="protected-label"><i class="fa-solid fa-lock"></i> Default</span>
+                        {% else %}
+                            {% if can_edit and theme.valid %}
+                            <form method="post" action="{{ url_for('admin.theme_enabled', theme_id=theme.id) }}">
+                                <input type="hidden" name="csrf_token" value="{{ generate_token() }}">
+                                <input type="hidden" name="enabled" value="{{ 'false' if theme.enabled else 'true' }}">
+                                <button class="theme-toggle {% if theme.enabled %}is-enabled{% endif %}" type="submit" role="switch" aria-checked="{{ 'true' if theme.enabled else 'false' }}" aria-label="{{ 'Disable' if theme.enabled else 'Enable' }} {{ theme.name|e }}">
+                                    <span class="toggle-knob"></span>
+                                </button>
+                            </form>
+                            {% endif %}
+                            <a class="icon-action" href="{{ url_for('admin.theme_editor', theme_id=theme.id) }}" title="{{ 'Edit' if can_edit else 'View' }} {{ theme.name|e }}" aria-label="{{ 'Edit' if can_edit else 'View' }} {{ theme.name|e }}"><i class="fa-solid {{ 'fa-pen' if can_edit else 'fa-eye' }}"></i></a>
+                        {% endif %}
+                    </div>
+                </article>
+                {% endfor %}
+            </section>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/global.js') }}"></script>
+</body>
+</html>

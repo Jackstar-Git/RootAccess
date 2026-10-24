@@ -1,0 +1,57 @@
+/*
+ * @theme-name: Matrix
+ * @theme-author: RootAccess
+ * @theme-description: Terminal green with scanlines and a monochrome interface.
+ * @theme-color-schema: dark
+ * @theme-scope: Colors, Typography, Effects
+ */
+:root[data-theme="matrix"] {
+    --main-bg: #000000;
+    --background-1: #000000;
+    --background-2: #001100;
+    --background-3: #00ff00;
+    --background-4: #002200;
+    --navbar-bg: #001100;
+    --font-color: #00ff00;
+    --secondary-font-color: #00ff00;
+    --third-font-color: #00aa00;
+    --warning-color: #00ff00;
+    --main-color-50: #004400;
+    --main-color-100: #006600;
+    --main-color-200: #008800;
+    --main-color-300: #00aa00;
+    --main-color-400: #00cc00;
+    --main-color-500: #00dd00;
+    --main-color-600: #00ee00;
+    --main-color-700: #00ff00;
+    --main-color-800: #00ff33;
+    --main-color-900: #00ff66;
+    --main-color-950: #00ff99;
+    --font-family: "Courier New", Courier, monospace;
+}
+
+img {
+    filter: sepia(100%) saturate(500%) hue-rotate(80deg) brightness(120%) contrast(110%);
+    mix-blend-mode: screen;
+}
+
+[data-theme="matrix"] .btn-primary,
+[data-theme="matrix"] .btn-secondary,
+[data-theme="matrix"] .btn-outline {
+    background: transparent;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    box-shadow: none;
+    text-transform: uppercase;
+}
+
+[data-theme="matrix"]::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 255, 0, 0.15) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 99999;
+}

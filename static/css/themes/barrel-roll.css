@@ -1,0 +1,22 @@
+/*
+ * @theme-name: Barrel Roll
+ * @theme-author: RootAccess
+ * @theme-description: A short page-wide barrel roll animation.
+ * @theme-color-schema: auto
+ * @theme-scope: Effects
+ */
+[data-theme="barrel-roll"] {
+	animation: barrelRoll 5s ease-in-out;
+	overflow-x: hidden;
+	max-height: 100vh;
+}
+
+@keyframes barrelRoll {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(720deg);
+	}
+}

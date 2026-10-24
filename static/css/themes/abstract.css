@@ -1,0 +1,57 @@
+/*
+ * @theme-name: Abstract
+ * @theme-author: RootAccess
+ * @theme-description: A geometric dark palette with cyan and orange accents.
+ * @theme-color-schema: dark
+ * @theme-scope: Colors, Shapes, Effects
+ */
+:root[data-theme="abstract"] {
+    --main-bg: #121212;
+    --background-1: #1e1e1e;
+    --background-2: #2a2a2a;
+    --background-3: #363636;
+    --background-4: #424242;
+    --navbar-bg: #121212;
+    --font-color: #e0e0e0;
+    --secondary-font-color: #b0b0b0;
+    --third-font-color: #808080;
+    --warning-color: #ff5722;
+    --main-color-50: #f5f5f5;
+    --main-color-100: #e0e0e0;
+    --main-color-200: #cccccc;
+    --main-color-300: #b8b8b8;
+    --main-color-400: #00bcd4;
+    --main-color-500: #0097a7;
+    --main-color-600: #ff5722;
+    --main-color-700: #e64a19;
+    --main-color-800: #d84315;
+    --main-color-900: #bf360c;
+    --main-color-950: #ff9800;
+    --font-family: "Montserrat", sans-serif;
+    --radius-sm: 0;
+    --radius-md: 0;
+    --radius-lg: 0;
+    --radius-xl: 0;
+}
+
+img {
+    filter: contrast(120%) blur(0.3px) sepia(20%);
+}
+
+[data-theme="abstract"] .btn-primary,
+[data-theme="abstract"] .btn-secondary,
+[data-theme="abstract"] .btn-outline {
+    background: var(--main-color-600);
+    color: #ffffff;
+    border: 2px solid var(--main-color-600);
+    box-shadow: none;
+    text-transform: uppercase;
+}
+
+[data-theme="abstract"] .btn-primary:hover,
+[data-theme="abstract"] .btn-secondary:hover,
+[data-theme="abstract"] .btn-outline:hover {
+    background: transparent;
+    color: var(--main-color-600);
+    border: 2px solid var(--main-color-600);
+}
