@@ -176,9 +176,21 @@
 
             <section class="glass-element contact-box" aria-label="Contact information">
                 <p>Want to build something together?</p>
-                <a href="https://discordapp.com/users/700285395589529702" class="discord-pill" rel="noopener">
-                    <i class="fab fa-discord" aria-hidden="true"></i> Connect on Discord
-                </a>
+                <details class="discord-picker">
+                    <summary class="discord-pill">
+                        <i class="fab fa-discord" aria-hidden="true"></i>
+                        Connect on Discord
+                        <i class="fas fa-chevron-down discord-picker-chevron" aria-hidden="true"></i>
+                    </summary>
+                    <div class="discord-picker-menu">
+                        <a href="discord://discord.com/users/700285395589529702">
+                            <i class="fas fa-mobile-alt" aria-hidden="true"></i> Open in App
+                        </a>
+                        <a href="https://discord.com/users/700285395589529702" target="_blank" rel="noopener noreferrer">
+                            <i class="fas fa-globe" aria-hidden="true"></i> Open in Browser
+                        </a>
+                    </div>
+                </details>
             </section>
         </div>
     </main>

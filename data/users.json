@@ -7,8 +7,8 @@
         "hierarchy_level": 0,
         "permissions": 13835058059577128959,
         "time_created": 1773949620,
-        "last_modified": 1790628334,
-        "last_login": 1790628334,
+        "last_modified": 1791139214,
+        "last_login": 1791139214,
         "status": "active",
         "notes": ""
     },
@@ -75,6 +75,19 @@
         "last_modified": 1780324235,
         "last_login": 0,
         "status": "test",
+        "notes": ""
+    },
+    {
+        "id": "b49ae2cf3806",
+        "username": "Szyon",
+        "password_hash": "scrypt:32768:8:1$MrN0RcMUy5ori65Q$521a7e58a78cc6f4a441b5ddc42b0af37b6876da7b903924c4d2e78987dc5ba7230c22b6af600fb3f82f388560f9bc20df6cf6a55b3578194f1fa3f78fa1766b",
+        "profile_picture_url": null,
+        "hierarchy_level": 1,
+        "permissions": 8589934591,
+        "time_created": 1792338390,
+        "last_modified": 1792338390,
+        "last_login": 0,
+        "status": "active",
         "notes": ""
     }
 ]

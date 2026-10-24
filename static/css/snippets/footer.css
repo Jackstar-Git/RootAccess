@@ -43,6 +43,65 @@
   transform: translateY(-3px);
 }
 
+.social-discord-picker {
+  position: relative;
+}
+
+.social-discord-trigger {
+  color: var(--main-color-800);
+  cursor: pointer;
+  font-size: var(--font-size-lg);
+  list-style: none;
+  transition: var(--transition-medium);
+}
+
+.social-discord-trigger::-webkit-details-marker {
+  display: none;
+}
+
+.social-discord-trigger:hover,
+.social-discord-picker[open] .social-discord-trigger {
+  color: var(--main-color-500);
+  transform: translateY(-3px);
+}
+
+.social-discord-trigger:focus-visible,
+.social-discord-menu a:focus-visible {
+  outline: 2px solid var(--main-color-500);
+  outline-offset: 4px;
+}
+
+.social-discord-menu {
+  background: var(--background-1);
+  border: 1px solid var(--background-2);
+  border-radius: var(--radius-md);
+  bottom: calc(100% + var(--spacing-md));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  display: grid;
+  min-width: 190px;
+  padding: var(--spacing-xs);
+  position: absolute;
+  right: 0;
+  text-align: left;
+  z-index: 2;
+}
+
+.social-discord-menu a {
+  align-items: center;
+  border-radius: var(--radius-sm);
+  color: var(--font-color);
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.social-discord-menu a:hover {
+  background: var(--background-2);
+  color: var(--font-color);
+}
+
 .footer-links-wrapper {
   display: grid;
   gap: var(--spacing-md);

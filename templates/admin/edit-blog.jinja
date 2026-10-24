@@ -108,6 +108,15 @@
                         </div>
 
                         <div class="settings-group">
+                            <label for="suggested-blogs">Manual suggestions (up to 3)</label>
+                            <select id="suggested-blogs" name="suggested_blogs" multiple class="modern-select">
+                                {% for suggested_blog in available_blogs %}
+                                    <option value="{{ suggested_blog.id }}" {% if suggested_blog.id in blog.suggested_blogs %}selected{% endif %}>{{ suggested_blog.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="settings-group">
                             <label>Tags</label>
                             <input type="text" name="tags" class="modern-input" value="{{ blog.tags | join(', ') }}" placeholder="travel, tech, lifestyle">
                         </div>

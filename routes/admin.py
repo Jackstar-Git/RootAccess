@@ -608,6 +608,7 @@ def create_blog() -> ResponseReturnValue:
             "image_url": image_url,
             "tags": [tag.strip() for tag in request.form.get("tags", "").split(",") if tag.strip()],
             "categories": request.form.getlist("categories"),
+            "suggested_blogs": request.form.getlist("suggested_blogs"),
             "type": request.form.get("type"),
             "reading_time": request.form.get("reading_time"),
             "description": request.form.get("description")
@@ -632,14 +633,16 @@ def create_blog() -> ResponseReturnValue:
                         flash("Scheduled date/time must be in the future.", "error")
                         return render_template(
                             "admin/add-blog.jinja",
-                            settings=get_settings("blog_config")
+                            settings=get_settings("blog_config"),
+                            available_blogs=[post for post in load_blogs() if post.get("status") == "visible"]
                         )
                 except ValueError as e:
                     logger.error(f"Invalid scheduled date format: {str(e)}")
                     flash("Invalid scheduled date/time format.", "error")
                     return render_template(
                         "admin/add-blog.jinja",
-                        settings=get_settings("blog_config")
+                        settings=get_settings("blog_config"),
+                        available_blogs=[post for post in load_blogs() if post.get("status") == "visible"]
                     )
 
         try:
@@ -653,7 +656,8 @@ def create_blog() -> ResponseReturnValue:
 
     return render_template(
         "admin/add-blog.jinja",
-        settings=get_settings("blog_config")
+        settings=get_settings("blog_config"),
+        available_blogs=[post for post in load_blogs() if post.get("status") == "visible"]
     )
 
 @admin_blueprint.route("/blogs/edit/<blog_id>", methods=["GET", "POST"])
@@ -686,6 +690,7 @@ def edit_blog(blog_id: str) -> ResponseReturnValue:
             "status": request.form.get("status", "draft"),
             "tags": [tag.strip() for tag in request.form.get("tags", "").split(",") if tag.strip()],
             "categories": request.form.getlist("categories"),
+            "suggested_blogs": request.form.getlist("suggested_blogs"),
             "description": request.form.get("description"),
             "type": request.form.get("type"),
             "reading_time": request.form.get("reading_time")
@@ -711,7 +716,8 @@ def edit_blog(blog_id: str) -> ResponseReturnValue:
                         return render_template(
                             "admin/edit-blog.jinja",
                             blog=blog,
-                            settings=get_settings("blog_config")
+                            settings=get_settings("blog_config"),
+                            available_blogs=[post for post in load_blogs() if post.get("status") == "visible" and post.get("id") != blog_id]
                         )
                 except ValueError as e:
                     logger.error(f"Invalid scheduled date format: {str(e)}")
@@ -719,7 +725,8 @@ def edit_blog(blog_id: str) -> ResponseReturnValue:
                     return render_template(
                         "admin/edit-blog.jinja",
                         blog=blog,
-                        settings=get_settings("blog_config")
+                        settings=get_settings("blog_config"),
+                        available_blogs=[post for post in load_blogs() if post.get("status") == "visible" and post.get("id") != blog_id]
                     )
             elif blog.get("scheduled_date"):
                 # If draft but no new schedule, remove old schedule
@@ -738,7 +745,8 @@ def edit_blog(blog_id: str) -> ResponseReturnValue:
     return render_template(
         "admin/edit-blog.jinja",
         blog=blog,
-        settings=get_settings("blog_config")
+        settings=get_settings("blog_config"),
+        available_blogs=[post for post in load_blogs() if post.get("status") == "visible" and post.get("id") != blog_id]
     )
 
 # ========== PROJECTS ROUTES ==========

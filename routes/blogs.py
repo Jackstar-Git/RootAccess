@@ -118,12 +118,41 @@ def blog(blog_id: str) -> ResponseReturnValue:
     for author_id in blog_data.get("authors", []):
         blog_data["author_profiles"][author_id] = get_user_by_id(author_id).get("profile_picture_url") if author_id else None #type: ignore
 
-    suggestions: list = query_blogs(
-            categories=blog_data.get("categories", []),
+    manual_ids = blog_data.get("suggested_blogs", [])
+    if not isinstance(manual_ids, list):
+        manual_ids = []
+
+    suggestions: list = []
+    selected_ids = set()
+    for suggested_id in manual_ids:
+        suggested_blog = get_item_by_id(suggested_id)
+        if (
+            suggested_blog
+            and suggested_blog.get("status") == "visible"
+            and str(suggested_blog.get("id")) != str(blog_id)
+            and str(suggested_blog.get("id")) not in selected_ids
+        ):
+            suggestions.append(suggested_blog)
+            selected_ids.add(str(suggested_blog.get("id")))
+            if len(suggestions) == 3:
+                break
+
+    if blog_data.get("categories"):
+        automatic_suggestions = query_blogs(
+            limit=None,
+            exclude_id=blog_id,
             status="visible",
-            limit=3,
-            exclude_id=blog_id
+            categories=blog_data["categories"]
         )
+    else:
+        automatic_suggestions = query_blogs(limit=None, exclude_id=blog_id, status="visible")
+    for suggested_blog in automatic_suggestions:
+        if len(suggestions) >= 3:
+            break
+        suggested_id = str(suggested_blog.get("id"))
+        if suggested_id not in selected_ids:
+            suggestions.append(suggested_blog)
+            selected_ids.add(suggested_id)
 
     suggestions_data: list = list(map(lambda blog_data: {
         **blog_data,

@@ -21,6 +21,7 @@ class BlogPost(TypedDict):
     content_html: str
     categories: List[str]
     tags: List[str]
+    suggested_blogs: List[str]
     reading_time: int
     reading_time_tag: Literal["short", "medium", "deep"]
     time_created: int
@@ -33,6 +34,12 @@ DATA_FILE: str = "data/blogs.json"
 # ==========================================
 # 1. HELPER FUNCTIONS
 # ==========================================
+
+def _normalize_suggested_blogs(value: Any) -> List[str]:
+    if not isinstance(value, list):
+        return []
+    unique_ids = dict.fromkeys(str(blog_id).strip() for blog_id in value if str(blog_id).strip())
+    return list(unique_ids)[:3]
 
 def _build_default_blog_payload(blog: Dict[str, Any] | BlogPost) -> BlogPost:
     return {
@@ -47,6 +54,7 @@ def _build_default_blog_payload(blog: Dict[str, Any] | BlogPost) -> BlogPost:
         "content_html": blog.get("content_html", ""),
         "categories": blog.get("categories", []),
         "tags": blog.get("tags", []),
+        "suggested_blogs": _normalize_suggested_blogs(blog.get("suggested_blogs", [])),
         "reading_time": blog.get("reading_time", 5),
         "reading_time_tag": blog.get("reading_time_tag", "short"),
         "time_created": blog.get("time_created", 0),
@@ -138,6 +146,7 @@ def add_blog(new_blog: Dict[str, Any]) -> BlogPost:
         "content_html": new_blog["content_html"],
         "categories": new_blog.get("categories", []),
         "tags": new_blog.get("tags", []),
+        "suggested_blogs": new_blog.get("suggested_blogs", []),
         "reading_time": new_blog.get("reading_time", 5),
         "reading_time_tag": new_blog.get("reading_time_tag", "short"),
         "time_created": new_blog.get("time_created", now),

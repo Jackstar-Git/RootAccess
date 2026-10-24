@@ -1185,11 +1185,11 @@ def api_manage_types() -> ResponseReturnValue:
 @permission_required(Permission.QUOTES_CREATE)
 def add_quote() -> ResponseReturnValue:
     user_id: Optional[str] = session.get("user_id")
-    text = request.form.get("quote_text", "").strip()
-    author = request.form.get("quote_author", "").strip()
-    original = request.form.get("quote_original", "").strip() or None
-    year_raw = request.form.get("quote_year", "").strip()
-    note = request.form.get("quote_note", "").strip() or None
+    text = (request.form.get("quote_text") or "").strip()
+    author = (request.form.get("quote_author") or "").strip()
+    original = (request.form.get("quote_original") or "").strip() or None
+    year_raw = (request.form.get("quote_year") or "").strip()
+    note = (request.form.get("quote_note") or "").strip() or None
 
     if not author:
         return jsonify({"error": "Author is required."}), 400
@@ -1233,11 +1233,11 @@ def api_manage_quotes() -> ResponseReturnValue:
     try:
         if request.method == "PUT":
             index = data.get("index")
-            text = data.get("text", "").strip()
-            author = data.get("author", "").strip()
-            original = data.get("original", "").strip() or None
+            text = (data.get("text") or "").strip()
+            author = (data.get("author") or "").strip()
+            original = (data.get("original") or "").strip() or None
             year_raw = data.get("year")
-            note = data.get("note", "").strip() or None
+            note = (data.get("note") or "").strip() or None
 
             if not author:
                 return jsonify({"error": "Author is required."}), 400
